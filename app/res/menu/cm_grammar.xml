@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/cmGrammarView" android:title="@string/cmGrammarView" />
+	<item android:id="@+id/cmGrammarEditName" android:title="@string/cmGrammarEditName" />
+	<item android:id="@+id/cmGrammarEditLang" android:title="@string/cmGrammarEditLang" />
+	<item android:id="@+id/cmGrammarEditUrl" android:title="@string/cmGrammarEditUrl" />
+	<item android:id="@+id/cmGrammarDelete" android:title="@string/cmGrammarDelete" />
+
+</menu>

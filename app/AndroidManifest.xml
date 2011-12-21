@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ee.ioc.phon.android.speak"
+    android:versionCode="810"
+    android:versionName="0.8.10" >
+
+    <!-- API level 3: some default button was not found, but we didn't explore it further. -->
+    <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
+    <!-- API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService -->
+    <uses-sdk android:minSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" >
+    </uses-permission>
+
+    <application
+        android:description="@string/descriptionApp"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/labelApp"
+        android:theme="@style/RecognizerTheme" >
+
+        <!--
+			android:clearTaskOnLaunch="true"
+			android:finishOnTaskLaunch="true"
+			android:allowTaskReparenting="false"
+        -->
+        <!--
+        TODO: The recorder can be in any orientation but during the time
+		it is active the orientation should not change. Or if it changes, it should not
+		affect the recording/transcribing.
+        -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:screenOrientation="behind" -->
+        <!--
+        TODO: singleTask seems a more appropriate launchMode,
+        but it does not work, and with singleInstance we fail to
+        deliver the results to the caller. So we have to use standard.
+        -->
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard"
+            android:label="@string/labelActivityRecognizerIntent"
+            android:launchMode="standard"
+            android:name=".RecognizerIntentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
+            <intent-filter >
+                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- We fall back to the application label because this is a launcher activity. -->
+        <activity
+            android:label="@string/labelActivityPreferences"
+            android:name=".Preferences" >
+        </activity>
+        <activity
+            android:label="@string/labelActivityAbout"
+            android:name=".AboutActivity" >
+        </activity>
+
+        <!-- This is the only activity that the recognizer can launch. -->
+        <!-- TODO: do not reparent -->
+        <activity
+            android:label="@string/labelActivityDetails"
+            android:name=".DetailsActivity"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:label="@string/labelActivityAppList"
+            android:name=".AppListActivity" >
+        </activity>
+        <activity
+            android:label="@string/labelActivityGrammarList"
+            android:name=".GrammarListActivity" >
+        </activity>
+        <activity
+            android:label="@string/labelActivityServerList"
+            android:name=".ServerListActivity" >
+        </activity>
+        <activity
+            android:label="@string/labelActivitySimpleDemo"
+            android:name=".demo.SimpleDemo" >
+        </activity>
+        <activity
+            android:label="@string/labelActivityRepeaterDemo"
+            android:name=".demo.RepeaterDemo" >
+        </activity>
+        <activity
+            android:label="@string/labelActivityVoiceSearchDemo"
+            android:name=".demo.VoiceSearchDemo" >
+        </activity>
+
+        <!--
+        <service android:name="SpeechRecognitionService" >
+            <intent-filter >
+                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        -->
+
+        <service
+            android:label="@string/labelApp"
+            android:name="SpeechRecognitionService" >
+            <intent-filter >
+
+                <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.speech"
+                android:resource="@xml/recognizer" />
+        </service>
+
+        <provider
+            android:authorities="ee.ioc.phon.android.speak.provider.AppsContentProvider"
+            android:name=".provider.AppsContentProvider" />
+    </application>
+
+</manifest>

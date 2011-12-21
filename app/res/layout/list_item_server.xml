@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="fill"
+    android:padding="8dp" >
+
+    <TextView
+        android:id="@+id/itemServerId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="123"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/itemServerUrl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemServerId"
+        android:text="@string/defaultService"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/itemServerStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/itemServerUrl"
+        android:gravity="right"
+        android:text="Default"
+        android:textColor="@color/green1"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

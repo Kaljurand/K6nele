@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/menuRecognizerShowInput"
+		android:title="@string/menuRecognizerShowInput"/>
+	<item
+		android:id="@+id/menuRecognizerTest"
+		android:title="@string/menuRecognizerTest">
+		<menu>
+			<group android:checkableBehavior="single">
+				<item
+					android:id="@+id/menuRecognizerTest1"
+					android:title="@string/menuRecognizerTest1" />
+				<!--
+				<item
+					android:id="@+id/menuRecognizerTest2"
+					android:title="@string/menuRecognizerTest2" />
+				-->
+				<item
+					android:id="@+id/menuRecognizerTest3"
+					android:title="@string/menuRecognizerTest3" />
+			</group>
+		</menu>
+	</item>
+</menu>

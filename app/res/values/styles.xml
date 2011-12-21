@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RecognizerTheme" parent="android:Theme.Black"></style>
+
+    <style name="Theme.Recognizer" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+</resources>

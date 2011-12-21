@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="fill"
+    android:padding="6dp" >
+
+    <ImageView
+        android:id="@+id/itemAppIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:adjustViewBounds="true"
+        android:maxHeight="50dip"
+        android:maxWidth="50dip"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/itemAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/itemAppIcon"
+        android:singleLine="true"
+        android:text="Google Maps for Android"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/itemAppFname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemAppName"
+        android:layout_toRightOf="@+id/itemAppIcon"
+        android:text="com.google.android.apps.maps.with.offline.maps.feature"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/itemAppId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemAppName"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="123"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/itemAppCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/semi_transparent"
+        android:padding="2dp"
+        android:text="6576"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/itemAppGrammarTargetLang"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemAppFname"
+        android:text="Gmaps"
+        android:textColor="@color/green1"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/itemAppGrammar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemAppGrammarTargetLang"
+        android:text="http://example.net/grammars/pgf/robot.pgf"
+        android:textColor="@color/orange1"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/itemAppServer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemAppGrammar"
+        android:text="@string/defaultService"
+        android:textColor="@color/orange"
+        android:textSize="13sp" />
+
+</RelativeLayout>

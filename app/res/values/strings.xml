@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    As long as this app is Estonian-specific we set the Estonian
+    name as the default name, this way the app is easier to find on the Market (for Estonians).
+    -->
+    <string name="labelApp">Kõnele</string>
+    <string name="filePreferences" translatable="false">SpeakFilePreferences</string>
+    <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
+    <string name="keyService" translatable="false">keyService</string>
+    <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime
+	</string>
+    <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+    <string name="defaultAutoStopAfterTime" translatable="false">20</string>
+
+    <string-array name="valuesAutoStopAfterTime" translatable="false">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
+
+    <string name="descriptionApp">speech-to-text service for Android apps</string>
+
+    <!-- Activity labels -->
+    <string name="labelActivityRecognizerIntent">@string/labelApp</string>
+    <string name="labelActivityAbout">About</string>
+    <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
+    <string name="labelActivityDetails">Details</string>
+    <string name="labelActivityAppList">Apps</string>
+    <string name="labelActivityGrammarList">Grammars</string>
+    <string name="labelActivityServerList">Recognizer servers</string>
+    <string name="labelActivitySimpleDemo">Simple demo</string>
+    <string name="labelActivityRepeaterDemo">Repeater demo</string>
+    <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
+
+    <!-- Preferences activity -->
+    <string name="titleCategoryApps">Apps &amp; Grammars</string>
+    <string name="titleCategoryOther">Other</string>
+    <string name="titleScreenDemos">Demos</string>
+    <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
+    <string name="titleAutoStart">Auto start</string>
+    <string name="summaryAutoStart">Start recording automatically</string>
+    <string name="titleAutoStopAfterPause">Auto stop after pause</string>
+    <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
+    <string name="titleAutoStopAfterTime">Max recording time</string>
+    <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
+    <string name="titleAudioCues">Play audio cues</string>
+    <string name="summaryAudioCues">Beep before and after recording</string>
+    <string name="summaryAppList">List of apps where you have used speech input</string>
+    <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
+    <string name="summaryServerList">List of speech recognition servers</string>
+    <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
+    <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
+    <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
+
+    <!-- RecognizerIntent activity -->
+    <string name="buttonSpeak">Tap &amp; Speak</string>
+    <string name="buttonStop">Speak now!\nTap when finished</string>
+    <string name="buttonYes">Yes</string>
+    <string name="buttonNo">No</string>
+    <string name="buttonOk">OK</string>
+    <string name="buttonCancel">Cancel</string>
+    <string name="statusTranscribing">Transcribing…</string>
+
+    <!-- @string/descriptionApp -->
+    <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
+		v%3$s by &lt;a href="http://www.google.com/profiles/kaljurand">Kaarel Kaljurand&lt;/a></string>
+    <string name="tvAbout">
+		&lt;p>%1$s
+is an app that offers speech-to-text service to other apps.
+Apps which allow user input via speech usually have a little microphone
+button as part of their user interface. Examples include:&lt;/p>
+
+&amp;nbsp;&amp;nbsp;&amp;bull; keyboards (e.g. SwiftKey X, GO Keyboard);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; TODO-list apps (e.g. Astrid Tasks, Out of Milk, Mighty Grocery Shopping List);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; SMS apps (e.g. GO SMS Pro, SMS Popup);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools (e.g. Google Translate, Dictionary.com);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. Google Maps, Google Docs, YouTube).
+
+		&lt;p>%1$s is
+		pre-configured to
+		use an online Estonian speech-to-text service
+		(&lt;a
+		href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>)
+		but
+		you can reconfigure it to use any online speech-to-text server
+		provided
+		that it implements the same interface.&lt;/p>
+
+&lt;p>Using %1$s you can assign speech recognition grammars to individual apps in order to
+improve the recognition quality. %1$s is preloaded with several useful Estonian grammars
+and more are available at
+&lt;a href="http://kaljurand.github.com/Grammars/">http://kaljurand.github.com/Grammars/&lt;/a>.&lt;/p>
+
+		&lt;p>Documentation, source code, and the list of requested features and known issues are available at
+		&lt;a
+		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p>
+	</string>
+
+    <!-- List view -->
+    <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
+    <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
+    <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
+    <string name="toastForwardedMatches">Recognized: %1$s</string>
+    <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
+    <string name="errorRecognizerNotPresent">There is no activity that provides speech recognition service.</string>
+
+    <!-- Error messages used in exceptions and toasts -->
+    <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
+    <string name="error">ERROR</string>
+    <string name="errorFailedLaunchApp">This app is not launchable or is not installed (anymore): %1$s</string>
+    <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
+    <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
+    <string name="errorResultClientError">General client error</string>
+    <string name="errorResultServerError">Recognizer server error</string>
+    <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>
+    <string name="errorBadPendingIntent">ERROR: not well-formed EXTRA_RESULTS_PENDINGINTENT</string>
+    <string name="errorCantCreateRecorder">ERROR: Failed to create an audio recorder</string>
+    <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
+    <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
+    <string name="noteMaxRecordingTimeExceeded">Max recording time exceeded</string>
+    <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
+    <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
+    <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>
+    <string name="dialogTitleChangeGrammarName">Change the name</string>
+    <string name="dialogTitleChangeGrammarLang">Change the target language</string>
+    <string name="dialogTitleChangeGrammarUrl">Change the grammar</string>
+    <string name="dialogTitleNewGrammar">Add a new grammar URL</string>
+    <string name="dialogTitleChangeServer">Change the server</string>
+    <string name="dialogTitleNewServer">Add a new server URL</string>
+    <string name="cmAppAssignGrammar">Assign grammar</string>
+    <string name="cmAppRemoveGrammar">Remove grammar</string>
+    <string name="cmAppAssignServer">Assign server</string>
+    <string name="cmAppRemoveServer">Remove server</string>
+    <string name="cmAppDelete">Delete</string>
+    <string name="cmGrammarView">View/download content</string>
+    <string name="cmGrammarEditName">Change name</string>
+    <string name="cmGrammarEditLang">Change target language</string>
+    <string name="cmGrammarEditUrl">Change URL</string>
+    <string name="cmGrammarDelete">Delete</string>
+    <string name="cmServerDefault">Set as default</string>
+    <string name="cmServerEdit">Change URL</string>
+    <string name="cmServerDelete">Delete</string>
+    <string name="menuAppsSort">Sort …</string>
+    <string name="menuAppsSortByName">by package name</string>
+    <string name="menuAppsSortByCount">by usage frequency</string>
+    <string name="menuAppsSortByGrammar">by grammar URL</string>
+    <string name="menuGrammarsAdd">Add</string>
+    <string name="menuServersAdd">Add</string>
+    <string name="menuDemoGrammarAssign">Assign grammar</string>
+    <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
+    <string name="buttonMicrophoneContentDescription">Press this button and speak</string>
+    <string name="ivWaveformContentDescription">Waveform of the spoken input</string>
+
+    <!-- Entries for the database, both apos and its escape character need escaping. -->
+    <string name="entryGrammarName1">[unrestricted input]</string>
+    <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
+
+    <!-- Menus for developers -->
+    <string name="menuRecognizerShowInput" translatable="false">Show input</string>
+    <string name="menuRecognizerTest" translatable="false">Tests</string>
+    <string name="menuRecognizerTest1" translatable="false">Upload /2 min IN s/</string>
+    <string name="menuRecognizerTest2" translatable="false">Upload /mine edasi/</string>
+    <string name="menuRecognizerTest3" translatable="false">Return dummy data</string>
+
+    <string-array name="entriesAutoStopAfterTime">
+        <item>2 sec</item>
+        <item>5 sec</item>
+        <item>10 sec</item>
+        <item>20 sec</item>
+        <item>30 sec</item>
+    </string-array>
+    <string-array name="entriesTestResult" translatable="false">
+        <item>Hello, world!</item>
+        <item>2 * 3</item>
+        <item>convert 4.5 km to m</item>
+        <item>map Sõpruse puiestee 214 , Tallinn</item>
+        <item>1 2 3 4 5</item>
+    </string-array>
+
+</resources>

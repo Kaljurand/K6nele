@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="fill"
+    android:padding="6dp" >
+
+    <TextView
+        android:id="@+id/itemGrammarName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="Shopping list"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/itemGrammarLang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/itemGrammarName"
+        android:padding="1dp"
+        android:text="ShoppingAssist"
+        android:textColor="@color/green1"
+        android:textSize="10sp"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/itemGrammarDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemGrammarName"
+        android:text="Shopping list items, e.g. &apos;two kilo carrots&apos;, &apos;half a liter of milk&apos;"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/itemGrammarId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemGrammarName"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="123"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/itemGrammarUrl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/itemGrammarDesc"
+        android:text="http://example.org/grammars/pgf/shopping.pgf"
+        android:textColor="@color/orange1"
+        android:textSize="13sp" />
+
+</RelativeLayout>

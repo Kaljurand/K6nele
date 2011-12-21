@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- <item android:id="@+id/cmAppLaunch" android:title="@string/cmAppLaunch" /> -->
+	<item android:id="@+id/cmAppAssignGrammar" android:title="@string/cmAppAssignGrammar" />
+	<item android:id="@+id/cmAppRemoveGrammar" android:title="@string/cmAppRemoveGrammar" />
+	<item android:id="@+id/cmAppAssignServer" android:title="@string/cmAppAssignServer" />
+	<item android:id="@+id/cmAppRemoveServer" android:title="@string/cmAppRemoveServer" />
+	<item android:id="@+id/cmAppDelete" android:title="@string/cmAppDelete" />
+
+</menu>
