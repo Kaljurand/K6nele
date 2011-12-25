@@ -18,17 +18,17 @@ package ee.ioc.phon.android.speak.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.RecognizerIntent;
 
 
 /**
- * <p>This is the simplest activity that calls the RecognizerIntent.ACTION_RECOGNIZE_SPEECH
+ * <p>This is a simple activity that calls the RecognizerIntent.ACTION_WEB_SEARCH
  * and populates a list view with the returned extra (EXTRA_RESULTS)
  * (i.e. the words/phrases that alternatively match the input speech).</p>
  * 
@@ -44,11 +44,13 @@ public class SimpleDemo extends AbstractRecognizerDemoActivity {
 		setContentView(R.layout.simple_demo);
 		mList = (ListView) findViewById(R.id.list_matches);
 
-		if (getRecognizers().size() == 0) {
+		Intent intent = createRecognizerIntent();
+
+		if (getRecognizers(intent).size() == 0) {
 			toast(getString(R.string.errorRecognizerNotPresent));
 			finish();
 		} else {
-			launchRecognizerIntent(createRecognizerIntent());
+			launchRecognizerIntent(intent);
 		}
 	}
 
@@ -63,13 +65,13 @@ public class SimpleDemo extends AbstractRecognizerDemoActivity {
 
 
 	/**
-	 * <p>Constructing the simplest ACTION_RECOGNIZER_SPEECH intent.
+	 * <p>Constructing a very simple ACTION_WEB_SEARCH intent.
 	 * The only required extra is EXTRA_LANGUAGE_MODEL.</p>
 	 * 
-	 * @return Recognizer Intent
+	 * @return ACTION_WEB_SEARCH-intent
 	 */
-	private Intent createRecognizerIntent() {
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+	private static Intent createRecognizerIntent() {
+		Intent intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
 		return intent;

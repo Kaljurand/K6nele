@@ -19,7 +19,6 @@ package ee.ioc.phon.android.speak.demo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.RecognizerIntent;
 
 
 /**
@@ -58,7 +58,7 @@ public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnCl
 		speakButton = (ImageButton) findViewById(R.id.buttonMicrophone);
 		mList = (ListView) findViewById(R.id.list_matches);
 
-		if (getRecognizers().size() == 0) {
+		if (getRecognizers(mIntent).size() == 0) {
 			speakButton.setEnabled(false);
 			toast(getString(R.string.errorRecognizerNotPresent));
 		} else {

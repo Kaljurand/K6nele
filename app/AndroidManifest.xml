@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
-    android:versionCode="810"
-    android:versionName="0.8.10" >
+    android:versionCode="811"
+    android:versionName="0.8.11" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
@@ -46,6 +46,11 @@
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter >
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.speech.action.WEB_SEARCH" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

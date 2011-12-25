@@ -19,7 +19,6 @@ package ee.ioc.phon.android.speak.demo;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -27,6 +26,7 @@ import android.widget.ImageButton;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.RecognizerIntent;
 
 
 /**
@@ -43,14 +43,7 @@ public class VoiceSearchDemo extends AbstractRecognizerDemoActivity implements O
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.voice_search_demo);
 		ImageButton speakButton = (ImageButton) findViewById(R.id.buttonMicrophone);
-
-		if (getRecognizers().size() == 0) {
-			speakButton.setEnabled(false);
-			toast(getString(R.string.errorRecognizerNotPresent));
-			finish();
-		} else {
-			speakButton.setOnClickListener(this);
-		}
+		speakButton.setOnClickListener(this);
 	}
 
 
