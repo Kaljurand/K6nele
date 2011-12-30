@@ -52,8 +52,11 @@ public class RawAudioRecorder {
 
 	private static final String LOG_TAG = RawAudioRecorder.class.getName();
 
+	private static final int DEFAULT_AUDIO_SOURCE = MediaRecorder.AudioSource.VOICE_RECOGNITION;
+	private static final int DEFAULT_SAMPLE_RATE = 16000;
+
 	private static final int RESOLUTION = AudioFormat.ENCODING_PCM_16BIT;
-	private static final short RESOLUTION_IN_BITS = 16;
+	private static final short RESOLUTION_IN_BYTES = 2;
 
 	// Number of channels (MONO = 1, STEREO = 2)
 	private static final short CHANNELS = 1;
@@ -79,10 +82,9 @@ public class RawAudioRecorder {
 	// The interval in which the recorded samples are output to the file
 	private static final int TIMER_INTERVAL = 120;
 
-	// The size in bytes of 1 seconds of 16kHz 16-bit mono audio.
-	// This assumes that we always record with these settings.
-	// TODO: calculate this dynamically
-	private static final int ONE_SEC = 32000; // (RESOLUTION_IN_BITS / 8) * CHANNELS * 16000
+	// E.g. 1 second of 16kHz 16-bit mono audio takes 32000 bytes.
+	// TODO: use the actual sample rate (not the default one)
+	private static final int ONE_SEC = RESOLUTION_IN_BYTES * CHANNELS * DEFAULT_SAMPLE_RATE;
 
 	private AudioRecord mRecorder = null;
 
@@ -94,8 +96,8 @@ public class RawAudioRecorder {
 	// Buffer size
 	private int mBufferSize;
 
-	// Number of frames written to file on each output
-	private int	mFramePeriod;
+	// Number of frames written to byte array on each output
+	private int mFramePeriod;
 
 	// The complete recording
 	private byte[] mCurrentRecording = new byte[0];
@@ -146,19 +148,22 @@ public class RawAudioRecorder {
 	 * TODO: we currently assume that the sample rate is always 16 kHz, support
 	 * other sample rates as well
 	 *
+	 * Android docs say: 44100Hz is currently the only rate that is guaranteed to work on all devices,
+	 * but other rates such as 22050, 16000, and 11025 may work on some devices.
+	 *
 	 * @param audioSource Identifier of the audio source (e.g. microphone)
 	 * @param sampleRate Sample rate (e.g. 16kHz)
 	 */
 	public RawAudioRecorder(int audioSource, int sampleRate) {
 		try {
 			mFramePeriod = sampleRate * TIMER_INTERVAL / 1000;
-			mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BITS * CHANNELS / 8;
+			mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BYTES * CHANNELS;
 
 			// Check to make sure buffer size is not smaller than the smallest allowed one
 			if (mBufferSize < AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION)) {
 				mBufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
 				// Set frame period and timer interval accordingly
-				mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BITS * CHANNELS / 8 );
+				mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
 				Log.w(LOG_TAG, "Increasing buffer size to " + Integer.toString(mBufferSize));
 			}
 
@@ -167,22 +172,26 @@ public class RawAudioRecorder {
 				throw new Exception("AudioRecord initialization failed");
 			}
 			mRecorder.setRecordPositionUpdateListener(mListener);
-			mRecorder.setPositionNotificationPeriod(mFramePeriod);
 
-			mState = State.INITIALIZING;
+			int code = mRecorder.setPositionNotificationPeriod(mFramePeriod);
+			if (code == AudioRecord.SUCCESS) {
+				setState(State.INITIALIZING);
+			} else {
+				setState(State.ERROR);
+			}
 		} catch (Exception e) {
 			if (e.getMessage() == null) {
 				Log.e(LOG_TAG, "Unknown error occured while initializing recording");
 			} else {
 				Log.e(LOG_TAG, e.getMessage());
 			}
-			mState = State.ERROR;
+			setState(State.ERROR);
 		}
 	}
 
 
 	public RawAudioRecorder() {
-		this(MediaRecorder.AudioSource.VOICE_RECOGNITION, 16000);
+		this(DEFAULT_AUDIO_SOURCE, DEFAULT_SAMPLE_RATE);
 	}
 
 
@@ -194,6 +203,10 @@ public class RawAudioRecorder {
 	 */
 	public State getState() {
 		return mState;
+	}
+
+	private void setState(State state) {
+		mState = state;
 	}
 
 
@@ -282,18 +295,18 @@ public class RawAudioRecorder {
 	 */
 	public void prepare() {
 		try {
-			if (mState == State.INITIALIZING) {
+			if (getState() == State.INITIALIZING) {
 				if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED) {
-					mBuffer = new byte[mFramePeriod * (RESOLUTION_IN_BITS/8) * CHANNELS];
-					mState = State.READY;
+					mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
+					setState(State.READY);
 				} else {
 					Log.e(LOG_TAG, "prepare() method called on uninitialized recorder");
-					mState = State.ERROR;
+					setState(State.ERROR);
 				}
 			} else {
 				Log.e(LOG_TAG, "prepare() method called on illegal state");
 				release();
-				mState = State.ERROR;
+				setState(State.ERROR);
 			}
 		} catch(Exception e) {
 			if (e.getMessage() == null) {
@@ -301,7 +314,7 @@ public class RawAudioRecorder {
 			} else {
 				Log.e(LOG_TAG, e.getMessage());
 			}
-			mState = State.ERROR;
+			setState(State.ERROR);
 		}
 	}
 
@@ -310,7 +323,7 @@ public class RawAudioRecorder {
 	 * <p>Releases the resources associated with this class, and removes the unnecessary files, when necessary.</p>
 	 */
 	public void release() {
-		if (mState == State.RECORDING) {
+		if (getState() == State.RECORDING) {
 			stop();
 		}
 
@@ -325,33 +338,31 @@ public class RawAudioRecorder {
 	 * Call after prepare().</p>
 	 */
 	public void start() {
-		if (mState == State.READY) {
-			//mPayloadSize = 0;
+		if (getState() == State.READY) {
 			mRecorder.startRecording();
 			Log.e(LOG_TAG, "startRecording()");
 			mRecorder.read(mBuffer, 0, mBuffer.length);
-			mState = State.RECORDING;
+			setState(State.RECORDING);
 		} else {
 			Log.e(LOG_TAG, "start() called on illegal state");
-			mState = State.ERROR;
+			setState(State.ERROR);
 		}
 	}
 
 
 	/**
-	 * <p>Stops the recording, and sets the state to STOPPED.
-	 * Also finalizes the wave file.</p>
+	 * <p>Stops the recording, and sets the state to STOPPED.</p>
 	 */
 	public void stop() {
-		if (mState == State.RECORDING) {
+		if (getState() == State.RECORDING) {
 			Log.e(LOG_TAG, "Stopping the recorder...");
 			// TODO: not sure if we need to set the listener to null
 			mRecorder.setRecordPositionUpdateListener(null);
 			mRecorder.stop();
-			mState = State.STOPPED;
+			setState(State.STOPPED);
 		} else {
-			Log.e(LOG_TAG, "stop() called in illegal state: " + mState);
-			mState = State.ERROR;
+			Log.e(LOG_TAG, "stop() called in illegal state: " + getState());
+			setState(State.ERROR);
 		}
 	}
 
@@ -392,9 +403,7 @@ public class RawAudioRecorder {
 			// byte curSample = mCurrentRecording[i+1];
 
 			short curSample = getShort(mCurrentRecording[i], mCurrentRecording[i+1]);
-			if (curSample > 0) {
-				sum += curSample * curSample;
-			}
+			sum += curSample * curSample;
 		}
 		return sum;
 	}
