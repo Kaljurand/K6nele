@@ -237,4 +237,11 @@ public class Utils {
 		}
 		return choice;
 	}
+
+
+	public static String getContentType(int sampleRate) {
+		// little endian = 1234
+		// big endian = 4321
+		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
+	}
 }

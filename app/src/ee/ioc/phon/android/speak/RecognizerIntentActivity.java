@@ -295,7 +295,6 @@ public class RecognizerIntentActivity extends Activity {
 			public void run() {
 				if (mRecorder != null) {
 					sendChunk(mMessageHandler, mRecorder.consumeRecording(), false);
-					Log.i(LOG_TAG, "Send chunk completed");
 					mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
 				}
 			}
@@ -499,10 +498,14 @@ public class RecognizerIntentActivity extends Activity {
 	 * 5. Update the GUI to show that the recording is in progress
 	 */
 	private void startRecordingOrFinish() {
-		boolean success = createRecSession(null);
+		int sampleRate = Integer.parseInt(
+				mPrefs.getString(
+						getString(R.string.keyRecordingRate),
+						getString(R.string.defaultRecordingRate)));
+		boolean success = createRecSession(Utils.getContentType(sampleRate));
 		if (success) {
 			try {
-				startRecording();
+				startRecording(sampleRate);
 				setGuiRecording();
 			} catch (IOException e) {
 				handleResultError(mMessageHandler, RecognizerIntent.RESULT_AUDIO_ERROR, "recorder", e);
@@ -516,8 +519,8 @@ public class RecognizerIntentActivity extends Activity {
 	 *
 	 * @throws IOException if recorder could not be created
 	 */
-	private void startRecording() throws IOException {
-		mRecorder = new RawAudioRecorder();
+	private void startRecording(int recordingRate) throws IOException {
+		mRecorder = new RawAudioRecorder(recordingRate);
 		if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
 			mRecorder = null;
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
@@ -697,6 +700,7 @@ public class RecognizerIntentActivity extends Activity {
 				mRecSession.setContentType(contentType);
 			}
 			mRecSession.create();
+			Log.i(LOG_TAG, "Created recognition session: " + contentType);
 			return true;
 		} catch (IOException e) {
 			setResultNetworkError(mMessageHandler, "create", e);
@@ -719,6 +723,7 @@ public class RecognizerIntentActivity extends Activity {
 			try {
 				mRecSession.sendChunk(bytes, isLast);
 				handler.sendMessage(createMessage(MSG_CHUNKS, "."));
+				Log.i(LOG_TAG, "Send chunk: " + bytes.length);
 			} catch (IOException e) {
 				setResultNetworkError(handler, "sendChunk", e);
 			}

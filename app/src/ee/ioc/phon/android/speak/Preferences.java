@@ -39,8 +39,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
-		Preference prefAutoStopAfterTime = (Preference) findPreference(getString(R.string.keyAutoStopAfterTime));
-		updateSummary(prefAutoStopAfterTime, sp.getString(getString(R.string.keyAutoStopAfterTime), "?"));
+		setSummary(
+				(Preference) findPreference(getString(R.string.keyAutoStopAfterTime)),
+				getString(R.string.summaryAutoStopAfterTime),
+				sp.getString(getString(R.string.keyAutoStopAfterTime), "?"));
+
+		setSummary(
+				(Preference) findPreference(getString(R.string.keyRecordingRate)),
+				getString(R.string.summaryRecordingRate),
+				sp.getString(getString(R.string.keyRecordingRate), "?"));
+
 	}
 
 
@@ -69,12 +77,17 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			pref.setSummary(etp.getText());
 		} else if (pref instanceof ListPreference) {
 			ListPreference lp = (ListPreference) pref;
-			updateSummary(pref, lp.getValue());
+			if (lp.getTitle().equals(getString(R.string.titleAutoStopAfterTime))) {
+				setSummary(pref, getString(R.string.summaryAutoStopAfterTime), lp.getValue());
+			} else if (lp.getTitle().equals(getString(R.string.titleRecordingRate))) {
+				setSummary(pref, getString(R.string.summaryRecordingRate), lp.getValue());
+			}
 		}
 	}
 
 
-	private void updateSummary(Preference pref, String str) {
-		pref.setSummary(String.format(getString(R.string.summaryAutoStopAfterTime), str));		
+	private void setSummary(Preference pref, String strText, String strArg) {
+		pref.setSummary(String.format(strText, strArg));
 	}
+
 }

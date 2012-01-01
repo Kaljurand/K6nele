@@ -45,6 +45,11 @@
 
 	<PreferenceCategory android:title="@string/titleCategoryOther">
 
+		<ListPreference android:key="@string/keyRecordingRate"
+			android:title="@string/titleRecordingRate" android:summary="@string/summaryRecordingRate"
+			android:defaultValue="@string/defaultRecordingRate" android:entries="@array/entriesRecordingRate"
+			android:entryValues="@array/valuesRecordingRate" />
+
 		<PreferenceScreen android:summary="@string/summaryScreenDemos"
 			android:title="@string/titleScreenDemos">
 

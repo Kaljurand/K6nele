@@ -43,10 +43,6 @@ import android.util.Log;
  */
 public class RawAudioRecorder {
 
-	// little endian = 1234
-	// big endian = 4321
-	//private static final String CONTENT_TYPE = "audio/x-raw-int,rate=16000,channels=1,signed=true,endianness=1234,depth=16,width=16";
-
 	// Setting this to "true" is not yet compatible with pause detection.
 	private static final boolean TRUNCATE_UPON_CONSUME = false;
 
@@ -80,15 +76,15 @@ public class RawAudioRecorder {
 
 
 	// The interval in which the recorded samples are output to the file
+	// TODO: explain why 120
 	private static final int TIMER_INTERVAL = 120;
-
-	// E.g. 1 second of 16kHz 16-bit mono audio takes 32000 bytes.
-	// TODO: use the actual sample rate (not the default one)
-	private static final int ONE_SEC = RESOLUTION_IN_BYTES * CHANNELS * DEFAULT_SAMPLE_RATE;
 
 	private AudioRecord mRecorder = null;
 
 	private double mAvgEnergy = 0;
+
+	private final int mSampleRate;
+	private final int mOneSec;
 
 	// Recorder state
 	private State mState;
@@ -152,22 +148,25 @@ public class RawAudioRecorder {
 	 * but other rates such as 22050, 16000, and 11025 may work on some devices.
 	 *
 	 * @param audioSource Identifier of the audio source (e.g. microphone)
-	 * @param sampleRate Sample rate (e.g. 16kHz)
+	 * @param sampleRate Sample rate (e.g. 16000)
 	 */
 	public RawAudioRecorder(int audioSource, int sampleRate) {
+		mSampleRate = sampleRate;
+		// E.g. 1 second of 16kHz 16-bit mono audio takes 32000 bytes.
+		mOneSec = RESOLUTION_IN_BYTES * CHANNELS * mSampleRate;
 		try {
-			mFramePeriod = sampleRate * TIMER_INTERVAL / 1000;
+			mFramePeriod = mSampleRate * TIMER_INTERVAL / 1000;
 			mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BYTES * CHANNELS;
 
 			// Check to make sure buffer size is not smaller than the smallest allowed one
-			if (mBufferSize < AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION)) {
-				mBufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
+			if (mBufferSize < AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION)) {
+				mBufferSize = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
 				// Set frame period and timer interval accordingly
 				mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
 				Log.w(LOG_TAG, "Increasing buffer size to " + Integer.toString(mBufferSize));
 			}
 
-			mRecorder = new AudioRecord(audioSource, sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
+			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
 			if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
 			}
@@ -187,6 +186,11 @@ public class RawAudioRecorder {
 			}
 			setState(State.ERROR);
 		}
+	}
+
+
+	public RawAudioRecorder(int sampleRate) {
+		this(DEFAULT_AUDIO_SOURCE, sampleRate);
 	}
 
 
@@ -222,7 +226,7 @@ public class RawAudioRecorder {
 			if (TRUNCATE_UPON_CONSUME) {
 				byte[] bytes = new byte[(int) totalLength];
 				System.arraycopy(mCurrentRecording, 0, bytes, 0, totalLength);
-				Log.e(LOG_TAG, "Copied from: 0" + ": " + totalLength + " bytes");
+				Log.i(LOG_TAG, "Copied from: 0" + ": " + totalLength + " bytes");
 				mCurrentRecording = new byte[0];
 				mLength += totalLength;
 				return bytes;
@@ -230,7 +234,7 @@ public class RawAudioRecorder {
 				int len = totalLength - mEndPos;
 				byte[] bytes = new byte[(int) len];
 				System.arraycopy(mCurrentRecording, mEndPos, bytes, 0, len);
-				Log.e(LOG_TAG, "Copied from: " + mEndPos + ": " + len + " bytes");
+				Log.i(LOG_TAG, "Copied from: " + mEndPos + ": " + len + " bytes");
 				mEndPos = totalLength;
 				return bytes;
 			}
@@ -248,14 +252,14 @@ public class RawAudioRecorder {
 	 */
 	public boolean isPausing() {
 		double pauseScore = getPauseScore();
-		Log.e(LOG_TAG, "Pause score: " + pauseScore);
+		Log.i(LOG_TAG, "Pause score: " + pauseScore);
 		return pauseScore > 7;
 	}
 
 
 	public float getRmsdb() {
-		long sumOfSquares = getRms(mCurrentRecording.length, ONE_SEC);
-		long samplesLength = ONE_SEC/2;
+		long sumOfSquares = getRms(mCurrentRecording.length, mOneSec);
+		long samplesLength = mOneSec/2;
 		if (sumOfSquares == 0 || samplesLength == 0) {
 			return 0;
 		}
@@ -275,7 +279,7 @@ public class RawAudioRecorder {
 	 * @return positive value which the caller can use to determine if there is a pause
 	 */
 	private double getPauseScore() {
-		long t2 = getRms(mCurrentRecording.length, ONE_SEC);
+		long t2 = getRms(mCurrentRecording.length, mOneSec);
 		if (t2 == 0) {
 			return 0;
 		}
@@ -340,7 +344,7 @@ public class RawAudioRecorder {
 	public void start() {
 		if (getState() == State.READY) {
 			mRecorder.startRecording();
-			Log.e(LOG_TAG, "startRecording()");
+			Log.i(LOG_TAG, "startRecording()");
 			mRecorder.read(mBuffer, 0, mBuffer.length);
 			setState(State.RECORDING);
 		} else {
@@ -355,7 +359,7 @@ public class RawAudioRecorder {
 	 */
 	public void stop() {
 		if (getState() == State.RECORDING) {
-			Log.e(LOG_TAG, "Stopping the recorder...");
+			Log.i(LOG_TAG, "Stopping the recorder...");
 			// TODO: not sure if we need to set the listener to null
 			mRecorder.setRecordPositionUpdateListener(null);
 			mRecorder.stop();

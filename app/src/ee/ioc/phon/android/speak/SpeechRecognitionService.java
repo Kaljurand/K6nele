@@ -120,15 +120,19 @@ public class SpeechRecognitionService extends RecognitionService {
 		}
 		 */
 
+		int sampleRate = Integer.parseInt(
+				mPrefs.getString(
+						getString(R.string.keyRecordingRate),
+						getString(R.string.defaultRecordingRate)));
 
 		try {
-			createRecSession(null, listener);
+			createRecSession(Utils.getContentType(sampleRate), listener);
 		} catch (RemoteException e2) {
 			e2.printStackTrace();
 		}
 
 		try {
-			startRecording();
+			startRecording(sampleRate);
 			listener.readyForSpeech(new Bundle());
 			// TODO: send it when the user actually started speaking
 			listener.beginningOfSpeech();
@@ -175,8 +179,8 @@ public class SpeechRecognitionService extends RecognitionService {
 	 *
 	 * @throws IOException if recorder could not be created
 	 */
-	private void startRecording() throws IOException {
-		mRecorder = new RawAudioRecorder();
+	private void startRecording(int sampleRate) throws IOException {
+		mRecorder = new RawAudioRecorder(sampleRate);
 		if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
 			mRecorder = null;
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
