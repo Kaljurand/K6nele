@@ -200,7 +200,7 @@ public class RecognizerIntentActivity extends Activity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
-		mBStartStop = (Button) findViewById(R.id.button);
+		mBStartStop = (Button) findViewById(R.id.bStartStop);
 		mLlTranscribing = (LinearLayout) findViewById(R.id.llTranscribing);
 		mLlProgress = (LinearLayout) findViewById(R.id.llProgress);
 		mLlError = (LinearLayout) findViewById(R.id.llError);
@@ -473,8 +473,12 @@ public class RecognizerIntentActivity extends Activity {
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.GONE);
 		setRecorderStyle(mRes.getColor(R.color.red));
-		mBStartStop.setText(getString(R.string.buttonStop));
-		mBStartStop.setVisibility(View.VISIBLE);
+		if (mPrefs.getBoolean("keyAutoStopAfterPause", true)) {
+			mBStartStop.setVisibility(View.INVISIBLE);
+		} else {
+			mBStartStop.setText(getString(R.string.buttonStop));
+			mBStartStop.setVisibility(View.VISIBLE);
+		}
 		startTasks();
 	}
 

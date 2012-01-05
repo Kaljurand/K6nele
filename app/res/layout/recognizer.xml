@@ -29,7 +29,7 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/bStartStop"
             android:layout_width="200dip"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
