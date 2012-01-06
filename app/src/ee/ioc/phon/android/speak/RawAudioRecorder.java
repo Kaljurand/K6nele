@@ -132,7 +132,7 @@ public class RawAudioRecorder {
 		}
 
 		public void onMarkerReached(AudioRecord recorder) {
-			// BUG: NOT USED
+			// TODO: NOT USED
 		}
 	};
 
@@ -155,17 +155,7 @@ public class RawAudioRecorder {
 		// E.g. 1 second of 16kHz 16-bit mono audio takes 32000 bytes.
 		mOneSec = RESOLUTION_IN_BYTES * CHANNELS * mSampleRate;
 		try {
-			mFramePeriod = mSampleRate * TIMER_INTERVAL / 1000;
-			mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BYTES * CHANNELS;
-
-			// Check to make sure buffer size is not smaller than the smallest allowed one
-			if (mBufferSize < AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION)) {
-				mBufferSize = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
-				// Set frame period and timer interval accordingly
-				mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
-				Log.w(LOG_TAG, "Increasing buffer size to " + Integer.toString(mBufferSize));
-			}
-
+			setBufferSizeAndFramePeriod();
 			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
 			if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
@@ -196,6 +186,28 @@ public class RawAudioRecorder {
 
 	public RawAudioRecorder() {
 		this(DEFAULT_AUDIO_SOURCE, DEFAULT_SAMPLE_RATE);
+	}
+
+
+	// old version
+	private void setBufferSizeAndFramePeriod_812() {
+		mFramePeriod = mSampleRate * TIMER_INTERVAL / 1000;
+		mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BYTES * CHANNELS;
+
+		// Check to make sure buffer size is not smaller than the smallest allowed one
+		if (mBufferSize < AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION)) {
+			mBufferSize = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
+			// Set frame period and timer interval accordingly
+			mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
+			Log.w(LOG_TAG, "AudioRecord buffer size (MIN): " + mBufferSize);
+		}
+	}
+
+
+	private void setBufferSizeAndFramePeriod() {
+		mBufferSize = 2 * AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
+		mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
+		Log.w(LOG_TAG, "AudioRecord buffer size: " + mBufferSize);
 	}
 
 
