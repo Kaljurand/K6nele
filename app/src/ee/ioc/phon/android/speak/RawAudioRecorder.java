@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import android.util.Log;
  * <li>16-bit</li>
  * <li>little endian</li>
  * <li>mono</li>
- * <li>16kHz</li>
+ * <li>16kHz (recommended, but a different sample rate can be specified in the constructor)</li>
  * </ul>
  * 
  * <p>For example, the corresponding <code>arecord</code> settings are</p>
@@ -37,14 +37,11 @@ import android.util.Log;
  * arecord --file-type raw --format=S16_LE --channels 1 --rate 16000
  * </pre>
  * 
- * TODO: use: ByteArrayOutputStream (instead of copying all the time)
+ * TODO: maybe use: ByteArrayOutputStream
  * 
  * @author Kaarel Kaljurand
  */
 public class RawAudioRecorder {
-
-	// Setting this to "true" is not yet compatible with pause detection.
-	private static final boolean TRUNCATE_UPON_CONSUME = false;
 
 	private static final String LOG_TAG = RawAudioRecorder.class.getName();
 
@@ -95,16 +92,15 @@ public class RawAudioRecorder {
 	// Number of frames written to byte array on each output
 	private int mFramePeriod;
 
-	// The complete recording
-	private byte[] mCurrentRecording = new byte[0];
+	// The complete space into which the recording in written.
+	// Its maximum length is about:
+	// 2 (bytes) * 1 (channels) * 30 (max rec time in seconds) * 44100 (times per second) = 2 646 000 bytes
+	// but typically is:
+	// 2 (bytes) * 1 (channels) * 20 (max rec time in seconds) * 16000 (times per second) = 640 000 bytes
+	private final byte[] mRecording;
 
-	// Used only in TRUNCATE-mode, otherwise = 0. Indicates the total length of the recording
-	// after the recording was last consumed. Only used in getLength().
-	private int mLength = 0;
-
-	// The position up to which the recording has been consumed if not in TRUNCATE-mode.
-	// Ignored in the TRUNCATE-mode.
-	private int mEndPos = 0;
+	private int mRecordedLength = 0;
+	private int mConsumedLength = 0;
 
 	// Buffer for output
 	private byte[] mBuffer;
@@ -126,8 +122,8 @@ public class RawAudioRecorder {
 				Log.e(LOG_TAG, "Read more bytes than is buffer length:" + numberOfBytes + ": " + mBuffer.length);
 				stop();
 			} else {
-				// Everything seems to be OK, writing the buffer into the file.
-				mCurrentRecording = concat(mCurrentRecording, mBuffer);
+				// Everything seems to be OK, adding the buffer to the recording.
+				add(mBuffer);
 			}
 		}
 
@@ -140,12 +136,9 @@ public class RawAudioRecorder {
 	/** 
 	 * <p>Instantiates a new recorder and sets the state to INITIALIZING.
 	 * In case of errors, no exception is thrown, but the state is set to ERROR.</p>
-	 * 
-	 * TODO: we currently assume that the sample rate is always 16 kHz, support
-	 * other sample rates as well
 	 *
-	 * Android docs say: 44100Hz is currently the only rate that is guaranteed to work on all devices,
-	 * but other rates such as 22050, 16000, and 11025 may work on some devices.
+	 * <p>Android docs say: 44100Hz is currently the only rate that is guaranteed to work on all devices,
+	 * but other rates such as 22050, 16000, and 11025 may work on some devices.</p>
 	 *
 	 * @param audioSource Identifier of the audio source (e.g. microphone)
 	 * @param sampleRate Sample rate (e.g. 16000)
@@ -154,6 +147,8 @@ public class RawAudioRecorder {
 		mSampleRate = sampleRate;
 		// E.g. 1 second of 16kHz 16-bit mono audio takes 32000 bytes.
 		mOneSec = RESOLUTION_IN_BYTES * CHANNELS * mSampleRate;
+		// TODO: replace 35 with the max length of the recording (as specified in the settings)
+		mRecording = new byte[mOneSec * 35];
 		try {
 			setBufferSizeAndFramePeriod();
 			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
@@ -226,36 +221,38 @@ public class RawAudioRecorder {
 	}
 
 
+	// TODO: just truncate the array, not create a new array
+	// This method should stop the recording, it should be the last
+	// method that one can call on the recorder object
 	public byte[] getCurrentRecording() {
-		return mCurrentRecording;
+		return getCurrentRecording(0);
 	}
 
 
+	private byte[] getCurrentRecording(int startPos) {
+		int len = getLength() - startPos;
+		byte[] bytes = new byte[len];
+		System.arraycopy(mRecording, startPos, bytes, 0, len);
+		return bytes;
+	}
+
+
+	/**
+	 * @return bytes that have been recorded since this method was last called
+	 */
 	public byte[] consumeRecording() {
 		// TODO: read about synchronized
-		synchronized (mCurrentRecording) {
-			int totalLength = mCurrentRecording.length;
-			if (TRUNCATE_UPON_CONSUME) {
-				byte[] bytes = new byte[(int) totalLength];
-				System.arraycopy(mCurrentRecording, 0, bytes, 0, totalLength);
-				Log.i(LOG_TAG, "Copied from: 0" + ": " + totalLength + " bytes");
-				mCurrentRecording = new byte[0];
-				mLength += totalLength;
-				return bytes;
-			} else {
-				int len = totalLength - mEndPos;
-				byte[] bytes = new byte[(int) len];
-				System.arraycopy(mCurrentRecording, mEndPos, bytes, 0, len);
-				Log.i(LOG_TAG, "Copied from: " + mEndPos + ": " + len + " bytes");
-				mEndPos = totalLength;
-				return bytes;
-			}
+		synchronized (mRecording) {
+			byte[] bytes = getCurrentRecording(mConsumedLength);
+			Log.i(LOG_TAG, "Copied from: " + mConsumedLength + ": " + bytes.length + " bytes");
+			mConsumedLength = mRecordedLength;
+			return bytes;
 		}
 	}
 
 
 	public int getLength() {
-		return mLength + mCurrentRecording.length;
+		return mRecordedLength;
 	}
 
 
@@ -270,7 +267,7 @@ public class RawAudioRecorder {
 
 
 	public float getRmsdb() {
-		long sumOfSquares = getRms(mCurrentRecording.length, mOneSec);
+		long sumOfSquares = getRms(mRecordedLength, mOneSec);
 		long samplesLength = mOneSec/2;
 		if (sumOfSquares == 0 || samplesLength == 0) {
 			return 0;
@@ -291,7 +288,7 @@ public class RawAudioRecorder {
 	 * @return positive value which the caller can use to determine if there is a pause
 	 */
 	private double getPauseScore() {
-		long t2 = getRms(mCurrentRecording.length, mOneSec);
+		long t2 = getRms(mRecordedLength, mOneSec);
 		if (t2 == 0) {
 			return 0;
 		}
@@ -383,22 +380,14 @@ public class RawAudioRecorder {
 	}
 
 
-	/**
-	 * TODO: how does the performance of this method behave if arrays get large
-	 * 
-	 * @param A
-	 * @param B
-	 * @return
-	 */
-	private static byte[] concat(byte[] A, byte[] B) {
-		long size = A.length+B.length;
-		if (size < Integer.MAX_VALUE) {
-			byte[] C = new byte[(int) size];
-			System.arraycopy(A, 0, C, 0, A.length);
-			System.arraycopy(B, 0, C, A.length, B.length);
-			return C;
+	private void add(byte[] buffer) {
+		if (mRecording.length >= mRecordedLength + buffer.length) {
+			// arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+			System.arraycopy(buffer, 0, mRecording, mRecordedLength, buffer.length);
+			mRecordedLength += buffer.length;
 		} else {
-			return A;
+			// This happens on the emulator for some reason
+			Log.e(LOG_TAG, "Recorder buffer overflow: " + mRecordedLength);
 		}
 	}
 
@@ -418,7 +407,7 @@ public class RawAudioRecorder {
 			// TODO: We don't need the whole short, just take the 2nd byte (the more significant one)
 			// byte curSample = mCurrentRecording[i+1];
 
-			short curSample = getShort(mCurrentRecording[i], mCurrentRecording[i+1]);
+			short curSample = getShort(mRecording[i], mRecording[i+1]);
 			sum += curSample * curSample;
 		}
 		return sum;
