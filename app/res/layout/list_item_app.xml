@@ -11,8 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
-        android:maxHeight="50dip"
-        android:maxWidth="50dip"
+        android:maxHeight="48dp"
+        android:maxWidth="48dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" />
 
@@ -23,7 +23,7 @@
         android:layout_toRightOf="@+id/itemAppIcon"
         android:singleLine="true"
         android:text="Google Maps for Android"
-        android:textSize="21sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/itemAppFname"
@@ -63,7 +63,7 @@
         android:layout_below="@+id/itemAppFname"
         android:text="Gmaps"
         android:textColor="@color/green1"
-        android:textSize="15sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/itemAppGrammar"
@@ -72,7 +72,7 @@
         android:layout_below="@+id/itemAppGrammarTargetLang"
         android:text="http://example.net/grammars/pgf/robot.pgf"
         android:textColor="@color/orange1"
-        android:textSize="13sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/itemAppServer"
@@ -81,6 +81,6 @@
         android:layout_below="@+id/itemAppGrammar"
         android:text="@string/defaultService"
         android:textColor="@color/orange"
-        android:textSize="13sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

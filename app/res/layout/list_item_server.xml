@@ -20,8 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemServerId"
         android:text="@string/defaultService"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
+    <!-- TODO: This should be used to signal the changing of the default server -->
     <TextView
         android:id="@+id/itemServerStatus"
         android:layout_width="fill_parent"

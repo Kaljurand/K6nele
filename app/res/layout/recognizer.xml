@@ -42,7 +42,7 @@
             android:shadowDy="1.3"
             android:shadowRadius="1.6"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/llTranscribing"
@@ -100,7 +100,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:textColor="@color/grey2"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <!-- android:format="%s" -->
 
@@ -113,7 +113,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/grey2"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvChunks"
@@ -149,7 +149,7 @@
             android:singleLine="true"
             android:text="@string/error"
             android:textColor="@color/red"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:typeface="monospace" />
 
         <TextView
@@ -163,7 +163,7 @@
             android:padding="1dp"
             android:text="@string/errorResultNetworkError"
             android:textColor="@color/grey2"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>
