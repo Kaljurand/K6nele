@@ -135,7 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         android:orientation="vertical"
-        android:padding="1dip"
+        android:padding="1dp"
         android:scaleType="fitXY"
         android:visibility="gone" >
 

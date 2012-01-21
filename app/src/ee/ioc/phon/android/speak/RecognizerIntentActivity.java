@@ -162,9 +162,9 @@ public class RecognizerIntentActivity extends Activity {
 	// Max recording time in milliseconds
 	private int mMaxRecordingTime;
 
-	private String mGrammarUrl;
+	private URL mServerUrl;
+	private URL mGrammarUrl;
 	private String mGrammarTargetLang;
-	private String mServerUrl;
 
 	private Resources mRes;
 
@@ -231,12 +231,7 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		}
 
-		String prompt = mExtras.getString(RecognizerIntent.EXTRA_PROMPT);
-		if (prompt == null || prompt.length() == 0) {
-			mTvPrompt.setVisibility(View.INVISIBLE);
-		} else {
-			mTvPrompt.setText(prompt);
-		}
+		setPrompt();
 
 		mMaxRecordingTime = 1000 * Integer.parseInt(
 				mPrefs.getString(
@@ -247,15 +242,14 @@ public class RecognizerIntentActivity extends Activity {
 
 		PackageNameRegistry wrapper = new PackageNameRegistry(this, getCaller());
 
-		// If the user has not overridden the grammar then use the app's EXTRA.
-		mGrammarUrl = Utils.chooseValue(wrapper.getGrammarUrl(), mExtras.getString(Extras.EXTRA_GRAMMAR_URL));
+		try {
+			setUrls(wrapper);
+		} catch (MalformedURLException e) {
+			// The user has managed to store a malformed URL in the configuration.
+			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
+		}
+
 		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
-		// The server URL should never be null
-		mServerUrl = Utils.chooseValue(
-				wrapper.getServerUrl(),
-				mExtras.getString(Extras.EXTRA_SERVER_URL),
-				mPrefs.getString(getString(R.string.keyService), getString(R.string.defaultService))
-		);
 
 		// Starting chunk sending in a separate thread so that slow internet
 		// would not block the UI.
@@ -269,25 +263,6 @@ public class RecognizerIntentActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		URL wsUrl = null;
-		URL lmUrl = null;
-
-		try {
-			wsUrl = new URL(mServerUrl);
-			if (mGrammarUrl != null && mGrammarUrl.length() > 0) {
-				lmUrl = new URL(mGrammarUrl);
-			}
-		} catch (MalformedURLException e) {
-			// The user has managed to store a malformed URL in the configuration.
-			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
-			return;
-		}
-
-		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-		mRecSession = new ChunkedWebRecSession(wsUrl, lmUrl, mGrammarTargetLang, nbest);
-		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + wsUrl + ": lm=" + lmUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + nbest);
-		mRecSession.setUserAgentComment(makeUserAgentComment());
 
 		// This task talks to the internet. It is therefore potentially slow and
 		// should not be run in the UI thread.
@@ -409,7 +384,6 @@ public class RecognizerIntentActivity extends Activity {
 			returnOrForwardMatches(mMessageHandler,
 					new ArrayList<String>(
 							Arrays.asList(mRes.getStringArray(R.array.entriesTestResult))));
-			finish();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -432,14 +406,6 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void setGuiStoppedRecording() {
-		stopChronometer();
-		setRecorderStyle(mRes.getColor(R.color.grey2));
-		mBStartStop.setVisibility(View.GONE);
-		stopTasks();
-	}
-
-
 	private void startTasks() {
 		mStatusHandler.postDelayed(mShowStatusTask, TASK_DELAY_STAT);
 		mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
@@ -454,16 +420,16 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void setGuiTranscribing() {
-		mTvPrompt.setVisibility(View.GONE);
-		mLlTranscribing.setVisibility(View.VISIBLE);
-		if (mRecorder != null) {
-			byte[] bytes = mRecorder.getCurrentRecording();
-			int w = ((View) mIvWaveform.getParent()).getWidth();
-			if (w > 0) {
-				mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, w, (int) (w / 2.5), 0, bytes.length));
-			}
-		}
+	private void setGuiInitOnError(String msgAsString) {
+		mLlTranscribing.setVisibility(View.GONE);
+		mIvWaveform.setVisibility(View.GONE);
+		// includes: bytes, chronometer, chunks
+		mLlProgress.setVisibility(View.GONE);
+		setPrompt();
+		mBStartStop.setText(getString(R.string.buttonSpeak));
+		mBStartStop.setVisibility(View.VISIBLE);
+		mLlError.setVisibility(View.VISIBLE);
+		mTvErrorMessage.setText(msgAsString);
 	}
 
 
@@ -480,6 +446,38 @@ public class RecognizerIntentActivity extends Activity {
 			mBStartStop.setVisibility(View.VISIBLE);
 		}
 		startTasks();
+	}
+
+
+	private void setGuiStoppedRecording() {
+		stopChronometer();
+		setRecorderStyle(mRes.getColor(R.color.grey2));
+		mBStartStop.setVisibility(View.GONE);
+		stopTasks();
+	}
+
+
+	private void setGuiTranscribing() {
+		mTvPrompt.setVisibility(View.GONE);
+		mLlTranscribing.setVisibility(View.VISIBLE);
+		if (mRecorder != null) {
+			byte[] bytes = mRecorder.getCurrentRecording();
+			int w = ((View) mIvWaveform.getParent()).getWidth();
+			if (w > 0) {
+				mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, w, (int) (w / 2.5), 0, bytes.length));
+			}
+		}
+	}
+
+
+	private void setPrompt() {
+		String prompt = mExtras.getString(RecognizerIntent.EXTRA_PROMPT);
+		if (prompt == null || prompt.length() == 0) {
+			mTvPrompt.setVisibility(View.INVISIBLE);
+		} else {
+			mTvPrompt.setText(prompt);
+			mTvPrompt.setVisibility(View.VISIBLE);
+		}
 	}
 
 
@@ -507,6 +505,7 @@ public class RecognizerIntentActivity extends Activity {
 						getString(R.string.keyRecordingRate),
 						getString(R.string.defaultRecordingRate)));
 		boolean success = createRecSession(Utils.getContentType(sampleRate));
+
 		if (success) {
 			try {
 				startRecording(sampleRate);
@@ -565,7 +564,6 @@ public class RecognizerIntentActivity extends Activity {
 			public void run() {
 				sendChunk(handler, bytes, true);
 				getResult(handler, mRecSession);
-				finish();
 			}
 		};
 		t.start();
@@ -680,9 +678,7 @@ public class RecognizerIntentActivity extends Activity {
 				mTvChunks.setText(mTvChunks.getText() + msgAsString);
 				break;
 			case MSG_RESULT_ERROR:
-				mLlProgress.setVisibility(View.GONE);
-				mLlError.setVisibility(View.VISIBLE);
-				mTvErrorMessage.setText(msgAsString);
+				setGuiInitOnError(msgAsString);
 				break;
 			}
 		}
@@ -699,6 +695,10 @@ public class RecognizerIntentActivity extends Activity {
 	 * @return <code>true</code> iff success
 	 */
 	private boolean createRecSession(String contentType) {
+		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
+		mRecSession = new ChunkedWebRecSession(mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
+		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + mServerUrl + ": lm=" + mGrammarUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + nbest);
+		mRecSession.setUserAgentComment(makeUserAgentComment());
 		try {
 			if (contentType != null) {
 				mRecSession.setContentType(contentType);
@@ -735,23 +735,22 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private boolean getResult(Handler handler, RecSession recSession) {
+	private void getResult(Handler handler, RecSession recSession) {
 		RecSessionResult result = null;
 		try {
 			result = recSession.getResult();
 		} catch (IOException e) {
+			releaseResources();
 			setResultNetworkError(handler, "getResult", e);
-			return false;
 		}
 
 		if (result == null || result.getLinearizations().isEmpty()) {
+			releaseResources();
 			handleResultError(handler, RecognizerIntent.RESULT_NO_MATCH, "", null);
-			return false;
 		} else {
 			ArrayList<String> matches = new ArrayList<String>();
 			matches.addAll(result.getLinearizations());
 			returnOrForwardMatches(handler, matches);
-			return true;
 		}
 	}
 
@@ -817,6 +816,7 @@ public class RecognizerIntentActivity extends Activity {
 				handler.sendMessage(createMessage(MSG_TOAST, e.getMessage()));
 			}
 		}
+		finish();
 	}
 
 
@@ -858,9 +858,7 @@ public class RecognizerIntentActivity extends Activity {
 			message = getString(R.string.errorResultServerError);
 			break;
 		case RecognizerIntent.RESULT_NO_MATCH:
-			//message = getString(R.string.errorResultNoMatch);
-			setResult(resultCode);
-			finish();
+			message = getString(R.string.errorResultNoMatch);
 			break;
 		default:
 			// TODO: This should never happen
@@ -870,6 +868,23 @@ public class RecognizerIntentActivity extends Activity {
 			Log.e(LOG_TAG, "Exception: " + type + ": " + e.getMessage());
 		}
 		handler.sendMessage(createMessage(MSG_RESULT_ERROR, message));
+	}
+
+
+	private void setUrls(PackageNameRegistry wrapper) throws MalformedURLException {
+		// The server URL should never be null
+		mServerUrl = new URL(
+				Utils.chooseValue(
+						wrapper.getServerUrl(),
+						mExtras.getString(Extras.EXTRA_SERVER_URL),
+						mPrefs.getString(getString(R.string.keyService), getString(R.string.defaultService))
+						));
+
+		// If the user has not overridden the grammar then use the app's EXTRA.
+		String urlAsString = Utils.chooseValue(wrapper.getGrammarUrl(), mExtras.getString(Extras.EXTRA_GRAMMAR_URL));
+		if (urlAsString != null && urlAsString.length() > 0) {
+			mGrammarUrl = new URL(urlAsString);
+		}
 	}
 
 
