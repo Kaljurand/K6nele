@@ -126,9 +126,9 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 	}
 
 
-	protected void launchRecognizerIntent(Intent intent) {
+	protected void launchRecognizerIntent(Intent intent, String prompt) {
 		if (mGrammarId == 0) {
-			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.promptDemo));
+			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, prompt);
 		} else {
 			String grammarTargetLang = getGrammarTargetLang();
 			intent.putExtra(Extras.EXTRA_GRAMMAR_URL, getGrammarUrl());
@@ -136,6 +136,11 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak " + getGrammarName() + " to " + grammarTargetLang);
 		}
 		startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+	}
+
+
+	protected void launchRecognizerIntent(Intent intent) {
+		launchRecognizerIntent(intent, getString(R.string.promptDemo));
 	}
 
 

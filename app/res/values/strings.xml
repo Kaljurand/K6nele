@@ -10,9 +10,9 @@
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyService" translatable="false">keyService</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
-    <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime
-	</string>
+    <string name="keyAutoStopAfterTime" translatable="false">eyAutoStopAfterTime</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+    <string name="defaultUrlCalibratePhrases" translatable="false">http://speech-vs-text.appspot.com/gr?n=5&amp;min=3&amp;max=15</string>
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
     <string-array name="valuesAutoStopAfterTime" translatable="false">
@@ -28,6 +28,7 @@
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAbout">About</string>
+    <string name="labelActivityCalibrate">Calibrate</string>
     <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
     <string name="labelActivityDetails">Details</string>
     <string name="labelActivityAppList">Apps</string>
@@ -55,6 +56,7 @@
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summaryServerList">List of speech recognition servers</string>
+    <string name="summaryCalibrate">Calibrate speech recognition server</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
@@ -71,8 +73,7 @@
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
 		v%3$s by &lt;a href="http://www.google.com/profiles/kaljurand">Kaarel Kaljurand&lt;/a></string>
-    <string name="tvAbout">
-		&lt;p>%1$s
+    <string name="tvAbout">		&lt;p>%1$s
 is an app that offers speech-to-text service to other apps.
 Apps which allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
@@ -100,8 +101,7 @@ and more are available at
 
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at
 		&lt;a
-		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p>
-	</string>
+		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>

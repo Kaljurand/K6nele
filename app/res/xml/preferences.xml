@@ -45,6 +45,13 @@
 
 	<PreferenceCategory android:title="@string/titleCategoryOther">
 
+		<Preference android:summary="@string/summaryCalibrate"
+			android:title="@string/labelActivityCalibrate">
+
+			<intent android:targetClass="ee.ioc.phon.android.speak.CalibrateActivity"
+				android:targetPackage="ee.ioc.phon.android.speak" />
+		</Preference>
+
 		<ListPreference android:key="@string/keyRecordingRate"
 			android:title="@string/titleRecordingRate" android:summary="@string/summaryRecordingRate"
 			android:defaultValue="@string/defaultRecordingRate" android:entries="@array/entriesRecordingRate"

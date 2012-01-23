@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
-    android:versionCode="817"
-    android:versionName="0.8.17" >
+    android:versionCode="900"
+    android:versionName="0.9.00" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
@@ -64,6 +64,10 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/labelActivityAbout" >
+        </activity>
+        <activity
+            android:name=".CalibrateActivity"
+            android:label="@string/labelActivityCalibrate" >
         </activity>
 
         <!-- This is the only activity that the recognizer can launch. -->

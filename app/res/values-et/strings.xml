@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="labelApp">Kõnele</string>
-	<string name="descriptionApp">kõnetuvastusmoodul Androidi rakendustele</string>
+    <string name="labelApp">Kõnele</string>
+    <string name="descriptionApp">kõnetuvastusmoodul Androidi rakendustele</string>
 
-	<!-- Activity labels -->
-	<string name="labelActivityRecognizerIntent">@string/labelApp</string>
-	<string name="labelActivityAppList">Rakendused</string>
-	<string name="labelActivityGrammarList">Grammatikad</string>
-	<string name="labelActivityAbout">Info</string>
-	<string name="labelActivityPreferences">Kõnele seaded</string> <!-- references @string/labelApp -->
-	<string name="labelActivityDetails">Detailid</string>
-	<string name="labelActivitySimpleDemo">Lihtne demo</string>
-	<string name="labelActivityRepeaterDemo">Kordaja demo</string>
-	<string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
-	<string name="labelActivityServerList">Kõnetuvastusserverid</string>
+    <!-- Activity labels -->
+    <string name="labelActivityRecognizerIntent">@string/labelApp</string>
+    <string name="labelActivityAppList">Rakendused</string>
+    <string name="labelActivityGrammarList">Grammatikad</string>
+    <string name="labelActivityAbout">Info</string>
+    <string name="labelActivityCalibrate">Kalibreeri</string>
+    <string name="labelActivityPreferences">Kõnele seaded</string> <!-- references @string/labelApp -->
+    <string name="labelActivityDetails">Detailid</string>
+    <string name="labelActivitySimpleDemo">Lihtne demo</string>
+    <string name="labelActivityRepeaterDemo">Kordaja demo</string>
+    <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
+    <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
-	<!-- Preferences activity -->
-	<string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
-	<string name="titleCategoryOther">Muu</string>
-	<string name="titleScreenDemos">Demod</string>
-	<string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
+    <!-- Preferences activity -->
+    <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
+    <string name="titleCategoryOther">Muu</string>
+    <string name="titleScreenDemos">Demod</string>
+    <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
 		kõnesisendi kasutamiseks</string>
-	<string name="titleAutoStart">Autostart</string>
-	<string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
-	<string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
-	<string name="summaryAutoStopAfterPause">Lõpeta lindistamine pärast pikemat pausi</string>
-	<string name="titleAutoStopAfterTime">Lindistuse maks. kestus</string>
-	<string name="summaryAutoStopAfterTime">Lõpeta lindistamine pärast %1$s sekundit</string>
-	<string name="titleRecordingRate">Sämplimissagedus</string>
-	<string name="summaryRecordingRate">Sämplimissagedus %1$s korda sekundis</string>
-	<string name="titleAudioCues">Helisignaalid</string>
-	<string name="summaryAudioCues">Anna lindistamise algusest ja lõpust märku lühikese
+    <string name="titleAutoStart">Autostart</string>
+    <string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
+    <string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
+    <string name="summaryAutoStopAfterPause">Lõpeta lindistamine pärast pikemat pausi</string>
+    <string name="titleAutoStopAfterTime">Lindistuse maks. kestus</string>
+    <string name="summaryAutoStopAfterTime">Lõpeta lindistamine pärast %1$s sekundit</string>
+    <string name="titleRecordingRate">Sämplimissagedus</string>
+    <string name="summaryRecordingRate">Sämplimissagedus %1$s korda sekundis</string>
+    <string name="titleAudioCues">Helisignaalid</string>
+    <string name="summaryAudioCues">Anna lindistamise algusest ja lõpust märku lühikese
 		helisignaaliga</string>
-	<string name="summaryAppList">Nimekiri rakendustest, kus on kasutatud
+    <string name="summaryAppList">Nimekiri rakendustest, kus on kasutatud
 		kõnesisendit</string>
-	<string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
+    <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
-	<string name="summaryServerList">Nimekiri kõnetuvastusserveritest</string>
-	<string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
-	<string name="summaryRepeaterDemo">Transkribeerib kõne, näitab parimat tulemust,
-		transkribeerib uuesti, &#8230; Kõnele saab menüü abil omistada
-		grammatika.
-	</string>
-	<string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
+    <string name="summaryServerList">Nimekiri kõnetuvastusserveritest</string>
+    <string name="summaryCalibrate">Kalibreeri kõnetuvastusserverit</string>
+    <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
+    <string name="summaryRepeaterDemo">ranskribeerib kõne, näitab parimat tulemust,
+		transkribeerib uuesti, … Kõnele saab menüü abil omistada
+		grammatika.</string>
+    <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
 
-	<!-- RecognizerIntent activity -->
-	<string name="buttonSpeak">Lindista!</string>
-	<string name="buttonStop">Lõpeta!</string>
-	<string name="buttonYes">Jah</string>
-	<string name="buttonNo">Ei</string>
-	<string name="buttonOk">OK</string>
-	<string name="buttonCancel">Loobu</string>
-	<string name="statusTranscribing">Teisendan tekstiks&#8230;</string>
-	<string name="tvAboutHeader">
-		&lt;b>%1$s&lt;/b>: %2$s
+    <!-- RecognizerIntent activity -->
+    <string name="buttonSpeak">Lindista!</string>
+    <string name="buttonStop">Lõpeta!</string>
+    <string name="buttonYes">Jah</string>
+    <string name="buttonNo">Ei</string>
+    <string name="buttonOk">OK</string>
+    <string name="buttonCancel">Loobu</string>
+    <string name="statusTranscribing">Teisendan tekstiks…</string>
+    <string name="tvAboutHeader">		&lt;b>%1$s&lt;/b>: %2$s
 		&lt;br/>
 		v%3$s, autor:
 		&lt;a
 		href="http://www.google.com/profiles/kaljurand">Kaarel
 		Kaljurand&lt;/a> </string>
-
-	<string name="tvAbout">
-		&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
+    <string name="tvAbout">		&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
 		et
 		saata lühisõnumeid, sooritada infootsingut, kirjutada märkmeid, jne.
@@ -139,86 +137,83 @@
 		href="http://recognizer-intent.googlecode.com">%1$s veebilehel&lt;/a>.
 		Samuti on seal võimalik tutvuda rakenduse lähtekoodiga ning teavitada
 		autorit rakenduse
-		puudustest.&lt;/p>
-	</string>
+		puudustest.&lt;/p></string>
 
-	<!-- List view -->
-	<string name="emptylistApps">Siia ilmub automaatselt nimekiri rakendustest, kus
+    <!-- List view -->
+    <string name="emptylistApps">Siia ilmub automaatselt nimekiri rakendustest, kus
 		on kasutad kõnesisendit</string>
-	<string name="emptylistGrammars">Grammatikaid pole. Lisa uus grammatika URL
+    <string name="emptylistGrammars">Grammatikaid pole. Lisa uus grammatika URL
 		Lisa-nupu abil.</string>
-	<string name="emptylistServers">Servereid pole. Lisa uus serveri URL Lisa-nupu
+    <string name="emptylistServers">Servereid pole. Lisa uus serveri URL Lisa-nupu
 		abil.</string>
-	<string name="menuAppsSort">Järjesta &#8230;</string>
-	<string name="menuAppsSortByName">rakenduse paki nime järgi</string>
-	<string name="menuAppsSortByCount">kasutussageduse järgi</string>
-	<string name="menuAppsSortByGrammar">grammatika URLi järgi</string>
-	<string name="menuGrammarsAdd">Lisa</string>
-	<string name="menuServersAdd">Lisa</string>
-	<string name="menuDemoGrammarAssign">Omista grammatika</string>
-	<string name="cmAppAssignGrammar">Omista grammatika</string>
-	<string name="cmAppRemoveGrammar">Eemalda grammatika</string>
-	<string name="cmAppAssignServer">Omista server</string>
-	<string name="cmAppRemoveServer">Eemalda server</string>
-	<string name="cmAppDelete">Kustuta</string>
-	<string name="cmGrammarView">Vaata / laadi alla</string>
-	<string name="cmGrammarEditName">Muuda nimi</string>
-	<string name="cmGrammarEditLang">Muuda keel</string>
-	<string name="cmGrammarEditUrl">Muuda URL</string>
-	<string name="cmGrammarDelete">Kustuta</string>
-	<string name="cmServerDefault">Määra vaikeväärtuseks</string>
-	<string name="cmServerEdit">Muuda URL</string>
-	<string name="cmServerDelete">Kustuta</string>
-	<string name="confirmDeleteEntry">Tahate kindlasti kustutada \"%1$s\"?</string>
-	<string name="confirmRemoveGrammar">Tuvastan selles rakenduses kõnet ilma oma
+    <string name="menuAppsSort">Järjesta …</string>
+    <string name="menuAppsSortByName">rakenduse paki nime järgi</string>
+    <string name="menuAppsSortByCount">kasutussageduse järgi</string>
+    <string name="menuAppsSortByGrammar">grammatika URLi järgi</string>
+    <string name="menuGrammarsAdd">Lisa</string>
+    <string name="menuServersAdd">Lisa</string>
+    <string name="menuDemoGrammarAssign">Omista grammatika</string>
+    <string name="cmAppAssignGrammar">Omista grammatika</string>
+    <string name="cmAppRemoveGrammar">Eemalda grammatika</string>
+    <string name="cmAppAssignServer">Omista server</string>
+    <string name="cmAppRemoveServer">Eemalda server</string>
+    <string name="cmAppDelete">Kustuta</string>
+    <string name="cmGrammarView">Vaata / laadi alla</string>
+    <string name="cmGrammarEditName">Muuda nimi</string>
+    <string name="cmGrammarEditLang">Muuda keel</string>
+    <string name="cmGrammarEditUrl">Muuda URL</string>
+    <string name="cmGrammarDelete">Kustuta</string>
+    <string name="cmServerDefault">Määra vaikeväärtuseks</string>
+    <string name="cmServerEdit">Muuda URL</string>
+    <string name="cmServerDelete">Kustuta</string>
+    <string name="confirmDeleteEntry">Tahate kindlasti kustutada \"%1$s\"?</string>
+    <string name="confirmRemoveGrammar">Tuvastan selles rakenduses kõnet ilma oma
 		grammatikata?</string>
-	<string name="confirmRemoveServer">Tuvastan selles rakenduses kõnet vaikimisi määratud
+    <string name="confirmRemoveServer">Tuvastan selles rakenduses kõnet vaikimisi määratud
 		serveriga?</string>
-	<string name="dialogTitleChangeGrammarName">Muuda grammatika nimi</string>
-	<string name="dialogTitleChangeGrammarLang">Muuda grammatika keel</string>
-	<string name="dialogTitleChangeGrammarUrl">Muuda grammatika URL</string>
-	<string name="dialogTitleNewGrammar">Lisa uus grammatika URL</string>
-	<string name="dialogTitleChangeServer">Muuda serveri URL</string>
-	<string name="dialogTitleNewServer">Lisa uus serveri URL</string>
-	<string name="toastForwardedMatches">Tuvastasin: %1$s</string>
-	<string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
-	<string name="entryGrammarName1">[piiramata sisend]</string>
-	<string name="entryGrammarDesc1">Selle grammatika saab omistada rakendustele, kus te
+    <string name="dialogTitleChangeGrammarName">Muuda grammatika nimi</string>
+    <string name="dialogTitleChangeGrammarLang">Muuda grammatika keel</string>
+    <string name="dialogTitleChangeGrammarUrl">Muuda grammatika URL</string>
+    <string name="dialogTitleNewGrammar">Lisa uus grammatika URL</string>
+    <string name="dialogTitleChangeServer">Muuda serveri URL</string>
+    <string name="dialogTitleNewServer">Lisa uus serveri URL</string>
+    <string name="toastForwardedMatches">Tuvastasin: %1$s</string>
+    <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
+    <string name="entryGrammarName1">[piiramata sisend]</string>
+    <string name="entryGrammarDesc1">Selle grammatika saab omistada rakendustele, kus te
 		soovite igal juhul vabas vormis rääkida, sõltumata sellest, kas
 		rakendus ise on määranud kasutamiseks mingi grammatika</string>
-	<string name="errorRecognizerNotPresent">Telefonis puudub kõnetuvastusteenust pakkuv
+    <string name="errorRecognizerNotPresent">Telefonis puudub kõnetuvastusteenust pakkuv
 		rakendus</string>
 
-	<!-- Error messages used in exceptions and toasts -->
-	<string name="error">VIGA</string>
-	<string name="errorFailedLaunchApp">See rakendus pole käivitatav või pole (enam)
+    <!-- Error messages used in exceptions and toasts -->
+    <string name="error">VIGA</string>
+    <string name="errorFailedLaunchApp">See rakendus pole käivitatav või pole (enam)
 		installeeritud: %1$s</string>
-	<string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>
-	<string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
-	<string name="errorResultAudioError">Lindistamine luhtus. Võibolla mõni teine rakendus
+    <string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>
+    <string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
+    <string name="errorResultAudioError">Lindistamine luhtus. Võibolla mõni teine rakendus
 		parasjagu lindistab?</string>
-	<string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
+    <string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
 		võrguühendus on sisse lülitatud?</string>
-	<string name="errorResultClientError">Kliendi viga</string>
-	<string name="errorResultServerError">Kõnetuvastusserveri viga</string>
-	<string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
+    <string name="errorResultClientError">Kliendi viga</string>
+    <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
+    <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
 		uuesti!</string>
-	<string name="errorBadPendingIntent">VIGA: formaadi viga: EXTRA_RESULTS_PENDINGINTENT
-	</string>
-	<string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
-	<string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
-	<string name="noteMaxRecordingTimeExceeded">Lindistamise ajalimiit on ületatud</string>
-	<string name="promptDemo">Öelge nt: Lampjalgadega stampvambilgi on rambikramp
-	</string>
-	<string name="buttonMicrophoneContentDescription">Vajutage sellele nupule ja kõnelege</string>
-	<string name="ivWaveformContentDescription">Sisendkõne pilt</string>
+    <string name="errorBadPendingIntent">IGA: formaadi viga: EXTRA_RESULTS_PENDINGINTENT</string>
+    <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
+    <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
+    <string name="noteMaxRecordingTimeExceeded">Lindistamise ajalimiit on ületatud</string>
+    <string name="promptDemo">elge nt: Lampjalgadega stampvambilgi on rambikramp</string>
+    <string name="buttonMicrophoneContentDescription">Vajutage sellele nupule ja kõnelege</string>
+    <string name="ivWaveformContentDescription">Sisendkõne pilt</string>
 
-	<string-array name="entriesAutoStopAfterTime">
-		<item>2 sek</item>
-		<item>5 sek</item>
-		<item>10 sek</item>
-		<item>20 sek</item>
-		<item>30 sek</item>
-	</string-array>
+    <string-array name="entriesAutoStopAfterTime">
+        <item>2 sek</item>
+        <item>5 sek</item>
+        <item>10 sek</item>
+        <item>20 sek</item>
+        <item>30 sek</item>
+    </string-array>
 
 </resources>
