@@ -39,10 +39,8 @@
         -->
         <activity
             android:name=".RecognizerIntentActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
@@ -108,6 +106,8 @@
         </service>
         -->
 
+        <service android:name="RecognizerIntentService" >
+        </service>
         <service
             android:name="SpeechRecognitionService"
             android:label="@string/labelApp" >

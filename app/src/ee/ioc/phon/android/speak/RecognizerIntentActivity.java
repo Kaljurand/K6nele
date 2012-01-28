@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,19 @@ import android.app.SearchManager;
 import android.app.PendingIntent.CanceledException;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcelable;
-import android.os.Process;
 import android.os.SystemClock;
 
 import android.preference.PreferenceManager;
@@ -66,9 +65,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 
-import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
-import ee.ioc.phon.netspeechapi.recsession.NotAvailableException;
-import ee.ioc.phon.netspeechapi.recsession.RecSession;
+import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
@@ -109,10 +106,6 @@ public class RecognizerIntentActivity extends Activity {
 
 	private static final String LOG_TAG = RecognizerIntentActivity.class.getName();
 
-	// Send the chunk every 2 seconds
-	private static final int TASK_INTERVAL_SEND = 2000;
-	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
-
 	// Update the byte count every second
 	private static final int TASK_INTERVAL_STAT = 1000;
 	// Start the task almost immediately
@@ -130,9 +123,8 @@ public class RecognizerIntentActivity extends Activity {
 	private static final int MSG_CHUNKS = 2;
 	private static final int MSG_RESULT_ERROR = 3;
 
-	// The amplitude is either short (16-bit) or byte (8-bit)
 	private static final double LOG_OF_MAX_VOLUME = Math.log10((double) Short.MAX_VALUE);
-	private static final String MAX_BAR = "||||||||||||||||||||";
+	private static final String DOTS = "......";
 
 	private String mUniqueId;
 
@@ -152,10 +144,7 @@ public class RecognizerIntentActivity extends Activity {
 	private SimpleMessageHandler mMessageHandler = new SimpleMessageHandler();
 	private Handler mStatusHandler = new Handler();
 	private Handler mVolumeHandler = new Handler();
-	private volatile Looper mSendLooper;
-	private volatile Handler mSendHandler;
 
-	private Runnable mSendTask;
 	private Runnable mShowStatusTask;
 	private Runnable mShowVolumeTask;
 
@@ -171,11 +160,72 @@ public class RecognizerIntentActivity extends Activity {
 	private int mExtraMaxResults = 0;
 	private PendingIntent mExtraResultsPendingIntent;
 	private Bundle mExtraResultsPendingIntentBundle;
-	private ChunkedWebRecSession mRecSession;
-
-	private RawAudioRecorder mRecorder;
 
 	private Bundle mExtras;
+
+	private RecognizerIntentService mService;
+	private boolean mIsBound = false;
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			Log.i(LOG_TAG, "Service connected");
+			mService = ((RecognizerBinder) service).getService();
+
+			mService.setOnResultListener(new RecognizerIntentService.OnResultListener() {
+				public boolean onResult(RecSessionResult result) {
+					if (result == null || result.getLinearizations().isEmpty()) {
+						handleResultError(mMessageHandler, RecognizerIntent.RESULT_NO_MATCH, "", null);
+					} else {
+						ArrayList<String> matches = new ArrayList<String>();
+						matches.addAll(result.getLinearizations());
+						returnOrForwardMatches(mMessageHandler, matches);
+					}
+					return true;
+				}
+			});
+
+			mService.setOnErrorListener(new RecognizerIntentService.OnErrorListener() {
+				public boolean onError(int errorCode, Exception e) {
+					toast("There was an error");
+					handleResultError(mMessageHandler, errorCode, "onError", e);
+					return true;
+				}
+			});
+
+			setGui();
+
+			if (! mService.isWorking() && mPrefs.getBoolean("keyAutoStart", false)) {
+				startRecordingOrFinish();
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			// This is called when the connection with the service has been
+			// unexpectedly disconnected -- that is, its process crashed.
+			// Because it is running in our same process, we should never
+			// see this happen.
+			mService = null;
+			Log.i(LOG_TAG, "Service disconnected");
+		}
+	};
+
+
+	void doBindService() {
+		bindService(new Intent(this, RecognizerIntentService.class), mConnection, Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+		Log.i(LOG_TAG, "Service is bound");
+	}
+
+
+	void doUnbindService() {
+		if (mIsBound) {
+			unbindService(mConnection);
+			mIsBound = false;
+			mService = null;
+			Log.i(LOG_TAG, "Service is UNBOUND");
+		}
+	}
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -188,8 +238,6 @@ public class RecognizerIntentActivity extends Activity {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.filePreferences), 0);
 		mUniqueId = settings.getString("id", null);
 		if (mUniqueId == null) {
-			//TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-			//mUniqueId = tm.getDeviceId();
 			mUniqueId = UUID.randomUUID().toString();
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id", mUniqueId);
@@ -231,8 +279,6 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		}
 
-		setPrompt();
-
 		mMaxRecordingTime = 1000 * Integer.parseInt(
 				mPrefs.getString(
 						getString(R.string.keyAutoStopAfterTime),
@@ -251,12 +297,12 @@ public class RecognizerIntentActivity extends Activity {
 
 		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
 
-		// Starting chunk sending in a separate thread so that slow internet
-		// would not block the UI.
-		HandlerThread thread = new HandlerThread("SendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
-		thread.start();
-		mSendLooper = thread.getLooper();
-		mSendHandler = new Handler(mSendLooper);
+		if (! mIsBound) {
+			// TODO: set a flag that we want to start recording
+			// as soon as the binding is established
+			// flag = true;
+			doBindService();
+		}
 	}
 
 
@@ -264,42 +310,24 @@ public class RecognizerIntentActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 
-		// This task talks to the internet. It is therefore potentially slow and
-		// should not be run in the UI thread.
-		mSendTask = new Runnable() {
-			public void run() {
-				if (mRecorder != null) {
-					sendChunk(mMessageHandler, mRecorder.consumeRecording(), false);
-					mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
-				}
-			}
-		};
-
 		// Show the file size
 		mShowStatusTask = new Runnable() {
 			public void run() {
-				if (mRecorder != null) {
-					mTvBytes.setText(Utils.getSizeAsString(mRecorder.getLength()));
-					mStatusHandler.postDelayed(this, TASK_INTERVAL_STAT);
+				if (mService != null) {
+					mTvBytes.setText(Utils.getSizeAsString(mService.getLength()));
+					mTvChunks.setText(makeBar(DOTS, mService.getChunkCount()));
 				}
+				mStatusHandler.postDelayed(this, TASK_INTERVAL_STAT);
 			}
 		};
 
 		// Show the max volume
 		mShowVolumeTask = new Runnable() {
 			public void run() {
-				if (mRecorder != null) {
-					//int maxAmplitude = mRecorder.getMaxAmplitude();
-					//mVolume.setText(makeBar(scaleVolume(maxAmplitude)));
-					//byte[] bytes = mRecorder.getCurrentRecording();
-					//int end = bytes.length;
-					//int start = end - 32 * TASK_INTERVAL_VOL;
-					//mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, 150, 50, start, end));
-					if (mPrefs.getBoolean("keyAutoStopAfterPause", true) && mRecorder.isPausing()) {
-						stopRecording();
-					} else {
-						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
-					}
+				if (mService != null && mPrefs.getBoolean("keyAutoStopAfterPause", true) && mService.isPausing()) {
+					stopRecording();
+				} else {
+					mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
 				}
 			}
 		};
@@ -307,19 +335,26 @@ public class RecognizerIntentActivity extends Activity {
 
 		mBStartStop.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (mRecorder == null) {
-					startRecordingOrFinish();
+				if (mIsBound) {
+					if (mService != null) {
+						if (mService.isWorking()) {
+							stopRecording();
+						} else {
+							startRecordingOrFinish();
+						}
+					}
 				} else {
-					stopRecording();
+					doBindService();
 				}
 			}
 		});
 
 
+		// TODO: get the base time from the service
 		mChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {                      
 			@Override
 			public void onChronometerTick(Chronometer chronometer) {
-				long elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
+				long elapsedMillis = SystemClock.elapsedRealtime() - mService.getStartTime();
 				if (elapsedMillis > mMaxRecordingTime) {
 					//mMessageHandler.sendMessage(createMessage(getString(R.string.noteMaxRecordingTimeExceeded)));
 					stopRecording();
@@ -327,31 +362,17 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		});
 
-
-		if (mPrefs.getBoolean("keyAutoStart", false)) {
-			startRecordingOrFinish();
-		} else {
-			mBStartStop.setText(getString(R.string.buttonSpeak));
-			mBStartStop.setVisibility(View.VISIBLE);
-		}
+		startTasks();
 	}
 
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		releaseResources();
-		mSendLooper.quit();
-	}
-
-
-	/**
-	 * <p>We have to call the super otherwise the app crashes
-	 * with the "super not called" exception.</p>
-	 */
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		Log.i(LOG_TAG, "Configuration changed");
+		stopTasks();
+		if (isFinishing()) {
+			doUnbindService();
+		}
 	}
 
 
@@ -391,32 +412,68 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+	private void setGui() {
+		if (mService == null) {
+			return;
+		}
+		switch(mService.getState()) {
+		case INIT:
+			setGuiInit();
+			break;
+		case RECORDING:
+			setGuiRecording();
+			break;
+		case PROCESSING:
+			setGuiTranscribing(mService.getCurrentRecording());
+			break;
+		}
+	}
+
+
 	private void setRecorderStyle(int color) {
 		mTvBytes.setTextColor(color);
 		mChronometer.setTextColor(color);
 	}
 
 
-	// TODO: maybe change the order of these calls
 	private void stopRecording() {
-		mRecorder.stop();
-		setGuiStoppedRecording();
+		mService.finishRecording();
 		playStopSound();
-		transcribeAndFinishInBackground(mMessageHandler, mRecorder.consumeRecording());
+		Thread t = new Thread() {
+			public void run() {
+				mService.startTranscribing();
+			}
+		};
+		t.start();
+		setGui();
 	}
 
 
 	private void startTasks() {
 		mStatusHandler.postDelayed(mShowStatusTask, TASK_DELAY_STAT);
 		mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
-		mSendHandler.postDelayed(mSendTask, TASK_DELAY_SEND);
 	}
 
 
 	private void stopTasks() {
 		mStatusHandler.removeCallbacks(mShowStatusTask);
 		mVolumeHandler.removeCallbacks(mShowVolumeTask);
-		mSendHandler.removeCallbacks(mSendTask);
+	}
+
+
+	private void setGuiInit() {
+		mLlTranscribing.setVisibility(View.GONE);
+		mIvWaveform.setVisibility(View.GONE);
+		// includes: bytes, chronometer, chunks
+		mLlProgress.setVisibility(View.INVISIBLE);
+		setPrompt();
+		if (mPrefs.getBoolean("keyAutoStart", false)) {
+			mBStartStop.setVisibility(View.GONE);
+		} else {
+			mBStartStop.setText(getString(R.string.buttonSpeak));
+			mBStartStop.setVisibility(View.VISIBLE);
+		}
+		mLlError.setVisibility(View.GONE);
 	}
 
 
@@ -445,27 +502,18 @@ public class RecognizerIntentActivity extends Activity {
 			mBStartStop.setText(getString(R.string.buttonStop));
 			mBStartStop.setVisibility(View.VISIBLE);
 		}
-		startTasks();
 	}
 
 
-	private void setGuiStoppedRecording() {
+	private void setGuiTranscribing(byte[] bytes) {
 		stopChronometer();
 		setRecorderStyle(mRes.getColor(R.color.grey2));
 		mBStartStop.setVisibility(View.GONE);
-		stopTasks();
-	}
-
-
-	private void setGuiTranscribing() {
 		mTvPrompt.setVisibility(View.GONE);
 		mLlTranscribing.setVisibility(View.VISIBLE);
-		if (mRecorder != null) {
-			byte[] bytes = mRecorder.getCurrentRecording();
-			int w = ((View) mIvWaveform.getParent()).getWidth();
-			if (w > 0) {
-				mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, w, (int) (w / 2.5), 0, bytes.length));
-			}
+		int w = ((View) mIvWaveform.getParent()).getWidth();
+		if (w > 0) {
+			mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, w, (int) (w / 2.5), 0, bytes.length));
 		}
 	}
 
@@ -487,7 +535,7 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void startChronometer() {
-		mChronometer.setBase(SystemClock.elapsedRealtime());
+		mChronometer.setBase(mService.getStartTime());
 		mChronometer.start();
 	}
 
@@ -500,50 +548,22 @@ public class RecognizerIntentActivity extends Activity {
 	 * 5. Update the GUI to show that the recording is in progress
 	 */
 	private void startRecordingOrFinish() {
+		setUp();
+		playStartSound();
+		SystemClock.sleep(DELAY_AFTER_START_BEEP);
+		mService.start();
+		setGui();
+	}
+
+
+	private void setUp() {
 		int sampleRate = Integer.parseInt(
 				mPrefs.getString(
 						getString(R.string.keyRecordingRate),
 						getString(R.string.defaultRecordingRate)));
-		boolean success = createRecSession(Utils.getContentType(sampleRate));
+		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
 
-		if (success) {
-			try {
-				startRecording(sampleRate);
-				setGuiRecording();
-			} catch (IOException e) {
-				handleResultError(mMessageHandler, RecognizerIntent.RESULT_AUDIO_ERROR, "recorder", e);
-			}
-		}
-	}
-
-
-	/**
-	 * <p>Starts recording from the microphone with 16kHz sample rate.</p>
-	 *
-	 * @throws IOException if recorder could not be created
-	 */
-	private void startRecording(int recordingRate) throws IOException {
-		mRecorder = new RawAudioRecorder(recordingRate);
-		if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
-			mRecorder = null;
-			throw new IOException(getString(R.string.errorCantCreateRecorder));
-		}
-
-		mRecorder.prepare();
-
-		if (mRecorder.getState() != RawAudioRecorder.State.READY) {
-			throw new IOException(getString(R.string.errorCantCreateRecorder));
-		}
-
-		playStartSound();
-
-		SystemClock.sleep(DELAY_AFTER_START_BEEP);
-
-		mRecorder.start();
-
-		if (mRecorder.getState() != RawAudioRecorder.State.RECORDING) {
-			throw new IOException(getString(R.string.errorCantCreateRecorder));
-		}
+		mService.init(sampleRate, makeUserAgentComment(), mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
 	}
 
 
@@ -556,19 +576,6 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void toast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-	}
-
-
-	private boolean transcribeAndFinishInBackground(final Handler handler, final byte[] bytes) {
-		Thread t = new Thread() {
-			public void run() {
-				sendChunk(handler, bytes, true);
-				getResult(handler, mRecSession);
-			}
-		};
-		t.start();
-		setGuiTranscribing();
-		return true;
 	}
 
 
@@ -631,31 +638,6 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	/**
-	 * <p>This method is called onStop, i.e. when the user presses HOME,
-	 * or presses BACK, or a call comes in, etc. We do not continue the activity
-	 * in the background, instead we kill all the ongoing processes.</p>
-	 * 
-	 * <p>We kill the running processes in this order: GUI tasks,
-	 * recognizer session, audio recorder.</p>
-	 * 
-	 * <p>Note that mRecorder.release() can be called in any state.
-	 * After that the recorder object is no longer available,
-	 * so we should set it to <code>null</code>.</p>
-	 */
-	private void releaseResources() {
-		setGuiStoppedRecording();
-
-		if (mRecSession != null && ! mRecSession.isFinished()) {
-			mRecSession.cancel();
-		}
-		if (mRecorder != null) {
-			mRecorder.release();
-			mRecorder = null;
-		}
-	}
-
-
 	private static Message createMessage(int type, String str) {
 		Bundle b = new Bundle();
 		b.putString(MSG, str);
@@ -682,91 +664,6 @@ public class RecognizerIntentActivity extends Activity {
 				break;
 			}
 		}
-	}
-
-
-	/**
-	 * <p>Tries to create a speech recognition session and returns <code>true</code>
-	 * if succeeds. Otherwise sends out an error message and returns <code>false</code>.
-	 * Set the content-type to <code>null</code> if you want to use the default
-	 * net-speech-api content type (raw audio).</p>
-	 * 
-	 * @param contentType content type of the audio (e.g. "audio/x-flac;rate=16000")
-	 * @return <code>true</code> iff success
-	 */
-	private boolean createRecSession(String contentType) {
-		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-		mRecSession = new ChunkedWebRecSession(mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
-		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + mServerUrl + ": lm=" + mGrammarUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + nbest);
-		mRecSession.setUserAgentComment(makeUserAgentComment());
-		try {
-			if (contentType != null) {
-				mRecSession.setContentType(contentType);
-			}
-			mRecSession.create();
-			Log.i(LOG_TAG, "Created recognition session: " + contentType);
-			return true;
-		} catch (IOException e) {
-			setResultNetworkError(mMessageHandler, "create", e);
-		} catch (NotAvailableException e) {
-			// This cannot happen in the current net-speech-api?
-			handleResultError(mMessageHandler, RecognizerIntent.RESULT_SERVER_ERROR, "create", e);
-		}
-		return false;
-	}
-
-
-	/**
-	 * 
-	 * @param handler message handler
-	 * @param bytes byte array representing the audio data
-	 * @param isLast indicates that this is the last chunk that is sent
-	 */
-	private void sendChunk(Handler handler, byte[] bytes, boolean isLast) {
-		if (bytes != null && bytes.length > 0 && ! mRecSession.isFinished()) {
-			try {
-				mRecSession.sendChunk(bytes, isLast);
-				handler.sendMessage(createMessage(MSG_CHUNKS, "."));
-				Log.i(LOG_TAG, "Send chunk: " + bytes.length);
-			} catch (IOException e) {
-				setResultNetworkError(handler, "sendChunk", e);
-			}
-		}
-	}
-
-
-	private void getResult(Handler handler, RecSession recSession) {
-		RecSessionResult result = null;
-		try {
-			result = recSession.getResult();
-		} catch (IOException e) {
-			releaseResources();
-			setResultNetworkError(handler, "getResult", e);
-		}
-
-		if (result == null || result.getLinearizations().isEmpty()) {
-			releaseResources();
-			handleResultError(handler, RecognizerIntent.RESULT_NO_MATCH, "", null);
-		} else {
-			ArrayList<String> matches = new ArrayList<String>();
-			matches.addAll(result.getLinearizations());
-			returnOrForwardMatches(handler, matches);
-		}
-	}
-
-
-	/**
-	 * <p>Sets the intent result to NETWORK_ERROR.</p>
-	 * 
-	 * <p>Note that we are not showing the exception message to the user,
-	 * as it has proved to be uninformative.</p>
-	 * 
-	 * @param handler message handler
-	 * @param type identifier of the caller
-	 * @param e exception
-	 */
-	private void setResultNetworkError(Handler handler, String type, IOException e) {
-		handleResultError(handler, RecognizerIntent.RESULT_NETWORK_ERROR, type, e);
 	}
 
 
@@ -888,20 +785,10 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	// What follows is some test code and some unused code.
-
-	// BUG: experimenting with 200
-	// How to do it properly?
-	private int scaleVolume(int volume) {
-		if (volume <= 200) return 0;
-		return (int) (MAX_BAR.length() * Math.log10((double) volume) / LOG_OF_MAX_VOLUME);
-	}
-
-
-	private String makeBar(int len) {
+	private static String makeBar(String bar, int len) {
 		if (len <= 0) return "";
-		if (len >= MAX_BAR.length()) return MAX_BAR;
-		return MAX_BAR.substring(0, len);
+		if (len >= bar.length()) return Integer.toString(len);
+		return bar.substring(0, len);
 	}
 
 
@@ -910,11 +797,9 @@ public class RecognizerIntentActivity extends Activity {
 		try {
 			byte[] bytes = getBytesFromAsset(fileName);
 			Log.i(LOG_TAG, "Transcribing bytes: " + bytes.length);
-			boolean success = createRecSession(contentType);
-			if (success) {
-				transcribeAndFinishInBackground(mMessageHandler, bytes);
-				return true;
-			}
+			setUp();
+			mService.transcribe(bytes);
+			return true;
 		} catch (IOException e) {
 			// Failed to get data from the asset
 			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "file", e);

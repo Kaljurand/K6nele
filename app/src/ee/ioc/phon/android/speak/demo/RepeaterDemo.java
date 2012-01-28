@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,9 @@ import ee.ioc.phon.android.speak.RecognizerIntent;
  */
 public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnClickListener {
 
-	private final List<String> mMatches = new ArrayList<String>();
+	// We make it static so that it would survive Destroy.
+	private static final List<String> mMatches = new ArrayList<String>();
+
 	private final Intent mIntent = createRecognizerIntent();
 	private ListView mList;
 	private ImageButton speakButton;
@@ -57,6 +59,7 @@ public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnCl
 		setContentView(R.layout.complex_demo);
 		speakButton = (ImageButton) findViewById(R.id.buttonMicrophone);
 		mList = (ListView) findViewById(R.id.list_matches);
+		updateListView(mMatches);
 
 		if (getRecognizers(mIntent).size() == 0) {
 			speakButton.setEnabled(false);
@@ -78,7 +81,7 @@ public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnCl
 	protected void onSuccess(List<String> matches) {
 		if (! matches.isEmpty()) {
 			mMatches.add(0, matches.get(0));
-			mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mMatches));
+			updateListView(mMatches);
 
 			// Here we could do something with the transcription, e.g. switch on lights,
 			// skip to the next track, change the channel, etc.
@@ -99,5 +102,10 @@ public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnCl
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
 		return intent;
+	}
+
+
+	private void updateListView(List<String> list) {
+		mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list));
 	}
 }
