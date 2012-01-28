@@ -26,6 +26,7 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <!-- make list elements' textSize smaller -->
     <ListView
         android:id="@+id/list_matches"
         android:layout_width="fill_parent"
