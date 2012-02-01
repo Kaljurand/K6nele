@@ -39,7 +39,6 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
 /**
- * TODO: kill itself as soon as there is an error
  * 
  * @author Kaarel Kaljurand
  */
@@ -50,7 +49,7 @@ public class RecognizerIntentService extends Service {
 	private final IBinder mBinder = new RecognizerBinder();
 
 	// Send the chunk every 2 seconds
-	private static final int TASK_INTERVAL_SEND = 2000;
+	private static final int TASK_INTERVAL_SEND = 1500;
 	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
 
 	private volatile Looper mSendLooper;
@@ -71,12 +70,19 @@ public class RecognizerIntentService extends Service {
 	private long mStartTime = 0;
 
 	public enum State {
-		INIT,
+		// Service created
+		CREATED,
+		// Recognizer session created
+		INITIALIZED,
+		// Started the recording
 		RECORDING,
-		PROCESSING;
+		// Finished recording
+		PROCESSING,
+		// Got an error
+		ERROR;
 	}
 
-	private State mState = State.INIT;
+	private State mState = null;
 
 
 	public class RecognizerBinder extends Binder {
@@ -105,6 +111,7 @@ public class RecognizerIntentService extends Service {
 	@Override
 	public void onCreate() {
 		Log.i(LOG_TAG, "onCreate");
+		setState(State.CREATED);
 	}
 
 
@@ -136,15 +143,8 @@ public class RecognizerIntentService extends Service {
 
 
 	public boolean isWorking() {
-		return getState() != State.INIT;
-	}
-
-
-	public byte[] consumeRecording() {
-		if (mRecorder == null) {
-			return new byte[0];
-		}
-		return mRecorder.consumeRecording();
+		State currentState = getState();
+		return currentState == State.RECORDING || currentState == State.PROCESSING;
 	}
 
 
@@ -161,6 +161,10 @@ public class RecognizerIntentService extends Service {
 	}
 
 
+	/**
+	 * <p>Return the complete audio data from the beginning
+	 * of the recording.</p>
+	 */
 	public byte[] getCurrentRecording() {
 		if (mRecorder == null) {
 			return new byte[0];
@@ -170,13 +174,6 @@ public class RecognizerIntentService extends Service {
 	}
 
 
-	/**
-	 * 1. Beep
-	 * 2. Wait until the beep has stopped
-	 * 3. Set up the recorder and start recording (finish if failed)
-	 * 4. Create the HTTP-connection to the recognition server
-	 * 5. Update the GUI to show that the recording is in progress
-	 */
 	public void init(int sampleRate, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
 		try {
 			createRecSession(Utils.getContentType(sampleRate), userAgentComment, serverUrl, grammarUrl, grammarTargetLang, nbest);
@@ -200,7 +197,6 @@ public class RecognizerIntentService extends Service {
 		}
 
 		mStartTime = SystemClock.elapsedRealtime();
-		setState(State.RECORDING);
 
 		// Starting chunk sending in a separate thread so that slow internet
 		// would not block the UI.
@@ -223,6 +219,7 @@ public class RecognizerIntentService extends Service {
 			}
 		};
 		mSendHandler.postDelayed(mSendTask, TASK_DELAY_SEND);
+		setState(State.RECORDING);
 	}
 
 
@@ -230,12 +227,17 @@ public class RecognizerIntentService extends Service {
 		if (mRecorder != null) {
 			mRecorder.stop();
 		}
+		mSendHandler.removeCallbacks(mSendTask);
 		setState(State.PROCESSING);
 	}
 
 
 	public void startTranscribing() {
-		transcribe(consumeRecording());
+		if (mRecorder == null) {
+			// TODO: set error
+		} else {
+			transcribe(mRecorder.consumeRecording());
+		}
 	}
 
 
@@ -244,6 +246,10 @@ public class RecognizerIntentService extends Service {
 	}
 
 
+	/**
+	 * <p>This can be called by clients who want to skip the recording
+	 * steps, but who have existing audio data which they want to transcribe.</p>
+	 */
 	public void transcribe(byte[] bytes) {
 		try {
 			sendChunk(bytes, true);
@@ -311,7 +317,7 @@ public class RecognizerIntentService extends Service {
 			mRecorder.release();
 			mRecorder = null;
 		}
-		setState(State.INIT);
+		setState(State.CREATED);
 	}
 
 
@@ -336,6 +342,7 @@ public class RecognizerIntentService extends Service {
 		}
 		mRecSession.create();
 		Log.i(LOG_TAG, "Created recognition session: " + contentType);
+		setState(State.INITIALIZED);
 	}
 
 
@@ -364,11 +371,13 @@ public class RecognizerIntentService extends Service {
 
 
 	private void setState(State state) {
+		Log.i(LOG_TAG, "State changed to: " + state);
 		mState = state;
 	}
 
 
 	private void processError(int errorCode, Exception e) {
+		setState(State.ERROR);
 		mOnErrorListener.onError(errorCode, e);
 		stopSelf();
 	}

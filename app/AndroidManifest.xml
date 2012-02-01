@@ -25,13 +25,7 @@
 			android:finishOnTaskLaunch="true"
 			android:allowTaskReparenting="false"
         -->
-        <!--
-        TODO: The recorder can be in any orientation but during the time
-		it is active the orientation should not change. Or if it changes, it should not
-		affect the recording/transcribing.
-        -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:screenOrientation="behind" -->
+
         <!--
         TODO: singleTask seems a more appropriate launchMode,
         but it does not work, and with singleInstance we fail to

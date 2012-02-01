@@ -106,15 +106,18 @@ public class RecognizerIntentActivity extends Activity {
 
 	private static final String LOG_TAG = RecognizerIntentActivity.class.getName();
 
+	private static final int TASK_CHUNKS_INTERVAL = 1500;
+	private static final int TASK_CHUNKS_DELAY = TASK_CHUNKS_INTERVAL;
+
 	// Update the byte count every second
-	private static final int TASK_INTERVAL_STAT = 1000;
+	private static final int TASK_BYTES_INTERVAL = 1000;
 	// Start the task almost immediately
-	private static final int TASK_DELAY_STAT = 100;
+	private static final int TASK_BYTES_DELAY = 100;
 
 	// Check the volume / pauses 10 times a second
-	private static final int TASK_INTERVAL_VOL = 100;
+	private static final int TASK_VOLUME_INTERVAL = 100;
 	// Wait for 1 sec before starting to measure the volume
-	private static final int TASK_DELAY_VOL = 1000;
+	private static final int TASK_VOLUME_DELAY = 1000;
 
 	private static final int DELAY_AFTER_START_BEEP = 200;
 
@@ -142,11 +145,13 @@ public class RecognizerIntentActivity extends Activity {
 	private TextView mTvErrorMessage;
 
 	private SimpleMessageHandler mMessageHandler = new SimpleMessageHandler();
-	private Handler mStatusHandler = new Handler();
-	private Handler mVolumeHandler = new Handler();
+	private Handler mHandlerBytes = new Handler();
+	private Handler mHandlerVolume = new Handler();
+	private Handler mHandlerChunks = new Handler();
 
-	private Runnable mShowStatusTask;
-	private Runnable mShowVolumeTask;
+	private Runnable mRunnableBytes;
+	private Runnable mRunnableVolume;
+	private Runnable mRunnableChunks;
 
 	// Max recording time in milliseconds
 	private int mMaxRecordingTime;
@@ -186,7 +191,6 @@ public class RecognizerIntentActivity extends Activity {
 
 			mService.setOnErrorListener(new RecognizerIntentService.OnErrorListener() {
 				public boolean onError(int errorCode, Exception e) {
-					toast("There was an error");
 					handleResultError(mMessageHandler, errorCode, "onError", e);
 					return true;
 				}
@@ -311,23 +315,32 @@ public class RecognizerIntentActivity extends Activity {
 		super.onStart();
 
 		// Show the file size
-		mShowStatusTask = new Runnable() {
+		mRunnableBytes = new Runnable() {
 			public void run() {
 				if (mService != null) {
 					mTvBytes.setText(Utils.getSizeAsString(mService.getLength()));
-					mTvChunks.setText(makeBar(DOTS, mService.getChunkCount()));
 				}
-				mStatusHandler.postDelayed(this, TASK_INTERVAL_STAT);
+				mHandlerBytes.postDelayed(this, TASK_BYTES_INTERVAL);
 			}
 		};
 
+		mRunnableChunks = new Runnable() {
+			public void run() {
+				if (mService != null) {
+					mTvChunks.setText(makeBar(DOTS, mService.getChunkCount()));
+				}
+				mHandlerChunks.postDelayed(this, TASK_CHUNKS_INTERVAL);
+			}
+		};
+
+
 		// Show the max volume
-		mShowVolumeTask = new Runnable() {
+		mRunnableVolume = new Runnable() {
 			public void run() {
 				if (mService != null && mPrefs.getBoolean("keyAutoStopAfterPause", true) && mService.isPausing()) {
 					stopRecording();
 				} else {
-					mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
+					mHandlerVolume.postDelayed(this, TASK_VOLUME_INTERVAL);
 				}
 			}
 		};
@@ -369,7 +382,9 @@ public class RecognizerIntentActivity extends Activity {
 	@Override
 	public void onStop() {
 		super.onStop();
-		stopTasks();
+		mHandlerBytes.removeCallbacks(mRunnableBytes);
+		mHandlerVolume.removeCallbacks(mRunnableVolume);
+		mHandlerChunks.removeCallbacks(mRunnableChunks);
 		if (isFinishing()) {
 			doUnbindService();
 		}
@@ -417,7 +432,7 @@ public class RecognizerIntentActivity extends Activity {
 			return;
 		}
 		switch(mService.getState()) {
-		case INIT:
+		case INITIALIZED:
 			setGuiInit();
 			break;
 		case RECORDING:
@@ -438,6 +453,8 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void stopRecording() {
 		mService.finishRecording();
+		mHandlerBytes.removeCallbacks(mRunnableBytes);
+		mHandlerVolume.removeCallbacks(mRunnableVolume);
 		playStopSound();
 		Thread t = new Thread() {
 			public void run() {
@@ -450,14 +467,9 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void startTasks() {
-		mStatusHandler.postDelayed(mShowStatusTask, TASK_DELAY_STAT);
-		mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
-	}
-
-
-	private void stopTasks() {
-		mStatusHandler.removeCallbacks(mShowStatusTask);
-		mVolumeHandler.removeCallbacks(mShowVolumeTask);
+		mHandlerBytes.postDelayed(mRunnableBytes, TASK_BYTES_DELAY);
+		mHandlerVolume.postDelayed(mRunnableVolume, TASK_VOLUME_DELAY);
+		mHandlerChunks.postDelayed(mRunnableChunks, TASK_CHUNKS_DELAY);
 	}
 
 
