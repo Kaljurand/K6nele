@@ -69,6 +69,7 @@ public class RecognizerIntentService extends Service {
 
 	private long mStartTime = 0;
 
+	// TODO: reduce the number of states
 	public enum State {
 		// Service created
 		CREATED,
@@ -79,7 +80,9 @@ public class RecognizerIntentService extends Service {
 		// Finished recording
 		PROCESSING,
 		// Got an error
-		ERROR;
+		ERROR,
+		// Resources released
+		RELEASED;
 	}
 
 	private State mState = null;
@@ -112,6 +115,8 @@ public class RecognizerIntentService extends Service {
 	public void onCreate() {
 		Log.i(LOG_TAG, "onCreate");
 		setState(State.CREATED);
+		mChunkCount = 0;
+		mStartTime = 0;
 	}
 
 
@@ -224,19 +229,19 @@ public class RecognizerIntentService extends Service {
 
 
 	public void finishRecording() {
-		if (mRecorder != null) {
-			mRecorder.stop();
-		}
-		mSendHandler.removeCallbacks(mSendTask);
-		setState(State.PROCESSING);
-	}
-
-
-	public void startTranscribing() {
 		if (mRecorder == null) {
-			// TODO: set error
+			processError(RecognizerIntent.RESULT_NETWORK_ERROR, null);
 		} else {
-			transcribe(mRecorder.consumeRecording());
+			mRecorder.stop();
+			mSendHandler.removeCallbacks(mSendTask);
+			setState(State.PROCESSING);
+
+			Thread t = new Thread() {
+				public void run() {
+					transcribe(mRecorder.consumeRecording());
+				}
+			};
+			t.start();
 		}
 	}
 
@@ -253,8 +258,12 @@ public class RecognizerIntentService extends Service {
 	public void transcribe(byte[] bytes) {
 		try {
 			sendChunk(bytes, true);
-			mOnResultListener.onResult(getResult());
-			stopSelf();
+			RecSessionResult result = getResult();
+			if (result == null || result.getLinearizations().isEmpty()) {
+				processError(RecognizerIntent.RESULT_NO_MATCH, null);
+			} else {
+				processResult(result);
+			}
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
 		}
@@ -262,40 +271,33 @@ public class RecognizerIntentService extends Service {
 
 
 	/**
-	 * <p>Starts recording from the microphone with 16kHz sample rate.</p>
+	 * <p>Starts recording from the microphone with the given sample rate.</p>
 	 *
 	 * @throws IOException if recorder could not be created
 	 */
 	private void startRecording(int recordingRate) throws IOException {
 		mRecorder = new RawAudioRecorder(recordingRate);
 		if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
-			releaseResources();
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
 		}
 
 		mRecorder.prepare();
 
 		if (mRecorder.getState() != RawAudioRecorder.State.READY) {
-			releaseResources();
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
 		}
 
 		mRecorder.start();
 
 		if (mRecorder.getState() != RawAudioRecorder.State.RECORDING) {
-			releaseResources();
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
 		}
 	}
 
 
 	/**
-	 * <p>This method is called onStop, i.e. when the user presses HOME,
-	 * or presses BACK, or a call comes in, etc. We do not continue the activity
-	 * in the background, instead we kill all the ongoing processes.</p>
-	 * 
-	 * <p>We kill the running processes in this order: GUI tasks,
-	 * recognizer session, audio recorder.</p>
+	 * <p>We kill the running processes in this order:
+	 * chunk sending, recognizer session, audio recorder.</p>
 	 * 
 	 * <p>Note that mRecorder.release() can be called in any state.
 	 * After that the recorder object is no longer available,
@@ -317,7 +319,7 @@ public class RecognizerIntentService extends Service {
 			mRecorder.release();
 			mRecorder = null;
 		}
-		setState(State.CREATED);
+		setState(State.RELEASED);
 	}
 
 
@@ -376,9 +378,18 @@ public class RecognizerIntentService extends Service {
 	}
 
 
+	// TODO: not sure what stopSelf does
+	private void processResult(RecSessionResult result) {
+		mOnResultListener.onResult(result);
+		releaseResources();
+		stopSelf();
+	}
+
+
 	private void processError(int errorCode, Exception e) {
 		setState(State.ERROR);
 		mOnErrorListener.onError(errorCode, e);
+		releaseResources();
 		stopSelf();
 	}
 }

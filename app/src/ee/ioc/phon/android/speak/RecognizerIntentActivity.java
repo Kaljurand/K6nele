@@ -61,6 +61,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -127,7 +129,8 @@ public class RecognizerIntentActivity extends Activity {
 	private static final int MSG_RESULT_ERROR = 3;
 
 	private static final double LOG_OF_MAX_VOLUME = Math.log10((double) Short.MAX_VALUE);
-	private static final String DOTS = "......";
+	private static final String DOTS = ".......";
+	private Map<Integer, String> mErrorMessages;
 
 	private String mUniqueId;
 
@@ -178,13 +181,10 @@ public class RecognizerIntentActivity extends Activity {
 
 			mService.setOnResultListener(new RecognizerIntentService.OnResultListener() {
 				public boolean onResult(RecSessionResult result) {
-					if (result == null || result.getLinearizations().isEmpty()) {
-						handleResultError(mMessageHandler, RecognizerIntent.RESULT_NO_MATCH, "", null);
-					} else {
-						ArrayList<String> matches = new ArrayList<String>();
-						matches.addAll(result.getLinearizations());
-						returnOrForwardMatches(mMessageHandler, matches);
-					}
+					// We trust that getLinearizations() returns a non-null non-empty list.
+					ArrayList<String> matches = new ArrayList<String>();
+					matches.addAll(result.getLinearizations());
+					returnOrForwardMatches(mMessageHandler, matches);
 					return true;
 				}
 			});
@@ -238,6 +238,7 @@ public class RecognizerIntentActivity extends Activity {
 		setContentView(R.layout.recognizer);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		mErrorMessages = createErrorMessages();
 
 		SharedPreferences settings = getSharedPreferences(getString(R.string.filePreferences), 0);
 		mUniqueId = settings.getString("id", null);
@@ -456,12 +457,6 @@ public class RecognizerIntentActivity extends Activity {
 		mHandlerBytes.removeCallbacks(mRunnableBytes);
 		mHandlerVolume.removeCallbacks(mRunnableVolume);
 		playStopSound();
-		Thread t = new Thread() {
-			public void run() {
-				mService.startTranscribing();
-			}
-		};
-		t.start();
 		setGui();
 	}
 
@@ -752,31 +747,10 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void handleResultError(Handler handler, int resultCode, String type, Exception e) {
-		String message = "";
-		switch (resultCode) {
-		case RecognizerIntent.RESULT_AUDIO_ERROR:
-			message = getString(R.string.errorResultAudioError);
-			break;
-		case RecognizerIntent.RESULT_CLIENT_ERROR:
-			message = getString(R.string.errorResultClientError);
-			break;
-		case RecognizerIntent.RESULT_NETWORK_ERROR:
-			message = getString(R.string.errorResultNetworkError);
-			break;
-		case RecognizerIntent.RESULT_SERVER_ERROR:
-			message = getString(R.string.errorResultServerError);
-			break;
-		case RecognizerIntent.RESULT_NO_MATCH:
-			message = getString(R.string.errorResultNoMatch);
-			break;
-		default:
-			// TODO: This should never happen
-			message = getString(R.string.error);
-		}
 		if (e != null) {
 			Log.e(LOG_TAG, "Exception: " + type + ": " + e.getMessage());
 		}
-		handler.sendMessage(createMessage(MSG_RESULT_ERROR, message));
+		handler.sendMessage(createMessage(MSG_RESULT_ERROR, mErrorMessages.get(resultCode)));
 	}
 
 
@@ -824,6 +798,17 @@ public class RecognizerIntentActivity extends Activity {
 		InputStream is = getAssets().open(assetName);
 		//long length = getAssets().openFd(assetName).getLength();
 		return IOUtils.toByteArray(is);
+	}
+
+
+	private Map<Integer, String> createErrorMessages() {
+		Map<Integer, String> errorMessages = new HashMap<Integer, String>();
+		errorMessages.put(RecognizerIntent.RESULT_AUDIO_ERROR, getString(R.string.errorResultAudioError));
+		errorMessages.put(RecognizerIntent.RESULT_CLIENT_ERROR, getString(R.string.errorResultClientError));
+		errorMessages.put(RecognizerIntent.RESULT_NETWORK_ERROR, getString(R.string.errorResultNetworkError));
+		errorMessages.put(RecognizerIntent.RESULT_SERVER_ERROR, getString(R.string.errorResultServerError));
+		errorMessages.put(RecognizerIntent.RESULT_NO_MATCH, getString(R.string.errorResultNoMatch));
+		return errorMessages;
 	}
 
 

@@ -10,8 +10,7 @@
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyService" translatable="false">keyService</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
-    <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime
-	</string>
+    <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
@@ -71,8 +70,7 @@
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
 		v%3$s by &lt;a href="http://www.google.com/profiles/kaljurand">Kaarel Kaljurand&lt;/a></string>
-    <string name="tvAbout">
-		&lt;p>%1$s
+    <string name="tvAbout">&lt;p>%1$s
 is an app that offers speech-to-text service to other apps.
 Apps which allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
@@ -100,8 +98,7 @@ and more are available at
 
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at
 		&lt;a
-		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p>
-	</string>
+		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
