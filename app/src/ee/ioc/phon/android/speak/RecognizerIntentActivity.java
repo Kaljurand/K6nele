@@ -196,10 +196,10 @@ public class RecognizerIntentActivity extends Activity {
 				}
 			});
 
-			setGui();
-
 			if (! mService.isWorking() && mPrefs.getBoolean("keyAutoStart", false)) {
 				startRecordingOrFinish();
+			} else {
+				setGui();
 			}
 		}
 
@@ -301,13 +301,6 @@ public class RecognizerIntentActivity extends Activity {
 		}
 
 		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
-
-		if (! mIsBound) {
-			// TODO: set a flag that we want to start recording
-			// as soon as the binding is established
-			// flag = true;
-			doBindService();
-		}
 	}
 
 
@@ -376,7 +369,16 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		});
 
-		startTasks();
+
+		if (mIsBound) {
+			Log.i(LOG_TAG, "Service is ALREADY bound");
+			setGui();
+		} else {
+			// TODO: set a flag that we want to start recording
+			// as soon as the binding is established
+			// flag = true;
+			doBindService();
+		}
 	}
 
 
@@ -454,14 +456,12 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void stopRecording() {
 		mService.finishRecording();
-		mHandlerBytes.removeCallbacks(mRunnableBytes);
-		mHandlerVolume.removeCallbacks(mRunnableVolume);
 		playStopSound();
 		setGui();
 	}
 
 
-	private void startTasks() {
+	private void startAllTasks() {
 		mHandlerBytes.postDelayed(mRunnableBytes, TASK_BYTES_DELAY);
 		mHandlerVolume.postDelayed(mRunnableVolume, TASK_VOLUME_DELAY);
 		mHandlerChunks.postDelayed(mRunnableChunks, TASK_CHUNKS_DELAY);
@@ -499,6 +499,8 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void setGuiRecording() {
 		startChronometer();
+		startAllTasks();
+		setPrompt();
 		mTvChunks.setText("");
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.GONE);
@@ -514,6 +516,8 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void setGuiTranscribing(byte[] bytes) {
 		stopChronometer();
+		mHandlerBytes.removeCallbacks(mRunnableBytes);
+		mHandlerVolume.removeCallbacks(mRunnableVolume);
 		setRecorderStyle(mRes.getColor(R.color.grey2));
 		mBStartStop.setVisibility(View.GONE);
 		mTvPrompt.setVisibility(View.GONE);
@@ -547,15 +551,8 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	/**
-	 * 1. Beep
-	 * 2. Wait until the beep has stopped
-	 * 3. Set up the recorder and start recording (finish if failed)
-	 * 4. Create the HTTP-connection to the recognition server
-	 * 5. Update the GUI to show that the recording is in progress
-	 */
 	private void startRecordingOrFinish() {
-		setUp();
+		init();
 		playStartSound();
 		SystemClock.sleep(DELAY_AFTER_START_BEEP);
 		mService.start();
@@ -563,7 +560,7 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void setUp() {
+	private void init() {
 		int sampleRate = Integer.parseInt(
 				mPrefs.getString(
 						getString(R.string.keyRecordingRate),
@@ -692,7 +689,12 @@ public class RecognizerIntentActivity extends Activity {
 			matches.subList(mExtraMaxResults, matches.size()).clear();
 		}
 
-		if (mExtraResultsPendingIntent == null) {
+		if (getCallingActivity() == null) {
+			// TODO: pass in all the matches
+			Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
+			intentWebSearch.putExtra(SearchManager.QUERY, matches.get(0));
+			startActivity(intentWebSearch);
+		} else if (mExtraResultsPendingIntent == null) {
 			setResultIntent(matches);
 		} else {
 			if (mExtraResultsPendingIntentBundle == null) {
@@ -779,12 +781,12 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private boolean transcribeFile(String fileName, String contentType) {
-		mBStartStop.setVisibility(View.GONE);
 		try {
 			byte[] bytes = getBytesFromAsset(fileName);
 			Log.i(LOG_TAG, "Transcribing bytes: " + bytes.length);
-			setUp();
+			init();
 			mService.transcribe(bytes);
+			setGui();
 			return true;
 		} catch (IOException e) {
 			// Failed to get data from the asset

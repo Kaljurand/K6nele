@@ -26,6 +26,7 @@
 			android:allowTaskReparenting="false"
         -->
 
+
         <!--
         TODO: singleTask seems a more appropriate launchMode,
         but it does not work, and with singleInstance we fail to
@@ -45,6 +46,11 @@
                 <action android:name="android.speech.action.WEB_SEARCH" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

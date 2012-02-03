@@ -309,6 +309,7 @@ public class RecognizerIntentService extends Service {
 		}
 
 		if (mSendLooper != null) {
+			// TODO: null sending message to a Handler on a dead thread
 			mSendLooper.quit();
 		}
 
