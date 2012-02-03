@@ -48,7 +48,7 @@ public class RecognizerIntentService extends Service {
 
 	private final IBinder mBinder = new RecognizerBinder();
 
-	// Send the chunk every 2 seconds
+	// Send the chunk every 1.5 seconds
 	private static final int TASK_INTERVAL_SEND = 1500;
 	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
 
@@ -65,7 +65,6 @@ public class RecognizerIntentService extends Service {
 	private OnErrorListener mOnErrorListener;
 
 	private int mChunkCount = 0;
-	private int mSampleRate = 16000;
 
 	private long mStartTime = 0;
 
@@ -115,8 +114,6 @@ public class RecognizerIntentService extends Service {
 	public void onCreate() {
 		Log.i(LOG_TAG, "onCreate");
 		setState(State.CREATED);
-		mChunkCount = 0;
-		mStartTime = 0;
 	}
 
 
@@ -179,9 +176,9 @@ public class RecognizerIntentService extends Service {
 	}
 
 
-	public void init(int sampleRate, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
+	public void init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
 		try {
-			createRecSession(Utils.getContentType(sampleRate), userAgentComment, serverUrl, grammarUrl, grammarTargetLang, nbest);
+			createRecSession(contentType, userAgentComment, serverUrl, grammarUrl, grammarTargetLang, nbest);
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
 			return;
@@ -189,42 +186,18 @@ public class RecognizerIntentService extends Service {
 			processError(RecognizerIntent.RESULT_SERVER_ERROR, e);
 			return;
 		}
-		mSampleRate = sampleRate;
 	}
 
 
-	public void start() {
+	public void start(int sampleRate) {
 		try {
-			startRecording(mSampleRate);
+			startRecording(sampleRate);
+			mStartTime = SystemClock.elapsedRealtime();
+			startChunkSending(TASK_INTERVAL_SEND, TASK_DELAY_SEND, false);
+			setState(State.RECORDING);
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_AUDIO_ERROR, e);
-			return;
 		}
-
-		mStartTime = SystemClock.elapsedRealtime();
-
-		// Starting chunk sending in a separate thread so that slow internet
-		// would not block the UI.
-		HandlerThread thread = new HandlerThread("SendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
-		thread.start();
-		mSendLooper = thread.getLooper();
-		mSendHandler = new Handler(mSendLooper);
-
-		mSendTask = new Runnable() {
-			public void run() {
-				if (mRecorder != null) {
-					try {
-						sendChunk(mRecorder.consumeRecording(), false);
-					} catch (IOException e) {
-						processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
-						return;
-					}
-					mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
-				}
-			}
-		};
-		mSendHandler.postDelayed(mSendTask, TASK_DELAY_SEND);
-		setState(State.RECORDING);
 	}
 
 
@@ -234,8 +207,8 @@ public class RecognizerIntentService extends Service {
 		} else {
 			mRecorder.stop();
 			mSendHandler.removeCallbacks(mSendTask);
-			setState(State.PROCESSING);
 
+			// TODO: improve this
 			Thread t = new Thread() {
 				public void run() {
 					transcribe(mRecorder.consumeRecording());
@@ -256,17 +229,50 @@ public class RecognizerIntentService extends Service {
 	 * steps, but who have existing audio data which they want to transcribe.</p>
 	 */
 	public void transcribe(byte[] bytes) {
+		setState(State.PROCESSING);
+		RecSessionResult result = null;
 		try {
 			sendChunk(bytes, true);
-			RecSessionResult result = getResult();
-			if (result == null || result.getLinearizations().isEmpty()) {
-				processError(RecognizerIntent.RESULT_NO_MATCH, null);
-			} else {
-				processResult(result);
-			}
+			result = getResult();
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
 		}
+		if (result == null || result.getLinearizations().isEmpty()) {
+			processError(RecognizerIntent.RESULT_NO_MATCH, null);
+		} else {
+			processResult(result);
+		}
+	}
+
+
+	/**
+	 * <p>Starting chunk sending in a separate thread so that slow internet would not block the UI.</p>
+	 *
+	 * TODO
+	 */
+	private void startChunkSending(final int interval, int delay, final boolean consumeAll) {
+		mChunkCount = 0;
+		HandlerThread thread = new HandlerThread("SendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
+		thread.start();
+		mSendLooper = thread.getLooper();
+		mSendHandler = new Handler(mSendLooper);
+
+		mSendTask = new Runnable() {
+			public void run() {
+				if (mRecorder != null) {
+					try {
+						sendChunk(mRecorder.consumeRecording(), consumeAll);
+					} catch (IOException e) {
+						processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
+						return;
+					}
+					if (consumeAll == false) {
+						mSendHandler.postDelayed(this, interval);
+					}
+				}
+			}
+		};
+		mSendHandler.postDelayed(mSendTask, delay);
 	}
 
 
@@ -304,13 +310,13 @@ public class RecognizerIntentService extends Service {
 	 * so we should set it to <code>null</code>.</p>
 	 */
 	private void releaseResources() {
-		if (mSendHandler != null) {
-			mSendHandler.removeCallbacks(mSendTask);
-		}
-
 		if (mSendLooper != null) {
 			// TODO: null sending message to a Handler on a dead thread
 			mSendLooper.quit();
+		}
+
+		if (mSendHandler != null) {
+			mSendHandler.removeCallbacks(mSendTask);
 		}
 
 		if (mRecSession != null && ! mRecSession.isFinished()) {
@@ -325,15 +331,12 @@ public class RecognizerIntentService extends Service {
 
 
 	/**
-	 * <p>Tries to create a speech recognition session and returns <code>true</code>
-	 * if succeeds. Otherwise sends out an error message and returns <code>false</code>.
-	 * Set the content-type to <code>null</code> if you want to use the default
+	 * <p>Tries to create a speech recognition session.</p>
+	 *
+	 * <p>Set the content-type to <code>null</code> if you want to use the default
 	 * net-speech-api content type (raw audio).</p>
 	 * 
 	 * @param contentType content type of the audio (e.g. "audio/x-flac;rate=16000")
-	 * @return <code>true</code> iff success
-	 * @throws NotAvailableException 
-	 * @throws IOException 
 	 */
 	private void createRecSession(String contentType, String userAgentComment,
 			URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) throws IOException, NotAvailableException {

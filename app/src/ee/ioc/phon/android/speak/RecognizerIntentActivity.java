@@ -68,6 +68,7 @@ import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 
 import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
+import ee.ioc.phon.android.speak.RecognizerIntentService.State;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
@@ -156,6 +157,8 @@ public class RecognizerIntentActivity extends Activity {
 	private Runnable mRunnableVolume;
 	private Runnable mRunnableChunks;
 
+	private int mSampleRate;
+
 	// Max recording time in milliseconds
 	private int mMaxRecordingTime;
 
@@ -173,6 +176,8 @@ public class RecognizerIntentActivity extends Activity {
 
 	private RecognizerIntentService mService;
 	private boolean mIsBound = false;
+
+	private boolean mStartRecording = false;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -196,8 +201,9 @@ public class RecognizerIntentActivity extends Activity {
 				}
 			});
 
-			if (! mService.isWorking() && mPrefs.getBoolean("keyAutoStart", false)) {
-				startRecordingOrFinish();
+
+			if (mStartRecording && ! mService.isWorking()) {
+				startRecording();
 			} else {
 				setGui();
 			}
@@ -284,10 +290,17 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		}
 
+		mSampleRate = Integer.parseInt(
+				mPrefs.getString(
+						getString(R.string.keyRecordingRate),
+						getString(R.string.defaultRecordingRate)));
+
 		mMaxRecordingTime = 1000 * Integer.parseInt(
 				mPrefs.getString(
 						getString(R.string.keyAutoStopAfterTime),
 						getString(R.string.defaultAutoStopAfterTime)));
+
+		mStartRecording = mPrefs.getBoolean("keyAutoStart", false);
 
 		mRes = getResources();
 
@@ -343,21 +356,19 @@ public class RecognizerIntentActivity extends Activity {
 		mBStartStop.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (mIsBound) {
-					if (mService != null) {
-						if (mService.isWorking()) {
-							stopRecording();
-						} else {
-							startRecordingOrFinish();
-						}
+					if (mService.getState() == State.RECORDING) {
+						stopRecording();
+					} else {
+						startRecording();
 					}
 				} else {
+					mStartRecording = true;
 					doBindService();
 				}
 			}
 		});
 
 
-		// TODO: get the base time from the service
 		mChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {                      
 			@Override
 			public void onChronometerTick(Chronometer chronometer) {
@@ -374,9 +385,6 @@ public class RecognizerIntentActivity extends Activity {
 			Log.i(LOG_TAG, "Service is ALREADY bound");
 			setGui();
 		} else {
-			// TODO: set a flag that we want to start recording
-			// as soon as the binding is established
-			// flag = true;
 			doBindService();
 		}
 	}
@@ -415,9 +423,7 @@ public class RecognizerIntentActivity extends Activity {
 			startActivity(details);
 			return true;
 		case R.id.menuRecognizerTest1:
-			if (! transcribeFile("test_kaks_minutit_sekundites.flac", "audio/x-flac;rate=16000")) {
-				finish();
-			}
+			transcribeFile("test_kaks_minutit_sekundites.flac", "audio/x-flac;rate=16000");
 			return true;
 		case R.id.menuRecognizerTest3:
 			returnOrForwardMatches(mMessageHandler,
@@ -435,6 +441,9 @@ public class RecognizerIntentActivity extends Activity {
 			return;
 		}
 		switch(mService.getState()) {
+		case CREATED:
+			setGuiInit();
+			break;
 		case INITIALIZED:
 			setGuiInit();
 			break;
@@ -473,8 +482,9 @@ public class RecognizerIntentActivity extends Activity {
 		mIvWaveform.setVisibility(View.GONE);
 		// includes: bytes, chronometer, chunks
 		mLlProgress.setVisibility(View.INVISIBLE);
+		mTvChunks.setText("");
 		setPrompt();
-		if (mPrefs.getBoolean("keyAutoStart", false)) {
+		if (mStartRecording) {
 			mBStartStop.setVisibility(View.GONE);
 		} else {
 			mBStartStop.setText(getString(R.string.buttonSpeak));
@@ -501,7 +511,6 @@ public class RecognizerIntentActivity extends Activity {
 		startChronometer();
 		startAllTasks();
 		setPrompt();
-		mTvChunks.setText("");
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.GONE);
 		setRecorderStyle(mRes.getColor(R.color.red));
@@ -518,9 +527,11 @@ public class RecognizerIntentActivity extends Activity {
 		stopChronometer();
 		mHandlerBytes.removeCallbacks(mRunnableBytes);
 		mHandlerVolume.removeCallbacks(mRunnableVolume);
+		mTvBytes.setText(Utils.getSizeAsString(bytes.length));
 		setRecorderStyle(mRes.getColor(R.color.grey2));
 		mBStartStop.setVisibility(View.GONE);
 		mTvPrompt.setVisibility(View.GONE);
+		mLlProgress.setVisibility(View.VISIBLE);
 		mLlTranscribing.setVisibility(View.VISIBLE);
 		int w = ((View) mIvWaveform.getParent()).getWidth();
 		if (w > 0) {
@@ -551,23 +562,18 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void startRecordingOrFinish() {
-		init();
+	private void startRecording() {
+		init(Utils.getContentType(mSampleRate));
 		playStartSound();
 		SystemClock.sleep(DELAY_AFTER_START_BEEP);
-		mService.start();
+		mService.start(mSampleRate);
 		setGui();
 	}
 
 
-	private void init() {
-		int sampleRate = Integer.parseInt(
-				mPrefs.getString(
-						getString(R.string.keyRecordingRate),
-						getString(R.string.defaultRecordingRate)));
+	private void init(String contentType) {
 		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-
-		mService.init(sampleRate, makeUserAgentComment(), mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
+		mService.init(contentType, makeUserAgentComment(), mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
 	}
 
 
@@ -780,19 +786,17 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private boolean transcribeFile(String fileName, String contentType) {
+	private void transcribeFile(String fileName, String contentType) {
 		try {
 			byte[] bytes = getBytesFromAsset(fileName);
 			Log.i(LOG_TAG, "Transcribing bytes: " + bytes.length);
-			init();
+			init(contentType);
 			mService.transcribe(bytes);
 			setGui();
-			return true;
 		} catch (IOException e) {
 			// Failed to get data from the asset
 			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "file", e);
 		}
-		return false;
 	}
 
 
