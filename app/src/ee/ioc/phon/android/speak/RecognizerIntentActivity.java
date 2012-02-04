@@ -110,7 +110,7 @@ public class RecognizerIntentActivity extends Activity {
 	private static final String LOG_TAG = RecognizerIntentActivity.class.getName();
 
 	private static final int TASK_CHUNKS_INTERVAL = 1500;
-	private static final int TASK_CHUNKS_DELAY = TASK_CHUNKS_INTERVAL;
+	private static final int TASK_CHUNKS_DELAY = 100;
 
 	// Update the byte count every second
 	private static final int TASK_BYTES_INTERVAL = 1000;
@@ -119,15 +119,14 @@ public class RecognizerIntentActivity extends Activity {
 
 	// Check the volume / pauses 10 times a second
 	private static final int TASK_VOLUME_INTERVAL = 100;
-	// Wait for 1 sec before starting to measure the volume
-	private static final int TASK_VOLUME_DELAY = 1000;
+	// TODO: maybe wait for 1 sec before starting to measure the volume
+	private static final int TASK_VOLUME_DELAY = 100;
 
 	private static final int DELAY_AFTER_START_BEEP = 200;
 
 	private static final String MSG = "MSG";
 	private static final int MSG_TOAST = 1;
-	private static final int MSG_CHUNKS = 2;
-	private static final int MSG_RESULT_ERROR = 3;
+	private static final int MSG_RESULT_ERROR = 2;
 
 	private static final double LOG_OF_MAX_VOLUME = Math.log10((double) Short.MAX_VALUE);
 	private static final String DOTS = ".......";
@@ -393,9 +392,7 @@ public class RecognizerIntentActivity extends Activity {
 	@Override
 	public void onStop() {
 		super.onStop();
-		mHandlerBytes.removeCallbacks(mRunnableBytes);
-		mHandlerVolume.removeCallbacks(mRunnableVolume);
-		mHandlerChunks.removeCallbacks(mRunnableChunks);
+		stopAllTasks();
 		if (isFinishing()) {
 			doUnbindService();
 		}
@@ -441,7 +438,7 @@ public class RecognizerIntentActivity extends Activity {
 			return;
 		}
 		switch(mService.getState()) {
-		case CREATED:
+		case IDLE:
 			setGuiInit();
 			break;
 		case INITIALIZED:
@@ -452,6 +449,10 @@ public class RecognizerIntentActivity extends Activity {
 			break;
 		case PROCESSING:
 			setGuiTranscribing(mService.getCurrentRecording());
+			break;
+		case ERROR:
+			// TODO
+			setGuiError("TODO");
 			break;
 		}
 	}
@@ -464,7 +465,7 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void stopRecording() {
-		mService.finishRecording();
+		mService.stop();
 		playStopSound();
 		setGui();
 	}
@@ -474,6 +475,14 @@ public class RecognizerIntentActivity extends Activity {
 		mHandlerBytes.postDelayed(mRunnableBytes, TASK_BYTES_DELAY);
 		mHandlerVolume.postDelayed(mRunnableVolume, TASK_VOLUME_DELAY);
 		mHandlerChunks.postDelayed(mRunnableChunks, TASK_CHUNKS_DELAY);
+	}
+
+
+	private void stopAllTasks() {
+		mHandlerBytes.removeCallbacks(mRunnableBytes);
+		mHandlerVolume.removeCallbacks(mRunnableVolume);
+		mHandlerChunks.removeCallbacks(mRunnableChunks);
+		stopChronometer();
 	}
 
 
@@ -494,7 +503,7 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void setGuiInitOnError(String msgAsString) {
+	private void setGuiError(String msgAsString) {
 		mLlTranscribing.setVisibility(View.GONE);
 		mIvWaveform.setVisibility(View.GONE);
 		// includes: bytes, chronometer, chunks
@@ -599,6 +608,11 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+	private void playErrorSound() {
+		playSound(R.raw.error);
+	}
+
+
 	private void playSound(int sound) {
 		if (mPrefs.getBoolean("keyAudioCues", true)) {
 			MediaPlayer.create(this, sound).start();
@@ -666,11 +680,8 @@ public class RecognizerIntentActivity extends Activity {
 			case MSG_TOAST:
 				toast(msgAsString);
 				break;
-			case MSG_CHUNKS:
-				mTvChunks.setText(mTvChunks.getText() + msgAsString);
-				break;
 			case MSG_RESULT_ERROR:
-				setGuiInitOnError(msgAsString);
+				setGuiError(msgAsString);
 				break;
 			}
 		}
@@ -683,6 +694,9 @@ public class RecognizerIntentActivity extends Activity {
 	 * a toast-message with the transcription.
 	 * Note that we assume that the given list of matches contains at least one
 	 * element.</p>
+	 *
+	 * <p>In case there is no pending intent and also no caller (i.e. we were launched
+	 * via the launcher icon), then we pass the results to the standard web search.</p>
 	 * 
 	 * TODO: the pending intent result code is currently set to 1234 (don't know what this means)
 	 * 
@@ -695,13 +709,15 @@ public class RecognizerIntentActivity extends Activity {
 			matches.subList(mExtraMaxResults, matches.size()).clear();
 		}
 
-		if (getCallingActivity() == null) {
-			// TODO: pass in all the matches
-			Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
-			intentWebSearch.putExtra(SearchManager.QUERY, matches.get(0));
-			startActivity(intentWebSearch);
-		} else if (mExtraResultsPendingIntent == null) {
-			setResultIntent(matches);
+		if (mExtraResultsPendingIntent == null) {
+			if (getCallingActivity() == null) {
+				Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
+				// TODO: pass in all the matches
+				intentWebSearch.putExtra(SearchManager.QUERY, matches.get(0));
+				startActivity(intentWebSearch);
+			} else {
+				setResultIntent(matches);
+			}
 		} else {
 			if (mExtraResultsPendingIntentBundle == null) {
 				mExtraResultsPendingIntentBundle = new Bundle();
@@ -758,6 +774,8 @@ public class RecognizerIntentActivity extends Activity {
 		if (e != null) {
 			Log.e(LOG_TAG, "Exception: " + type + ": " + e.getMessage());
 		}
+		playErrorSound();
+		stopAllTasks();
 		handler.sendMessage(createMessage(MSG_RESULT_ERROR, mErrorMessages.get(resultCode)));
 	}
 

@@ -68,20 +68,17 @@ public class RecognizerIntentService extends Service {
 
 	private long mStartTime = 0;
 
-	// TODO: reduce the number of states
 	public enum State {
-		// Service created
-		CREATED,
+		// Service created or resources released
+		IDLE,
 		// Recognizer session created
 		INITIALIZED,
 		// Started the recording
 		RECORDING,
-		// Finished recording
+		// Finished recording, transcribing now
 		PROCESSING,
 		// Got an error
-		ERROR,
-		// Resources released
-		RELEASED;
+		ERROR;
 	}
 
 	private State mState = null;
@@ -113,7 +110,7 @@ public class RecognizerIntentService extends Service {
 	@Override
 	public void onCreate() {
 		Log.i(LOG_TAG, "onCreate");
-		setState(State.CREATED);
+		setState(State.IDLE);
 	}
 
 
@@ -139,17 +136,26 @@ public class RecognizerIntentService extends Service {
 	}
 
 
+	/**
+	 * @return time when the recording started
+	 */
 	public long getStartTime() {
 		return mStartTime;
 	}
 
 
+	/**
+	 * @return <code>true</code> iff currently recording or processing
+	 */
 	public boolean isWorking() {
 		State currentState = getState();
 		return currentState == State.RECORDING || currentState == State.PROCESSING;
 	}
 
 
+	/**
+	 * @return length of the current recording in bytes
+	 */
 	public int getLength() {
 		if (mRecorder == null) {
 			return 0;
@@ -158,14 +164,16 @@ public class RecognizerIntentService extends Service {
 	}
 
 
+	/**
+	 * @return <code>true</code> iff currently recording non-speech
+	 */
 	public boolean isPausing() {
 		return mRecorder != null && mRecorder.isPausing();
 	}
 
 
 	/**
-	 * <p>Return the complete audio data from the beginning
-	 * of the recording.</p>
+	 * @return complete audio data from the beginning of the recording
 	 */
 	public byte[] getCurrentRecording() {
 		if (mRecorder == null) {
@@ -176,19 +184,51 @@ public class RecognizerIntentService extends Service {
 	}
 
 
+	/**
+	 * @return number of audio chunks sent to the server
+	 */
+	public int getChunkCount() {
+		return mChunkCount;
+	}
+
+
+	/**
+	 * <p>Tries to create a speech recognition session.</p>
+	 *
+	 * <p>Set the content-type to <code>null</code> if you want to use the default
+	 * net-speech-api content type (raw audio).</p>
+	 *
+	 * @param contentType content type of the audio (e.g. "audio/x-flac;rate=16000")
+	 * @param userAgentComment
+	 * @param serverUrl URL of the recognizer server
+	 * @param grammarUrl URL of the speech recognition grammar
+	 * @param grammarTargetLang name of the target language (in case of GF grammars)
+	 * @param nbest number of requested hypothesis
+	 */
 	public void init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
+		mRecSession = new ChunkedWebRecSession(serverUrl, grammarUrl, grammarTargetLang, nbest);
+		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + serverUrl + ": lm=" + grammarUrl + ": lang=" + grammarTargetLang + ": nbest=" + nbest);
+		mRecSession.setUserAgentComment(userAgentComment);
+		if (contentType != null) {
+			mRecSession.setContentType(contentType);
+		}
 		try {
-			createRecSession(contentType, userAgentComment, serverUrl, grammarUrl, grammarTargetLang, nbest);
+			mRecSession.create();
+			Log.i(LOG_TAG, "Created recognition session: " + contentType);
+			setState(State.INITIALIZED);
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
-			return;
 		} catch (NotAvailableException e) {
 			processError(RecognizerIntent.RESULT_SERVER_ERROR, e);
-			return;
 		}
 	}
 
 
+	/**
+	 * <p>Start recording with the given sample rate.</p>
+	 *
+	 * @param sampleRate sample rate in Hz, e.g. 16000
+	 */
 	public void start(int sampleRate) {
 		try {
 			startRecording(sampleRate);
@@ -201,46 +241,49 @@ public class RecognizerIntentService extends Service {
 	}
 
 
-	public void finishRecording() {
+	/**
+	 * <p>Stops the recording, finishes chunk sending, sends off the
+	 * last chunk (in another thread).</p>
+	 */
+	public void stop() {
 		if (mRecorder == null) {
-			processError(RecognizerIntent.RESULT_NETWORK_ERROR, null);
+			Log.i(LOG_TAG, "stop() called when mRecorder == null");
 		} else {
 			mRecorder.stop();
 			mSendHandler.removeCallbacks(mSendTask);
-
-			// TODO: improve this
-			Thread t = new Thread() {
-				public void run() {
-					transcribe(mRecorder.consumeRecording());
-				}
-			};
-			t.start();
+			transcribe(mRecorder.consumeRecording());
 		}
-	}
-
-
-	public int getChunkCount() {
-		return mChunkCount;
 	}
 
 
 	/**
 	 * <p>This can be called by clients who want to skip the recording
 	 * steps, but who have existing audio data which they want to transcribe.</p>
+	 *
+	 * @param bytes array of bytes to be transcribed
 	 */
-	public void transcribe(byte[] bytes) {
+	public void transcribe(final byte[] bytes) {
+		Thread t = new Thread() {
+			public void run() {
+				transcribe_aux(bytes);
+			}
+		};
+		t.start();
 		setState(State.PROCESSING);
-		RecSessionResult result = null;
+	}
+
+
+	private void transcribe_aux(byte[] bytes) {
 		try {
 			sendChunk(bytes, true);
-			result = getResult();
+			RecSessionResult result = getResult();
+			if (result == null || result.getLinearizations().isEmpty()) {
+				processError(RecognizerIntent.RESULT_NO_MATCH, null);
+			} else {
+				processResult(result);
+			}
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
-		}
-		if (result == null || result.getLinearizations().isEmpty()) {
-			processError(RecognizerIntent.RESULT_NO_MATCH, null);
-		} else {
-			processResult(result);
 		}
 	}
 
@@ -322,33 +365,11 @@ public class RecognizerIntentService extends Service {
 		if (mRecSession != null && ! mRecSession.isFinished()) {
 			mRecSession.cancel();
 		}
+
 		if (mRecorder != null) {
 			mRecorder.release();
 			mRecorder = null;
 		}
-		setState(State.RELEASED);
-	}
-
-
-	/**
-	 * <p>Tries to create a speech recognition session.</p>
-	 *
-	 * <p>Set the content-type to <code>null</code> if you want to use the default
-	 * net-speech-api content type (raw audio).</p>
-	 * 
-	 * @param contentType content type of the audio (e.g. "audio/x-flac;rate=16000")
-	 */
-	private void createRecSession(String contentType, String userAgentComment,
-			URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) throws IOException, NotAvailableException {
-		mRecSession = new ChunkedWebRecSession(serverUrl, grammarUrl, grammarTargetLang, nbest);
-		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + serverUrl + ": lm=" + grammarUrl + ": lang=" + grammarTargetLang + ": nbest=" + nbest);
-		mRecSession.setUserAgentComment(userAgentComment);
-		if (contentType != null) {
-			mRecSession.setContentType(contentType);
-		}
-		mRecSession.create();
-		Log.i(LOG_TAG, "Created recognition session: " + contentType);
-		setState(State.INITIALIZED);
 	}
 
 
@@ -361,8 +382,6 @@ public class RecognizerIntentService extends Service {
 
 
 	/**
-	 * 
-	 * @param handler message handler
 	 * @param bytes byte array representing the audio data
 	 * @param isLast indicates that this is the last chunk that is sent
 	 * @throws IOException 
@@ -371,7 +390,13 @@ public class RecognizerIntentService extends Service {
 		if (mRecSession != null && bytes != null && bytes.length > 0 && ! mRecSession.isFinished()) {
 			mRecSession.sendChunk(bytes, isLast);
 			mChunkCount++;
-			Log.i(LOG_TAG, "Send chunk: " + bytes.length);
+			if (isLast) {
+				Log.i(LOG_TAG, "sendChunk: FINAL: " + bytes.length);
+			} else {
+				Log.i(LOG_TAG, "sendChunk: " + bytes.length);
+			}
+		} else {
+			Log.e(LOG_TAG, "sendChunk: nothing to send");
 		}
 	}
 
@@ -386,14 +411,14 @@ public class RecognizerIntentService extends Service {
 	private void processResult(RecSessionResult result) {
 		mOnResultListener.onResult(result);
 		releaseResources();
+		setState(State.IDLE);
 		stopSelf();
 	}
 
 
 	private void processError(int errorCode, Exception e) {
-		setState(State.ERROR);
 		mOnErrorListener.onError(errorCode, e);
 		releaseResources();
-		stopSelf();
+		setState(State.ERROR);
 	}
 }

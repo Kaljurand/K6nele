@@ -1,0 +1,31 @@
+/**
+ * State changes of K6nele's recognizer service
+ *
+ * @author Kaarel Kaljurand
+ * @version 2012-02-04
+ */
+
+digraph G {
+
+	node [fillcolor = "yellow", style = "rounded,filled"];
+
+	"Result" [color = "green"];
+	"Error" [color = "red"];
+
+	"Created" -> "Initialized" [label = "init(String, String, URL, URL, String, int)", labelfontsize="10"];
+
+	"Initialized" -> "Processing" [label = "transcribe(byte[])"];
+
+	"Initialized" -> "Recording" [label = "start(int sampleRate)"];
+
+	"Recording" -> "Processing" [label = "stop()"];
+
+	"Processing" -> "Result" [style = "bold"];
+
+	"Initialized" -> "Error" [color = "red"];
+	"Recording" -> "Error" [color = "red"];
+	"Processing" -> "Error" [color = "red"];
+
+	"Error" -> "Initialized" [label = "init(...)"];
+
+}
