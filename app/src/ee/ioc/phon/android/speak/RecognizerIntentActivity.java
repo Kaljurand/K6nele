@@ -130,6 +130,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	private static final double LOG_OF_MAX_VOLUME = Math.log10((double) Short.MAX_VALUE);
 	private static final String DOTS = ".......";
+
 	private Map<Integer, String> mErrorMessages;
 
 	private String mUniqueId;
@@ -175,7 +176,6 @@ public class RecognizerIntentActivity extends Activity {
 
 	private RecognizerIntentService mService;
 	private boolean mIsBound = false;
-
 	private boolean mStartRecording = false;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -217,23 +217,6 @@ public class RecognizerIntentActivity extends Activity {
 			Log.i(LOG_TAG, "Service disconnected");
 		}
 	};
-
-
-	void doBindService() {
-		bindService(new Intent(this, RecognizerIntentService.class), mConnection, Context.BIND_AUTO_CREATE);
-		mIsBound = true;
-		Log.i(LOG_TAG, "Service is bound");
-	}
-
-
-	void doUnbindService() {
-		if (mIsBound) {
-			unbindService(mConnection);
-			mIsBound = false;
-			mService = null;
-			Log.i(LOG_TAG, "Service is UNBOUND");
-		}
-	}
 
 
 	@Override
@@ -373,19 +356,13 @@ public class RecognizerIntentActivity extends Activity {
 			public void onChronometerTick(Chronometer chronometer) {
 				long elapsedMillis = SystemClock.elapsedRealtime() - mService.getStartTime();
 				if (elapsedMillis > mMaxRecordingTime) {
-					//mMessageHandler.sendMessage(createMessage(getString(R.string.noteMaxRecordingTimeExceeded)));
 					stopRecording();
 				}
 			}
 		});
 
 
-		if (mIsBound) {
-			Log.i(LOG_TAG, "Service is ALREADY bound");
-			setGui();
-		} else {
-			doBindService();
-		}
+		doBindService();
 	}
 
 
@@ -393,8 +370,9 @@ public class RecognizerIntentActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		stopAllTasks();
+		doUnbindService();
 		if (isFinishing()) {
-			doUnbindService();
+			stopService(new Intent(this, RecognizerIntentService.class));
 		}
 	}
 
@@ -433,8 +411,29 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+	void doBindService() {
+		// This can be called also on an already running service
+		startService(new Intent(this, RecognizerIntentService.class));
+
+		bindService(new Intent(this, RecognizerIntentService.class), mConnection, Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+		Log.i(LOG_TAG, "Service is bound");
+	}
+
+
+	void doUnbindService() {
+		if (mIsBound) {
+			unbindService(mConnection);
+			mIsBound = false;
+			mService = null;
+			Log.i(LOG_TAG, "Service is UNBOUND");
+		}
+	}
+
+
 	private void setGui() {
 		if (mService == null) {
+			setGuiError(RecognizerIntent.RESULT_CLIENT_ERROR);
 			return;
 		}
 		switch(mService.getState()) {
@@ -451,8 +450,7 @@ public class RecognizerIntentActivity extends Activity {
 			setGuiTranscribing(mService.getCurrentRecording());
 			break;
 		case ERROR:
-			// TODO
-			setGuiError("TODO");
+			setGuiError(mService.getErrorCode());
 			break;
 		}
 	}
@@ -503,7 +501,7 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void setGuiError(String msgAsString) {
+	private void setGuiError(int errorCode) {
 		mLlTranscribing.setVisibility(View.GONE);
 		mIvWaveform.setVisibility(View.GONE);
 		// includes: bytes, chronometer, chunks
@@ -512,11 +510,12 @@ public class RecognizerIntentActivity extends Activity {
 		mBStartStop.setText(getString(R.string.buttonSpeak));
 		mBStartStop.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.VISIBLE);
-		mTvErrorMessage.setText(msgAsString);
+		mTvErrorMessage.setText(mErrorMessages.get(errorCode));
 	}
 
 
 	private void setGuiRecording() {
+		mChronometer.setBase(mService.getStartTime());
 		startChronometer();
 		startAllTasks();
 		setPrompt();
@@ -533,6 +532,7 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void setGuiTranscribing(byte[] bytes) {
+		mChronometer.setBase(mService.getStartTime());
 		stopChronometer();
 		mHandlerBytes.removeCallbacks(mRunnableBytes);
 		mHandlerVolume.removeCallbacks(mRunnableVolume);
@@ -566,23 +566,24 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void startChronometer() {
-		mChronometer.setBase(mService.getStartTime());
 		mChronometer.start();
 	}
 
 
 	private void startRecording() {
-		init(Utils.getContentType(mSampleRate));
-		playStartSound();
-		SystemClock.sleep(DELAY_AFTER_START_BEEP);
-		mService.start(mSampleRate);
-		setGui();
+		boolean success = init(Utils.getContentType(mSampleRate));
+		if (success) {
+			playStartSound();
+			SystemClock.sleep(DELAY_AFTER_START_BEEP);
+			mService.start(mSampleRate);
+			setGui();
+		}
 	}
 
 
-	private void init(String contentType) {
+	private boolean init(String contentType) {
 		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-		mService.init(contentType, makeUserAgentComment(), mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
+		return mService.init(contentType, makeUserAgentComment(), mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
 	}
 
 
@@ -681,7 +682,9 @@ public class RecognizerIntentActivity extends Activity {
 				toast(msgAsString);
 				break;
 			case MSG_RESULT_ERROR:
-				setGuiError(msgAsString);
+				playErrorSound();
+				stopAllTasks();
+				setGuiError(mService.getErrorCode());
 				break;
 			}
 		}
@@ -774,8 +777,6 @@ public class RecognizerIntentActivity extends Activity {
 		if (e != null) {
 			Log.e(LOG_TAG, "Exception: " + type + ": " + e.getMessage());
 		}
-		playErrorSound();
-		stopAllTasks();
 		handler.sendMessage(createMessage(MSG_RESULT_ERROR, mErrorMessages.get(resultCode)));
 	}
 
@@ -808,9 +809,11 @@ public class RecognizerIntentActivity extends Activity {
 		try {
 			byte[] bytes = getBytesFromAsset(fileName);
 			Log.i(LOG_TAG, "Transcribing bytes: " + bytes.length);
-			init(contentType);
-			mService.transcribe(bytes);
-			setGui();
+			boolean success = init(contentType);
+			if (success) {
+				mService.transcribe(bytes);
+				setGui();
+			}
 		} catch (IOException e) {
 			// Failed to get data from the asset
 			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "file", e);

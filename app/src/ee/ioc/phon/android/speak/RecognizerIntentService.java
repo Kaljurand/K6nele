@@ -64,6 +64,8 @@ public class RecognizerIntentService extends Service {
 	private OnResultListener mOnResultListener;
 	private OnErrorListener mOnErrorListener;
 
+	private int mErrorCode;
+
 	private int mChunkCount = 0;
 
 	private long mStartTime = 0;
@@ -102,15 +104,16 @@ public class RecognizerIntentService extends Service {
 
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		Log.i(LOG_TAG, "onBind");
-		return mBinder;
-	}
-
-	@Override
 	public void onCreate() {
 		Log.i(LOG_TAG, "onCreate");
 		setState(State.IDLE);
+	}
+
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		Log.i(LOG_TAG, "onBind");
+		return mBinder;
 	}
 
 
@@ -193,6 +196,14 @@ public class RecognizerIntentService extends Service {
 
 
 	/**
+	 * @return error code that corresponds to the latest error state
+	 */
+	public int getErrorCode() {
+		return mErrorCode;
+	}
+
+
+	/**
 	 * <p>Tries to create a speech recognition session.</p>
 	 *
 	 * <p>Set the content-type to <code>null</code> if you want to use the default
@@ -204,8 +215,9 @@ public class RecognizerIntentService extends Service {
 	 * @param grammarUrl URL of the speech recognition grammar
 	 * @param grammarTargetLang name of the target language (in case of GF grammars)
 	 * @param nbest number of requested hypothesis
+	 * @return <code>true</code> iff there was no error
 	 */
-	public void init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
+	public boolean init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
 		mRecSession = new ChunkedWebRecSession(serverUrl, grammarUrl, grammarTargetLang, nbest);
 		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + serverUrl + ": lm=" + grammarUrl + ": lang=" + grammarTargetLang + ": nbest=" + nbest);
 		mRecSession.setUserAgentComment(userAgentComment);
@@ -214,13 +226,16 @@ public class RecognizerIntentService extends Service {
 		}
 		try {
 			mRecSession.create();
-			Log.i(LOG_TAG, "Created recognition session: " + contentType);
+			Log.i(LOG_TAG, "mRecSession.create() OK: " + contentType);
+			Log.i(LOG_TAG, "mRecSession.create() OK: " + userAgentComment);
 			setState(State.INITIALIZED);
+			return true;
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
 		} catch (NotAvailableException e) {
 			processError(RecognizerIntent.RESULT_SERVER_ERROR, e);
 		}
+		return false;
 	}
 
 
@@ -263,12 +278,11 @@ public class RecognizerIntentService extends Service {
 	 * @param bytes array of bytes to be transcribed
 	 */
 	public void transcribe(final byte[] bytes) {
-		Thread t = new Thread() {
+		new Thread(new Runnable() {
 			public void run() {
 				transcribe_aux(bytes);
 			}
-		};
-		t.start();
+		}).start();
 		setState(State.PROCESSING);
 	}
 
@@ -417,6 +431,7 @@ public class RecognizerIntentService extends Service {
 
 
 	private void processError(int errorCode, Exception e) {
+		mErrorCode = errorCode;
 		mOnErrorListener.onError(errorCode, e);
 		releaseResources();
 		setState(State.ERROR);
