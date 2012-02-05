@@ -38,6 +38,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import android.view.Menu;
@@ -53,7 +54,6 @@ import android.widget.LinearLayout;
 
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Chronometer.OnChronometerTickListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,6 +147,9 @@ public class RecognizerIntentActivity extends Activity {
 	private ImageView mIvWaveform;
 	private TextView mTvChunks;
 	private TextView mTvErrorMessage;
+
+	private int mWaveformWidth;
+	private int mWaveformHeight;
 
 	private SimpleMessageHandler mMessageHandler = new SimpleMessageHandler();
 	private Handler mHandlerBytes = new Handler();
@@ -296,6 +299,14 @@ public class RecognizerIntentActivity extends Activity {
 		}
 
 		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
+
+
+		// http://stackoverflow.com/questions/5012840/android-specifying-pixel-units-like-sp-px-dp-without-using-xml
+		DisplayMetrics metrics = mRes.getDisplayMetrics();
+		// This must match the layout_width of the top layout in recognizer.xml
+		float dp = 250f;
+		mWaveformWidth = (int) (metrics.density * dp + 0.5f);
+		mWaveformHeight = (int) (mWaveformWidth / 2.5);
 	}
 
 
@@ -303,7 +314,7 @@ public class RecognizerIntentActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 
-		// Show the file size
+		// Show the length of the current recording in bytes
 		mRunnableBytes = new Runnable() {
 			public void run() {
 				if (mService != null) {
@@ -313,6 +324,7 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		};
 
+		// Show the number of audio chunks that have been sent to the server
 		mRunnableChunks = new Runnable() {
 			public void run() {
 				if (mService != null) {
@@ -322,14 +334,21 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		};
 
-
-		// Show the max volume
+		// Decide if we should stop recording
+		// 1. Max recording time has passed
+		// 2. Speaker stopped speaking
 		mRunnableVolume = new Runnable() {
 			public void run() {
-				if (mService != null && mPrefs.getBoolean("keyAutoStopAfterPause", true) && mService.isPausing()) {
-					stopRecording();
-				} else {
-					mHandlerVolume.postDelayed(this, TASK_VOLUME_INTERVAL);
+				if (mService != null) {
+					if (mMaxRecordingTime < (SystemClock.elapsedRealtime() - mService.getStartTime())) {
+						Log.i(LOG_TAG, "Max recording time exceeded");
+						stopRecording();
+					} else if (mPrefs.getBoolean("keyAutoStopAfterPause", true) && mService.isPausing()) {
+						Log.i(LOG_TAG, "Speaker finished speaking");
+						stopRecording();
+					} else {
+						mHandlerVolume.postDelayed(this, TASK_VOLUME_INTERVAL);
+					}
 				}
 			}
 		};
@@ -350,18 +369,6 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		});
 
-
-		mChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {                      
-			@Override
-			public void onChronometerTick(Chronometer chronometer) {
-				long elapsedMillis = SystemClock.elapsedRealtime() - mService.getStartTime();
-				if (elapsedMillis > mMaxRecordingTime) {
-					stopRecording();
-				}
-			}
-		});
-
-
 		doBindService();
 	}
 
@@ -369,8 +376,17 @@ public class RecognizerIntentActivity extends Activity {
 	@Override
 	public void onStop() {
 		super.onStop();
+		if (mService != null) {
+			mService.setOnResultListener(null);
+			mService.setOnErrorListener(null);
+		}
 		stopAllTasks();
 		doUnbindService();
+
+		// If non-empty transcription results were obtained,
+		// or BACK was pressed then we stop the service.
+		// We do not stop the service if HOME is pressed
+		// or the orientation changes.
 		if (isFinishing()) {
 			stopService(new Intent(this, RecognizerIntentService.class));
 		}
@@ -490,7 +506,7 @@ public class RecognizerIntentActivity extends Activity {
 		// includes: bytes, chronometer, chunks
 		mLlProgress.setVisibility(View.INVISIBLE);
 		mTvChunks.setText("");
-		setPrompt();
+		setTvPrompt();
 		if (mStartRecording) {
 			mBStartStop.setVisibility(View.GONE);
 		} else {
@@ -506,7 +522,7 @@ public class RecognizerIntentActivity extends Activity {
 		mIvWaveform.setVisibility(View.GONE);
 		// includes: bytes, chronometer, chunks
 		mLlProgress.setVisibility(View.GONE);
-		setPrompt();
+		setTvPrompt();
 		mBStartStop.setText(getString(R.string.buttonSpeak));
 		mBStartStop.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.VISIBLE);
@@ -518,7 +534,7 @@ public class RecognizerIntentActivity extends Activity {
 		mChronometer.setBase(mService.getStartTime());
 		startChronometer();
 		startAllTasks();
-		setPrompt();
+		setTvPrompt();
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.GONE);
 		setRecorderStyle(mRes.getColor(R.color.red));
@@ -536,27 +552,34 @@ public class RecognizerIntentActivity extends Activity {
 		stopChronometer();
 		mHandlerBytes.removeCallbacks(mRunnableBytes);
 		mHandlerVolume.removeCallbacks(mRunnableVolume);
+		// Chunk checking keeps running
 		mTvBytes.setText(Utils.getSizeAsString(bytes.length));
 		setRecorderStyle(mRes.getColor(R.color.grey2));
 		mBStartStop.setVisibility(View.GONE);
 		mTvPrompt.setVisibility(View.GONE);
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlTranscribing.setVisibility(View.VISIBLE);
-		int w = ((View) mIvWaveform.getParent()).getWidth();
-		if (w > 0) {
-			mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, w, (int) (w / 2.5), 0, bytes.length));
-		}
+		mIvWaveform.setVisibility(View.VISIBLE);
+		mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, mWaveformWidth, mWaveformHeight, 0, bytes.length));
 	}
 
 
-	private void setPrompt() {
-		String prompt = mExtras.getString(RecognizerIntent.EXTRA_PROMPT);
+	private void setTvPrompt() {
+		String prompt = getPrompt();
 		if (prompt == null || prompt.length() == 0) {
 			mTvPrompt.setVisibility(View.INVISIBLE);
 		} else {
 			mTvPrompt.setText(prompt);
 			mTvPrompt.setVisibility(View.VISIBLE);
 		}
+	}
+
+
+	private String getPrompt() {
+		if (mExtraResultsPendingIntent == null && getCallingActivity() == null) {
+			return getString(R.string.promptDefault);
+		}
+		return mExtras.getString(RecognizerIntent.EXTRA_PROMPT);
 	}
 
 

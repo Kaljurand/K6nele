@@ -333,7 +333,7 @@ public class RawAudioRecorder {
 
 
 	/**
-	 * <p>Releases the resources associated with this class, and removes the unnecessary files, when necessary.</p>
+	 * <p>Releases the resources associated with this class.</p>
 	 */
 	public void release() {
 		if (getState() == State.RECORDING) {
@@ -380,14 +380,23 @@ public class RawAudioRecorder {
 	}
 
 
+	/**
+	 * <p>Copy the given byte array into the total recording array.</p>
+	 *
+	 * <p>The total recording array has been pre-allocated (e.g. for 35 seconds of audio).
+	 * If it gets full then the recording is stopped.</p>
+	 *
+	 * @param buffer audio buffer
+	 */
 	private void add(byte[] buffer) {
 		if (mRecording.length >= mRecordedLength + buffer.length) {
 			// arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
 			System.arraycopy(buffer, 0, mRecording, mRecordedLength, buffer.length);
 			mRecordedLength += buffer.length;
 		} else {
-			// This happens on the emulator for some reason
+			// This also happens on the emulator for some reason
 			Log.e(LOG_TAG, "Recorder buffer overflow: " + mRecordedLength);
+			stop();
 		}
 	}
 

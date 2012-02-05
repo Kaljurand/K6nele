@@ -479,7 +479,7 @@ public class SpeechRecognitionService extends RecognitionService {
 		if (mExtraResultsPendingIntent == null) {
 			String caller = mExtras.getString(RecognizerIntent.EXTRA_CALLING_PACKAGE);
 			if (caller == null) {
-				return "unknownkeyboard";
+				return "unknown";
 			}
 			return caller;
 		}

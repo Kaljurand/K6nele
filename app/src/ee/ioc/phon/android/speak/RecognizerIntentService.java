@@ -218,6 +218,11 @@ public class RecognizerIntentService extends Service {
 	 * @return <code>true</code> iff there was no error
 	 */
 	public boolean init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
+		if (mState != State.IDLE && mState != State.ERROR) {
+			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
+			return false;
+		}
+
 		mRecSession = new ChunkedWebRecSession(serverUrl, grammarUrl, grammarTargetLang, nbest);
 		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + serverUrl + ": lm=" + grammarUrl + ": lang=" + grammarTargetLang + ": nbest=" + nbest);
 		mRecSession.setUserAgentComment(userAgentComment);
@@ -244,15 +249,21 @@ public class RecognizerIntentService extends Service {
 	 *
 	 * @param sampleRate sample rate in Hz, e.g. 16000
 	 */
-	public void start(int sampleRate) {
+	public boolean start(int sampleRate) {
+		if (mState != State.INITIALIZED) {
+			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
+			return false;
+		}
 		try {
 			startRecording(sampleRate);
 			mStartTime = SystemClock.elapsedRealtime();
 			startChunkSending(TASK_INTERVAL_SEND, TASK_DELAY_SEND, false);
 			setState(State.RECORDING);
+			return true;
 		} catch (IOException e) {
 			processError(RecognizerIntent.RESULT_AUDIO_ERROR, e);
 		}
+		return false;
 	}
 
 
@@ -260,14 +271,15 @@ public class RecognizerIntentService extends Service {
 	 * <p>Stops the recording, finishes chunk sending, sends off the
 	 * last chunk (in another thread).</p>
 	 */
-	public void stop() {
-		if (mRecorder == null) {
-			Log.i(LOG_TAG, "stop() called when mRecorder == null");
-		} else {
-			mRecorder.stop();
-			mSendHandler.removeCallbacks(mSendTask);
-			transcribe(mRecorder.consumeRecording());
+	public boolean stop() {
+		if (mState != State.RECORDING || mRecorder == null) {
+			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
+			return false;
 		}
+		mRecorder.stop();
+		mSendHandler.removeCallbacks(mSendTask);
+		transcribe(mRecorder.consumeRecording());
+		return true;
 	}
 
 
@@ -277,13 +289,18 @@ public class RecognizerIntentService extends Service {
 	 *
 	 * @param bytes array of bytes to be transcribed
 	 */
-	public void transcribe(final byte[] bytes) {
+	public boolean transcribe(final byte[] bytes) {
+		if (mState != State.RECORDING && mState != State.INITIALIZED) {
+			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
+			return false;
+		}
 		new Thread(new Runnable() {
 			public void run() {
 				transcribe_aux(bytes);
 			}
 		}).start();
 		setState(State.PROCESSING);
+		return true;
 	}
 
 
@@ -316,7 +333,7 @@ public class RecognizerIntentService extends Service {
 
 		mSendTask = new Runnable() {
 			public void run() {
-				if (mRecorder != null) {
+				if (mRecorder != null && mRecorder.getState() == RawAudioRecorder.State.RECORDING) {
 					try {
 						sendChunk(mRecorder.consumeRecording(), consumeAll);
 					} catch (IOException e) {
@@ -369,7 +386,7 @@ public class RecognizerIntentService extends Service {
 	private void releaseResources() {
 		if (mSendLooper != null) {
 			// TODO: null sending message to a Handler on a dead thread
-			mSendLooper.quit();
+			//mSendLooper.quit();
 		}
 
 		if (mSendHandler != null) {
@@ -423,7 +440,9 @@ public class RecognizerIntentService extends Service {
 
 	// TODO: not sure what stopSelf does
 	private void processResult(RecSessionResult result) {
-		mOnResultListener.onResult(result);
+		if (mOnResultListener != null) {
+			mOnResultListener.onResult(result);
+		}
 		releaseResources();
 		setState(State.IDLE);
 		stopSelf();
@@ -432,7 +451,9 @@ public class RecognizerIntentService extends Service {
 
 	private void processError(int errorCode, Exception e) {
 		mErrorCode = errorCode;
-		mOnErrorListener.onError(errorCode, e);
+		if (mOnErrorListener != null) {
+			mOnErrorListener.onError(errorCode, e);
+		}
 		releaseResources();
 		setState(State.ERROR);
 	}
