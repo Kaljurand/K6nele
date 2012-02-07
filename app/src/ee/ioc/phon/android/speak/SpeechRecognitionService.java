@@ -94,6 +94,8 @@ public class SpeechRecognitionService extends RecognitionService {
 
 	private Bundle mExtras;
 
+	private String mCaller;
+
 	@Override
 	protected void onCancel(Callback listener) {
 		releaseResources();
@@ -366,7 +368,8 @@ public class SpeechRecognitionService extends RecognitionService {
 						getString(R.string.keyAutoStopAfterTime),
 						getString(R.string.defaultAutoStopAfterTime)));
 
-		PackageNameRegistry wrapper = new PackageNameRegistry(this, getCaller());
+		mCaller = getCaller();
+		PackageNameRegistry wrapper = new PackageNameRegistry(this, mCaller);
 
 		// If the user has not overridden the grammar then use the app's EXTRA.
 		mGrammarUrl = Utils.chooseValue(wrapper.getGrammarUrl(), mExtras.getString(Extras.EXTRA_GRAMMAR_URL));
@@ -376,7 +379,7 @@ public class SpeechRecognitionService extends RecognitionService {
 				wrapper.getServerUrl(),
 				mExtras.getString(Extras.EXTRA_SERVER_URL),
 				mPrefs.getString(getString(R.string.keyService), getString(R.string.defaultService))
-		);
+				);
 
 		// Starting chunk sending in a separate thread so that slow internet
 		// would not block the UI.
@@ -406,7 +409,9 @@ public class SpeechRecognitionService extends RecognitionService {
 		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
 		mRecSession = new ChunkedWebRecSession(wsUrl, lmUrl, mGrammarTargetLang, nbest);
 		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + wsUrl + ": lm=" + lmUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + nbest);
-		mRecSession.setUserAgentComment(makeUserAgentComment());
+		String userAgentComment = makeUserAgentComment();
+		mRecSession.setUserAgentComment(userAgentComment);
+		Log.i(LOG_TAG, "User Agent comment: " + userAgentComment);
 
 		// This task talks to the internet. It is therefore potentially slow and
 		// should not be run in the UI thread.
@@ -444,7 +449,7 @@ public class SpeechRecognitionService extends RecognitionService {
 					if (
 							mTimeToFinish < SystemClock.uptimeMillis() ||
 							mPrefs.getBoolean("keyAutoStopAfterPause", true) && mRecorder.isPausing()
-					) {
+							) {
 						stopRecording(listener);
 					} else {
 						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
@@ -457,15 +462,16 @@ public class SpeechRecognitionService extends RecognitionService {
 
 	// TODO: maybe replace by "SpeechRecognitionService/"
 	private String makeUserAgentComment() {
-		return 	"RecognizerIntentActivity/" + Utils.getVersionName(this) + "; " + mUniqueId + "; " + getCaller();
+		return 	"RecognizerIntentActivity/" + Utils.getVersionName(this) + "; " + mUniqueId + "; " + mCaller;
 	}
 
 
 	/**
-	 * <p>Returns the package name of the app that receives the transcription,
-	 * or <code>null</code> if the package name could not be resolved.</p>
+	 * <p>Returns a description of the caller that eventually receives the transcription.
+	 * If the extras specify a pending intent (I've never encountered such an app though),
+	 * then the pending intent's target package's name is returned.</p>
 	 *
-	 * <p>We use EXTRA_CALLING_PACKAGE because there does not seem to be a way to
+	 * <p>Otherwise we use EXTRA_CALLING_PACKAGE because there does not seem to be a way to
 	 * find out which Activity called us, i.e. this does not work:</p>
 	 *
 	 * <pre>
@@ -474,14 +480,20 @@ public class SpeechRecognitionService extends RecognitionService {
 	 *     return callingActivity.getPackageName();
 	 * }
 	 * </pre>
+	 *
+	 * <p>We also parse the extras looking for another package name, e.g. included in the
+	 * <code>android.speech.extras.RECOGNITION_CONTEXT</code> extra which some keyboard
+	 * apps set. The eventual return value would look something like:</p>
+	 *
+	 * <ul>
+	 * <li>VoiceIME/com.google.android.apps.plus (standard keyboard in Google Plus app)</li>
+	 * <li>SwypeIME/com.timsu.astrid</li>
+	 * <li>null/null (if no caller-identifying info was found in the extras)
+	 * </ul>
 	 */
 	private String getCaller() {
 		if (mExtraResultsPendingIntent == null) {
-			String caller = mExtras.getString(RecognizerIntent.EXTRA_CALLING_PACKAGE);
-			if (caller == null) {
-				return "unknown";
-			}
-			return caller;
+			return mExtras.getString(RecognizerIntent.EXTRA_CALLING_PACKAGE) + "/" + getPackageName(mExtras);
 		}
 		return mExtraResultsPendingIntent.getTargetPackage();
 	}
@@ -511,5 +523,32 @@ public class SpeechRecognitionService extends RecognitionService {
 			listener.error(SpeechRecognizer.ERROR_SERVER);
 		}
 		return false;
+	}
+
+
+	/**
+	 * <p>Traverses the given bundle (which can contain other bundles)
+	 * looking for the key "packageName".
+	 * Returns its corresponding value if finds it.</p>
+	 *
+	 * @param bundle bundle (e.g. intent extras)
+	 * @return package name possibly hidden deep into the given bundle
+	 */
+	private static String getPackageName(Bundle bundle) {
+		for (String key : bundle.keySet()) {
+			Object value = bundle.get(key);
+			Log.i(LOG_TAG, "EXTRA: " + key + ": " + bundle.get(key));
+			if (value instanceof Bundle) {
+				Log.i(LOG_TAG, "<bundle>");
+				String packageName = getPackageName((Bundle) value);
+				if (packageName != null) {
+					return packageName;
+				}
+				Log.i(LOG_TAG, "</bundle>");
+			} else if ("packageName".equals(key)) {
+				return value.toString();
+			}
+		}
+		return null;
 	}
 }
