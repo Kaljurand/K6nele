@@ -182,7 +182,8 @@ and more are available at
         <item>1 2 3 4 5</item>
     </string-array>
     <string-array name="entriesRecordingRate" translatable="false">
-        <item>8 kHz</item>
+
+        <!-- <item>8 kHz</item> -->
         <item>11 kHz</item>
         <item>16 kHz</item>
         <item>22 kHz</item>
@@ -193,7 +194,8 @@ and more are available at
 
     <!-- Unfortunately cannot use an integer array -->
     <string-array name="valuesRecordingRate" translatable="false">
-        <item>8000</item>
+
+        <!-- <item>8000</item> -->
         <item>11025</item>
         <item>16000</item>
         <item>22050</item>
