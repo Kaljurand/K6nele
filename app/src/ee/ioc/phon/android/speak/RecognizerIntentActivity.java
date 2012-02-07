@@ -73,16 +73,23 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
 /**
- * <p>This activity responds to the RecognizerIntent.ACTION_RECOGNIZE_SPEECH intent.
- * We have tried to implement the complete interface of RecognizerIntent as of API level 7 (v2.1).</p>
+ * <p>This activity responds to the following intent types:</p>
+ * <ul>
+ * <li>android.speech.action.RECOGNIZE_SPEECH</li>
+ * <li>android.speech.action.WEB_SEARCH</li>
+ * </ul>
+ * <p>We have tried to implement the complete interface of RecognizerIntent as of API level 7 (v2.1).</p>
  * 
  * <p>It records audio, transcribes it using a speech-to-text server
- * and returns the result as a list of Strings, or an error code.</p>
+ * and returns the result as a non-empty list of Strings.
+ * In case of <code>android.intent.action.MAIN</code>,
+ * it submits the recorded/transcribed audio to a web search.
+ * It never returns an error code,
+ * all the errors are processed within this activity.</p>
  * 
  * <p>This activity rewrites the error codes which originally come from the
  * speech recognizer webservice (and which are then rewritten by the net-speech-api)
- * to the RecognizerIntent result error codes, which the eventual app will react to
- * by displaying them somehow to the user. The RecognizerIntent error codes are the
+ * to the RecognizerIntent result error codes. The RecognizerIntent error codes are the
  * following (with my interpretation after the colon):</p>
  * 
  * <ul>
@@ -147,9 +154,6 @@ public class RecognizerIntentActivity extends Activity {
 	private ImageView mIvWaveform;
 	private TextView mTvChunks;
 	private TextView mTvErrorMessage;
-
-	private int mWaveformWidth;
-	private int mWaveformHeight;
 
 	private SimpleMessageHandler mMessageHandler = new SimpleMessageHandler();
 	private Handler mHandlerBytes = new Handler();
@@ -299,14 +303,6 @@ public class RecognizerIntentActivity extends Activity {
 		}
 
 		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
-
-
-		// http://stackoverflow.com/questions/5012840/android-specifying-pixel-units-like-sp-px-dp-without-using-xml
-		DisplayMetrics metrics = mRes.getDisplayMetrics();
-		// This must match the layout_width of the top layout in recognizer.xml
-		float dp = 250f;
-		mWaveformWidth = (int) (metrics.density * dp + 0.5f);
-		mWaveformHeight = (int) (mWaveformWidth / 2.5);
 	}
 
 
@@ -559,8 +555,15 @@ public class RecognizerIntentActivity extends Activity {
 		mTvPrompt.setVisibility(View.GONE);
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlTranscribing.setVisibility(View.VISIBLE);
+
+		// http://stackoverflow.com/questions/5012840/android-specifying-pixel-units-like-sp-px-dp-without-using-xml
+		DisplayMetrics metrics = mRes.getDisplayMetrics();
+		// This must match the layout_width of the top layout in recognizer.xml
+		float dp = 250f;
+		int waveformWidth = (int) (metrics.density * dp + 0.5f);
+		int waveformHeight = (int) (waveformWidth / 2.5);
 		mIvWaveform.setVisibility(View.VISIBLE);
-		mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, mWaveformWidth, mWaveformHeight, 0, bytes.length));
+		mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, waveformWidth, waveformHeight, 0, bytes.length));
 	}
 
 
