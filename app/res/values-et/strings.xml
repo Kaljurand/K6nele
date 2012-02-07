@@ -39,7 +39,7 @@
 		transkriptsiooni rakenduse-keelde</string>
     <string name="summaryServerList">Nimekiri kõnetuvastusserveritest</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
-    <string name="summaryRepeaterDemo">ranskribeerib kõne, näitab parimat tulemust,
+    <string name="summaryRepeaterDemo">Transkribeerib kõne, näitab parimat tulemust,
 		transkribeerib uuesti, … Kõnele saab menüü abil omistada
 		grammatika.</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
@@ -62,8 +62,9 @@
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
 		et
-		saata lühisõnumeid, sooritada infootsingut, kirjutada märkmeid, jne.
-		Sellistes rakendustes on tüüpiliselt väike mikrofonikujuline nupp,
+		saata lühisõnumeid, sooritada infootsingut, kirjutada märkmeid, jne.&lt;/p>
+
+		&lt;p>Paljudes Androidi rakendustes on väike mikrofonikujuline nupp,
 		millele vajutades eeldab rakendus kasutajalt mõnesekundilist
 		kõnejuppi,
 		mis automaatselt tekstiks teisendatakse.
@@ -73,6 +74,7 @@
 		&amp;nbsp;&amp;nbsp;&amp;bull;
 		klaviatuurirakendused (nt
 		SwiftKey X, SlideIT, GO Keyboard);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused (nt Google Maps, Waze);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull; TODO-rakendused (nt
 		Astrid Tasks, Taskos
 		To Do List, Out of Milk,
@@ -87,9 +89,7 @@
 		tõlketeenused (nt Google
 		Translate);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull;
-		otsinguribaga rakendused (nt Google
-		Maps, YouTube, Google
-		Docs).
+		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, Google Maps, YouTube, Google Docs).
 
 		&lt;p>Tüüpiliselt kasutab
 		telefon kõne
@@ -110,7 +110,10 @@
 		keelde. Nt
 		kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
 		grammatika
-		või kaardirakendusele Eesti aadresside grammatika. Vt ka
+		või kaardirakendusele Eesti aadresside grammatika.
+		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
+		Nt rakenduses Speaktoit saab hommikuse äratuskella paika seada fraasiga \"ärata mind seitse kolmkümmend\",
+		eeldusel, et sellele rakendusele on omistatud Alarm-grammatika. Vt ka
 		&lt;a
 		href="http://kaljurand.github.com/Grammars/">grammatikate
 		projekti
@@ -127,7 +130,8 @@
 		transkribeerimiseks
 		laaditakse
 		serverisse umbes 1MB jagu
-		andmeid.&lt;/p>
+		andmeid.
+		(Seda juhul kui kõne on salvestatud 16kHz sämplimissagedusega.)&lt;/p>
 
 		&lt;p>Põhjalikum
 		dokumentatsioon on saadaval
@@ -164,7 +168,7 @@
     <string name="cmServerDefault">Määra vaikeväärtuseks</string>
     <string name="cmServerEdit">Muuda URL</string>
     <string name="cmServerDelete">Kustuta</string>
-    <string name="confirmDeleteEntry">Tahate kindlasti kustutada \"%1$s\"?</string>
+    <string name="confirmDeleteEntry">Eemaldan loendist \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Tuvastan selles rakenduses kõnet ilma oma
 		grammatikata?</string>
     <string name="confirmRemoveServer">Tuvastan selles rakenduses kõnet vaikimisi määratud
@@ -198,7 +202,7 @@
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
 		uuesti!</string>
-    <string name="errorBadPendingIntent">IGA: formaadi viga: EXTRA_RESULTS_PENDINGINTENT</string>
+    <string name="errorBadPendingIntent">VIGA: formaadi viga: EXTRA_RESULTS_PENDINGINTENT</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="noteMaxRecordingTimeExceeded">Lindistamise ajalimiit on ületatud</string>
