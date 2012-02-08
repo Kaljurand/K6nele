@@ -28,6 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,8 @@ import android.widget.EditText;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
@@ -243,5 +246,24 @@ public class Utils {
 		// little endian = 1234
 		// big endian = 4321
 		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
+	}
+
+
+	public static List<String> ppBundle(Bundle bundle) {
+		return ppBundle("/", bundle);
+	}
+
+
+	private static List<String> ppBundle(String bundleName, Bundle bundle) {
+		List<String> strings = new ArrayList<String>();
+		for (String key : bundle.keySet()) {
+			Object value = bundle.get(key);
+			if (value instanceof Bundle) {
+				strings.addAll(ppBundle(bundleName + key + "/", (Bundle) value));
+			} else {
+				strings.add(bundleName + key + ": " + value);
+			}
+		}
+		return strings;
 	}
 }

@@ -62,6 +62,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -662,30 +663,17 @@ public class RecognizerIntentActivity extends Activity {
 		if (mExtraResultsPendingIntent != null) {
 			pendingIntentTargetPackage = mExtraResultsPendingIntent.getTargetPackage();
 		}
-		String pendingBundle = null;
-		if (mExtraResultsPendingIntentBundle != null) {
-			pendingBundle = mExtraResultsPendingIntentBundle.keySet().toString();
-		}
-		return new String[] {
-				"ID: " + mUniqueId,
-				"User-Agent comment: " + makeUserAgentComment(),
-				"Calling activity class name: " + callingActivityClassName,
-				"Calling activity package name: " + callingActivityPackageName,
-				"Pending intent target package: " + pendingIntentTargetPackage,
-				"Selected grammar: " + mGrammarUrl,
-				"Selected target lang: " + mGrammarTargetLang,
-				"Selected server: " + mServerUrl,
-				"Intent extras: " + mExtras.keySet().toString(),
-				"LANGUAGE_MODEL: " + mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE_MODEL),
-				"LANGUAGE: " + mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE),
-				"MAX_RESULTS: " + mExtraMaxResults,
-				"PROMPT: " + mExtras.getString(RecognizerIntent.EXTRA_PROMPT),
-				"RESULTS_PENDING_INTENT: " + mExtraResultsPendingIntent,
-				"RESULTS_PENDING_INTENT_BUNDLE: " + pendingBundle,
-				"SERVER_URL: " + mExtras.getString(Extras.EXTRA_SERVER_URL),
-				"GRAMMAR_URL: " + mExtras.getString(Extras.EXTRA_GRAMMAR_URL),
-				"GRAMMAR_TARGET_LANG: " + mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG)
-		};
+		List<String> info = new ArrayList<String>();
+		info.add("ID: " + mUniqueId);
+		info.add("User-Agent comment: " + makeUserAgentComment());
+		info.add("Calling activity class name: " + callingActivityClassName);
+		info.add("Calling activity package name: " + callingActivityPackageName);
+		info.add("Pending intent target package: " + pendingIntentTargetPackage);
+		info.add("Selected grammar: " + mGrammarUrl);
+		info.add("Selected target lang: " + mGrammarTargetLang);
+		info.add("Selected server: " + mServerUrl);
+		info.addAll(Utils.ppBundle(mExtras));
+		return info.toArray(new String[info.size()]);
 	}
 
 
