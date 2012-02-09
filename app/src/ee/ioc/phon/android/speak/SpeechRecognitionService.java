@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.NotAvailableException;
@@ -48,8 +47,6 @@ import android.util.Log;
 // TODO: max recording time, maybe calculate the amount of sends
 // delay + x * interval = max_recording_time --> (max-delay)/interval
 
-// TODO: keep track of callers
-
 // TODO: send correct dB
 
 // TODO: send correct waveform data
@@ -65,9 +62,6 @@ public class SpeechRecognitionService extends RecognitionService {
 	private static final int TASK_INTERVAL_VOL = 100;
 	// Wait for 1 sec before starting to measure the volume
 	private static final int TASK_DELAY_VOL = 1000;
-
-
-	private String mUniqueId;
 
 	private SharedPreferences mPrefs;
 
@@ -333,15 +327,6 @@ public class SpeechRecognitionService extends RecognitionService {
 	private void myCreate(Intent recognizerIntent, final Callback listener) throws RemoteException {
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-		SharedPreferences settings = getSharedPreferences(getString(R.string.filePreferences), 0);
-		mUniqueId = settings.getString("id", null);
-		if (mUniqueId == null) {
-			mUniqueId = UUID.randomUUID().toString();
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putString("id", mUniqueId);
-			editor.commit();	
-		}
-
 		mExtras = recognizerIntent.getExtras();
 		if (mExtras == null) {
 			// For some reason getExtras() can return null, we map it
@@ -409,9 +394,14 @@ public class SpeechRecognitionService extends RecognitionService {
 		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
 		mRecSession = new ChunkedWebRecSession(wsUrl, lmUrl, mGrammarTargetLang, nbest);
 		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + wsUrl + ": lm=" + lmUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + nbest);
-		String userAgentComment = makeUserAgentComment();
+		String userAgentComment = Utils.makeUserAgentComment(this, mCaller);
 		mRecSession.setUserAgentComment(userAgentComment);
 		Log.i(LOG_TAG, "User Agent comment: " + userAgentComment);
+		mRecSession.setDeviceId(Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)));
+		String phrase = mExtras.getString(Extras.EXTRA_PHRASE);
+		if (phrase != null) {
+			mRecSession.setPhrase(phrase);
+		}
 
 		// This task talks to the internet. It is therefore potentially slow and
 		// should not be run in the UI thread.
@@ -460,12 +450,6 @@ public class SpeechRecognitionService extends RecognitionService {
 	}
 
 
-	// TODO: maybe replace by "SpeechRecognitionService/"
-	private String makeUserAgentComment() {
-		return 	"RecognizerIntentActivity/" + Utils.getVersionName(this) + "; " + mUniqueId + "; " + mCaller;
-	}
-
-
 	/**
 	 * <p>Returns a description of the caller that eventually receives the transcription.
 	 * If the extras specify a pending intent (I've never encountered such an app though),
@@ -488,7 +472,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * <ul>
 	 * <li>VoiceIME/com.google.android.apps.plus (standard keyboard in Google Plus app)</li>
 	 * <li>SwypeIME/com.timsu.astrid</li>
-	 * <li>null/null (if no caller-identifying info was found in the extras)
+	 * <li>null/null (if no caller-identifying info was found in the extras)</li>
 	 * </ul>
 	 */
 	private String getCaller() {

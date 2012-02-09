@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -39,6 +40,7 @@ import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 
@@ -199,6 +201,11 @@ public class Utils {
 	}
 
 
+	public static String makeUserAgentComment(Context c, String caller) {
+		return "RecognizerIntentActivity/" + getVersionName(c) + "; " + caller;
+	}
+
+
 	public static String getVersionName(Context c) {
 		PackageInfo info = getPackageInfo(c);
 		if (info == null) {
@@ -246,6 +253,18 @@ public class Utils {
 		// little endian = 1234
 		// big endian = 4321
 		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
+	}
+
+
+	public static String getUniqueId(SharedPreferences settings) {
+		String id = settings.getString("id", null);
+		if (id == null) {
+			id = UUID.randomUUID().toString();
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id", id);
+			editor.commit();
+		}
+		return id;
 	}
 
 

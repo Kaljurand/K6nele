@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package ee.ioc.phon.android.speak;
  * <p>Set of non-standard extras that our RecognizerIntentActivity supports.</p>
  * 
  * @author Kaarel Kaljurand
- *
  */
 public class Extras {
 
@@ -32,5 +31,10 @@ public class Extras {
 
 	// Identifier of the target language (any string)
 	public static final String EXTRA_GRAMMAR_TARGET_LANG = "ee.ioc.phon.android.extra.GRAMMAR_TARGET_LANG";
+
+	// Desired transcription.
+	// Using this extra, the user can specify to which string the enclosed audio
+	// should be transcribed.
+	public static final String EXTRA_PHRASE = "ee.ioc.phon.android.extra.PHRASE";
 
 }

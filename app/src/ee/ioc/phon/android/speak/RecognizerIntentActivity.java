@@ -64,7 +64,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 
@@ -140,8 +139,6 @@ public class RecognizerIntentActivity extends Activity {
 	private static final String DOTS = ".......";
 
 	private Map<Integer, String> mErrorMessages;
-
-	private String mUniqueId;
 
 	private SharedPreferences mPrefs;
 
@@ -235,15 +232,6 @@ public class RecognizerIntentActivity extends Activity {
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		mErrorMessages = createErrorMessages();
-
-		SharedPreferences settings = getSharedPreferences(getString(R.string.filePreferences), 0);
-		mUniqueId = settings.getString("id", null);
-		if (mUniqueId == null) {
-			mUniqueId = UUID.randomUUID().toString();
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putString("id", mUniqueId);
-			editor.commit();	
-		}
 
 		// Don't shut down the screen
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -610,7 +598,16 @@ public class RecognizerIntentActivity extends Activity {
 
 	private boolean init(String contentType) {
 		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-		return mService.init(contentType, makeUserAgentComment(), mServerUrl, mGrammarUrl, mGrammarTargetLang, nbest);
+		return mService.init(
+				contentType,
+				Utils.makeUserAgentComment(this, getCaller()),
+				mServerUrl,
+				mGrammarUrl,
+				mGrammarTargetLang,
+				nbest,
+				Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)),
+				mExtras.getString(Extras.EXTRA_PHRASE)
+				);
 	}
 
 
@@ -664,8 +661,8 @@ public class RecognizerIntentActivity extends Activity {
 			pendingIntentTargetPackage = mExtraResultsPendingIntent.getTargetPackage();
 		}
 		List<String> info = new ArrayList<String>();
-		info.add("ID: " + mUniqueId);
-		info.add("User-Agent comment: " + makeUserAgentComment());
+		info.add("ID: " + Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)));
+		info.add("User-Agent comment: " + Utils.makeUserAgentComment(this, getCaller()));
 		info.add("Calling activity class name: " + callingActivityClassName);
 		info.add("Calling activity package name: " + callingActivityPackageName);
 		info.add("Pending intent target package: " + pendingIntentTargetPackage);
@@ -762,11 +759,6 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		}
 		finish();
-	}
-
-
-	private String makeUserAgentComment() {
-		return 	"RecognizerIntentActivity/" + Utils.getVersionName(this) + "; " + mUniqueId + "; " + getCaller();
 	}
 
 

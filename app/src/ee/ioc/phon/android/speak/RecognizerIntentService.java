@@ -217,7 +217,7 @@ public class RecognizerIntentService extends Service {
 	 * @param nbest number of requested hypothesis
 	 * @return <code>true</code> iff there was no error
 	 */
-	public boolean init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest) {
+	public boolean init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest, String deviceId, String phrase) {
 		if (mState != State.IDLE && mState != State.ERROR) {
 			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
 			return false;
@@ -229,10 +229,16 @@ public class RecognizerIntentService extends Service {
 		if (contentType != null) {
 			mRecSession.setContentType(contentType);
 		}
+		mRecSession.setDeviceId(deviceId);
+		if (phrase != null) {
+			mRecSession.setPhrase(phrase);
+		}
 		try {
 			mRecSession.create();
-			Log.i(LOG_TAG, "mRecSession.create() OK: " + contentType);
-			Log.i(LOG_TAG, "mRecSession.create() OK: " + userAgentComment);
+			Log.i(LOG_TAG, "mRecSession.create() content type: " + contentType);
+			Log.i(LOG_TAG, "mRecSession.create() UA: " + userAgentComment);
+			Log.i(LOG_TAG, "mRecSession.create() ID: " + deviceId);
+			Log.i(LOG_TAG, "mRecSession.create() phrase: " + phrase);
 			setState(State.INITIALIZED);
 			return true;
 		} catch (IOException e) {

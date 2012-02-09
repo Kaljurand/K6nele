@@ -207,7 +207,8 @@
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="noteMaxRecordingTimeExceeded">Lindistamise ajalimiit on ületatud</string>
     <string name="promptDefault">Kõnelege veebiotsingu päring</string>
-    <string name="promptDemo">Öelge nt: Lampjalgadega stampvambilgi on rambikramp</string>
+    <string name="promptDemo">Öelge nt: Lampjalgadega stampvambilgi on rambikramp.</string>
+    <string name="phraseDemo">Lampjalgadega stampvambilgi on rambikramp.</string>
     <string name="buttonMicrophoneContentDescription">Vajutage sellele nupule ja kõnelege</string>
     <string name="ivWaveformContentDescription">Sisendkõne pilt</string>
 
