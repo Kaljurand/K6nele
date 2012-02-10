@@ -10,7 +10,7 @@
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyService" translatable="false">keyService</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
-    <string name="keyAutoStopAfterTime" translatable="false">eyAutoStopAfterTime</string>
+    <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultUrlCalibratePhrases" translatable="false">http://speech-vs-text.appspot.com/gr?n=5&amp;min=3&amp;max=15</string>
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
@@ -73,7 +73,7 @@
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
 		v%3$s by &lt;a href="http://www.google.com/profiles/kaljurand">Kaarel Kaljurand&lt;/a></string>
-    <string name="tvAbout">		&lt;p>%1$s
+    <string name="tvAbout">&lt;p>%1$s
 is an app that offers speech-to-text service to other apps.
 Apps which allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
@@ -154,7 +154,9 @@ and more are available at
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
+    <string name="promptDefault">Speak a web search query</string>
     <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
+    <string name="phraseDemo">Kuuuurija istus töööös jääääres.</string>
     <string name="buttonMicrophoneContentDescription">Press this button and speak</string>
     <string name="ivWaveformContentDescription">Waveform of the spoken input</string>
 
@@ -184,7 +186,8 @@ and more are available at
         <item>1 2 3 4 5</item>
     </string-array>
     <string-array name="entriesRecordingRate" translatable="false">
-        <item>8 kHz</item>
+
+        <!-- <item>8 kHz</item> -->
         <item>11 kHz</item>
         <item>16 kHz</item>
         <item>22 kHz</item>
@@ -195,7 +198,8 @@ and more are available at
 
     <!-- Unfortunately cannot use an integer array -->
     <string-array name="valuesRecordingRate" translatable="false">
-        <item>8000</item>
+
+        <!-- <item>8000</item> -->
         <item>11025</item>
         <item>16000</item>
         <item>22050</item>

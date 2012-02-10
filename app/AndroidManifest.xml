@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
     package="ee.ioc.phon.android.speak"
-    android:versionCode="900"
-    android:versionName="0.9.00" >
+    android:versionCode="901"
+    android:versionName="0.9.01" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
@@ -25,13 +26,8 @@
 			android:finishOnTaskLaunch="true"
 			android:allowTaskReparenting="false"
         -->
-        <!--
-        TODO: The recorder can be in any orientation but during the time
-		it is active the orientation should not change. Or if it changes, it should not
-		affect the recording/transcribing.
-        -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:screenOrientation="behind" -->
+
+
         <!--
         TODO: singleTask seems a more appropriate launchMode,
         but it does not work, and with singleInstance we fail to
@@ -39,10 +35,8 @@
         -->
         <activity
             android:name=".RecognizerIntentActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
@@ -53,6 +47,11 @@
                 <action android:name="android.speech.action.WEB_SEARCH" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -112,6 +111,8 @@
         </service>
         -->
 
+        <service android:name="RecognizerIntentService" >
+        </service>
         <service
             android:name="SpeechRecognitionService"
             android:label="@string/labelApp" >
