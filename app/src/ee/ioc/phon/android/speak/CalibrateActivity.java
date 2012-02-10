@@ -52,11 +52,14 @@ import ee.ioc.phon.android.speak.demo.AbstractRecognizerDemoActivity;
  */
 public class CalibrateActivity extends AbstractRecognizerDemoActivity implements OnClickListener {
 
-	private final List<String> mMatches = new ArrayList<String>();
+	// We make it static so that it would survive Destroy.
+	private static final List<String> mMatches = new ArrayList<String>();
+
 	private final Intent mIntent = createRecognizerIntent();
 	private ListView mList;
 	private Button speakButton;
 	private Iterator<String> mPhraseIterator;
+	private String mCurrentPhrase;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 		setContentView(R.layout.calibrate);
 		speakButton = (Button) findViewById(R.id.buttonMicrophone);
 		mList = (ListView) findViewById(R.id.list_matches);
+		updateList(mMatches);
 
 		if (getRecognizers(mIntent).size() == 0) {
 			speakButton.setEnabled(false);
@@ -87,7 +91,8 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 			List<String> phrases = getPhrases(url);
 			if (phrases != null && ! phrases.isEmpty()) {
 				mPhraseIterator = phrases.iterator();
-				launchRecognizerIntent(mIntent, mPhraseIterator.next());
+				mCurrentPhrase = mPhraseIterator.next();
+				launchRecognizerIntent(mIntent, mCurrentPhrase);
 			} else {
 				toast("ERROR: No phrases to test with...");
 			}
@@ -97,35 +102,29 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 
 	@Override
 	protected void onSuccess(List<String> matches) {
-		if (matches.isEmpty()) {
-			mMatches.add("(NO MATCH)");
+		if (matches.isEmpty() || mPhraseIterator == null) {
+			mMatches.add(0, "(NO MATCH)");
 		} else {
 			String match = matches.get(0);
-			String m1 = match.replaceAll("\\W+", "");
-			String m2 = mPhraseIterator.toString().toLowerCase().replaceAll("\\W+", "");
+			String m1 = match.toLowerCase().replaceAll("\\W+", "");
+			String m2 = mCurrentPhrase.toLowerCase().replaceAll("\\W+", "");
 			if (m1.equals(m2)) {
 				match = "[OK] " + match;
 			}
 			mMatches.add(0, match);
 		}
-		mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mMatches));
 
-		if (mPhraseIterator.hasNext()) {
+		updateList(mMatches);
+
+		if (mPhraseIterator != null && mPhraseIterator.hasNext()) {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					launchRecognizerIntent(mIntent, mPhraseIterator.next());
+					mCurrentPhrase = mPhraseIterator.next();
+					launchRecognizerIntent(mIntent, mCurrentPhrase);
 				}
 			}, 800);
 		}
-	}
-
-
-	private static List<String> getPhrases() {
-		List<String> phrases = new ArrayList<String>();
-		phrases.add("tere");
-		phrases.add("elas metsas");
-		return phrases;
 	}
 
 
@@ -188,5 +187,10 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 				list.add(str);
 			}
 		}
+	}
+
+
+	private void updateList(List<String> listItems) {
+		mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems));
 	}
 }

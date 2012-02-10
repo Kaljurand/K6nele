@@ -128,8 +128,8 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 
 	protected void launchRecognizerIntent(Intent intent, String prompt) {
 		if (mGrammarId == 0) {
-			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.promptDemo));
-			intent.putExtra(Extras.EXTRA_PHRASE, getString(R.string.phraseDemo));
+			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, prompt);
+			intent.putExtra(Extras.EXTRA_PHRASE, prompt);
 		} else {
 			String grammarTargetLang = getGrammarTargetLang();
 			intent.putExtra(Extras.EXTRA_GRAMMAR_URL, getGrammarUrl());

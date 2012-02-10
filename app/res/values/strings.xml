@@ -12,7 +12,7 @@
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
-    <string name="defaultUrlCalibratePhrases" translatable="false">http://speech-vs-text.appspot.com/gr?n=5&amp;min=3&amp;max=15</string>
+    <string name="defaultUrlCalibratePhrases" translatable="false">http://speech-vs-text.appspot.com/gr?n=5&amp;min=2&amp;max=6&amp;f=tallinn</string>
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
     <string-array name="valuesAutoStopAfterTime" translatable="false">
