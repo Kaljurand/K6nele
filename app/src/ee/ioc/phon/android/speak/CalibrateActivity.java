@@ -55,9 +55,8 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 	// We make it static so that it would survive Destroy.
 	private static final List<String> mMatches = new ArrayList<String>();
 
-	private final Intent mIntent = createRecognizerIntent();
+	private Intent mIntent;
 	private ListView mList;
-	private Button speakButton;
 	private Iterator<String> mPhraseIterator;
 	private String mCurrentPhrase;
 
@@ -65,16 +64,16 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.calibrate);
-		speakButton = (Button) findViewById(R.id.buttonMicrophone);
+
 		mList = (ListView) findViewById(R.id.list_matches);
 		updateList(mMatches);
 
-		if (getRecognizers(mIntent).size() == 0) {
-			speakButton.setEnabled(false);
-			toast(getString(R.string.errorRecognizerNotPresent));
-		} else {
-			speakButton.setOnClickListener(this);
-		}
+		mIntent = new Intent(this, RecognizerIntentActivity.class);
+		mIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+		mIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+
+		Button speakButton = (Button) findViewById(R.id.buttonMicrophone);
+		speakButton.setOnClickListener(this);
 	}
 
 
@@ -94,7 +93,7 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 				mCurrentPhrase = mPhraseIterator.next();
 				launchRecognizerIntent(mIntent, mCurrentPhrase);
 			} else {
-				toast("ERROR: No phrases to test with...");
+				toast("ERROR: No phrases to test with! Is the internet switched on?");
 			}
 		}
 	}
@@ -125,14 +124,6 @@ public class CalibrateActivity extends AbstractRecognizerDemoActivity implements
 				}
 			}, 800);
 		}
-	}
-
-
-	private static Intent createRecognizerIntent() {
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-		return intent;
 	}
 
 
