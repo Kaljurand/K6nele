@@ -354,7 +354,10 @@ public class SpeechRecognitionService extends RecognitionService {
 						getString(R.string.defaultAutoStopAfterTime)));
 
 		mCaller = getCaller();
-		PackageNameRegistry wrapper = new PackageNameRegistry(this, mCaller);
+		// We put just the package name into the database, i.e. there is no
+		// difference in terms of grammar assigning if speech recognition
+		// in the app is used via the keyboard or via a dedicated speech input button.
+		PackageNameRegistry wrapper = new PackageNameRegistry(this, mCaller.replaceFirst(".*/", ""));
 
 		// If the user has not overridden the grammar then use the app's EXTRA.
 		mGrammarUrl = Utils.chooseValue(wrapper.getGrammarUrl(), mExtras.getString(Extras.EXTRA_GRAMMAR_URL));
