@@ -53,7 +53,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.speech.DETAILS"
+                android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
         </activity>
+
+        <receiver android:name=".GetLanguageDetailsReceiver" >
+            <intent-filter>
+                <action android:name="android.speech.action.GET_LANGUAGE_DETAILS" />
+            </intent-filter>
+        </receiver>
 
         <!-- We fall back to the application label because this is a launcher activity. -->
         <activity
