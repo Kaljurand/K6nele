@@ -39,7 +39,7 @@ public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 
 	public final ArrayList<String> mSupportedLanguages = new ArrayList<String>();
 
-	private static final String LOG_TAG = RecognizerIntentActivity.class.getName();
+	private static final String LOG_TAG = GetLanguageDetailsReceiver.class.getName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
