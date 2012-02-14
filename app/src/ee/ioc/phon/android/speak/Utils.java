@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -202,7 +203,11 @@ public class Utils {
 
 
 	public static String makeUserAgentComment(Context c, String caller) {
-		return "RecognizerIntentActivity/" + getVersionName(c) + "; " + caller;
+		return "RecognizerIntentActivity/" + getVersionName(c) + "; " +
+				Build.MANUFACTURER + "/" +
+				Build.DEVICE + "/" +
+				Build.DISPLAY + "; " +
+				caller;
 	}
 
 

@@ -22,9 +22,8 @@
             android:layout_margin="1dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:lines="2"
+            android:lines="3"
             android:padding="1dp"
-            android:text="@string/promptDemo"
             android:textColor="@color/grey2"
             android:textSize="14sp" />
 
