@@ -37,7 +37,7 @@ import android.util.Log;
  */
 public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 
-	public final ArrayList<String> mSupportedLanguages = new ArrayList<String>();
+	private final ArrayList<String> mSupportedLanguages = new ArrayList<String>();
 
 	private static final String LOG_TAG = GetLanguageDetailsReceiver.class.getName();
 
