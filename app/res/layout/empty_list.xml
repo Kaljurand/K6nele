@@ -5,8 +5,7 @@
     android:layout_height="fill_parent"
     android:gravity="center"
     android:padding="6dp"
-    android:text="..."
-    android:textColor="@color/grey2"
+    android:textColor="@color/grey1"
     android:textSize="16sp" >
 
 </TextView>

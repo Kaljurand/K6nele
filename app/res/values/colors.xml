@@ -6,7 +6,6 @@
     <color name="white">#ffffff</color>
     <color name="orange">#ff6600</color> <!-- orange -->
     <color name="orange1">#ffcc99</color> <!-- sand(Safe Hex3) -->
-    <!-- General -->
     <color name="green1">#99cc33</color>
     <color name="green2">#00cc00</color>
     <color name="green3">#669900</color>
@@ -17,8 +16,7 @@
     <color name="buttonPressed">#660000</color>
     <color name="buttonPressedStart">#660000</color>
     <color name="buttonPressedEnd">#cc0000</color>
-
-    <!-- dark grey -->
+    <color name="grey1">#c0c0c0</color>
     <color name="grey2">#808080</color>
     <color name="grey3">#404040</color>
 
