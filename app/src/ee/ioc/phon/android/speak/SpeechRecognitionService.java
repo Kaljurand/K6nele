@@ -44,10 +44,11 @@ import android.speech.SpeechRecognizer;
 import android.speech.RecognitionService;
 import android.util.Log;
 
-// TODO: max recording time, maybe calculate the amount of sends
-// delay + x * interval = max_recording_time --> (max-delay)/interval
-
-// TODO: send correct waveform data
+/**
+ * TODO: send correct waveform data
+ *
+ * @author Kaarel Kaljurand
+ */
 public class SpeechRecognitionService extends RecognitionService {
 
 	private static final String LOG_TAG = SpeechRecognitionService.class.getName();
@@ -101,34 +102,40 @@ public class SpeechRecognitionService extends RecognitionService {
 	@Override
 	protected void onStartListening(Intent recognizerIntent, final Callback listener) {
 		try {
-			myCreate(recognizerIntent, listener);
-			myStart(listener);
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
+			init(recognizerIntent, listener);
+		} catch (RemoteException e) {
+			handleRemoteException(e);
+			return;
 		}
 
 
 		// TODO: test this
 		/*
 		if (checkCallingPermission("android.permission.RECORD_AUDIO") == PackageManager.PERMISSION_DENIED) {
-			try {
-				listener.error(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS);
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
+			handleError(listener, SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS);
+			return;
 		}
 		 */
+
 
 		int sampleRate = Integer.parseInt(
 				mPrefs.getString(
 						getString(R.string.keyRecordingRate),
 						getString(R.string.defaultRecordingRate)));
 
+
 		try {
-			createRecSession(Utils.getContentType(sampleRate), listener);
-		} catch (RemoteException e2) {
-			e2.printStackTrace();
+			mRecSession.setContentType(Utils.getContentType(sampleRate));
+			mRecSession.create();
+		} catch (IOException e) {
+			handleError(listener, SpeechRecognizer.ERROR_NETWORK);
+			return;
+		} catch (NotAvailableException e) {
+			// This cannot happen in the current net-speech-api?
+			handleError(listener, SpeechRecognizer.ERROR_SERVER);
+			return;
 		}
+
 
 		try {
 			startRecording(sampleRate);
@@ -137,15 +144,12 @@ public class SpeechRecognitionService extends RecognitionService {
 			listener.beginningOfSpeech();
 			startTasks();
 		} catch (IOException e) {
-			try {
-				listener.error(SpeechRecognizer.ERROR_AUDIO);
-			} catch (RemoteException e1) {
-				e1.printStackTrace();
-			}
+			handleError(listener, SpeechRecognizer.ERROR_AUDIO);
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			handleRemoteException(e);
 		}
 	}
+
 
 	@Override
 	protected void onStopListening(Callback listener) {
@@ -161,6 +165,7 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 	private void releaseResources() {
+		Log.i(LOG_TAG, "Releasing resources");
 		stopTasks();
 		if (mRecSession != null && ! mRecSession.isFinished()) {
 			mRecSession.cancel();
@@ -169,7 +174,10 @@ public class SpeechRecognitionService extends RecognitionService {
 			mRecorder.release();
 			mRecorder = null;
 		}
-		mSendLooper.quit();
+		if (mSendLooper != null) {
+			mSendLooper.quit();
+			mSendLooper = null;
+		}
 	}
 
 
@@ -201,29 +209,25 @@ public class SpeechRecognitionService extends RecognitionService {
 
 	// TODO: maybe change the order of these calls
 	private void stopRecording(Callback listener) {
-		try {
-			listener.endOfSpeech();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
 		mRecorder.stop();
 		stopTasks();
 		transcribeAndFinishInBackground(mRecorder.consumeRecording(), listener);
+		try {
+			listener.endOfSpeech();
+		} catch (RemoteException e) {
+			handleRemoteException(e);
+		}
 	}
 
 
 	/**
 	 * @param bytes byte array representing the audio data
 	 * @param isLast indicates that this is the last chunk that is sent
-	 * @throws RemoteException 
+	 * @throws IOException
 	 */
-	private void sendChunk(byte[] bytes, boolean isLast, final Callback listener) throws RemoteException {
+	private void sendChunk(byte[] bytes, boolean isLast) throws IOException {
 		if (bytes != null && bytes.length > 0 && ! mRecSession.isFinished()) {
-			try {
-				mRecSession.sendChunk(bytes, isLast);
-			} catch (IOException e) {
-				listener.error(SpeechRecognizer.ERROR_NETWORK);
-			}
+			mRecSession.sendChunk(bytes, isLast);
 		}
 	}
 
@@ -246,12 +250,16 @@ public class SpeechRecognitionService extends RecognitionService {
 		Thread t = new Thread() {
 			public void run() {
 				try {
-					sendChunk(bytes, true, listener);
-					getResult(mRecSession, listener);
-					// At this point we don't need the resources anymore
-					releaseResources();
+					try {
+						sendChunk(bytes, true);
+						getResult(mRecSession, listener);
+					} catch (IOException e) {
+						handleError(listener, SpeechRecognizer.ERROR_NETWORK);
+					}
 				} catch (RemoteException e) {
-					e.printStackTrace();
+					handleRemoteException(e);
+				} finally {
+					releaseResources();
 				}
 			}
 		};
@@ -260,23 +268,15 @@ public class SpeechRecognitionService extends RecognitionService {
 	}
 
 
-	private boolean getResult(RecSession recSession, Callback listener) throws RemoteException {
-		RecSessionResult result = null;
-		try {
-			result = recSession.getResult();
-		} catch (IOException e) {
-			listener.error(SpeechRecognizer.ERROR_NETWORK);
-			return false;
-		}
+	private void getResult(RecSession recSession, Callback listener) throws RemoteException, IOException {
+		RecSessionResult result = recSession.getResult();
 
 		if (result == null || result.getLinearizations().isEmpty()) {
 			listener.error(SpeechRecognizer.ERROR_NO_MATCH);
-			return false;
 		} else {
 			ArrayList<String> matches = new ArrayList<String>();
 			matches.addAll(result.getLinearizations());
 			returnOrForwardMatches(matches, listener);
-			return true;
 		}
 	}
 
@@ -287,13 +287,14 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * a toast-message with the transcription.
 	 * Note that we assume that the given list of matches contains at least one
 	 * element.</p>
-	 * 
+	 *
 	 * TODO: the pending intent result code is currently set to 1234 (don't know what this means)
-	 * 
-	 * @param handler message handler
+	 *
 	 * @param matches transcription results (one or more)
+	 * @param listener listener that receives the matches
+	 * @throws RemoteException 
 	 */
-	private void returnOrForwardMatches(ArrayList<String> matches, Callback listener) {
+	private void returnOrForwardMatches(ArrayList<String> matches, Callback listener) throws RemoteException {
 		// Throw away matches that the user is not interested in
 		if (mExtraMaxResults > 0 && matches.size() > mExtraMaxResults) {
 			matches.subList(mExtraMaxResults, matches.size()).clear();
@@ -302,12 +303,7 @@ public class SpeechRecognitionService extends RecognitionService {
 		if (mExtraResultsPendingIntent == null) {
 			Bundle bundle = new Bundle();
 			bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches);
-
-			try {
-				listener.results(bundle);
-			} catch (RemoteException e) {
-				throw new RuntimeException(e);
-			}
+			listener.results(bundle);
 		} else {
 			if (mExtraResultsPendingIntentBundle == null) {
 				mExtraResultsPendingIntentBundle = new Bundle();
@@ -329,7 +325,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	}
 
 
-	private void myCreate(Intent recognizerIntent, final Callback listener) throws RemoteException {
+	private void init(Intent recognizerIntent, final Callback listener) throws RemoteException {
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 		mExtras = recognizerIntent.getExtras();
@@ -377,10 +373,6 @@ public class SpeechRecognitionService extends RecognitionService {
 		thread.start();
 		mSendLooper = thread.getLooper();
 		mSendHandler = new Handler(mSendLooper);
-	}
-
-
-	private void myStart(final Callback listener) throws RemoteException {
 
 		URL wsUrl = null;
 		URL lmUrl = null;
@@ -408,22 +400,25 @@ public class SpeechRecognitionService extends RecognitionService {
 			mRecSession.setPhrase(phrase);
 		}
 
-		// This task talks to the internet. It is therefore potentially slow and
-		// should not be run in the UI thread.
+		// Send chunks to the server
 		mSendTask = new Runnable() {
 			public void run() {
 				if (mRecorder != null) {
 					try {
 						// TODO: Currently returns 16-bit LE
 						byte[] buffer = mRecorder.consumeRecording();
-						sendChunk(buffer, false, listener);
-						// TODO: Expects 16-bit BE
-						listener.bufferReceived(buffer);
+						try {
+							sendChunk(buffer, false);
+							// TODO: Expects 16-bit BE
+							listener.bufferReceived(buffer);
+							Log.i(LOG_TAG, "Send chunk completed");
+							mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
+						} catch (IOException e) {
+							handleError(listener, SpeechRecognizer.ERROR_NETWORK);
+						}
 					} catch (RemoteException e) {
-						e.printStackTrace();
+						handleRemoteException(e);
 					}
-					Log.i(LOG_TAG, "Send chunk completed");
-					mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
 				}
 			}
 		};
@@ -439,7 +434,7 @@ public class SpeechRecognitionService extends RecognitionService {
 						listener.rmsChanged(rmsdb);
 						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
 					} catch (RemoteException e) {
-						e.printStackTrace();
+						handleRemoteException(e);
 					}
 				}
 			}
@@ -464,29 +459,21 @@ public class SpeechRecognitionService extends RecognitionService {
 	}
 
 
-	/**
-	 * <p>Tries to create a speech recognition session and returns <code>true</code>
-	 * if succeeds. Otherwise sends out an error message and returns <code>false</code>.
-	 * Set the content-type to <code>null</code> if you want to use the default
-	 * net-speech-api content type (raw audio).</p>
-	 * 
-	 * @param contentType content type of the audio (e.g. "audio/x-flac;rate=16000")
-	 * @return <code>true</code> iff success
-	 * @throws RemoteException 
-	 */
-	private boolean createRecSession(String contentType, Callback listener) throws RemoteException {
+	private void handleError(final Callback listener, int errorCode) {
+		releaseResources();
 		try {
-			if (contentType != null) {
-				mRecSession.setContentType(contentType);
-			}
-			mRecSession.create();
-			return true;
-		} catch (IOException e) {
-			listener.error(SpeechRecognizer.ERROR_NETWORK);
-		} catch (NotAvailableException e) {
-			// This cannot happen in the current net-speech-api?
-			listener.error(SpeechRecognizer.ERROR_SERVER);
+			listener.error(errorCode);
+		} catch (RemoteException e) {
+			handleRemoteException(e);
 		}
-		return false;
+	}
+
+
+	/**
+	 * About RemoteException see
+	 * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
+	 */
+	private void handleRemoteException(RemoteException e) {
+		Log.e(LOG_TAG, e.getMessage());
 	}
 }

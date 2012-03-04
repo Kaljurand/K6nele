@@ -402,8 +402,8 @@ public class RecognizerIntentService extends Service {
 	 */
 	private void releaseResources() {
 		if (mSendLooper != null) {
-			// TODO: null sending message to a Handler on a dead thread
-			//mSendLooper.quit();
+			mSendLooper.quit();
+			mSendLooper = null;
 		}
 
 		if (mSendHandler != null) {
