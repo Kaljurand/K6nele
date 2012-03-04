@@ -47,8 +47,6 @@ import android.util.Log;
 // TODO: max recording time, maybe calculate the amount of sends
 // delay + x * interval = max_recording_time --> (max-delay)/interval
 
-// TODO: send correct dB
-
 // TODO: send correct waveform data
 public class SpeechRecognitionService extends RecognitionService {
 
@@ -58,19 +56,24 @@ public class SpeechRecognitionService extends RecognitionService {
 	private static final int TASK_INTERVAL_SEND = 2000;
 	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
 
-	// Check the volume / pauses 10 times a second
-	private static final int TASK_INTERVAL_VOL = 100;
-	// Wait for 1 sec before starting to measure the volume
-	private static final int TASK_DELAY_VOL = 1000;
+	// Check the volume 20 times a second
+	private static final int TASK_INTERVAL_VOL = 50;
+	// Wait for 1/2 sec before starting to measure the volume
+	private static final int TASK_DELAY_VOL = 500;
+
+	private static final int TASK_INTERVAL_STOP = 1000;
+	private static final int TASK_DELAY_STOP = 1000;
 
 	private SharedPreferences mPrefs;
 
 	private Handler mVolumeHandler = new Handler();
+	private Handler mStopHandler = new Handler();
 	private volatile Looper mSendLooper;
 	private volatile Handler mSendHandler;
 
 	private Runnable mSendTask;
 	private Runnable mShowVolumeTask;
+	private Runnable mStopTask;
 
 	// Time (in milliseconds since the boot) when the recording is going to be stopped
 	private long mTimeToFinish;
@@ -228,12 +231,14 @@ public class SpeechRecognitionService extends RecognitionService {
 	private void startTasks() {
 		mSendHandler.postDelayed(mSendTask, TASK_DELAY_SEND);
 		mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
+		mStopHandler.postDelayed(mStopTask, TASK_DELAY_STOP);
 	}
 
 
 	private void stopTasks() {
 		mSendHandler.removeCallbacks(mSendTask);
 		mVolumeHandler.removeCallbacks(mShowVolumeTask);
+		mStopHandler.removeCallbacks(mStopTask);
 	}
 
 
@@ -432,17 +437,26 @@ public class SpeechRecognitionService extends RecognitionService {
 						float rmsdb = mRecorder.getRmsdb();
 						Log.i(LOG_TAG, "RMS DB: " + rmsdb);
 						listener.rmsChanged(rmsdb);
+						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
+				}
+			}
+		};
 
+
+		// Check if we should stop recording
+		mStopTask = new Runnable() {
+			public void run() {
+				if (mRecorder != null) {
 					if (
 							mTimeToFinish < SystemClock.uptimeMillis() ||
 							mPrefs.getBoolean("keyAutoStopAfterPause", true) && mRecorder.isPausing()
 							) {
 						stopRecording(listener);
 					} else {
-						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
+						mStopHandler.postDelayed(this, TASK_INTERVAL_STOP);
 					}
 				}
 			}

@@ -101,6 +101,7 @@ public class RawAudioRecorder {
 
 	private int mRecordedLength = 0;
 	private int mConsumedLength = 0;
+	private int mVolumeMeasureLength = 0;
 
 	// Buffer for output
 	private byte[] mBuffer;
@@ -267,8 +268,10 @@ public class RawAudioRecorder {
 
 
 	public float getRmsdb() {
-		long sumOfSquares = getRms(mRecordedLength, mOneSec);
-		long samplesLength = mOneSec/2;
+		int span = mRecordedLength - mVolumeMeasureLength;
+		mVolumeMeasureLength = mRecordedLength;
+		long sumOfSquares = getRms(mRecordedLength, span);
+		long samplesLength = span/2;
 		if (sumOfSquares == 0 || samplesLength == 0) {
 			return 0;
 		}
