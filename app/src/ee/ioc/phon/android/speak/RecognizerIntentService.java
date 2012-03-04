@@ -168,6 +168,17 @@ public class RecognizerIntentService extends Service {
 
 
 	/**
+	 * @return dB value of recent sound pressure
+	 */
+	public float getRmsdb() {
+		if (mRecorder == null) {
+			return 0;
+		}
+		return mRecorder.getRmsdb();
+	}
+
+
+	/**
 	 * @return <code>true</code> iff currently recording non-speech
 	 */
 	public boolean isPausing() {

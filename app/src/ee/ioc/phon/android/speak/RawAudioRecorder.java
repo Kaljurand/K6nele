@@ -339,11 +339,10 @@ public class RawAudioRecorder {
 	 * <p>Releases the resources associated with this class.</p>
 	 */
 	public void release() {
-		if (getState() == State.RECORDING) {
-			stop();
-		}
-
 		if (mRecorder != null) {
+			if (getState() == State.RECORDING) {
+				stop();
+			}
 			mRecorder.release();
 		}
 	}
@@ -370,14 +369,17 @@ public class RawAudioRecorder {
 	 * <p>Stops the recording, and sets the state to STOPPED.</p>
 	 */
 	public void stop() {
-		if (getState() == State.RECORDING) {
-			Log.i(LOG_TAG, "Stopping the recorder...");
-			// TODO: not sure if we need to set the listener to null
-			mRecorder.setRecordPositionUpdateListener(null);
+		// TODO: not sure if we need to set the listener to null
+		mRecorder.setRecordPositionUpdateListener(null);
+
+		// We check the underlying AudioRecord state to make sure
+		// that we don't get an IllegalStateException.
+		int recordingState = mRecorder.getRecordingState();
+		if (recordingState == AudioRecord.RECORDSTATE_RECORDING) {
 			mRecorder.stop();
 			setState(State.STOPPED);
 		} else {
-			Log.e(LOG_TAG, "stop() called in illegal state: " + getState());
+			Log.e(LOG_TAG, "stop() called in illegal state: " + recordingState);
 			setState(State.ERROR);
 		}
 	}

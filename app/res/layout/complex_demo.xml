@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:layout_weight="1"
-            android:contentDescription="@string/buttonMicrophoneContentDescription"
+            android:contentDescription="@string/cdMicrophone"
             android:gravity="center"
             android:padding="5dp"
             android:src="@drawable/ic_btn_speak_now" />

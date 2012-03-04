@@ -28,6 +28,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 
 import android.os.Bundle;
@@ -124,10 +125,13 @@ public class RecognizerIntentActivity extends Activity {
 	// Start the task almost immediately
 	private static final int TASK_BYTES_DELAY = 100;
 
-	// Check the volume / pauses 10 times a second
-	private static final int TASK_VOLUME_INTERVAL = 100;
-	// TODO: maybe wait for 1 sec before starting to measure the volume
-	private static final int TASK_VOLUME_DELAY = 100;
+	// Check for pause / max time limit twice a second
+	private static final int TASK_STOP_INTERVAL = 500;
+	private static final int TASK_STOP_DELAY = 1000;
+
+	// Check the volume 20 times a second
+	private static final int TASK_VOLUME_INTERVAL = 50;
+	private static final int TASK_VOLUME_DELAY = 500;
 
 	private static final int DELAY_AFTER_START_BEEP = 200;
 
@@ -135,8 +139,7 @@ public class RecognizerIntentActivity extends Activity {
 	private static final int MSG_TOAST = 1;
 	private static final int MSG_RESULT_ERROR = 2;
 
-	private static final double LOG_OF_MAX_VOLUME = Math.log10((double) Short.MAX_VALUE);
-	private static final String DOTS = ".......";
+	private static final String DOTS = "............";
 
 	private Map<Integer, String> mErrorMessages;
 
@@ -149,16 +152,20 @@ public class RecognizerIntentActivity extends Activity {
 	private LinearLayout mLlError;
 	private TextView mTvBytes;
 	private Chronometer mChronometer;
+	private ImageView mIvVolume;
 	private ImageView mIvWaveform;
 	private TextView mTvChunks;
 	private TextView mTvErrorMessage;
+	private List<Drawable> mVolumeLevels;
 
 	private SimpleMessageHandler mMessageHandler = new SimpleMessageHandler();
 	private Handler mHandlerBytes = new Handler();
+	private Handler mHandlerStop = new Handler();
 	private Handler mHandlerVolume = new Handler();
 	private Handler mHandlerChunks = new Handler();
 
 	private Runnable mRunnableBytes;
+	private Runnable mRunnableStop;
 	private Runnable mRunnableVolume;
 	private Runnable mRunnableChunks;
 
@@ -182,6 +189,7 @@ public class RecognizerIntentActivity extends Activity {
 	private RecognizerIntentService mService;
 	private boolean mIsBound = false;
 	private boolean mStartRecording = false;
+	private int mLevel = 0;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -243,9 +251,20 @@ public class RecognizerIntentActivity extends Activity {
 		mLlError = (LinearLayout) findViewById(R.id.llError);
 		mTvBytes = (TextView) findViewById(R.id.tvBytes);
 		mChronometer = (Chronometer) findViewById(R.id.chronometer);
+		mIvVolume = (ImageView) findViewById(R.id.ivVolume);
 		mIvWaveform = (ImageView) findViewById(R.id.ivWaveform);
 		mTvChunks = (TextView) findViewById(R.id.tvChunks);
 		mTvErrorMessage = (TextView) findViewById(R.id.tvErrorMessage);
+
+		mRes = getResources();
+		mVolumeLevels = new ArrayList<Drawable>();
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level0));
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level1));
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level2));
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level3));
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level4));
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level5));
+		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level6));
 
 		mExtras = getIntent().getExtras();
 		if (mExtras == null) {
@@ -279,8 +298,6 @@ public class RecognizerIntentActivity extends Activity {
 						getString(R.string.defaultAutoStopAfterTime)));
 
 		mStartRecording = mPrefs.getBoolean("keyAutoStart", false);
-
-		mRes = getResources();
 
 		PackageNameRegistry wrapper = new PackageNameRegistry(this, getCaller());
 
@@ -322,7 +339,7 @@ public class RecognizerIntentActivity extends Activity {
 		// Decide if we should stop recording
 		// 1. Max recording time has passed
 		// 2. Speaker stopped speaking
-		mRunnableVolume = new Runnable() {
+		mRunnableStop = new Runnable() {
 			public void run() {
 				if (mService != null) {
 					if (mMaxRecordingTime < (SystemClock.elapsedRealtime() - mService.getStartTime())) {
@@ -332,8 +349,32 @@ public class RecognizerIntentActivity extends Activity {
 						Log.i(LOG_TAG, "Speaker finished speaking");
 						stopRecording();
 					} else {
-						mHandlerVolume.postDelayed(this, TASK_VOLUME_INTERVAL);
+						mHandlerStop.postDelayed(this, TASK_STOP_INTERVAL);
 					}
+				}
+			}
+		};
+
+
+		mRunnableVolume = new Runnable() {
+			public void run() {
+				if (mService != null) {
+					// TODO: take these from some configuration
+					float min = 15.f;
+					float max = 30.f;
+
+					float db = mService.getRmsdb();
+					final int maxLevel = mVolumeLevels.size() - 1;
+
+					int index = (int) ((db - min) / (max - min) * maxLevel);
+					final int level = Math.min(Math.max(0, index), maxLevel);
+
+					if (level != mLevel) {
+						mIvVolume.setImageDrawable(mVolumeLevels.get(level));
+						mLevel = level;
+					}
+
+					mHandlerVolume.postDelayed(this, TASK_VOLUME_INTERVAL);
 				}
 			}
 		};
@@ -472,6 +513,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void startAllTasks() {
 		mHandlerBytes.postDelayed(mRunnableBytes, TASK_BYTES_DELAY);
+		mHandlerStop.postDelayed(mRunnableStop, TASK_STOP_DELAY);
 		mHandlerVolume.postDelayed(mRunnableVolume, TASK_VOLUME_DELAY);
 		mHandlerChunks.postDelayed(mRunnableChunks, TASK_CHUNKS_DELAY);
 	}
@@ -479,6 +521,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void stopAllTasks() {
 		mHandlerBytes.removeCallbacks(mRunnableBytes);
+		mHandlerStop.removeCallbacks(mRunnableStop);
 		mHandlerVolume.removeCallbacks(mRunnableVolume);
 		mHandlerChunks.removeCallbacks(mRunnableChunks);
 		stopChronometer();
@@ -494,7 +537,9 @@ public class RecognizerIntentActivity extends Activity {
 		setTvPrompt();
 		if (mStartRecording) {
 			mBStartStop.setVisibility(View.GONE);
+			mIvVolume.setVisibility(View.VISIBLE);
 		} else {
+			mIvVolume.setVisibility(View.GONE);
 			mBStartStop.setText(getString(R.string.buttonSpeak));
 			mBStartStop.setVisibility(View.VISIBLE);
 		}
@@ -504,6 +549,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void setGuiError(int errorCode) {
 		mLlTranscribing.setVisibility(View.GONE);
+		mIvVolume.setVisibility(View.GONE);
 		mIvWaveform.setVisibility(View.GONE);
 		// includes: bytes, chronometer, chunks
 		mLlProgress.setVisibility(View.GONE);
@@ -524,8 +570,10 @@ public class RecognizerIntentActivity extends Activity {
 		mLlError.setVisibility(View.GONE);
 		setRecorderStyle(mRes.getColor(R.color.red));
 		if (mPrefs.getBoolean("keyAutoStopAfterPause", true)) {
-			mBStartStop.setVisibility(View.INVISIBLE);
+			mBStartStop.setVisibility(View.GONE);
+			mIvVolume.setVisibility(View.VISIBLE);
 		} else {
+			mIvVolume.setVisibility(View.GONE);
 			mBStartStop.setText(getString(R.string.buttonStop));
 			mBStartStop.setVisibility(View.VISIBLE);
 		}
@@ -536,12 +584,14 @@ public class RecognizerIntentActivity extends Activity {
 		mChronometer.setBase(mService.getStartTime());
 		stopChronometer();
 		mHandlerBytes.removeCallbacks(mRunnableBytes);
+		mHandlerStop.removeCallbacks(mRunnableStop);
 		mHandlerVolume.removeCallbacks(mRunnableVolume);
 		// Chunk checking keeps running
 		mTvBytes.setText(Utils.getSizeAsString(bytes.length));
 		setRecorderStyle(mRes.getColor(R.color.grey2));
 		mBStartStop.setVisibility(View.GONE);
 		mTvPrompt.setVisibility(View.GONE);
+		mIvVolume.setVisibility(View.GONE);
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlTranscribing.setVisibility(View.VISIBLE);
 

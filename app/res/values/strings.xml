@@ -154,8 +154,11 @@ and more are available at
     <string name="promptDefault">Speak a web search query</string>
     <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
     <string name="phraseDemo">Kuuuurija istus töööös jääääres.</string>
-    <string name="buttonMicrophoneContentDescription">Press this button and speak</string>
-    <string name="ivWaveformContentDescription">Waveform of the spoken input</string>
+
+    <!-- Content description of images and buttons -->
+    <string name="cdMicrophone">Press this button and speak</string>
+    <string name="cdWaveform">Waveform of the spoken input</string>
+    <string name="cdVolume">Volume level</string>
 
     <!-- Entries for the database, both apos and its escape character need escaping. -->
     <string name="entryGrammarName1">[unrestricted input]</string>
