@@ -41,6 +41,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,9 +63,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
@@ -141,7 +140,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	private static final String DOTS = "............";
 
-	private Map<Integer, String> mErrorMessages;
+	private SparseArray<String> mErrorMessages;
 
 	private SharedPreferences mPrefs;
 
@@ -884,8 +883,8 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private Map<Integer, String> createErrorMessages() {
-		Map<Integer, String> errorMessages = new HashMap<Integer, String>();
+	private SparseArray<String> createErrorMessages() {
+		SparseArray<String> errorMessages = new SparseArray<String>();
 		errorMessages.put(RecognizerIntent.RESULT_AUDIO_ERROR, getString(R.string.errorResultAudioError));
 		errorMessages.put(RecognizerIntent.RESULT_CLIENT_ERROR, getString(R.string.errorResultClientError));
 		errorMessages.put(RecognizerIntent.RESULT_NETWORK_ERROR, getString(R.string.errorResultNetworkError));

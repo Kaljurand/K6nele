@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
     package="ee.ioc.phon.android.speak"
-    android:versionCode="823"
-    android:versionName="0.8.23" >
+    android:installLocation="auto"
+    android:versionCode="825"
+    android:versionName="0.8.25" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
     <!-- API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService -->
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>

@@ -32,3 +32,9 @@ Version tags are set by e.g.
 	git tag -a v0.8.18 -m 'version 0.8.18'
 
 The last number should be even.
+
+
+Lint
+----
+
+	lint --html report.html app

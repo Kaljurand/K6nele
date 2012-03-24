@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="transparent">#00000000</color>
     <color name="semi_transparent">#ee404040</color>
     <color name="white">#ffffff</color>
     <color name="orange">#ff6600</color> <!-- orange -->
@@ -14,8 +13,6 @@
     <color name="buttonNormalStart">#cc0000</color>
     <color name="buttonNormalEnd">#660000</color>
     <color name="buttonPressed">#660000</color>
-    <color name="buttonPressedStart">#660000</color>
-    <color name="buttonPressedEnd">#cc0000</color>
     <color name="grey1">#c0c0c0</color>
     <color name="grey2">#808080</color>
     <color name="grey3">#404040</color>

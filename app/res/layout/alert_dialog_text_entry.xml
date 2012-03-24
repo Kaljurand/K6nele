@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:autoText="false"
-        android:capitalize="none"
         android:gravity="fill_horizontal"
         android:inputType="textUri"
         android:scrollHorizontally="true"
