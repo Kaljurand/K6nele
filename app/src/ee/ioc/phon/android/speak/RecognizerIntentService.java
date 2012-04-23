@@ -378,8 +378,6 @@ public class RecognizerIntentService extends Service {
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
 		}
 
-		mRecorder.prepare();
-
 		if (mRecorder.getState() != RawAudioRecorder.State.READY) {
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
 		}

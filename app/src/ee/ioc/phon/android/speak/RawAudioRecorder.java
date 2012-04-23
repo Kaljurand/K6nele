@@ -55,19 +55,16 @@ public class RawAudioRecorder {
 	private static final short CHANNELS = 1;
 
 	public enum State {
-		// recorder is initializing
-		INITIALIZING,
-
-		// recorder has been initialized, recorder not yet started
+		// recorder is ready, but not yet recording
 		READY,
 
-		// recording
+		// recorder recording
 		RECORDING,
 
-		// reconstruction needed
+		// error occurred, reconstruction needed
 		ERROR,
 
-		// reset needed
+		// recorder stopped
 		STOPPED
 	};
 
@@ -122,6 +119,9 @@ public class RawAudioRecorder {
 			} else if (numberOfBytes > mBuffer.length) {
 				Log.e(LOG_TAG, "Read more bytes than is buffer length:" + numberOfBytes + ": " + mBuffer.length);
 				stop();
+			} else if (numberOfBytes == 0) {
+				Log.e(LOG_TAG, "Read zero bytes");
+				stop();
 			} else {
 				// Everything seems to be OK, adding the buffer to the recording.
 				add(mBuffer);
@@ -130,11 +130,12 @@ public class RawAudioRecorder {
 
 		public void onMarkerReached(AudioRecord recorder) {
 			// TODO: NOT USED
+			Log.i(LOG_TAG, "onMarkerReached");
 		}
 	};
 
 
-	/** 
+	/**
 	 * <p>Instantiates a new recorder and sets the state to INITIALIZING.
 	 * In case of errors, no exception is thrown, but the state is set to ERROR.</p>
 	 *
@@ -156,21 +157,22 @@ public class RawAudioRecorder {
 			if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
 			}
-			mRecorder.setRecordPositionUpdateListener(mListener);
-
 			int code = mRecorder.setPositionNotificationPeriod(mFramePeriod);
 			if (code == AudioRecord.SUCCESS) {
-				setState(State.INITIALIZING);
+				mRecorder.setRecordPositionUpdateListener(mListener);
+				mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
+				setState(State.READY);
 			} else {
-				setState(State.ERROR);
+				throw new Exception("AudioRecord initialization failed: setPositionNotificationPeriod");
 			}
 		} catch (Exception e) {
+			release();
+			setState(State.ERROR);
 			if (e.getMessage() == null) {
 				Log.e(LOG_TAG, "Unknown error occured while initializing recording");
 			} else {
 				Log.e(LOG_TAG, e.getMessage());
 			}
-			setState(State.ERROR);
 		}
 	}
 
@@ -302,40 +304,6 @@ public class RawAudioRecorder {
 
 
 	/**
-	 * TODO: there is no need for this method we could merge it with the constructor
-	 * 
-	 * <p>Prepares the recorder for recording and sets the state to READY.
-	 * In case the recorder is not in the INITIALIZING state
-	 * the recorder is set to the ERROR state, which makes a reconstruction necessary.
-	 * In case of an exception, the state is changed to ERROR.</p>
-	 */
-	public void prepare() {
-		try {
-			if (getState() == State.INITIALIZING) {
-				if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED) {
-					mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
-					setState(State.READY);
-				} else {
-					Log.e(LOG_TAG, "prepare() method called on uninitialized recorder");
-					setState(State.ERROR);
-				}
-			} else {
-				Log.e(LOG_TAG, "prepare() method called on illegal state");
-				release();
-				setState(State.ERROR);
-			}
-		} catch(Exception e) {
-			if (e.getMessage() == null) {
-				Log.e(LOG_TAG, "Unknown error occured in prepare()");
-			} else {
-				Log.e(LOG_TAG, e.getMessage());
-			}
-			setState(State.ERROR);
-		}
-	}
-
-
-	/**
 	 * <p>Releases the resources associated with this class.</p>
 	 */
 	public void release() {
@@ -349,15 +317,19 @@ public class RawAudioRecorder {
 
 
 	/**
-	 * <p>Starts the recording, and sets the state to RECORDING.
-	 * Call after prepare().</p>
+	 * <p>Starts the recording, and sets the state to RECORDING.</p>
 	 */
 	public void start() {
-		if (getState() == State.READY) {
+		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED) {
 			mRecorder.startRecording();
-			Log.i(LOG_TAG, "startRecording()");
-			mRecorder.read(mBuffer, 0, mBuffer.length);
-			setState(State.RECORDING);
+			if (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+				// TODO: why is this needed?
+				mRecorder.read(mBuffer, 0, mBuffer.length);
+				setState(State.RECORDING);
+			} else {
+				Log.e(LOG_TAG, "startRecording() failed");
+				setState(State.ERROR);
+			}
 		} else {
 			Log.e(LOG_TAG, "start() called on illegal state");
 			setState(State.ERROR);

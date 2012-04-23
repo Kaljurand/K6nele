@@ -801,8 +801,7 @@ public class RecognizerIntentActivity extends Activity {
 			}
 			handler.sendMessage(createMessage(MSG_TOAST, String.format(getString(R.string.toastForwardedMatches), message)));
 			try {
-				// TODO: dummy number 1234
-				mExtraResultsPendingIntent.send(this, 1234, intent);
+				mExtraResultsPendingIntent.send(this, Activity.RESULT_OK, intent);
 			} catch (CanceledException e) {
 				handler.sendMessage(createMessage(MSG_TOAST, e.getMessage()));
 			}

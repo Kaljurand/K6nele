@@ -8,9 +8,10 @@
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
     <!-- API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService -->
+    <!-- TODO: setting targetSdkVersion=15 would switch on StrictMode -->
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="15" />
+        android:targetSdkVersion="8" />
 
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
