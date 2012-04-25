@@ -99,37 +99,6 @@ public class RawAudioRecorder {
 	private byte[] mBuffer;
 
 
-	private AudioRecord.OnRecordPositionUpdateListener mListener = new AudioRecord.OnRecordPositionUpdateListener() {
-		public void onPeriodicNotification(AudioRecord recorder) {
-			// public int read (byte[] audioData, int offsetInBytes, int sizeInBytes)
-			int numberOfBytes = recorder.read(mBuffer, 0, mBuffer.length); // Fill buffer
-
-			// Some error checking
-			if (numberOfBytes == AudioRecord.ERROR_INVALID_OPERATION) {
-				Log.e(LOG_TAG, "The AudioRecord object was not properly initialized");
-				stop();
-			} else if (numberOfBytes == AudioRecord.ERROR_BAD_VALUE) {
-				Log.e(LOG_TAG, "The parameters do not resolve to valid data and indexes.");
-				stop();
-			} else if (numberOfBytes > mBuffer.length) {
-				Log.e(LOG_TAG, "Read more bytes than is buffer length:" + numberOfBytes + ": " + mBuffer.length);
-				stop();
-			} else if (numberOfBytes == 0) {
-				Log.e(LOG_TAG, "Read zero bytes");
-				stop();
-			} else {
-				// Everything seems to be OK, adding the buffer to the recording.
-				add(mBuffer);
-			}
-		}
-
-		public void onMarkerReached(AudioRecord recorder) {
-			// TODO: NOT USED
-			Log.i(LOG_TAG, "onMarkerReached");
-		}
-	};
-
-
 	/**
 	 * <p>Instantiates a new recorder and sets the state to INITIALIZING.
 	 * In case of errors, no exception is thrown, but the state is set to ERROR.</p>
@@ -152,14 +121,8 @@ public class RawAudioRecorder {
 			if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
 			}
-			int code = mRecorder.setPositionNotificationPeriod(mFramePeriod);
-			if (code == AudioRecord.SUCCESS) {
-				mRecorder.setRecordPositionUpdateListener(mListener);
-				mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
-				setState(State.READY);
-			} else {
-				throw new Exception("AudioRecord initialization failed: setPositionNotificationPeriod");
-			}
+			mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
+			setState(State.READY);
 		} catch (Exception e) {
 			release();
 			setState(State.ERROR);
@@ -179,6 +142,30 @@ public class RawAudioRecorder {
 
 	public RawAudioRecorder() {
 		this(DEFAULT_AUDIO_SOURCE, DEFAULT_SAMPLE_RATE);
+	}
+
+
+	private int read(AudioRecord recorder) {
+		// public int read (byte[] audioData, int offsetInBytes, int sizeInBytes)
+		int numberOfBytes = recorder.read(mBuffer, 0, mBuffer.length); // Fill buffer
+
+		// Some error checking
+		if (numberOfBytes == AudioRecord.ERROR_INVALID_OPERATION) {
+			Log.e(LOG_TAG, "The AudioRecord object was not properly initialized");
+			return -1;
+		} else if (numberOfBytes == AudioRecord.ERROR_BAD_VALUE) {
+			Log.e(LOG_TAG, "The parameters do not resolve to valid data and indexes.");
+			return -2;
+		} else if (numberOfBytes > mBuffer.length) {
+			Log.e(LOG_TAG, "Read more bytes than is buffer length:" + numberOfBytes + ": " + mBuffer.length);
+			return -3;
+		} else if (numberOfBytes == 0) {
+			Log.e(LOG_TAG, "Read zero bytes");
+			return -4;
+		}
+		// Everything seems to be OK, adding the buffer to the recording.
+		add(mBuffer);
+		return 0;
 	}
 
 
@@ -325,12 +312,22 @@ public class RawAudioRecorder {
 	 * <p>Starts the recording, and sets the state to RECORDING.</p>
 	 */
 	public void start() {
+		final RawAudioRecorder that = this;
 		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED) {
 			mRecorder.startRecording();
 			if (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
-				// TODO: why is this needed?
-				mRecorder.read(mBuffer, 0, mBuffer.length);
 				setState(State.RECORDING);
+				new Thread() {
+					public void run() {
+						while (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+							int status = read(mRecorder);
+							if (status < 0) {
+								that.stop();
+								break;
+							}
+						}
+					}
+				}.start();
 			} else {
 				Log.e(LOG_TAG, "startRecording() failed");
 				setState(State.ERROR);
@@ -346,17 +343,14 @@ public class RawAudioRecorder {
 	 * <p>Stops the recording, and sets the state to STOPPED.</p>
 	 */
 	public void stop() {
-		// TODO: not sure if we need to set the listener to null
-		mRecorder.setRecordPositionUpdateListener(null);
-
 		// We check the underlying AudioRecord state to make sure
 		// that we don't get an IllegalStateException.
-		int recordingState = mRecorder.getRecordingState();
-		if (recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED &&
+				mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 			mRecorder.stop();
 			setState(State.STOPPED);
 		} else {
-			Log.e(LOG_TAG, "stop() called in illegal state: " + recordingState);
+			Log.e(LOG_TAG, "stop() called in illegal state");
 			setState(State.ERROR);
 		}
 	}
