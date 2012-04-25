@@ -68,11 +68,6 @@ public class RawAudioRecorder {
 		STOPPED
 	};
 
-
-	// The interval in which the recorded samples are output to the file
-	// TODO: explain why 120
-	private static final int TIMER_INTERVAL = 120;
-
 	private AudioRecord mRecorder = null;
 
 	private double mAvgEnergy = 0;
@@ -189,6 +184,9 @@ public class RawAudioRecorder {
 
 	// old version
 	private void setBufferSizeAndFramePeriod_812() {
+		// The interval in which the recorded samples are output to the file
+		// TODO: explain why 120
+		final int TIMER_INTERVAL = 120;
 		mFramePeriod = mSampleRate * TIMER_INTERVAL / 1000;
 		mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BYTES * CHANNELS;
 
@@ -203,9 +201,16 @@ public class RawAudioRecorder {
 
 
 	private void setBufferSizeAndFramePeriod() {
-		mBufferSize = 2 * AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
+		int minBufferSizeInBytes = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
+		if (minBufferSizeInBytes == AudioRecord.ERROR_BAD_VALUE) {
+			throw new IllegalArgumentException("AudioRecord.getMinBufferSize: parameters not supported by hardware");
+		} else if (minBufferSizeInBytes == AudioRecord.ERROR) {
+			Log.w(LOG_TAG, "AudioRecord.getMinBufferSize: unable to query hardware for output properties");
+			minBufferSizeInBytes = mSampleRate * (120 / 1000) * RESOLUTION_IN_BYTES * CHANNELS;
+		}
+		mBufferSize = 2 * minBufferSizeInBytes;
 		mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
-		Log.w(LOG_TAG, "AudioRecord buffer size: " + mBufferSize);
+		Log.w(LOG_TAG, "AudioRecord buffer size: " + mBufferSize + ", min size = " + minBufferSizeInBytes);
 	}
 
 
