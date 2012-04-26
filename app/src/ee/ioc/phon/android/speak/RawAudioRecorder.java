@@ -91,9 +91,11 @@ public class RawAudioRecorder {
 	// 2 (bytes) * 1 (channels) * 20 (max rec time in seconds) * 16000 (times per second) = 640 000 bytes
 	private final byte[] mRecording;
 
+	// TODO: use: mRecording.length instead
 	private int mRecordedLength = 0;
+
+	// The number of bytes the client has already consumed
 	private int mConsumedLength = 0;
-	private int mVolumeMeasureLength = 0;
 
 	// Buffer for output
 	private byte[] mBuffer;
@@ -202,9 +204,6 @@ public class RawAudioRecorder {
 
 
 	/**
-	 * <p>Returns the state of the recorder in a RawAudioRecord.State typed object.
-	 * Useful, as no exceptions are thrown.</p>
-	 *
 	 * @return recorder state
 	 */
 	public State getState() {
@@ -216,11 +215,22 @@ public class RawAudioRecorder {
 	}
 
 
-	// TODO: just truncate the array, not create a new array
-	// This method should stop the recording, it should be the last
-	// method that one can call on the recorder object
-	public byte[] getCurrentRecording() {
+	/**
+	 * @return bytes that have been recorded since the beginning
+	 */
+	public byte[] getCompleteRecording() {
 		return getCurrentRecording(0);
+	}
+
+
+	/**
+	 * @return bytes that have been recorded since this method was last called
+	 */
+	public synchronized byte[] consumeRecording() {
+		byte[] bytes = getCurrentRecording(mConsumedLength);
+		Log.i(LOG_TAG, "Copied from: " + mConsumedLength + ": " + bytes.length + " bytes");
+		mConsumedLength = mRecordedLength;
+		return bytes;
 	}
 
 
@@ -229,20 +239,6 @@ public class RawAudioRecorder {
 		byte[] bytes = new byte[len];
 		System.arraycopy(mRecording, startPos, bytes, 0, len);
 		return bytes;
-	}
-
-
-	/**
-	 * @return bytes that have been recorded since this method was last called
-	 */
-	public byte[] consumeRecording() {
-		// TODO: read about synchronized
-		synchronized (mRecording) {
-			byte[] bytes = getCurrentRecording(mConsumedLength);
-			Log.i(LOG_TAG, "Copied from: " + mConsumedLength + ": " + bytes.length + " bytes");
-			mConsumedLength = mRecordedLength;
-			return bytes;
-		}
 	}
 
 
@@ -261,15 +257,18 @@ public class RawAudioRecorder {
 	}
 
 
+	/**
+	 * @return volume indicator that shows the average volume of the last read buffer
+	 */
 	public float getRmsdb() {
-		int span = mRecordedLength - mVolumeMeasureLength;
-		mVolumeMeasureLength = mRecordedLength;
-		long sumOfSquares = getRms(mRecordedLength, span);
-		long samplesLength = span/2;
-		if (sumOfSquares == 0 || samplesLength == 0) {
-			return 0;
+		long sumOfSquares = getRms(mRecordedLength, mBuffer.length);
+		double rootMeanSquare = Math.sqrt(sumOfSquares / (mBuffer.length / 2));
+		if (rootMeanSquare > 1) {
+			Log.i(LOG_TAG, "getRmsdb(): " + rootMeanSquare);
+			// TODO: why 10?
+			return (float) (10 * Math.log10(rootMeanSquare));
 		}
-		return getDb(sumOfSquares, samplesLength);
+		return 0;
 	}
 
 
@@ -296,14 +295,17 @@ public class RawAudioRecorder {
 
 
 	/**
-	 * <p>Releases the resources associated with this class.</p>
+	 * <p>Stops the recording (if needed) and releases the resources.
+	 * The object can no longer be used and the reference should be
+	 * set to null after a call to release().</p>
 	 */
-	public void release() {
+	public synchronized void release() {
 		if (mRecorder != null) {
-			if (getState() == State.RECORDING) {
+			if (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 				stop();
 			}
 			mRecorder.release();
+			mRecorder = null;
 		}
 	}
 
@@ -312,17 +314,15 @@ public class RawAudioRecorder {
 	 * <p>Starts the recording, and sets the state to RECORDING.</p>
 	 */
 	public void start() {
-		final RawAudioRecorder that = this;
 		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED) {
 			mRecorder.startRecording();
 			if (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 				setState(State.RECORDING);
 				new Thread() {
 					public void run() {
-						while (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+						while (mRecorder != null && mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 							int status = read(mRecorder);
 							if (status < 0) {
-								that.stop();
 								break;
 							}
 						}
@@ -340,15 +340,21 @@ public class RawAudioRecorder {
 
 
 	/**
-	 * <p>Stops the recording, and sets the state to STOPPED.</p>
+	 * <p>Stops the recording, and sets the state to STOPPED.
+	 * If stopping fails then sets the state to ERROR.</p>
 	 */
 	public void stop() {
-		// We check the underlying AudioRecord state to make sure
-		// that we don't get an IllegalStateException.
+		// We check the underlying AudioRecord state trying to avoid IllegalStateException.
+		// If it still occurs then we catch it.
 		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED &&
 				mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
-			mRecorder.stop();
-			setState(State.STOPPED);
+			try {
+				mRecorder.stop();
+				setState(State.STOPPED);
+			} catch (IllegalStateException e) {
+				Log.e(LOG_TAG, "native stop() called in illegal state: " + e.getMessage());
+				setState(State.ERROR);
+			}
 		} else {
 			Log.e(LOG_TAG, "stop() called in illegal state");
 			setState(State.ERROR);
@@ -372,7 +378,7 @@ public class RawAudioRecorder {
 		} else {
 			// This also happens on the emulator for some reason
 			Log.e(LOG_TAG, "Recorder buffer overflow: " + mRecordedLength);
-			stop();
+			release();
 		}
 	}
 
@@ -396,16 +402,6 @@ public class RawAudioRecorder {
 			sum += curSample * curSample;
 		}
 		return sum;
-	}
-
-
-	private static float getDb(long sumOfSquares, long samplesLength) {
-		double rootMeanSquare = Math.sqrt(sumOfSquares / samplesLength);
-		if (rootMeanSquare > 1) {
-			// TODO: why 10?
-			return (float) (10 * Math.log10(rootMeanSquare));
-		}
-		return 0;
 	}
 
 

@@ -189,12 +189,12 @@ public class RecognizerIntentService extends Service {
 	/**
 	 * @return complete audio data from the beginning of the recording
 	 */
-	public byte[] getCurrentRecording() {
+	public byte[] getCompleteRecording() {
 		if (mRecorder == null) {
 			return new byte[0];
 
 		}
-		return mRecorder.getCurrentRecording();
+		return mRecorder.getCompleteRecording();
 	}
 
 

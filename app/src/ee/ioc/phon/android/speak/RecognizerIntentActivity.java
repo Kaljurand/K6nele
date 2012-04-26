@@ -128,8 +128,8 @@ public class RecognizerIntentActivity extends Activity {
 	private static final int TASK_STOP_INTERVAL = 500;
 	private static final int TASK_STOP_DELAY = 1000;
 
-	// Check the volume 20 times a second
-	private static final int TASK_VOLUME_INTERVAL = 50;
+	// Check the volume 10 times a second
+	private static final int TASK_VOLUME_INTERVAL = 100;
 	private static final int TASK_VOLUME_DELAY = 500;
 
 	private static final int DELAY_AFTER_START_BEEP = 200;
@@ -488,7 +488,7 @@ public class RecognizerIntentActivity extends Activity {
 			setGuiRecording();
 			break;
 		case PROCESSING:
-			setGuiTranscribing(mService.getCurrentRecording());
+			setGuiTranscribing(mService.getCompleteRecording());
 			break;
 		case ERROR:
 			setGuiError(mService.getErrorCode());

@@ -57,8 +57,8 @@ public class SpeechRecognitionService extends RecognitionService {
 	private static final int TASK_INTERVAL_SEND = 2000;
 	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
 
-	// Check the volume 20 times a second
-	private static final int TASK_INTERVAL_VOL = 50;
+	// Check the volume 10 times a second
+	private static final int TASK_INTERVAL_VOL = 100;
 	// Wait for 1/2 sec before starting to measure the volume
 	private static final int TASK_DELAY_VOL = 500;
 
@@ -428,7 +428,6 @@ public class SpeechRecognitionService extends RecognitionService {
 				if (mRecorder != null) {
 					try {
 						float rmsdb = mRecorder.getRmsdb();
-						Log.i(LOG_TAG, "RMS DB: " + rmsdb);
 						listener.rmsChanged(rmsdb);
 						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
 					} catch (RemoteException e) {
