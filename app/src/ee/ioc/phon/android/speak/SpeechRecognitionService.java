@@ -53,10 +53,6 @@ public class SpeechRecognitionService extends RecognitionService {
 
 	private static final String LOG_TAG = SpeechRecognitionService.class.getName();
 
-	// Send the chunk every 2 seconds
-	private static final int TASK_INTERVAL_SEND = 2000;
-	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
-
 	// Check the volume 10 times a second
 	private static final int TASK_INTERVAL_VOL = 100;
 	// Wait for 1/2 sec before starting to measure the volume
@@ -231,7 +227,7 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 	private void startTasks() {
-		mSendHandler.postDelayed(mSendTask, TASK_DELAY_SEND);
+		mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
 		mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
 		mStopHandler.postDelayed(mStopTask, TASK_DELAY_STOP);
 	}
@@ -410,7 +406,7 @@ public class SpeechRecognitionService extends RecognitionService {
 							// TODO: Expects 16-bit BE
 							listener.bufferReceived(buffer);
 							Log.i(LOG_TAG, "Send chunk completed");
-							mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
+							mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
 						} catch (IOException e) {
 							handleError(listener, SpeechRecognizer.ERROR_NETWORK);
 						}

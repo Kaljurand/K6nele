@@ -48,10 +48,6 @@ public class RecognizerIntentService extends Service {
 
 	private final IBinder mBinder = new RecognizerBinder();
 
-	// Send the chunk every 1.5 seconds
-	private static final int TASK_INTERVAL_SEND = 1500;
-	private static final int TASK_DELAY_SEND = TASK_INTERVAL_SEND;
-
 	private volatile Looper mSendLooper;
 	private volatile Handler mSendHandler;
 
@@ -274,7 +270,7 @@ public class RecognizerIntentService extends Service {
 		try {
 			startRecording(sampleRate);
 			mStartTime = SystemClock.elapsedRealtime();
-			startChunkSending(TASK_INTERVAL_SEND, TASK_DELAY_SEND, false);
+			startChunkSending(Constants.TASK_INTERVAL_SEND, Constants.TASK_DELAY_SEND, false);
 			setState(State.RECORDING);
 			return true;
 		} catch (IOException e) {
