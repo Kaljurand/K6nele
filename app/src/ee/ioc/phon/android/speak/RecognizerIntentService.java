@@ -424,12 +424,16 @@ public class RecognizerIntentService extends Service {
 
 
 	/**
+	 * <p>Note that this call can make sense even if there are 0 bytes to be sent.
+	 * This is the case when it is the last chunk to be sent. To properly close
+	 * the connection one must always call sendChunk with <code>isLast == true</code>.</p>
+	 *
 	 * @param bytes byte array representing the audio data
 	 * @param isLast indicates that this is the last chunk that is sent
 	 * @throws IOException 
 	 */
 	private void sendChunk(byte[] bytes, boolean isLast) throws IOException {
-		if (mRecSession != null && bytes != null && bytes.length > 0 && ! mRecSession.isFinished()) {
+		if (mRecSession != null && ! mRecSession.isFinished()) {
 			mRecSession.sendChunk(bytes, isLast);
 			mChunkCount++;
 			if (isLast) {
@@ -438,7 +442,7 @@ public class RecognizerIntentService extends Service {
 				Log.i(LOG_TAG, "sendChunk: " + bytes.length);
 			}
 		} else {
-			Log.e(LOG_TAG, "sendChunk: nothing to send");
+			Log.e(LOG_TAG, "sendChunk: recSession is not available");
 		}
 	}
 

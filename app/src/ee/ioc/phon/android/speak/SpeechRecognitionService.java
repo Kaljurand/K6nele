@@ -220,7 +220,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * @throws IOException
 	 */
 	private void sendChunk(byte[] bytes, boolean isLast) throws IOException {
-		if (bytes != null && bytes.length > 0 && ! mRecSession.isFinished()) {
+		if (mRecSession != null && ! mRecSession.isFinished()) {
 			mRecSession.sendChunk(bytes, isLast);
 		}
 	}
