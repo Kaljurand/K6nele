@@ -19,7 +19,6 @@ package ee.ioc.phon.android.speak;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 /**
  * <p>Records raw audio using AudioRecord and stores it into a byte array as</p>
@@ -184,7 +183,7 @@ public class RawAudioRecorder {
 			mBufferSize = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
 			// Set frame period and timer interval accordingly
 			mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
-			Log.w(LOG_TAG, "AudioRecord buffer size (MIN): " + mBufferSize);
+			Log.i(LOG_TAG, "AudioRecord buffer size (MIN): " + mBufferSize);
 		}
 	}
 
@@ -194,12 +193,12 @@ public class RawAudioRecorder {
 		if (minBufferSizeInBytes == AudioRecord.ERROR_BAD_VALUE) {
 			throw new IllegalArgumentException("AudioRecord.getMinBufferSize: parameters not supported by hardware");
 		} else if (minBufferSizeInBytes == AudioRecord.ERROR) {
-			Log.w(LOG_TAG, "AudioRecord.getMinBufferSize: unable to query hardware for output properties");
+			Log.e(LOG_TAG, "AudioRecord.getMinBufferSize: unable to query hardware for output properties");
 			minBufferSizeInBytes = mSampleRate * (120 / 1000) * RESOLUTION_IN_BYTES * CHANNELS;
 		}
 		mBufferSize = 2 * minBufferSizeInBytes;
 		mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
-		Log.w(LOG_TAG, "AudioRecord buffer size: " + mBufferSize + ", min size = " + minBufferSizeInBytes);
+		Log.i(LOG_TAG, "AudioRecord buffer size: " + mBufferSize + ", min size = " + minBufferSizeInBytes);
 	}
 
 

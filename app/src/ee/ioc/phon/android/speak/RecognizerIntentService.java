@@ -28,10 +28,7 @@ import android.os.Looper;
 import android.os.Process;
 import android.os.SystemClock;
 
-import android.util.Log;
-
 import java.io.IOException;
-import java.net.URL;
 
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.NotAvailableException;
@@ -213,39 +210,16 @@ public class RecognizerIntentService extends Service {
 	/**
 	 * <p>Tries to create a speech recognition session.</p>
 	 *
-	 * <p>Set the content-type to <code>null</code> if you want to use the default
-	 * net-speech-api content type (raw audio).</p>
-	 *
-	 * @param contentType content type of the audio (e.g. "audio/x-flac;rate=16000")
-	 * @param userAgentComment
-	 * @param serverUrl URL of the recognizer server
-	 * @param grammarUrl URL of the speech recognition grammar
-	 * @param grammarTargetLang name of the target language (in case of GF grammars)
-	 * @param nbest number of requested hypothesis
 	 * @return <code>true</code> iff there was no error
 	 */
-	public boolean init(String contentType, String userAgentComment, URL serverUrl, URL grammarUrl, String grammarTargetLang, int nbest, String deviceId, String phrase) {
+	public boolean init(ChunkedWebRecSession recSession) {
 		if (mState != State.IDLE && mState != State.ERROR) {
 			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
 			return false;
 		}
-
-		mRecSession = new ChunkedWebRecSession(serverUrl, grammarUrl, grammarTargetLang, nbest);
-		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + serverUrl + ": lm=" + grammarUrl + ": lang=" + grammarTargetLang + ": nbest=" + nbest);
-		mRecSession.setUserAgentComment(userAgentComment);
-		if (contentType != null) {
-			mRecSession.setContentType(contentType);
-		}
-		mRecSession.setDeviceId(deviceId);
-		if (phrase != null) {
-			mRecSession.setPhrase(phrase);
-		}
+		mRecSession = recSession;
 		try {
 			mRecSession.create();
-			Log.i(LOG_TAG, "mRecSession.create() content type: " + contentType);
-			Log.i(LOG_TAG, "mRecSession.create() UA: " + userAgentComment);
-			Log.i(LOG_TAG, "mRecSession.create() ID: " + deviceId);
-			Log.i(LOG_TAG, "mRecSession.create() phrase: " + phrase);
 			setState(State.INITIALIZED);
 			return true;
 		} catch (IOException e) {

@@ -18,7 +18,6 @@ package ee.ioc.phon.android.speak;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
@@ -35,14 +34,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.os.Parcelable;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
 import android.speech.RecognitionService;
-import android.util.Log;
 
 /**
  * TODO: send correct waveform data
@@ -50,8 +47,6 @@ import android.util.Log;
  * @author Kaarel Kaljurand
  */
 public class SpeechRecognitionService extends RecognitionService {
-
-	private static final String LOG_TAG = SpeechRecognitionService.class.getName();
 
 	// Check the volume 10 times a second
 	private static final int TASK_INTERVAL_VOL = 100;
@@ -75,20 +70,13 @@ public class SpeechRecognitionService extends RecognitionService {
 	// Time (in milliseconds since the boot) when the recording is going to be stopped
 	private long mTimeToFinish;
 
-	private String mGrammarUrl;
-	private String mGrammarTargetLang;
-	private String mServerUrl;
-
-	private int mExtraMaxResults = 0;
-	private PendingIntent mExtraResultsPendingIntent;
-	private Bundle mExtraResultsPendingIntentBundle;
+	private ChunkedWebRecSessionBuilder mRecSessionBuilder;
 	private ChunkedWebRecSession mRecSession;
 
 	private RawAudioRecorder mRecorder;
 
 	private Bundle mExtras;
 
-	private Caller mCaller;
 
 	@Override
 	protected void onCancel(Callback listener) {
@@ -120,8 +108,9 @@ public class SpeechRecognitionService extends RecognitionService {
 						getString(R.string.defaultRecordingRate)));
 
 
+		mRecSessionBuilder.setContentType(sampleRate);
+		mRecSession = mRecSessionBuilder.build();
 		try {
-			mRecSession.setContentType(Utils.getContentType(sampleRate));
 			mRecSession.create();
 		} catch (IOException e) {
 			handleError(listener, SpeechRecognizer.ERROR_NETWORK);
@@ -161,7 +150,6 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 	private void releaseResources() {
-		Log.i(LOG_TAG, "Releasing resources");
 		stopTasks();
 		if (mRecSession != null && ! mRecSession.isFinished()) {
 			mRecSession.cancel();
@@ -290,30 +278,35 @@ public class SpeechRecognitionService extends RecognitionService {
 	 */
 	private void returnOrForwardMatches(ArrayList<String> matches, Callback listener) throws RemoteException {
 		// Throw away matches that the user is not interested in
-		if (mExtraMaxResults > 0 && matches.size() > mExtraMaxResults) {
-			matches.subList(mExtraMaxResults, matches.size()).clear();
+		int maxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
+		if (maxResults > 0 && matches.size() > maxResults) {
+			matches.subList(maxResults, matches.size()).clear();
 		}
 
-		if (mExtraResultsPendingIntent == null) {
+		PendingIntent pendingIntent = Utils.getPendingIntent(mExtras);
+		if (pendingIntent == null) {
 			Bundle bundle = new Bundle();
 			bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches);
 			listener.results(bundle);
 		} else {
-			if (mExtraResultsPendingIntentBundle == null) {
-				mExtraResultsPendingIntentBundle = new Bundle();
+			// This probably never occurs...
+			Bundle bundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
+			if (bundle == null) {
+				bundle = new Bundle();
 			}
 			String match = matches.get(0);
 			//mExtraResultsPendingIntentBundle.putString(SearchManager.QUERY, match);
 			Intent intent = new Intent();
-			intent.putExtras(mExtraResultsPendingIntentBundle);
+			intent.putExtras(bundle);
 			// This is for Google Maps, YouTube, ...
 			intent.putExtra(SearchManager.QUERY, match);
 			// This is for SwiftKey X, ...
 			intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
 			try {
 				// TODO: dummy number 1234
-				mExtraResultsPendingIntent.send(this, 1234, intent);
+				pendingIntent.send(this, 1234, intent);
 			} catch (CanceledException e) {
+				// TODO
 			}
 		}
 	}
@@ -327,20 +320,14 @@ public class SpeechRecognitionService extends RecognitionService {
 			// For some reason getExtras() can return null, we map it
 			// to an empty Bundle if this occurs.
 			mExtras = new Bundle();
-		} else {
-			mExtraMaxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
-			mExtraResultsPendingIntentBundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
+		}
 
-			Parcelable extraResultsPendingIntentAsParceable = mExtras.getParcelable(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT);
-			if (extraResultsPendingIntentAsParceable != null) {
-				//PendingIntent.readPendingIntentOrNullFromParcel(mExtraResultsPendingIntent);
-				if (extraResultsPendingIntentAsParceable instanceof PendingIntent) {
-					mExtraResultsPendingIntent = (PendingIntent) extraResultsPendingIntentAsParceable;
-				} else {
-					listener.error(SpeechRecognizer.ERROR_CLIENT);
-					return;
-				}
-			}
+		try {
+			mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, null);
+		} catch (MalformedURLException e) {
+			// The user has managed to store a malformed URL in the configuration.
+			listener.error(SpeechRecognizer.ERROR_CLIENT);
+			return;
 		}
 
 		mTimeToFinish = SystemClock.uptimeMillis() + 1000 * Integer.parseInt(
@@ -348,51 +335,12 @@ public class SpeechRecognitionService extends RecognitionService {
 						getString(R.string.keyAutoStopAfterTime),
 						getString(R.string.defaultAutoStopAfterTime)));
 
-		mCaller = new Caller(mExtraResultsPendingIntent, mExtras);
-		PackageNameRegistry wrapper = new PackageNameRegistry(this, mCaller.getActualCaller());
-
-		// If the user has not overridden the grammar then use the app's EXTRA.
-		mGrammarUrl = Utils.chooseValue(wrapper.getGrammarUrl(), mExtras.getString(Extras.EXTRA_GRAMMAR_URL));
-		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
-		// The server URL should never be null
-		mServerUrl = Utils.chooseValue(
-				wrapper.getServerUrl(),
-				mExtras.getString(Extras.EXTRA_SERVER_URL),
-				mPrefs.getString(getString(R.string.keyService), getString(R.string.defaultService))
-				);
-
-		// Starting chunk sending in a separate thread so that slow internet
+		// Starting chunk sending in a separate thread so that slow Internet
 		// would not block the UI.
 		HandlerThread thread = new HandlerThread("SendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
 		mSendLooper = thread.getLooper();
 		mSendHandler = new Handler(mSendLooper);
-
-		URL wsUrl = null;
-		URL lmUrl = null;
-
-		try {
-			wsUrl = new URL(mServerUrl);
-			if (mGrammarUrl != null && mGrammarUrl.length() > 0) {
-				lmUrl = new URL(mGrammarUrl);
-			}
-		} catch (MalformedURLException e) {
-			// The user has managed to store a malformed URL in the configuration.
-			listener.error(SpeechRecognizer.ERROR_CLIENT);
-			return;
-		}
-
-		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-		mRecSession = new ChunkedWebRecSession(wsUrl, lmUrl, mGrammarTargetLang, nbest);
-		Log.i(LOG_TAG, "Created ChunkedWebRecSession: " + wsUrl + ": lm=" + lmUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + nbest);
-		String userAgentComment = Utils.makeUserAgentComment(this, mCaller.toString());
-		mRecSession.setUserAgentComment(userAgentComment);
-		Log.i(LOG_TAG, "User Agent comment: " + userAgentComment);
-		mRecSession.setDeviceId(Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)));
-		String phrase = mExtras.getString(Extras.EXTRA_PHRASE);
-		if (phrase != null) {
-			mRecSession.setPhrase(phrase);
-		}
 
 		// Send chunks to the server
 		mSendTask = new Runnable() {
@@ -405,7 +353,7 @@ public class SpeechRecognitionService extends RecognitionService {
 							sendChunk(buffer, false);
 							// TODO: Expects 16-bit BE
 							listener.bufferReceived(buffer);
-							Log.i(LOG_TAG, "Send chunk completed");
+							Log.i("Send chunk completed");
 							mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
 						} catch (IOException e) {
 							handleError(listener, SpeechRecognizer.ERROR_NETWORK);
@@ -467,6 +415,6 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
 	 */
 	private void handleRemoteException(RemoteException e) {
-		Log.e(LOG_TAG, e.getMessage());
+		Log.e(e.getMessage());
 	}
 }

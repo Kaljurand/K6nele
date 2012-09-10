@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak.provider;
 
 import java.util.HashMap;
 
+import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 
 import android.content.ContentProvider;
@@ -32,7 +33,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 // TODO: rename to SpeakContentProvider (or ContentProvider)
 public class AppsContentProvider extends ContentProvider {
@@ -124,7 +124,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'" + mContext.getString(R.string.entryGrammarDesc1) + "', " +
 					"'', " +
 					"''" +
-			");");
+					");");
 
 			// TODO: externalize all these strings
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
@@ -133,7 +133,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Väike näitegrammatika, nt ''mine kolm meetrit edasi'', ''mine neli meetrit tagasi''', " +
 					"'Eng', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Go.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'3', " +
@@ -141,7 +141,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Aritmeetilised avaldised, nt ''miinus kaks pluss kolm koma neli korda viis''', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Expr.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'4', " +
@@ -149,7 +149,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Mõõtude teisendamine, nt ''kaksteist ruutjalga ruutkilomeetrites''', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Unitconv.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'5', " +
@@ -157,7 +157,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Alarm + Calc + Direction', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Action.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'6', " +
@@ -165,7 +165,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Eesti aadressid, nt ''Algus Pariisi Lõpp Sõpruse puiestee kakssada kolmteist Tallinn''', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Direction.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'7', " +
@@ -173,7 +173,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Expr + Unitconv', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Calc.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'8', " +
@@ -181,7 +181,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Suvalise pikkusega numbrite ja tähtede jada', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Symbols.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'9', " +
@@ -189,7 +189,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Eesti autonumbrimärgi keel, nt ''aaa bee tsee üks kaks kolm''', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Estvrp.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'10', " +
@@ -197,7 +197,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Keel ''Direction'' alamhulk, mis katab ainult Tallinna', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'11', " +
@@ -205,7 +205,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Keel ''Direction'' alamhulk, mis katab ainult Tallinna', " +
 					"'Edwin', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'12', " +
@@ -213,7 +213,7 @@ public class AppsContentProvider extends ContentProvider {
 					"'Väike näitegrammatika, nt ''mine kolm meetrit edasi'', ''mine neli meetrit tagasi''', " +
 					"NULL, " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Go.pgf'" +
-			");");
+					");");
 
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
 					"'13', " +
@@ -221,13 +221,13 @@ public class AppsContentProvider extends ContentProvider {
 					"'Nt ''ärata mind kell kaheksa null üks''', " +
 					"'App', " +
 					"'http://kaljurand.github.com/Grammars/grammars/pgf/Alarm.pgf'" +
-			");");
+					");");
 		}
 
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading database v" + oldVersion + " -> v" + newVersion + ", which will destroy all old data.");
+			Log.i(TAG, "Upgrading database v" + oldVersion + " -> v" + newVersion + ", which will destroy all old data.");
 			db.execSQL("DROP TABLE IF EXISTS " + APPS_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + GRAMMARS_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + SERVERS_TABLE_NAME);

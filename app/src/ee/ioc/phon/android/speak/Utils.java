@@ -17,6 +17,7 @@
 package ee.ioc.phon.android.speak;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,9 +33,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -58,6 +58,18 @@ public class Utils {
 	private static final int SAMPLING_RATE = 16000;
 
 	private Utils() {}
+
+
+	public static PendingIntent getPendingIntent(Bundle extras) {
+		Parcelable extraResultsPendingIntentAsParceable = extras.getParcelable(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT);
+		if (extraResultsPendingIntentAsParceable != null) {
+			//PendingIntent.readPendingIntentOrNullFromParcel(mExtraResultsPendingIntent);
+			if (extraResultsPendingIntentAsParceable instanceof PendingIntent) {
+				return (PendingIntent) extraResultsPendingIntentAsParceable;
+			}
+		}
+		return null;
+	}
 
 
 	/**
@@ -272,15 +284,6 @@ public class Utils {
 	}
 
 
-	public static String makeUserAgentComment(Context c, String caller) {
-		return "RecognizerIntentActivity/" + getVersionName(c) + "; " +
-				Build.MANUFACTURER + "/" +
-				Build.DEVICE + "/" +
-				Build.DISPLAY + "; " +
-				caller;
-	}
-
-
 	public static String getVersionName(Context c) {
 		PackageInfo info = getPackageInfo(c);
 		if (info == null) {
@@ -301,7 +304,7 @@ public class Utils {
 		try {
 			return manager.getPackageInfo(c.getPackageName(), 0);
 		} catch (NameNotFoundException e) {
-			Log.e(Utils.class.getName(), "Couldn't find package information in PackageManager", e);
+			Log.e("Couldn't find package information in PackageManager: " + e);
 		}
 		return null;
 	}
@@ -321,13 +324,6 @@ public class Utils {
 			return thirdChoice;
 		}
 		return choice;
-	}
-
-
-	public static String getContentType(int sampleRate) {
-		// little endian = 1234
-		// big endian = 4321
-		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
 	}
 
 

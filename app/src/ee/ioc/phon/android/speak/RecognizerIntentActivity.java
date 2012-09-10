@@ -35,12 +35,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Parcelable;
 import android.os.SystemClock;
 
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseArray;
 
 import android.view.Menu;
@@ -60,7 +58,6 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -173,15 +170,11 @@ public class RecognizerIntentActivity extends Activity {
 	// Max recording time in milliseconds
 	private int mMaxRecordingTime;
 
-	private URL mServerUrl;
-	private URL mGrammarUrl;
-	private String mGrammarTargetLang;
+	private ChunkedWebRecSessionBuilder mRecSessionBuilder;
 
 	private Resources mRes;
 
-	private int mExtraMaxResults = 0;
 	private PendingIntent mExtraResultsPendingIntent;
-	private Bundle mExtraResultsPendingIntentBundle;
 
 	private Bundle mExtras;
 
@@ -271,19 +264,7 @@ public class RecognizerIntentActivity extends Activity {
 			// to an empty Bundle if this occurs.
 			mExtras = new Bundle();
 		} else {
-			mExtraMaxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
-			mExtraResultsPendingIntentBundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
-
-			Parcelable extraResultsPendingIntentAsParceable = mExtras.getParcelable(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT);
-			if (extraResultsPendingIntentAsParceable != null) {
-				//PendingIntent.readPendingIntentOrNullFromParcel(mExtraResultsPendingIntent);
-				if (extraResultsPendingIntentAsParceable instanceof PendingIntent) {
-					mExtraResultsPendingIntent = (PendingIntent) extraResultsPendingIntentAsParceable;
-				} else {
-					handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, getString(R.string.errorBadPendingIntent), null);
-					return;
-				}
-			}
+			mExtraResultsPendingIntent = Utils.getPendingIntent(mExtras);
 		}
 
 		mSampleRate = Integer.parseInt(
@@ -298,16 +279,12 @@ public class RecognizerIntentActivity extends Activity {
 
 		mStartRecording = mPrefs.getBoolean("keyAutoStart", false);
 
-		PackageNameRegistry wrapper = new PackageNameRegistry(this, getCaller());
-
 		try {
-			setUrls(wrapper);
+			mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, getCallingActivity());
 		} catch (MalformedURLException e) {
 			// The user has managed to store a malformed URL in the configuration.
 			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
 		}
-
-		mGrammarTargetLang = Utils.chooseValue(wrapper.getGrammarLang(), mExtras.getString(Extras.EXTRA_GRAMMAR_TARGET_LANG));
 	}
 
 
@@ -635,28 +612,13 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void startRecording() {
-		boolean success = init(Utils.getContentType(mSampleRate));
-		if (success) {
+		mRecSessionBuilder.setContentType(mSampleRate);
+		if (mService.init(mRecSessionBuilder.build())) {
 			playStartSound();
 			SystemClock.sleep(DELAY_AFTER_START_BEEP);
 			mService.start(mSampleRate);
 			setGui();
 		}
-	}
-
-
-	private boolean init(String contentType) {
-		int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
-		return mService.init(
-				contentType,
-				Utils.makeUserAgentComment(this, getCaller()),
-				mServerUrl,
-				mGrammarUrl,
-				mGrammarTargetLang,
-				nbest,
-				Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)),
-				mExtras.getString(Extras.EXTRA_PHRASE)
-				);
 	}
 
 
@@ -711,13 +673,13 @@ public class RecognizerIntentActivity extends Activity {
 		}
 		List<String> info = new ArrayList<String>();
 		info.add("ID: " + Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)));
-		info.add("User-Agent comment: " + Utils.makeUserAgentComment(this, getCaller()));
+		info.add("User-Agent comment: " + mRecSessionBuilder.getUserAgentComment());
 		info.add("Calling activity class name: " + callingActivityClassName);
 		info.add("Calling activity package name: " + callingActivityPackageName);
 		info.add("Pending intent target package: " + pendingIntentTargetPackage);
-		info.add("Selected grammar: " + mGrammarUrl);
-		info.add("Selected target lang: " + mGrammarTargetLang);
-		info.add("Selected server: " + mServerUrl);
+		info.add("Selected grammar: " + mRecSessionBuilder.getGrammarUrl());
+		info.add("Selected target lang: " + mRecSessionBuilder.getGrammarTargetLang());
+		info.add("Selected server: " + mRecSessionBuilder.getServerUrl());
 		info.addAll(Utils.ppBundle(mExtras));
 		return info.toArray(new String[info.size()]);
 	}
@@ -733,6 +695,7 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+	// TODO: make static
 	public class SimpleMessageHandler extends Handler {
 		public void handleMessage(Message msg) {
 			Bundle b = msg.getData();
@@ -768,8 +731,9 @@ public class RecognizerIntentActivity extends Activity {
 	 */
 	private void returnOrForwardMatches(Handler handler, ArrayList<String> matches) {
 		// Throw away matches that the user is not interested in
-		if (mExtraMaxResults > 0 && matches.size() > mExtraMaxResults) {
-			matches.subList(mExtraMaxResults, matches.size()).clear();
+		int maxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
+		if (maxResults > 0 && matches.size() > maxResults) {
+			matches.subList(maxResults, matches.size()).clear();
 		}
 
 		if (mExtraResultsPendingIntent == null) {
@@ -782,13 +746,14 @@ public class RecognizerIntentActivity extends Activity {
 				setResultIntent(matches);
 			}
 		} else {
-			if (mExtraResultsPendingIntentBundle == null) {
-				mExtraResultsPendingIntentBundle = new Bundle();
+			Bundle bundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
+			if (bundle == null) {
+				bundle = new Bundle();
 			}
 			String match = matches.get(0);
 			//mExtraResultsPendingIntentBundle.putString(SearchManager.QUERY, match);
 			Intent intent = new Intent();
-			intent.putExtras(mExtraResultsPendingIntentBundle);
+			intent.putExtras(bundle);
 			// This is for Google Maps, YouTube, ...
 			intent.putExtra(SearchManager.QUERY, match);
 			// This is for SwiftKey X, ...
@@ -810,45 +775,11 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	/**
-	 * <p>Returns the package name of the app that receives the transcription,
-	 * or <code>null</code> if the package name could not be resolved.</p>
-	 */
-	private String getCaller() {
-		if (mExtraResultsPendingIntent == null) {
-			ComponentName callingActivity = getCallingActivity();
-			if (callingActivity != null) {
-				return callingActivity.getPackageName();
-			}
-		} else {
-			return mExtraResultsPendingIntent.getTargetPackage();
-		}
-		return null;
-	}
-
-
 	private void handleResultError(Handler handler, int resultCode, String type, Exception e) {
 		if (e != null) {
 			Log.e(LOG_TAG, "Exception: " + type + ": " + e.getMessage());
 		}
 		handler.sendMessage(createMessage(MSG_RESULT_ERROR, mErrorMessages.get(resultCode)));
-	}
-
-
-	private void setUrls(PackageNameRegistry wrapper) throws MalformedURLException {
-		// The server URL should never be null
-		mServerUrl = new URL(
-				Utils.chooseValue(
-						wrapper.getServerUrl(),
-						mExtras.getString(Extras.EXTRA_SERVER_URL),
-						mPrefs.getString(getString(R.string.keyService), getString(R.string.defaultService))
-						));
-
-		// If the user has not overridden the grammar then use the app's EXTRA.
-		String urlAsString = Utils.chooseValue(wrapper.getGrammarUrl(), mExtras.getString(Extras.EXTRA_GRAMMAR_URL));
-		if (urlAsString != null && urlAsString.length() > 0) {
-			mGrammarUrl = new URL(urlAsString);
-		}
 	}
 
 
@@ -863,8 +794,8 @@ public class RecognizerIntentActivity extends Activity {
 		try {
 			byte[] bytes = getBytesFromAsset(fileName);
 			Log.i(LOG_TAG, "Transcribing bytes: " + bytes.length);
-			boolean success = init(contentType);
-			if (success) {
+			mRecSessionBuilder.setContentType(contentType);
+			if (mService.init(mRecSessionBuilder.build())) {
 				mService.transcribe(bytes);
 				setGui();
 			}
