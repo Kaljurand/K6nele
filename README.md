@@ -1,9 +1,13 @@
 Kõnele
 ======
 
-The source code behind
+Kõnele is an Android app that offers speech-to-text service to other apps. Apps which allow user input via speech usually have a little microphone button as part of their user interface.
 
-http://market.android.com/details?id=ee.ioc.phon.android.speak
+More information: https://code.google.com/p/recognizer-intent/
+
+Market versions:
+
+	- Google Play: http://market.android.com/details?id=ee.ioc.phon.android.speak
 
 
 Compilation
@@ -11,7 +15,7 @@ Compilation
 
 Go into the app-directory and execute
 
-> ant clean release
+	ant clean release
 
 Note that you need to have 3 additional files that are not part of this
 repository:
@@ -32,9 +36,3 @@ Version tags are set by e.g.
 	git tag -a v0.8.18 -m 'version 0.8.18'
 
 The last number should be even.
-
-
-Lint
-----
-
-	lint --html report.html app

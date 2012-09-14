@@ -44,12 +44,20 @@ public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.i(LOG_TAG, "received: " + intent.getAction());
 
-		mSupportedLanguages.add("et_EE");
-		mSupportedLanguages.add("en_US");
-		mSupportedLanguages.add("nl_BE");
+		Bundle resultExtras = getResultExtras(true);
+
+		// TODO: not sure how we are supposed to behave in this case, where
+		// another recognizer has already responded to the broadcast and filled
+		// in its values.
+		if (! resultExtras.isEmpty()) {
+			Log.i("Overwriting extras: " + resultExtras);
+		}
+
+		mSupportedLanguages.add("et-EE");
+		mSupportedLanguages.add("en-US");
 
 		Bundle extras = new Bundle();
-		extras.putString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "et_EE");
+		extras.putString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "et-EE");
 		extras.putStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, mSupportedLanguages);
 		setResultExtras(extras);
 

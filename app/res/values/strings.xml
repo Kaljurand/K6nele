@@ -3,7 +3,7 @@
 
     <!--
     As long as this app is Estonian-specific we set the Estonian
-    name as the default name, this way the app is easier to find on the Market (for Estonians).
+    name as the default name, this way the app is easier to find on Google Play (for Estonians).
     -->
     <string name="labelApp">Kõnele</string>
     <string name="filePreferences" translatable="false">SpeakFilePreferences</string>
@@ -75,7 +75,7 @@ is an app that offers speech-to-text service to other apps.
 Apps which allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
 
-&amp;nbsp;&amp;nbsp;&amp;bull; keyboards (e.g. SwiftKey X, GO Keyboard);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; keyboards (e.g. SlideIT, GO Keyboard);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; TODO-list apps (e.g. Astrid Tasks, Out of Milk, Mighty Grocery Shopping List);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; SMS apps (e.g. GO SMS Pro, SMS Popup);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools (e.g. Google Translate, Dictionary.com);&lt;br/>

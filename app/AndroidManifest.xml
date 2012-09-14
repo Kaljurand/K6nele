@@ -110,16 +110,6 @@
             android:label="@string/labelActivityVoiceSearchDemo" >
         </activity>
 
-        <!--
-        <service android:name="SpeechRecognitionService" >
-            <intent-filter >
-                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
-        -->
-
         <service android:name="RecognizerIntentService" >
         </service>
         <service
@@ -140,7 +130,8 @@
 
         <provider
             android:name=".provider.AppsContentProvider"
-            android:authorities="ee.ioc.phon.android.speak.provider.AppsContentProvider" />
+            android:authorities="ee.ioc.phon.android.speak.provider.AppsContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
