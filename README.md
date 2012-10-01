@@ -7,7 +7,7 @@ More information: https://code.google.com/p/recognizer-intent/
 
 Market versions:
 
-	- Google Play: http://market.android.com/details?id=ee.ioc.phon.android.speak
+  - Google Play: http://market.android.com/details?id=ee.ioc.phon.android.speak
 
 
 Compilation

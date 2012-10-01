@@ -6,7 +6,6 @@
     name as the default name, this way the app is easier to find on Google Play (for Estonians).
     -->
     <string name="labelApp">Kõnele</string>
-    <string name="filePreferences" translatable="false">SpeakFilePreferences</string>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyService" translatable="false">keyService</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>

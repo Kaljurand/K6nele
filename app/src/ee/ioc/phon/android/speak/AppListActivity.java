@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,8 +66,8 @@ public class AppListActivity extends RecognizerIntentListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		SharedPreferences settings = getSharedPreferences(getString(R.string.filePreferences), 0);
-		mCurrentSortOrder = settings.getString(getString(R.string.prefCurrentSortOrder), App.Columns.COUNT + " DESC");
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mCurrentSortOrder = prefs.getString(getString(R.string.prefCurrentSortOrder), App.Columns.COUNT + " DESC");
 
 		ListView lv = getListView();
 		setEmptyView(getString(R.string.emptylistApps));
@@ -93,8 +94,8 @@ public class AppListActivity extends RecognizerIntentListActivity {
 	@Override
 	public void onStop() {
 		super.onStop();
-		SharedPreferences settings = getSharedPreferences(getString(R.string.filePreferences), 0);
-		SharedPreferences.Editor editor = settings.edit();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(getString(R.string.prefCurrentSortOrder), mCurrentSortOrder);
 		editor.commit();
 	}
@@ -191,7 +192,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
 							removeApp(key, App.Columns.GRAMMAR);
 						}
 					}
-			).show();
+					).show();
 			return true;
 		case R.id.cmAppAssignServer:
 			Intent intentServer = new Intent(AppListActivity.this, ServerListActivity.class);
@@ -206,7 +207,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
 							removeApp(key, App.Columns.SERVER);
 						}
 					}
-			).show();
+					).show();
 			return true;
 		case R.id.cmAppDelete:
 			Utils.getYesNoDialog(
@@ -217,7 +218,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
 							delete(CONTENT_URI, key);
 						}
 					}
-			).show();
+					).show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -286,7 +287,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
 				null,
 				null,
 				sortOrder
-		);
+				);
 
 		return new AppListCursorAdapter(this, managedCursor, true);
 	}

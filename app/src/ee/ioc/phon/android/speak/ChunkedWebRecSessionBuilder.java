@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**
@@ -40,7 +41,7 @@ public class ChunkedWebRecSessionBuilder {
 	public ChunkedWebRecSessionBuilder(Context context, Bundle extras, ComponentName callingActivity) throws MalformedURLException {
 		mContext = context;
 
-		SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.filePreferences), 0);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mDeviceId = Utils.getUniqueId(prefs);
 
 		PendingIntent pendingIntent = Utils.getPendingIntent(extras);

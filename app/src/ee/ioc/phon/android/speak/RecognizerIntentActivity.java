@@ -672,7 +672,7 @@ public class RecognizerIntentActivity extends Activity {
 			pendingIntentTargetPackage = mExtraResultsPendingIntent.getTargetPackage();
 		}
 		List<String> info = new ArrayList<String>();
-		info.add("ID: " + Utils.getUniqueId(getSharedPreferences(getString(R.string.filePreferences), 0)));
+		info.add("ID: " + Utils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
 		info.add("User-Agent comment: " + mRecSessionBuilder.getUserAgentComment());
 		info.add("Calling activity class name: " + callingActivityClassName);
 		info.add("Calling activity package name: " + callingActivityPackageName);
