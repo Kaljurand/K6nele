@@ -76,15 +76,14 @@ public class SpeechRecognitionService extends RecognitionService {
 	private RawAudioRecorder mRecorder;
 
 	private Bundle mExtras;
+	private AudioPauser mAudioPauser;
 
-
-	@Override
-	protected void onCancel(Callback listener) {
-		releaseResources();
-	}
 
 	@Override
 	protected void onStartListening(Intent recognizerIntent, final Callback listener) {
+		Log.i("onStartListening");
+		mAudioPauser = new AudioPauser(this);
+		mAudioPauser.pause();
 		try {
 			init(recognizerIntent, listener);
 		} catch (RemoteException e) {
@@ -138,13 +137,28 @@ public class SpeechRecognitionService extends RecognitionService {
 
 	@Override
 	protected void onStopListening(Callback listener) {
+		Log.i("onStopListening");
 		stopRecording(listener);
+	}
+
+
+	/**
+	 * Note that we ignore the callback, it doesn't seem to make
+	 * sense to call anything on cancel.
+	 */
+	@Override
+	protected void onCancel(Callback listener) {
+		Log.i("onCancel");
+		releaseResources();
+		mAudioPauser.resume();
 	}
 
 
 	@Override
 	public void onDestroy() {
+		Log.i("onDestroy");
 		releaseResources();
+		mAudioPauser.resume();
 		super.onDestroy();
 	}
 
@@ -193,6 +207,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	private void stopRecording(Callback listener) {
 		mRecorder.stop();
 		stopTasks();
+		mAudioPauser.resume();
 		transcribeAndFinishInBackground(mRecorder.consumeRecording(), listener);
 		try {
 			listener.endOfSpeech();
@@ -353,7 +368,6 @@ public class SpeechRecognitionService extends RecognitionService {
 							sendChunk(buffer, false);
 							// TODO: Expects 16-bit BE
 							listener.bufferReceived(buffer);
-							Log.i("Send chunk completed");
 							mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
 						} catch (IOException e) {
 							handleError(listener, SpeechRecognizer.ERROR_NETWORK);

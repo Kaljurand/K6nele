@@ -36,7 +36,8 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
 /**
- * 
+ * TODO: remove this class and rewrite the clients to use SpeechRecognitionService
+ *
  * @author Kaarel Kaljurand
  */
 public class RecognizerIntentService extends Service {
@@ -77,6 +78,8 @@ public class RecognizerIntentService extends Service {
 	}
 
 	private State mState = null;
+
+	private AudioPauser mAudioPauser;
 
 
 	public class RecognizerBinder extends Binder {
@@ -241,6 +244,9 @@ public class RecognizerIntentService extends Service {
 			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
 			return false;
 		}
+		// Stop the audio
+		mAudioPauser = new AudioPauser(this);
+		mAudioPauser.pause();
 		try {
 			startRecording(sampleRate);
 			mStartTime = SystemClock.elapsedRealtime();
@@ -266,6 +272,9 @@ public class RecognizerIntentService extends Service {
 		mRecorder.stop();
 		mSendHandler.removeCallbacks(mSendTask);
 		transcribe(mRecorder.consumeRecording());
+		if (mAudioPauser != null) {
+			mAudioPauser.resume();
+		}
 		return true;
 	}
 
@@ -385,6 +394,9 @@ public class RecognizerIntentService extends Service {
 		if (mRecorder != null) {
 			mRecorder.release();
 			mRecorder = null;
+		}
+		if (mAudioPauser != null) {
+			mAudioPauser.resume();
 		}
 	}
 
