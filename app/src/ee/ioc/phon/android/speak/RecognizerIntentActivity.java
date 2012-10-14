@@ -57,6 +57,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -154,7 +155,7 @@ public class RecognizerIntentActivity extends Activity {
 	private TextView mTvErrorMessage;
 	private List<Drawable> mVolumeLevels;
 
-	private SimpleMessageHandler mMessageHandler = new SimpleMessageHandler();
+	private SimpleMessageHandler mMessageHandler;
 	private Handler mHandlerBytes = new Handler();
 	private Handler mHandlerStop = new Handler();
 	private Handler mHandlerVolume = new Handler();
@@ -230,6 +231,7 @@ public class RecognizerIntentActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.recognizer);
 
+		mMessageHandler = new SimpleMessageHandler(this);
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		mErrorMessages = createErrorMessages();
 
@@ -523,6 +525,11 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+	private void setGuiError() {
+		setGuiError(mService.getErrorCode());
+	}
+
+
 	private void setGuiError(int errorCode) {
 		mLlTranscribing.setVisibility(View.GONE);
 		mIvVolume.setVisibility(View.GONE);
@@ -695,20 +702,28 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	// TODO: make static
-	public class SimpleMessageHandler extends Handler {
+	private static class SimpleMessageHandler extends Handler {
+		private final WeakReference<RecognizerIntentActivity> mRef;
+
+		public SimpleMessageHandler(RecognizerIntentActivity c) {
+			mRef = new WeakReference<RecognizerIntentActivity>(c);
+		}
+
 		public void handleMessage(Message msg) {
-			Bundle b = msg.getData();
-			String msgAsString = b.getString(MSG);
-			switch (msg.what) {
-			case MSG_TOAST:
-				toast(msgAsString);
-				break;
-			case MSG_RESULT_ERROR:
-				playErrorSound();
-				stopAllTasks();
-				setGuiError(mService.getErrorCode());
-				break;
+			RecognizerIntentActivity outerClass = mRef.get();
+			if (outerClass != null) {
+				Bundle b = msg.getData();
+				String msgAsString = b.getString(MSG);
+				switch (msg.what) {
+				case MSG_TOAST:
+					outerClass.toast(msgAsString);
+					break;
+				case MSG_RESULT_ERROR:
+					outerClass.playErrorSound();
+					outerClass.stopAllTasks();
+					outerClass.setGuiError();
+					break;
+				}
 			}
 		}
 	}

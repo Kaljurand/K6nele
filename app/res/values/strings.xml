@@ -116,7 +116,6 @@ and more are available at
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
     <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>
-    <string name="errorBadPendingIntent">ERROR: not well-formed EXTRA_RESULTS_PENDINGINTENT</string>
     <string name="errorCantCreateRecorder">ERROR: Failed to create an audio recorder</string>
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
@@ -158,6 +157,7 @@ and more are available at
     <string name="cdMicrophone">Press this button and speak</string>
     <string name="cdWaveform">Waveform of the spoken input</string>
     <string name="cdVolume">Volume level</string>
+    <string name="cdAppIcon">App icon</string>
 
     <!-- Entries for the database, both apos and its escape character need escaping. -->
     <string name="entryGrammarName1">[unrestricted input]</string>

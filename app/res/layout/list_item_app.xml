@@ -11,6 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/cdAppIcon"
         android:maxHeight="48dp"
         android:maxWidth="48dp"
         android:scaleType="fitCenter"

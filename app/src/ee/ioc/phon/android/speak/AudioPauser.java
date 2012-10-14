@@ -7,8 +7,8 @@ import android.media.AudioManager.OnAudioFocusChangeListener;
 public class AudioPauser {
 
 	private final AudioManager mAudioManager;
+	private final OnAudioFocusChangeListener mAfChangeListener;
 	private int mCurrentVolume;
-	private OnAudioFocusChangeListener mAfChangeListener;
 	private boolean isPausing = false;
 
 	public AudioPauser(Context context) {

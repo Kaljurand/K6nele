@@ -202,7 +202,6 @@
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
 		uuesti!</string>
-    <string name="errorBadPendingIntent">VIGA: formaadi viga: EXTRA_RESULTS_PENDINGINTENT</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="noteMaxRecordingTimeExceeded">Lindistamise ajalimiit on ületatud</string>
@@ -214,6 +213,7 @@
     <string name="cdMicrophone">Vajutage sellele nupule ja kõnelege</string>
     <string name="cdWaveform">Sisendkõne pilt</string>
     <string name="cdVolume">Valjuse näit</string>
+    <string name="cdAppIcon">Logo</string>
 
     <string-array name="entriesAutoStopAfterTime">
         <item>2 sek</item>
