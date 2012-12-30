@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,9 @@ import java.net.MalformedURLException;
 
 import ee.ioc.phon.android.speak.provider.Server;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,7 +65,7 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 				null,
 				null,
 				Server.Columns.URL + " ASC"
-		);
+				);
 
 		SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(
 				this,
@@ -75,7 +73,7 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 				managedCursor,
 				columns,
 				to
-		);
+				);
 
 		ListView lv = getListView();
 		setEmptyView(getString(R.string.emptylistServers));
@@ -111,7 +109,7 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 							}
 						}
 					}
-			).show();
+					).show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -135,12 +133,6 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 		String url = cursor.getString(cursor.getColumnIndex(Server.Columns.URL));
 
 		switch (item.getItemId()) {
-		case R.id.cmServerDefault:
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString(getString(R.string.keyService), url);
-			editor.commit();
-			return true;
 		case R.id.cmServerEdit:
 			Utils.getTextEntryDialog(
 					this,
@@ -155,7 +147,7 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 							}
 						}
 					}
-			).show();
+					).show();
 			return true;
 		case R.id.cmServerDelete:
 			Utils.getYesNoDialog(
@@ -166,7 +158,7 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 							delete(CONTENT_URI, key);
 						}
 					}
-			).show();
+					).show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item android:id="@+id/cmServerDefault" android:title="@string/cmServerDefault" />
 	<item android:id="@+id/cmServerEdit" android:title="@string/cmServerEdit" />
 	<item android:id="@+id/cmServerDelete" android:title="@string/cmServerDelete" />
 

@@ -526,7 +526,11 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void setGuiError() {
-		setGuiError(mService.getErrorCode());
+		if (mService == null) {
+			setGuiError(RecognizerIntent.RESULT_CLIENT_ERROR);
+		} else {
+			setGuiError(mService.getErrorCode());
+		}
 	}
 
 

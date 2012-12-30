@@ -17,6 +17,7 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
+    <string name="titleDefaultService">Server</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
     <string name="titleCategoryOther">Muu</string>
     <string name="titleScreenDemos">Demod</string>
@@ -165,7 +166,6 @@
     <string name="cmGrammarEditLang">Muuda keel</string>
     <string name="cmGrammarEditUrl">Muuda URL</string>
     <string name="cmGrammarDelete">Kustuta</string>
-    <string name="cmServerDefault">Määra vaikeväärtuseks</string>
     <string name="cmServerEdit">Muuda URL</string>
     <string name="cmServerDelete">Kustuta</string>
     <string name="confirmDeleteEntry">Eemaldan loendist \"%1$s\"?</string>

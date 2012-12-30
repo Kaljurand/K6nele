@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,19 @@
 
 package ee.ioc.phon.android.speak;
 
+import ee.ioc.phon.android.speak.provider.Server;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 /**
  * <p>Preferences activity. Updates some preference-summaries automatically,
@@ -31,6 +37,8 @@ import android.preference.PreferenceActivity;
  * @author Kaarel Kaljurand
  */
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+
+	private static final int ACTIVITY_SELECT_SERVER_URL = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +74,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 		Preference service = (Preference) findPreference(getString(R.string.keyService));
-		service.setSummary(sp.getString(getString(R.string.keyService), ""));
+		service.setSummary(sp.getString(getString(R.string.keyService), getString(R.string.defaultService)));
+
+		service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
+				return true;
+			}
+
+		});
 	}
 
 
@@ -86,8 +103,38 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	}
 
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode != Activity.RESULT_OK) {
+			return;
+		}
+		switch (requestCode) {
+		case ACTIVITY_SELECT_SERVER_URL:
+			Uri serverUri = data.getData();
+			if (serverUri == null) {
+				toast(getString(R.string.errorFailedGetServerUrl));
+			} else {
+				long id = Long.parseLong(serverUri.getPathSegments().get(1));
+				String url = Utils.idToValue(this, Server.Columns.CONTENT_URI, Server.Columns._ID, Server.Columns.URL, id);
+				if (url != null) {
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putString(getString(R.string.keyService), url);
+					editor.commit();
+				}
+			}
+			break;
+		}
+	}
+
+
 	private void setSummary(Preference pref, String strText, String strArg) {
 		pref.setSummary(String.format(strText, strArg));
+	}
+
+	private void toast(String message) {
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
 
 }

@@ -36,6 +36,7 @@
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
 
     <!-- Preferences activity -->
+    <string name="titleDefaultService">Default server</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
     <string name="titleCategoryOther">Other</string>
     <string name="titleScreenDemos">Demos</string>
@@ -139,7 +140,6 @@ and more are available at
     <string name="cmGrammarEditLang">Change target language</string>
     <string name="cmGrammarEditUrl">Change URL</string>
     <string name="cmGrammarDelete">Delete</string>
-    <string name="cmServerDefault">Set as default</string>
     <string name="cmServerEdit">Change URL</string>
     <string name="cmServerDelete">Delete</string>
     <string name="menuAppsSort">Sort …</string>
