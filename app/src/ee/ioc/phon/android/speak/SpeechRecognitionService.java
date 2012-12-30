@@ -19,8 +19,11 @@ package ee.ioc.phon.android.speak;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
+import ee.ioc.phon.netspeechapi.recsession.Hypothesis;
+import ee.ioc.phon.netspeechapi.recsession.Linearization;
 import ee.ioc.phon.netspeechapi.recsession.NotAvailableException;
 import ee.ioc.phon.netspeechapi.recsession.RecSession;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
@@ -265,43 +268,68 @@ public class SpeechRecognitionService extends RecognitionService {
 	}
 
 
+	/**
+	 * <p>If there are no results then returns {@code SpeechRecognizer.ERROR_NO_MATCH)}.
+	 * Otherwise packages the results in two different formats which both use an {@code ArrayList<String>}
+	 * and sends the results to the caller.</p>
+	 */
 	private void getResult(RecSession recSession, Callback listener) throws RemoteException, IOException {
 		RecSessionResult result = recSession.getResult();
 
-		if (result == null || result.getLinearizations().isEmpty()) {
+		if (result == null) {
 			listener.error(SpeechRecognizer.ERROR_NO_MATCH);
-		} else {
-			ArrayList<String> matches = new ArrayList<String>();
-			matches.addAll(result.getLinearizations());
-			returnOrForwardMatches(matches, listener);
+			return;
 		}
+
+		List<Hypothesis> hyps = result.getHypotheses();
+		if (hyps.isEmpty()) {
+			listener.error(SpeechRecognizer.ERROR_NO_MATCH);
+			return;
+		}
+
+		int maxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
+		if (maxResults <= 0) {
+			maxResults = hyps.size();
+		}
+
+		ArrayList<String> everything = new ArrayList<String>();
+		ArrayList<String> lins = new ArrayList<String>();
+		ArrayList<Integer> counts = new ArrayList<Integer>(hyps.size());
+		int count = 0;
+		for (Hypothesis hyp : hyps) {
+			if (count++ >= maxResults) {
+				break;
+			}
+			everything.add(hyp.getUtterance());
+			List<Linearization> hypLins = hyp.getLinearizations();
+			counts.add(hypLins.size());
+			for (Linearization lin : hypLins) {
+				everything.add(lin.getOutput());
+				everything.add(lin.getLang());
+				lins.add(lin.getOutput());
+			}
+		}
+		returnOrForwardMatches(everything, counts, lins, listener);
 	}
 
 
 	/**
-	 * <p>Returns the transcription results (matches) to the caller,
-	 * or sends them to the pending intent. In the latter case we also display
-	 * a toast-message with the transcription.
-	 * Note that we assume that the given list of matches contains at least one
-	 * element.</p>
+	 * <p>Returns the transcription results to the caller,
+	 * or sends them to the pending intent.</p>
 	 *
-	 * TODO: the pending intent result code is currently set to 1234 (don't know what this means)
-	 *
-	 * @param matches transcription results (one or more)
+	 * @param everything recognition results (all the components)
+	 * @param counts number of linearizations for each hyphothesis (needed to interpret {@code everything})
+	 * @param matches recognition results (just linearizations)
 	 * @param listener listener that receives the matches
 	 * @throws RemoteException 
 	 */
-	private void returnOrForwardMatches(ArrayList<String> matches, Callback listener) throws RemoteException {
-		// Throw away matches that the user is not interested in
-		int maxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
-		if (maxResults > 0 && matches.size() > maxResults) {
-			matches.subList(maxResults, matches.size()).clear();
-		}
-
+	private void returnOrForwardMatches(ArrayList<String> everything, ArrayList<Integer> counts, ArrayList<String> matches, Callback listener) throws RemoteException {
 		PendingIntent pendingIntent = Utils.getPendingIntent(mExtras);
 		if (pendingIntent == null) {
 			Bundle bundle = new Bundle();
 			bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches);
+			bundle.putStringArrayList(Extras.RESULTS_RECOGNITION_LINEARIZATIONS, everything);
+			bundle.putIntegerArrayList(Extras.RESULTS_RECOGNITION_LINEARIZATION_COUNTS, counts);
 			listener.results(bundle);
 		} else {
 			// This probably never occurs...
@@ -317,6 +345,8 @@ public class SpeechRecognitionService extends RecognitionService {
 			intent.putExtra(SearchManager.QUERY, match);
 			// This is for SwiftKey X, ...
 			intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
+			intent.putStringArrayListExtra(Extras.RESULTS_RECOGNITION_LINEARIZATIONS, everything);
+			intent.putIntegerArrayListExtra(Extras.RESULTS_RECOGNITION_LINEARIZATION_COUNTS, counts);
 			try {
 				// TODO: dummy number 1234
 				pendingIntent.send(this, 1234, intent);

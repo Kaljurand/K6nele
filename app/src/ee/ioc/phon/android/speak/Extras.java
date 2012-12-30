@@ -37,4 +37,17 @@ public class Extras {
 	// should be transcribed.
 	public static final String EXTRA_PHRASE = "ee.ioc.phon.android.extra.PHRASE";
 
+	/**
+	 * Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
+	 * {@link RecognitionListener#onResults(Bundle)} and
+	 * {@link RecognitionListener#onPartialResults(Bundle)} methods. This list represents structured
+	 * data: hyp1, out11, lang11, out12, lang12, ..., hyp2, out21, lang21, ...
+	 * The number of linearizations for each hypothesis is given by an ArrayList<Integer> from a bundle
+	 * item accessible via the key RESULTS_RECOGNITION_LINEARIZATION_COUNTS
+	 */
+	public static final String RESULTS_RECOGNITION_LINEARIZATIONS = "ee.ioc.phon.android.extra.RESULTS_RECOGNITION_LINEARIZATIONS";
+
+	// TODO: document
+	public static final String RESULTS_RECOGNITION_LINEARIZATION_COUNTS = "ee.ioc.phon.android.extra.RESULTS_RECOGNITION_LINEARIZATION_COUNTS";
+
 }
