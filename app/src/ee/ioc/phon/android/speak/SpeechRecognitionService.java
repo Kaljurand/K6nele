@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,6 +111,7 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 		mRecSessionBuilder.setContentType(sampleRate);
+		//Log.i(mRecSessionBuilder.toStringArrayList());
 		mRecSession = mRecSessionBuilder.build();
 		try {
 			mRecSession.create();
@@ -126,8 +127,10 @@ public class SpeechRecognitionService extends RecognitionService {
 
 		try {
 			startRecording(sampleRate);
+			Log.i("Callback: readyForSpeech: " + sampleRate);
 			listener.readyForSpeech(new Bundle());
 			// TODO: send it when the user actually started speaking
+			Log.i("Callback: beginningOfSpeech");
 			listener.beginningOfSpeech();
 			startTasks();
 		} catch (IOException e) {
@@ -213,6 +216,7 @@ public class SpeechRecognitionService extends RecognitionService {
 		mAudioPauser.resume();
 		transcribeAndFinishInBackground(mRecorder.consumeRecording(), listener);
 		try {
+			Log.i("Callback: endOfSpeech");
 			listener.endOfSpeech();
 		} catch (RemoteException e) {
 			handleRemoteException(e);
@@ -277,12 +281,14 @@ public class SpeechRecognitionService extends RecognitionService {
 		RecSessionResult result = recSession.getResult();
 
 		if (result == null) {
+			Log.i("Callback: error: ERROR_NO_MATCH: RecSessionResult == null");
 			listener.error(SpeechRecognizer.ERROR_NO_MATCH);
 			return;
 		}
 
 		List<Hypothesis> hyps = result.getHypotheses();
 		if (hyps.isEmpty()) {
+			Log.i("Callback: error: ERROR_NO_MATCH: getHypotheses().isEmpty()");
 			listener.error(SpeechRecognizer.ERROR_NO_MATCH);
 			return;
 		}
@@ -292,21 +298,41 @@ public class SpeechRecognitionService extends RecognitionService {
 			maxResults = hyps.size();
 		}
 
-		ArrayList<String> everything = new ArrayList<String>();
+		// Utterances OR linearizations
 		ArrayList<String> lins = new ArrayList<String>();
+
+		// Utterances and their linearizations in a flat serialization
+		ArrayList<String> everything = new ArrayList<String>();
 		ArrayList<Integer> counts = new ArrayList<Integer>(hyps.size());
 		int count = 0;
 		for (Hypothesis hyp : hyps) {
 			if (count++ >= maxResults) {
 				break;
 			}
-			everything.add(hyp.getUtterance());
+			String utterance = hyp.getUtterance();
+			// We assume that there is always an utterance. If the utterance is
+			// missing then we consider the hypothesis not well-formed and take
+			// the next hypothesis.
+			if (utterance == null) {
+				continue;
+			}
+			everything.add(utterance);
 			List<Linearization> hypLins = hyp.getLinearizations();
-			counts.add(hypLins.size());
-			for (Linearization lin : hypLins) {
-				everything.add(lin.getOutput());
-				everything.add(lin.getLang());
-				lins.add(lin.getOutput());
+			if (hypLins == null || hypLins.isEmpty()) {
+				lins.add(hyp.getUtterance());
+				counts.add(0);
+			} else {
+				counts.add(hypLins.size());
+				for (Linearization lin : hypLins) {
+					String output = lin.getOutput();
+					everything.add(output);
+					everything.add(lin.getLang());
+					if (output == null || output.length() == 0) {
+						lins.add(utterance);
+					} else {
+						lins.add(output);
+					}
+				}
 			}
 		}
 		returnOrForwardMatches(everything, counts, lins, listener);
@@ -330,8 +356,12 @@ public class SpeechRecognitionService extends RecognitionService {
 			bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches);
 			bundle.putStringArrayList(Extras.RESULTS_RECOGNITION_LINEARIZATIONS, everything);
 			bundle.putIntegerArrayList(Extras.RESULTS_RECOGNITION_LINEARIZATION_COUNTS, counts);
+			Log.i("Callback: results: RESULTS_RECOGNITION: " + matches);
+			Log.i("Callback: results: RESULTS_RECOGNITION_LINEARIZATIONS: " + everything);
+			Log.i("Callback: results: RESULTS_RECOGNITION_LINEARIZATIONS_COUNTS: " + counts);
 			listener.results(bundle);
 		} else {
+			Log.i("EXTRA_RESULTS_PENDINGINTENT_BUNDLE was used with SpeechRecognizer (this is not tested)");
 			// This probably never occurs...
 			Bundle bundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
 			if (bundle == null) {
@@ -371,6 +401,7 @@ public class SpeechRecognitionService extends RecognitionService {
 			mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, null);
 		} catch (MalformedURLException e) {
 			// The user has managed to store a malformed URL in the configuration.
+			Log.i("Callback: error: ERROR_CLIENT");
 			listener.error(SpeechRecognizer.ERROR_CLIENT);
 			return;
 		}
@@ -396,6 +427,7 @@ public class SpeechRecognitionService extends RecognitionService {
 						byte[] buffer = mRecorder.consumeRecording();
 						try {
 							sendChunk(buffer, false);
+							Log.i("Callback: bufferReceived: length = " + buffer.length);
 							// TODO: Expects 16-bit BE
 							listener.bufferReceived(buffer);
 							mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
@@ -416,6 +448,7 @@ public class SpeechRecognitionService extends RecognitionService {
 				if (mRecorder != null) {
 					try {
 						float rmsdb = mRecorder.getRmsdb();
+						Log.i("Callback: rmsChanged: " + rmsdb);
 						listener.rmsChanged(rmsdb);
 						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
 					} catch (RemoteException e) {
@@ -447,6 +480,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	private void handleError(final Callback listener, int errorCode) {
 		releaseResources();
 		try {
+			Log.i("Callback: error: " + errorCode);
 			listener.error(errorCode);
 		} catch (RemoteException e) {
 			handleRemoteException(e);

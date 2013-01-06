@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,6 @@ import android.os.Bundle;
  */
 public class Caller {
 
-	private static final String LOG_TAG = Caller.class.getName();
-
 	private final String mPrimaryCaller;
 	private final String mSecondaryCaller;
 
@@ -97,19 +95,9 @@ public class Caller {
 	 * @return package name possibly hidden deep into the given bundle
 	 */
 	private static String getPackageName(Bundle bundle) {
-		for (String key : bundle.keySet()) {
-			Object value = bundle.get(key);
-			Log.i(LOG_TAG, "EXTRA: " + key + ": " + bundle.get(key));
-			if (value instanceof Bundle) {
-				Log.i(LOG_TAG, "<bundle>");
-				String packageName = getPackageName((Bundle) value);
-				if (packageName != null) {
-					return packageName;
-				}
-				Log.i(LOG_TAG, "</bundle>");
-			} else if ("packageName".equals(key)) {
-				return value.toString();
-			}
+		Object obj = Utils.getBundleValue(bundle, "packageName");
+		if (obj instanceof String) {
+			return (String) obj;
 		}
 		return null;
 	}

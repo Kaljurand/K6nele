@@ -1,7 +1,25 @@
+/*
+ * Copyright 2012-2013, Institute of Cybernetics at Tallinn University of Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ee.ioc.phon.android.speak;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -13,6 +31,19 @@ import android.preference.PreferenceManager;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**
+ * <p>Builds a query for the speech recognizer server combing information from
+ * various sources:</p>
+ *
+ * <ul>
+ *   <li>input extras</li>
+ *   <li>name of the calling app</li>
+ *   <li>stored preferences</li>
+ *   <li>app/grammar database</li>
+ * </ul>
+ *
+ * <p>The following is some of the information that is sent to the server along with the audio.</p>
+ *
+ * <pre>
  * contentType
  * 		content type of the audio (e.g. "audio/x-flac;rate=16000")
  * serverUrl
@@ -23,6 +54,7 @@ import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
  * 		name of the target language (in case of GF grammars)
  * nbest
  * 		number of requested hypothesis
+ * </pre>
  */
 public class ChunkedWebRecSessionBuilder {
 
@@ -33,6 +65,7 @@ public class ChunkedWebRecSessionBuilder {
 	private int mNbest;
 	private String mGrammarTargetLang;
 	private String mLang;
+	private boolean mPartialResults = false;
 	private String mPhrase;
 	private String mContentType;
 	private String mUserAgentComment;
@@ -40,6 +73,8 @@ public class ChunkedWebRecSessionBuilder {
 
 	public ChunkedWebRecSessionBuilder(Context context, Bundle extras, ComponentName callingActivity) throws MalformedURLException {
 		mContext = context;
+
+		//Log.i(Utils.ppBundle(extras));
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mDeviceId = Utils.getUniqueId(prefs);
@@ -122,13 +157,29 @@ public class ChunkedWebRecSessionBuilder {
 			recSession.setDeviceId(mDeviceId);
 		}
 
+		// Inform the server that we want partial results.
+		// TODO: this is not supported yet, neither on the server nor the K6nele side
+		if (mPartialResults) {
+			recSession.setParam("partial", "true");
+		}
+
 		return recSession;
 	}
 
 
-	public String toString() {
-		return
-				mWsUrl + ": lm=" + mLmUrl + ": lang=" + mGrammarTargetLang + ": nbest=" + mNbest;
+	public List<String> toStringArrayList() {
+		List<String> list = new ArrayList<String>();
+		list.add(mWsUrl == null ? null : mWsUrl.toString());
+		list.add(mLmUrl == null ? null : mLmUrl.toString());
+		list.add(mContentType);
+		list.add(mGrammarTargetLang);
+		list.add(mLang);
+		list.add(mNbest + "");
+		list.add(mPhrase);
+		list.add(mDeviceId);
+		list.add(mUserAgentComment);
+		list.add(mPartialResults + "");
+		return list;
 	}
 
 
@@ -137,8 +188,17 @@ public class ChunkedWebRecSessionBuilder {
 		mNbest = (maxResults > 1) ? maxResults : 1;
 
 		mLang = extras.getString(RecognizerIntent.EXTRA_LANGUAGE);
-		// TODO: use
-		// extras.getString(RecognizerIntent.EXTRA_PARTIAL_RESULTS);
+
+		// If EXTRA_LANGUAGE is not set but the bundle contains "selectedLanguage" (as is the case with some IMEs)
+		// then use a value from the latter.
+		if (mLang == null) {
+			Object selectedLanguage = Utils.getBundleValue(extras, "selectedLanguage");
+			if (selectedLanguage != null) {
+				mLang = selectedLanguage.toString();
+			}
+		}
+
+		mPartialResults = extras.getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS);
 
 		// K6nele-specific extras
 		mPhrase = extras.getString(Extras.EXTRA_PHRASE);

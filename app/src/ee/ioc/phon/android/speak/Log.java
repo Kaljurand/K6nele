@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2012-2013, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package ee.ioc.phon.android.speak;
 
+import java.util.List;
+
 public class Log {
 
 	private static final boolean DEBUG = false;
@@ -24,6 +26,17 @@ public class Log {
 
 	public static void i(String msg) {
 		if (DEBUG) android.util.Log.i(LOG_TAG, msg);
+	}
+
+	public static void i(List<String> msgs) {
+		if (DEBUG) {
+			for (String msg : msgs) {
+				if (msg == null) {
+					msg = "<null>";
+				}
+				android.util.Log.i(LOG_TAG, msg);
+			}
+		}
 	}
 
 	public static void e(String msg) {
