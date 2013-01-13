@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -187,16 +188,7 @@ public class ChunkedWebRecSessionBuilder {
 		int maxResults = extras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
 		mNbest = (maxResults > 1) ? maxResults : 1;
 
-		mLang = extras.getString(RecognizerIntent.EXTRA_LANGUAGE);
-
-		// If EXTRA_LANGUAGE is not set but the bundle contains "selectedLanguage" (as is the case with some IMEs)
-		// then use a value from the latter.
-		if (mLang == null) {
-			Object selectedLanguage = Utils.getBundleValue(extras, "selectedLanguage");
-			if (selectedLanguage != null) {
-				mLang = selectedLanguage.toString();
-			}
-		}
+		mLang = makeLang(extras);
 
 		mPartialResults = extras.getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS);
 
@@ -241,6 +233,41 @@ public class ChunkedWebRecSessionBuilder {
 		// little endian = 1234
 		// big endian = 4321
 		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
+	}
+
+
+	/**
+	 * <p>We choose the input language, preferring the language specified in EXTRA_LANGUAGE,
+	 * if this is unspecified then we look into the bundle to see if "selectedLanguage" is set
+	 * (by an IME). If this is also unspecified then we return the current locale as required
+	 * by the Android specification:
+	 * {@link http://developer.android.com/reference/android/speech/RecognizerIntent.html#EXTRA_LANGUAGE}</p>
+	 *
+	 * <blockquote>
+	 * <p>Optional IETF language tag (as defined by BCP 47), for example "en-US".
+	 * This tag informs the recognizer to perform speech recognition in a
+	 * language different than the one set in the getDefault().</p>
+	 * </blockquote>
+	 */
+	private String makeLang(Bundle extras) {
+		String lang = extras.getString(RecognizerIntent.EXTRA_LANGUAGE);
+		if (lang != null) {
+			return lang;
+		}
+
+		// If EXTRA_LANGUAGE is not set but the bundle contains "selectedLanguage" (as is the case with some IMEs)
+		// then use a value from the latter.
+		Object selectedLanguage = Utils.getBundleValue(extras, "selectedLanguage");
+		if (selectedLanguage != null) {
+			return selectedLanguage.toString();
+		}
+
+		Locale locale = Locale.getDefault();
+		if (locale != null) {
+			return locale.toString();
+		}
+
+		return null;
 	}
 
 
