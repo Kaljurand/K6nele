@@ -103,7 +103,6 @@ public class SpeechRecognitionService extends RecognitionService {
 		}
 		 */
 
-
 		int sampleRate = Integer.parseInt(
 				mPrefs.getString(
 						getString(R.string.keyRecordingRate),
@@ -164,7 +163,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	public void onDestroy() {
 		Log.i("onDestroy");
 		releaseResources();
-		mAudioPauser.resume();
+		if (mAudioPauser != null) mAudioPauser.resume();
 		super.onDestroy();
 	}
 
@@ -244,9 +243,9 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 	private void stopTasks() {
-		mSendHandler.removeCallbacks(mSendTask);
-		mVolumeHandler.removeCallbacks(mShowVolumeTask);
-		mStopHandler.removeCallbacks(mStopTask);
+		if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
+		if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
+		if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
 	}
 
 

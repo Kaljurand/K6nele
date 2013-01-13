@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto"
-    android:versionCode="834"
-    android:versionName="0.8.34" >
+    android:versionCode="836"
+    android:versionName="0.8.36" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
@@ -36,8 +36,11 @@
         but it does not work, and with singleInstance we fail to
         deliver the results to the caller. So we have to use standard.
         -->
+        <!-- This activity is exported, i.e. any app can launch K6nele. -->
+        <!-- TODO: launching worked also with exported=true, although didn't try explicit packagename-based launching. -->
         <activity
             android:name=".RecognizerIntentActivity"
+            android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
             android:theme="@android:style/Theme.Dialog" >
@@ -62,7 +65,10 @@
                 android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
         </activity>
 
-        <receiver android:name=".GetLanguageDetailsReceiver" >
+        <!-- This receiver is exported, i.e. any app can ask which languages K6nele supports. -->
+        <receiver
+            android:name=".GetLanguageDetailsReceiver"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.speech.action.GET_LANGUAGE_DETAILS" />
             </intent-filter>
@@ -112,9 +118,14 @@
 
         <service android:name="RecognizerIntentService" >
         </service>
+
+        <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
+        <!-- TODO: why can't I specify more permissions here? -->
         <service
             android:name="SpeechRecognitionService"
-            android:label="@string/labelApp" >
+            android:exported="true"
+            android:label="@string/labelApp"
+            android:permission="android.permission.RECORD_AUDIO" >
             <intent-filter>
 
                 <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
