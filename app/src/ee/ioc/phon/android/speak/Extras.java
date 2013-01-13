@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ public class Extras {
 	// should be transcribed.
 	public static final String EXTRA_PHRASE = "ee.ioc.phon.android.extra.PHRASE";
 
+	// TODO: better names
 	/**
 	 * Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
 	 * {@link RecognitionListener#onResults(Bundle)} and

@@ -38,7 +38,6 @@
 		kõnesisendit</string>
     <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
-    <string name="summaryServerList">Nimekiri kõnetuvastusserveritest</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryRepeaterDemo">Transkribeerib kõne, näitab parimat tulemust,
 		transkribeerib uuesti, … Kõnele saab menüü abil omistada
@@ -58,7 +57,7 @@
 		&lt;br/>
 		v%3$s, autor:
 		&lt;a
-		href="http://www.google.com/profiles/kaljurand">Kaarel
+		href="https://plus.google.com/111912457138686732050/about">Kaarel
 		Kaljurand&lt;/a> </string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
@@ -76,16 +75,16 @@
 		klaviatuurirakendused (nt
 		SlideIT, GO Keyboard);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused (nt Google Maps, Waze);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; TODO-rakendused (nt
-		Astrid Tasks, Taskos
+		&amp;nbsp;&amp;nbsp;&amp;bull; märkmete ja meeldetuletuste rakendused (nt
+		Evernote, Astrid Tasks, Taskos
 		To Do List, Out of Milk,
 		Mighty Grocery Shopping
 		List);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull;
 		lühisõnumirakendused (nt SMS Popup, GO
 		SMS Pro);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt
-		Edwin, Speaktoit);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt Arvutaja, Edwin, Speaktoit);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; kalkulaatorid (nt WolframAlpha);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull; sõnastiku- ja
 		tõlketeenused (nt Google
 		Translate);&lt;br/>
@@ -132,7 +131,7 @@
 		laaditakse
 		serverisse umbes 1MB jagu
 		andmeid.
-		(Seda juhul kui kõne on salvestatud 16kHz sämplimissagedusega.)&lt;/p>
+		(Eeldusel, et kõne on salvestatud 16kHz sämplimissagedusega.)&lt;/p>
 
 		&lt;p>Põhjalikum
 		dokumentatsioon on saadaval

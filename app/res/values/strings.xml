@@ -53,7 +53,6 @@
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
-    <string name="summaryServerList">List of speech recognition servers</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
@@ -69,16 +68,17 @@
 
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
-		v%3$s by &lt;a href="http://www.google.com/profiles/kaljurand">Kaarel Kaljurand&lt;/a></string>
+		v%3$s by &lt;a href="https://plus.google.com/111912457138686732050/about">Kaarel Kaljurand&lt;/a></string>
     <string name="tvAbout">&lt;p>%1$s
 is an app that offers speech-to-text service to other apps.
 Apps which allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
 
 &amp;nbsp;&amp;nbsp;&amp;bull; keyboards (e.g. SlideIT, GO Keyboard);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; TODO-list apps (e.g. Astrid Tasks, Out of Milk, Mighty Grocery Shopping List);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; note taking and TODO-list apps (e.g. Evernote, Astrid Tasks, Out of Milk, Mighty Grocery Shopping List);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; SMS apps (e.g. GO SMS Pro, SMS Popup);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools (e.g. Google Translate, Dictionary.com);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; calculators (e.g. WolframAlpha);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. Google Maps, Google Docs, YouTube).
 
 		&lt;p>%1$s is
@@ -91,9 +91,11 @@ button as part of their user interface. Examples include:&lt;/p>
 		provided
 		that it implements the same interface.&lt;/p>
 
-&lt;p>Using %1$s you can assign speech recognition grammars to individual apps in order to
-improve the recognition quality. %1$s is preloaded with several useful Estonian grammars
-and more are available at
+&lt;p>%1$s supports grammar-based speech recognition, i.e. you can assign grammars to individual apps in order to
+improve the recognition quality and map the recognized speech automatically to the expected application format.
+%1$s is preloaded with links to several speech grammars for Estonian
+and English, covering domains like unit conversion, address queries, setting the alarm clock.
+More grammars are available at
 &lt;a href="http://kaljurand.github.com/Grammars/">http://kaljurand.github.com/Grammars/&lt;/a>.&lt;/p>
 
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at
