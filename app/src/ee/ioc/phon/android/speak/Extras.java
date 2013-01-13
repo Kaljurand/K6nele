@@ -17,7 +17,7 @@
 package ee.ioc.phon.android.speak;
 
 /**
- * <p>Set of non-standard extras that our RecognizerIntentActivity supports.</p>
+ * <p>Set of non-standard extras that K6nele supports.</p>
  * 
  * @author Kaarel Kaljurand
  */
@@ -37,18 +37,28 @@ public class Extras {
 	// should be transcribed.
 	public static final String EXTRA_PHRASE = "ee.ioc.phon.android.extra.PHRASE";
 
-	// TODO: better names
+
 	/**
-	 * Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
+	 * <p>Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
 	 * {@link RecognitionListener#onResults(Bundle)} and
 	 * {@link RecognitionListener#onPartialResults(Bundle)} methods. This list represents structured
-	 * data: hyp1, out11, lang11, out12, lang12, ..., hyp2, out21, lang21, ...
-	 * The number of linearizations for each hypothesis is given by an ArrayList<Integer> from a bundle
-	 * item accessible via the key RESULTS_RECOGNITION_LINEARIZATION_COUNTS
+	 * data:</p>
+	 * <ul>
+	 *   <li>raw utterance of hypothesis 1
+	 *   <li>linearization 1.1
+	 *   <li>language code of linearization 1.1
+	 *   <li>linearization 1.2
+	 *   <li>language code of linearization 1.2
+	 *   <li>...
+	 *   <li>raw utterance of hypothesis 2
+	 *   <li>...
+	 * </ul>
+	 *
+	 * <p>The number of linearizations for each hypothesis is given by an ArrayList<Integer> from a bundle
+	 * item accessible via the key RESULTS_RECOGNITION_LINEARIZATION_COUNTS.
+	 * Both of these bundle items have to be present for the client to be able to use the results.</p>
 	 */
 	public static final String RESULTS_RECOGNITION_LINEARIZATIONS = "ee.ioc.phon.android.extra.RESULTS_RECOGNITION_LINEARIZATIONS";
-
-	// TODO: document
 	public static final String RESULTS_RECOGNITION_LINEARIZATION_COUNTS = "ee.ioc.phon.android.extra.RESULTS_RECOGNITION_LINEARIZATION_COUNTS";
 
 }
