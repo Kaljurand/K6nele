@@ -18,6 +18,7 @@
 
     <!-- Preferences activity -->
     <string name="titleDefaultService">Server</string>
+    <string name="titleCategoryUi">Kasutajaliides</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
     <string name="titleCategoryOther">Muu</string>
     <string name="titleScreenDemos">Demod</string>

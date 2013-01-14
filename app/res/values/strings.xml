@@ -37,6 +37,7 @@
 
     <!-- Preferences activity -->
     <string name="titleDefaultService">Default server</string>
+    <string name="titleCategoryUi">User interface</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
     <string name="titleCategoryOther">Other</string>
     <string name="titleScreenDemos">Demos</string>
