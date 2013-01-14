@@ -413,7 +413,6 @@ public class RecognizerIntentActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.menuRecognizerShowInput:
 			Intent details = new Intent(this, DetailsActivity.class);
-			details.putExtra(DetailsActivity.EXTRA_TITLE, (String) null);
 			details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
 			startActivity(details);
 			return true;

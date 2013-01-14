@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto"
-    android:versionCode="836"
-    android:versionName="0.8.36" >
+    android:versionCode="837"
+    android:versionName="0.8.37" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
@@ -19,6 +19,7 @@
     </uses-permission>
 
     <application
+        android:allowBackup="true"
         android:description="@string/descriptionApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/labelApp"
