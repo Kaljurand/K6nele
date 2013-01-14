@@ -2,13 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="right"
     android:orientation="vertical"
     android:paddingBottom="0dip"
     android:paddingLeft="0dip"
     android:paddingRight="0dip"
     android:paddingTop="0dip" >
 
-    <!-- Prompt, transcription progress monitor, start/stop button, volume monitor, waveform -->
+    <!-- Settings, Prompt, transcription progress monitor, start/stop button, volume monitor, waveform -->
+
+    <Button
+        android:id="@+id/bSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/ic_menu_preferences" />
 
     <LinearLayout
         android:layout_width="250dip"
@@ -150,18 +158,6 @@
         android:visibility="gone" >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="1dp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/error"
-            android:textColor="@color/red"
-            android:textSize="18sp"
-            android:typeface="monospace" />
-
-        <TextView
             android:id="@+id/tvErrorMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -170,7 +166,7 @@
             android:gravity="center"
             android:padding="1dp"
             android:text="@string/errorResultNetworkError"
-            android:textColor="@color/grey2"
+            android:textColor="@color/grey1"
             android:textSize="14sp" />
     </LinearLayout>
 

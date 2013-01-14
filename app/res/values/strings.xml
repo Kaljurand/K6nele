@@ -113,7 +113,6 @@ More grammars are available at
 
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
-    <string name="error">ERROR</string>
     <string name="errorFailedLaunchApp">This app is not launchable or is not installed (anymore): %1$s</string>
     <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
     <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>

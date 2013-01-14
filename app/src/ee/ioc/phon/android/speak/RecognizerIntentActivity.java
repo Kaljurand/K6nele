@@ -373,6 +373,13 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		});
 
+		// Settings button
+		((Button) findViewById(R.id.bSettings)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				startActivity(new Intent(getApplicationContext(), Preferences.class));
+			}
+		});
+
 		doBindService();
 	}
 

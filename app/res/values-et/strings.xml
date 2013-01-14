@@ -189,7 +189,6 @@
 		rakendus</string>
 
     <!-- Error messages used in exceptions and toasts -->
-    <string name="error">VIGA</string>
     <string name="errorFailedLaunchApp">See rakendus pole käivitatav või pole (enam)
 		installeeritud: %1$s</string>
     <string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>
