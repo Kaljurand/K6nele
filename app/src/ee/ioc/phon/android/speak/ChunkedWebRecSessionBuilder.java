@@ -262,16 +262,13 @@ public class ChunkedWebRecSessionBuilder {
 			return selectedLanguage.toString();
 		}
 
-		// TODO: enable this in the future to be compatible with the Android spec.
-		// For the time being it is safer not to send the
-		// locale because K6nele users assume Estonian even if the app does not specify it
-		// (e.g. Arvutaja v4).
-		/*
-		Locale locale = Locale.getDefault();
-		if (locale != null) {
-			return locale.toString();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		if (prefs.getBoolean(mContext.getString(R.string.keyRespectLocale), false)) {
+			Locale locale = Locale.getDefault();
+			if (locale != null) {
+				return locale.toString();
+			}
 		}
-		*/
 
 		return null;
 	}

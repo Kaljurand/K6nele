@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    For the time being it is safer not to respect the locale (by default) to tell us
+    the language of the input speech because K6nele users might use a non-Estonian
+    locale but assume Estonian even if the app does not specify it (e.g. Arvutaja v4).
+    -->
+    <bool name="defaultRespectLocale">false</bool>
+
+</resources>

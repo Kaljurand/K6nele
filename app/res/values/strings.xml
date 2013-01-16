@@ -10,6 +10,7 @@
     <string name="keyService" translatable="false">keyService</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
+    <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
@@ -48,6 +49,9 @@
     <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
+    <string name="titleRespectLocale">Support device language</string>
+    <string name="summaryRespectLocale">Assume that the input speech is in the device\'s default language,
+        unless the app sets a different language</string>
     <string name="titleRecordingRate">Sample rate</string>
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioCues">Play audio cues</string>

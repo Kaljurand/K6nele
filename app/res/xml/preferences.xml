@@ -59,6 +59,12 @@
             android:summary="@string/summaryRecordingRate"
             android:title="@string/titleRecordingRate" />
 
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultRespectLocale"
+            android:key="@string/keyRespectLocale"
+            android:summary="@string/summaryRespectLocale"
+            android:title="@string/titleRespectLocale" />
+
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos" >
