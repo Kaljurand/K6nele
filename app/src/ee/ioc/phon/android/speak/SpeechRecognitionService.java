@@ -110,7 +110,7 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 		mRecSessionBuilder.setContentType(sampleRate);
-		//Log.i(mRecSessionBuilder.toStringArrayList());
+		if (Log.DEBUG) Log.i(mRecSessionBuilder.toStringArrayList());
 		mRecSession = mRecSessionBuilder.build();
 		try {
 			mRecSession.create();

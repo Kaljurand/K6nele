@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Log {
 
-	private static final boolean DEBUG = false;
+	public static final boolean DEBUG = false;
 
 	public static final String LOG_TAG = "ee.ioc.phon.android.speak";
 

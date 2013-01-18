@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -31,6 +32,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -184,6 +186,9 @@ public class RecognizerIntentActivity extends Activity {
 	private boolean mStartRecording = false;
 	private int mLevel = 0;
 
+	// Note: only used with pre-Honeycomb
+	private boolean mIsStartActivity = false;
+
 	private ServiceConnection mConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			Log.i(LOG_TAG, "Service connected");
@@ -294,6 +299,8 @@ public class RecognizerIntentActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 
+		mIsStartActivity = false;
+
 		// Show the length of the current recording in bytes
 		mRunnableBytes = new Runnable() {
 			public void run() {
@@ -376,6 +383,7 @@ public class RecognizerIntentActivity extends Activity {
 		// Settings button
 		((Button) findViewById(R.id.bSettings)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				mIsStartActivity = true;
 				startActivity(new Intent(getApplicationContext(), Preferences.class));
 			}
 		});
@@ -384,9 +392,11 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onStop() {
 		super.onStop();
+		Log.i("onStop");
 		if (mService != null) {
 			mService.setOnResultListener(null);
 			mService.setOnErrorListener(null);
@@ -394,11 +404,16 @@ public class RecognizerIntentActivity extends Activity {
 		stopAllTasks();
 		doUnbindService();
 
-		// If non-empty transcription results were obtained,
-		// or BACK was pressed then we stop the service.
-		// We do not stop the service if HOME is pressed
-		// or the orientation changes.
-		if (isFinishing()) {
+		// We stop the service unless a configuration change causes onStop(),
+		// i.e. the service is not stopped because of rotation, but is
+		// stopped if BACK or HOME is pressed, or the Settings-activity is launched.
+		// Note: on pre-honeycomb HOME does not stop the service, as there does not seem
+		// to be a nice way to detect configuration change in onStop().
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			if (! isChangingConfigurations()) {
+				stopService(new Intent(this, RecognizerIntentService.class));
+			}
+		} else if (mIsStartActivity || isFinishing()) {
 			stopService(new Intent(this, RecognizerIntentService.class));
 		}
 	}

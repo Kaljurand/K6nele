@@ -75,7 +75,7 @@ public class ChunkedWebRecSessionBuilder {
 	public ChunkedWebRecSessionBuilder(Context context, Bundle extras, ComponentName callingActivity) throws MalformedURLException {
 		mContext = context;
 
-		//Log.i(Utils.ppBundle(extras));
+		if (Log.DEBUG) Log.i(Utils.ppBundle(extras));
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mDeviceId = Utils.getUniqueId(prefs);
