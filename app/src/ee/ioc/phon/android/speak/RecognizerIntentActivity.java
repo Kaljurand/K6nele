@@ -137,6 +137,7 @@ public class RecognizerIntentActivity extends Activity {
 	private static final String MSG = "MSG";
 	private static final int MSG_TOAST = 1;
 	private static final int MSG_RESULT_ERROR = 2;
+	private static final int MSG_WEB_SEARCH = 3;
 
 	private static final String DOTS = "............";
 
@@ -748,6 +749,10 @@ public class RecognizerIntentActivity extends Activity {
 					outerClass.stopAllTasks();
 					outerClass.setGuiError();
 					break;
+				case MSG_WEB_SEARCH:
+					Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
+					intentWebSearch.putExtra(SearchManager.QUERY, msgAsString);
+					outerClass.startActivity(intentWebSearch);
 				}
 			}
 		}
@@ -769,7 +774,7 @@ public class RecognizerIntentActivity extends Activity {
 	 * @param handler message handler
 	 * @param matches transcription results (one or more)
 	 */
-	private void returnOrForwardMatches(Handler handler, ArrayList<String> matches) {
+	private void returnOrForwardMatches(final Handler handler, ArrayList<String> matches) {
 		// Throw away matches that the user is not interested in
 		int maxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
 		if (maxResults > 0 && matches.size() > maxResults) {
@@ -778,10 +783,8 @@ public class RecognizerIntentActivity extends Activity {
 
 		if (mExtraResultsPendingIntent == null) {
 			if (getCallingActivity() == null) {
-				Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
-				// TODO: pass in all the matches
-				intentWebSearch.putExtra(SearchManager.QUERY, matches.get(0));
-				startActivity(intentWebSearch);
+				handleResultsByWebSearch(this, handler, matches);
+				return;
 			} else {
 				setResultIntent(matches);
 			}
@@ -812,6 +815,21 @@ public class RecognizerIntentActivity extends Activity {
 			}
 		}
 		finish();
+	}
+
+
+	// TODO: in case of a single result or a single confident result,
+	// do not show the dialog but launch the websearch at once
+	private void handleResultsByWebSearch(final Context context, final Handler handler, final ArrayList<String> results) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Utils.getListDialog(context, results, new ExecutableString() {
+					@Override
+					public void execute(String str) {
+						handler.sendMessage(createMessage(MSG_WEB_SEARCH, str));
+					}}).show();
+			}
+		});
 	}
 
 

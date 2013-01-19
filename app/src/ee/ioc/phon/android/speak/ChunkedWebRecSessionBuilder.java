@@ -97,6 +97,7 @@ public class ChunkedWebRecSessionBuilder {
 		PackageNameRegistry wrapper = new PackageNameRegistry(context, caller);
 		String urlService = prefs.getString(context.getString(R.string.keyService), context.getString(R.string.defaultService));
 		setFromExtras(extras, wrapper, urlService);
+		mNbest = makeNbest(extras);
 	}
 
 
@@ -146,6 +147,7 @@ public class ChunkedWebRecSessionBuilder {
 			recSession.setLang(mLang);
 		}
 
+
 		if (mUserAgentComment != null) {
 			recSession.setUserAgentComment(mUserAgentComment);
 		}
@@ -185,9 +187,6 @@ public class ChunkedWebRecSessionBuilder {
 
 
 	private void setFromExtras(Bundle extras, PackageNameRegistry wrapper, String urlServer) throws MalformedURLException {
-		int maxResults = extras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
-		mNbest = (maxResults > 1) ? maxResults : 1;
-
 		mLang = makeLang(extras);
 
 		mPartialResults = extras.getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS);
@@ -233,6 +232,12 @@ public class ChunkedWebRecSessionBuilder {
 		// little endian = 1234
 		// big endian = 4321
 		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
+	}
+
+
+	private static int makeNbest(Bundle extras) {
+		int maxResults = extras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
+		return (maxResults > 0) ? maxResults : 5;
 	}
 
 

@@ -285,6 +285,19 @@ public class Utils {
 	}
 
 
+	public static AlertDialog getListDialog(Context context, List<String> list, final ExecutableString ex) {
+		final String[] array = new String[list.size()];
+		list.toArray(array);
+		return new AlertDialog.Builder(context)
+		.setItems(array, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				ex.execute(array[which]);
+			}
+		})
+		.create();
+	}
+
+
 	public static String getVersionName(Context c) {
 		PackageInfo info = getPackageInfo(c);
 		if (info == null) {
