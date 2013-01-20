@@ -113,8 +113,8 @@
 		grammatikaid, et tõlkida tuvastustulemus rakenduse-spetsiifilisse
 		keelde. Nt
 		kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
-		grammatika
-		või kaardirakendusele Eesti aadresside grammatika.
+		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
+		ning kaardirakendusele või bussiaegade rakendusele Eesti aadresside grammatika.
 		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
 		Nt rakenduses Speaktoit saab hommikuse äratuskella paika seada fraasiga \"ärata mind seitse kolmkümmend\",
 		eeldusel, et sellele rakendusele on omistatud Alarm-grammatika. Vt ka
@@ -182,6 +182,7 @@
     <string name="dialogTitleNewGrammar">Lisa uus grammatika URL</string>
     <string name="dialogTitleChangeServer">Muuda serveri URL</string>
     <string name="dialogTitleNewServer">Lisa uus serveri URL</string>
+    <string name="dialogTitleHypotheses">Kas ütlesite &#8230;</string>
     <string name="toastForwardedMatches">Tuvastasin: %1$s</string>
     <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
     <string name="entryGrammarName1">[piiramata sisend]</string>

@@ -137,7 +137,6 @@ public class RecognizerIntentActivity extends Activity {
 	private static final String MSG = "MSG";
 	private static final int MSG_TOAST = 1;
 	private static final int MSG_RESULT_ERROR = 2;
-	private static final int MSG_WEB_SEARCH = 3;
 
 	private static final String DOTS = "............";
 
@@ -390,6 +389,13 @@ public class RecognizerIntentActivity extends Activity {
 		});
 
 		doBindService();
+	}
+
+
+	@Override
+	public void onResume() {
+		super.onStart();
+		setGui();
 	}
 
 
@@ -749,10 +755,6 @@ public class RecognizerIntentActivity extends Activity {
 					outerClass.stopAllTasks();
 					outerClass.setGuiError();
 					break;
-				case MSG_WEB_SEARCH:
-					Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
-					intentWebSearch.putExtra(SearchManager.QUERY, msgAsString);
-					outerClass.startActivity(intentWebSearch);
 				}
 			}
 		}
@@ -767,12 +769,12 @@ public class RecognizerIntentActivity extends Activity {
 	 * element.</p>
 	 *
 	 * <p>In case there is no pending intent and also no caller (i.e. we were launched
-	 * via the launcher icon), then we pass the results to the standard web search.</p>
-	 * 
-	 * TODO: the pending intent result code is currently set to 1234 (don't know what this means)
+	 * via the launcher icon), then we pass the results to the standard web search.
+	 * In case of multiple results we ask the user to choose. The user can also press BACK,
+	 * i.e. in this case the activity does not finish.</p>
 	 * 
 	 * @param handler message handler
-	 * @param matches transcription results (one or more)
+	 * @param matches transcription results (one or more hypotheses)
 	 */
 	private void returnOrForwardMatches(final Handler handler, ArrayList<String> matches) {
 		// Throw away matches that the user is not interested in
@@ -818,18 +820,30 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	// TODO: in case of a single result or a single confident result,
-	// do not show the dialog but launch the websearch at once
+	// In case of multiple hypotheses, ask the user to select from a list dialog.
+	// TODO: fetch also confidence scores and treat a very confident hypothesis
+	// as a single hypothesis.
 	private void handleResultsByWebSearch(final Context context, final Handler handler, final ArrayList<String> results) {
+		// Some tweaking to cleanup the UI that would show under the
+		// dialog window that we are about to open.
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Utils.getListDialog(context, results, new ExecutableString() {
-					@Override
-					public void execute(String str) {
-						handler.sendMessage(createMessage(MSG_WEB_SEARCH, str));
-					}}).show();
+				mLlTranscribing.setVisibility(View.GONE);
 			}
 		});
+
+		Intent searchIntent;
+		if (results.size() == 1) {
+			searchIntent = new Intent(Intent.ACTION_WEB_SEARCH);
+			searchIntent.putExtra(SearchManager.QUERY, results.get(0));
+		} else {
+			// TODO: it would be a bit cleaner to pass ACTION_WEB_SEARCH
+			// via a pending intent
+			searchIntent = new Intent(this, DetailsActivity.class);
+			searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
+			searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, results.toArray(new String[results.size()]));
+		}
+		startActivity(searchIntent);
 	}
 
 

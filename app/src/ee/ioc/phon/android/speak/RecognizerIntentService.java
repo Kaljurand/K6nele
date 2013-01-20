@@ -317,8 +317,6 @@ public class RecognizerIntentService extends Service {
 
 	/**
 	 * <p>Starting chunk sending in a separate thread so that slow internet would not block the UI.</p>
-	 *
-	 * TODO
 	 */
 	private void startChunkSending(final int interval, int delay, final boolean consumeAll) {
 		mChunkCount = 0;

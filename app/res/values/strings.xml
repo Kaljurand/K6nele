@@ -136,6 +136,7 @@ More grammars are available at
     <string name="dialogTitleNewGrammar">Add a new grammar URL</string>
     <string name="dialogTitleChangeServer">Change the server</string>
     <string name="dialogTitleNewServer">Add a new server URL</string>
+    <string name="dialogTitleHypotheses">Did you mean &#8230;</string>
     <string name="cmAppAssignGrammar">Assign grammar</string>
     <string name="cmAppRemoveGrammar">Remove grammar</string>
     <string name="cmAppAssignServer">Assign server</string>

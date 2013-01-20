@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,15 @@
 package ee.ioc.phon.android.speak;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 /**
  * <p>Simple activity for displaying String-arrays.
@@ -48,6 +54,15 @@ public class DetailsActivity extends ListActivity {
 			String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
 			if (stringArray != null) {
 				setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item_detail, stringArray));
+
+				getListView().setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
+						intentWebSearch.putExtra(SearchManager.QUERY, ((TextView) view).getText());
+						startActivity(intentWebSearch);
+						// TODO: maybe finish this activity and its parent
+					}
+				});
 			}
 		}
 	}

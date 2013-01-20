@@ -22,16 +22,18 @@
         android:text="@string/defaultService"
         android:textSize="14sp" />
 
-    <!-- TODO: This should be used to signal the changing of the default server -->
+    <!-- TODO: This could be used to indicate the default server -->
+
     <TextView
         android:id="@+id/itemServerStatus"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/itemServerUrl"
-        android:gravity="right"
-        android:text="Default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="2dp"
+        android:text="·"
         android:textColor="@color/green1"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:visibility="gone" />
 
 </RelativeLayout>

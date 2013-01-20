@@ -71,9 +71,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppGrammarTargetLang"
-        android:text="http://example.net/grammars/pgf/robot.pgf"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:text="http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf"
         android:textColor="@color/orange1"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/itemAppServer"
@@ -82,6 +84,6 @@
         android:layout_below="@+id/itemAppGrammar"
         android:text="@string/defaultService"
         android:textColor="@color/orange"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
 </RelativeLayout>
