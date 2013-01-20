@@ -97,7 +97,7 @@ public class ChunkedWebRecSessionBuilder {
 		PackageNameRegistry wrapper = new PackageNameRegistry(context, caller);
 		String urlService = prefs.getString(context.getString(R.string.keyService), context.getString(R.string.defaultService));
 		setFromExtras(extras, wrapper, urlService);
-		mNbest = makeNbest(extras);
+		mNbest = makeNbest(extras, callingActivity);
 	}
 
 
@@ -235,9 +235,24 @@ public class ChunkedWebRecSessionBuilder {
 	}
 
 
-	private static int makeNbest(Bundle extras) {
+	/**
+	 * <p>If {@code EXTRA_MAX_RESULTS} was set (i.e. it is positive) then we
+	 * pass it on to the server. If the caller did not specify the amount of
+	 * results that it wants then we assume that it wants just a single result.
+	 * However, if there was no caller, i.e. K6nele was launched via its own
+	 * launcher icon, or from a browser then we ask the server for 5 results
+	 * (TODO: this could be user-configurable).</p>
+	 */
+	private static int makeNbest(Bundle extras, ComponentName callingActivity) {
 		int maxResults = extras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
-		return (maxResults > 0) ? maxResults : 5;
+		if (maxResults <= 0) {
+			if (callingActivity == null) {
+				return 5;
+			} else {
+				return 1;
+			}
+		}
+		return maxResults;
 	}
 
 
