@@ -168,11 +168,6 @@ public class RecognizerIntentActivity extends Activity {
 	private Runnable mRunnableVolume;
 	private Runnable mRunnableChunks;
 
-	private int mSampleRate;
-
-	// Max recording time in milliseconds
-	private int mMaxRecordingTime;
-
 	private ChunkedWebRecSessionBuilder mRecSessionBuilder;
 
 	private Resources mRes;
@@ -214,6 +209,7 @@ public class RecognizerIntentActivity extends Activity {
 
 			if (mStartRecording && ! mService.isWorking()) {
 				startRecording();
+				mStartRecording = false;
 			} else {
 				setGui();
 			}
@@ -237,7 +233,6 @@ public class RecognizerIntentActivity extends Activity {
 		setContentView(R.layout.recognizer);
 
 		mMessageHandler = new SimpleMessageHandler(this);
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		mErrorMessages = createErrorMessages();
 
 		// Don't shut down the screen
@@ -274,16 +269,9 @@ public class RecognizerIntentActivity extends Activity {
 			mExtraResultsPendingIntent = Utils.getPendingIntent(mExtras);
 		}
 
-		mSampleRate = Integer.parseInt(
-				mPrefs.getString(
-						getString(R.string.keyRecordingRate),
-						getString(R.string.defaultRecordingRate)));
-
-		mMaxRecordingTime = 1000 * Integer.parseInt(
-				mPrefs.getString(
-						getString(R.string.keyAutoStopAfterTime),
-						getString(R.string.defaultAutoStopAfterTime)));
-
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		// For the change in the autostart-setting to take effect,
+		// the user must restart the app. This seems more natural.
 		mStartRecording = mPrefs.getBoolean("keyAutoStart", false);
 
 		try {
@@ -322,12 +310,17 @@ public class RecognizerIntentActivity extends Activity {
 		};
 
 		// Decide if we should stop recording
-		// 1. Max recording time has passed
+		// 1. Max recording time (in milliseconds) has passed
 		// 2. Speaker stopped speaking
+		final int maxRecordingTime = 1000 * Integer.parseInt(
+				mPrefs.getString(
+						getString(R.string.keyAutoStopAfterTime),
+						getString(R.string.defaultAutoStopAfterTime)));
+
 		mRunnableStop = new Runnable() {
 			public void run() {
 				if (mService != null) {
-					if (mMaxRecordingTime < (SystemClock.elapsedRealtime() - mService.getStartTime())) {
+					if (maxRecordingTime < (SystemClock.elapsedRealtime() - mService.getStartTime())) {
 						Log.i(LOG_TAG, "Max recording time exceeded");
 						stopRecording();
 					} else if (mPrefs.getBoolean("keyAutoStopAfterPause", true) && mService.isPausing()) {
@@ -394,7 +387,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	@Override
 	public void onResume() {
-		super.onStart();
+		super.onResume();
 		setGui();
 	}
 
@@ -651,11 +644,14 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void startRecording() {
-		mRecSessionBuilder.setContentType(mSampleRate);
+		int sampleRate = Integer.parseInt(
+				mPrefs.getString(
+						getString(R.string.keyRecordingRate),
+						getString(R.string.defaultRecordingRate)));
+		mRecSessionBuilder.setContentType(sampleRate);
 		if (mService.init(mRecSessionBuilder.build())) {
 			playStartSound();
-			SystemClock.sleep(DELAY_AFTER_START_BEEP);
-			mService.start(mSampleRate);
+			mService.start(sampleRate);
 			setGui();
 		}
 	}
@@ -674,7 +670,10 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void playStartSound() {
-		playSound(R.raw.explore_begin);
+		boolean soundPlayed = playSound(R.raw.explore_begin);
+		if (soundPlayed) {
+			SystemClock.sleep(DELAY_AFTER_START_BEEP);
+		}
 	}
 
 
@@ -688,10 +687,12 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void playSound(int sound) {
+	private boolean playSound(int sound) {
 		if (mPrefs.getBoolean("keyAudioCues", true)) {
 			MediaPlayer.create(this, sound).start();
+			return true;
 		}
+		return false;
 	}
 
 
