@@ -59,6 +59,8 @@ import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
  */
 public class ChunkedWebRecSessionBuilder {
 
+	public static final int MAX_RESULTS = 5;
+
 	private final Context mContext;
 
 	private URL mWsUrl;
@@ -236,18 +238,20 @@ public class ChunkedWebRecSessionBuilder {
 
 
 	/**
-	 * <p>If {@code EXTRA_MAX_RESULTS} was set (i.e. it is positive) then we
-	 * pass it on to the server. If the caller did not specify the amount of
-	 * results that it wants then we assume that it wants just a single result.
-	 * However, if there was no caller, i.e. K6nele was launched via its own
-	 * launcher icon, or from a browser then we ask the server for 5 results
-	 * (TODO: this could be user-configurable).</p>
+	 * <p>If {@code EXTRA_MAX_RESULTS} was set (i.e. it is larger than 0) then we
+	 * pass it on to the server.</p>
+	 * <p>If it was not set then we check the type of the language model (this is an obligatory input parameter).
+	 * If the language model is unset (e.g. K6nele was launched via its own launcher icon), or
+	 * the model is "web search" (this is the case with some web browsers), then we ask the server
+	 * for several results. (TODO: this could be user-configurable.)
+	 * Otherwise we ask for just a single result.</p>
 	 */
 	private static int makeNbest(Bundle extras, ComponentName callingActivity) {
 		int maxResults = extras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
 		if (maxResults <= 0) {
-			if (callingActivity == null) {
-				return 5;
+			String model = extras.getString(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
+			if (model == null || model.equals(RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)) {
+				return MAX_RESULTS;
 			} else {
 				return 1;
 			}

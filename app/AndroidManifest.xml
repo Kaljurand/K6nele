@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto"
-    android:versionCode="838"
-    android:versionName="0.8.38" >
+    android:versionCode="839"
+    android:versionName="0.8.39" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
