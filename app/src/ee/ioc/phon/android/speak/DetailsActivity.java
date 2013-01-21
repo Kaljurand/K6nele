@@ -60,7 +60,7 @@ public class DetailsActivity extends ListActivity {
 						Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
 						intentWebSearch.putExtra(SearchManager.QUERY, ((TextView) view).getText());
 						startActivity(intentWebSearch);
-						// TODO: can we finish the parent as well?
+						// TODO: can we finish the parent as well? or maybe return the selection to parent?
 						finish();
 					}
 				});

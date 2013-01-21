@@ -720,6 +720,7 @@ public class RecognizerIntentActivity extends Activity {
 		info.add("Selected grammar: " + mRecSessionBuilder.getGrammarUrl());
 		info.add("Selected target lang: " + mRecSessionBuilder.getGrammarTargetLang());
 		info.add("Selected server: " + mRecSessionBuilder.getServerUrl());
+		info.add("Intent action: " + getIntent().getAction());
 		info.addAll(Utils.ppBundle(mExtras));
 		return info.toArray(new String[info.size()]);
 	}
@@ -764,16 +765,23 @@ public class RecognizerIntentActivity extends Activity {
 
 	/**
 	 * <p>Returns the transcription results (matches) to the caller,
-	 * or sends them to the pending intent. In the latter case we also display
-	 * a toast-message with the transcription.
-	 * Note that we assume that the given list of matches contains at least one
+	 * or sends them to the pending intent, or performs a web search.</p>
+	 *
+	 * <p>If a pending intent was specified then use it. This is the case with
+	 * applications that use the standard search bar (e.g. Google Maps and YouTube).</p>
+	 *
+	 * <p>Otherwise. If there was no caller (i.e. we cannot return the results), or
+	 * the caller asked us explicitly to perform "web search", then do that, possibly
+	 * disambiguating the results or redoing the recognition.
+	 * This is the case when K6nele was launched from its launcher icon (i.e. no caller),
+	 * or from a browser app.
+	 * (Note that trying to return the results to Google Chrome does not seem to work.)</p>
+	 *
+	 * <p>Otherwise. Just return the results to the caller.</p>
+	 *
+	 * <p>Note that we assume that the given list of matches contains at least one
 	 * element.</p>
 	 *
-	 * <p>In case there is no pending intent and also no caller (i.e. we were launched
-	 * via the launcher icon), then we pass the results to the standard web search.
-	 * In case of multiple results we ask the user to choose. The user can also press BACK,
-	 * i.e. in this case the activity does not finish.</p>
-	 * 
 	 * @param handler message handler
 	 * @param matches transcription results (one or more hypotheses)
 	 */
@@ -785,7 +793,9 @@ public class RecognizerIntentActivity extends Activity {
 		}
 
 		if (mExtraResultsPendingIntent == null) {
-			if (getCallingActivity() == null) {
+			if (getCallingActivity() == null
+					|| RecognizerIntent.ACTION_WEB_SEARCH.equals(getIntent().getAction())
+					|| mExtras.getBoolean(RecognizerIntent.EXTRA_WEB_SEARCH_ONLY)) {
 				handleResultsByWebSearch(this, handler, matches);
 				return;
 			} else {
@@ -810,6 +820,7 @@ public class RecognizerIntentActivity extends Activity {
 			} else {
 				message = matches.toString();
 			}
+			// Display a toast with the transcription.
 			handler.sendMessage(createMessage(MSG_TOAST, String.format(getString(R.string.toastForwardedMatches), message)));
 			try {
 				mExtraResultsPendingIntent.send(this, Activity.RESULT_OK, intent);
