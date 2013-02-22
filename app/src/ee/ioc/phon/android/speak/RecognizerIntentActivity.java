@@ -644,14 +644,14 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private void startRecording() {
-		int sampleRate = Integer.parseInt(
-				mPrefs.getString(
-						getString(R.string.keyRecordingRate),
-						getString(R.string.defaultRecordingRate)));
+		PrefStore prefStore = new PrefStore(mPrefs, getResources());
+		int sampleRate = prefStore.getInteger(R.string.keyRecordingRate, R.string.defaultRecordingRate);
+		boolean isNoiseSuppressor = prefStore.getBoolean(R.string.keyNoiseSuppressor, R.bool.defaultNoiseSuppressor);
+
 		mRecSessionBuilder.setContentType(sampleRate);
 		if (mService.init(mRecSessionBuilder.build())) {
 			playStartSound();
-			mService.start(sampleRate);
+			mService.start(sampleRate, isNoiseSuppressor);
 			setGui();
 		}
 	}

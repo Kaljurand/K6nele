@@ -64,6 +64,11 @@
             android:key="@string/keyRespectLocale"
             android:summary="@string/summaryRespectLocale"
             android:title="@string/titleRespectLocale" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultNoiseSuppressor"
+            android:key="@string/keyNoiseSuppressor"
+            android:summary="@string/summaryNoiseSuppressor"
+            android:title="@string/titleNoiseSuppressor" />
 
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"

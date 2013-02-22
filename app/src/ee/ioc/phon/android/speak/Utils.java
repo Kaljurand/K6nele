@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -60,6 +61,9 @@ public class Utils {
 
 	private Utils() {}
 
+	public static boolean getBoolean(SharedPreferences prefs, Resources res, int resKey, int resDefault) {
+		return prefs.getBoolean(res.getString(resKey), res.getBoolean(resDefault));
+	}
 
 	public static PendingIntent getPendingIntent(Bundle extras) {
 		Parcelable extraResultsPendingIntentAsParceable = extras.getParcelable(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT);

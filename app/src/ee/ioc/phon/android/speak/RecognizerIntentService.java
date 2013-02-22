@@ -239,7 +239,7 @@ public class RecognizerIntentService extends Service {
 	 *
 	 * @param sampleRate sample rate in Hz, e.g. 16000
 	 */
-	public boolean start(int sampleRate) {
+	public boolean start(int sampleRate, boolean isNoiseSuppressor) {
 		if (mState != State.INITIALIZED) {
 			processError(RecognizerIntent.RESULT_CLIENT_ERROR, null);
 			return false;
@@ -248,7 +248,7 @@ public class RecognizerIntentService extends Service {
 		mAudioPauser = new AudioPauser(this);
 		mAudioPauser.pause();
 		try {
-			startRecording(sampleRate);
+			startRecording(sampleRate, isNoiseSuppressor);
 			mStartTime = SystemClock.elapsedRealtime();
 			startChunkSending(Constants.TASK_INTERVAL_SEND, Constants.TASK_DELAY_SEND, false);
 			setState(State.RECORDING);
@@ -349,8 +349,8 @@ public class RecognizerIntentService extends Service {
 	 *
 	 * @throws IOException if recorder could not be created
 	 */
-	private void startRecording(int recordingRate) throws IOException {
-		mRecorder = new RawAudioRecorder(recordingRate);
+	private void startRecording(int recordingRate, boolean isNoiseSuppressor) throws IOException {
+		mRecorder = new RawAudioRecorder(recordingRate, isNoiseSuppressor);
 		if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
 			throw new IOException(getString(R.string.errorCantCreateRecorder));
 		}

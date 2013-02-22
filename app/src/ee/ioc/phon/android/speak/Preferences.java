@@ -17,6 +17,7 @@
 package ee.ioc.phon.android.speak;
 
 import ee.ioc.phon.android.speak.provider.Server;
+import ee.ioc.phon.android.speechrecorder.SpeechRecord;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,6 +57,10 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				(Preference) findPreference(getString(R.string.keyRecordingRate)),
 				getString(R.string.summaryRecordingRate),
 				sp.getString(getString(R.string.keyRecordingRate), "?"));
+
+
+		Preference prefNoiseSuppressor = (Preference) findPreference(getString(R.string.keyNoiseSuppressor));
+		prefNoiseSuppressor.setEnabled(SpeechRecord.isNoiseSuppressorAvailable());
 
 	}
 

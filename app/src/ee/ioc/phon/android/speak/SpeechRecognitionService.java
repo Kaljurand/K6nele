@@ -103,11 +103,9 @@ public class SpeechRecognitionService extends RecognitionService {
 		}
 		 */
 
-		int sampleRate = Integer.parseInt(
-				mPrefs.getString(
-						getString(R.string.keyRecordingRate),
-						getString(R.string.defaultRecordingRate)));
-
+		PrefStore prefStore = new PrefStore(mPrefs, getResources());
+		int sampleRate = prefStore.getInteger(R.string.keyRecordingRate, R.string.defaultRecordingRate);
+		boolean isNoiseSuppressor = prefStore.getBoolean(R.string.keyNoiseSuppressor, R.bool.defaultNoiseSuppressor);
 
 		mRecSessionBuilder.setContentType(sampleRate);
 		if (Log.DEBUG) Log.i(mRecSessionBuilder.toStringArrayList());
@@ -125,7 +123,7 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 		try {
-			startRecording(sampleRate);
+			startRecording(sampleRate, isNoiseSuppressor);
 			Log.i("Callback: readyForSpeech: " + sampleRate);
 			listener.readyForSpeech(new Bundle());
 			// TODO: send it when the user actually started speaking
@@ -189,8 +187,8 @@ public class SpeechRecognitionService extends RecognitionService {
 	 *
 	 * @throws IOException if recorder could not be created
 	 */
-	private void startRecording(int sampleRate) throws IOException {
-		mRecorder = new RawAudioRecorder(sampleRate);
+	private void startRecording(int sampleRate, boolean isNoiseSuppressor) throws IOException {
+		mRecorder = new RawAudioRecorder(sampleRate, isNoiseSuppressor);
 		if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
 			mRecorder = null;
 			throw new IOException(getString(R.string.errorCantCreateRecorder));

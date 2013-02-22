@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak;
 
+import ee.ioc.phon.android.speechrecorder.SpeechRecord;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -110,7 +111,7 @@ public class RawAudioRecorder {
 	 * @param audioSource Identifier of the audio source (e.g. microphone)
 	 * @param sampleRate Sample rate (e.g. 16000)
 	 */
-	public RawAudioRecorder(int audioSource, int sampleRate) {
+	public RawAudioRecorder(int audioSource, int sampleRate, boolean isNoiseSuppressor) {
 		mSampleRate = sampleRate;
 		// E.g. 1 second of 16kHz 16-bit mono audio takes 32000 bytes.
 		mOneSec = RESOLUTION_IN_BYTES * CHANNELS * mSampleRate;
@@ -118,7 +119,7 @@ public class RawAudioRecorder {
 		mRecording = new byte[mOneSec * 35];
 		try {
 			setBufferSizeAndFramePeriod();
-			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
+			mRecorder = new SpeechRecord(mSampleRate, mBufferSize, isNoiseSuppressor, false, false);
 			if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
 			}
@@ -136,13 +137,13 @@ public class RawAudioRecorder {
 	}
 
 
-	public RawAudioRecorder(int sampleRate) {
-		this(DEFAULT_AUDIO_SOURCE, sampleRate);
+	public RawAudioRecorder(int sampleRate, boolean isNoiseSuppressor) {
+		this(DEFAULT_AUDIO_SOURCE, sampleRate, isNoiseSuppressor);
 	}
 
 
 	public RawAudioRecorder() {
-		this(DEFAULT_AUDIO_SOURCE, DEFAULT_SAMPLE_RATE);
+		this(DEFAULT_AUDIO_SOURCE, DEFAULT_SAMPLE_RATE, true);
 	}
 
 
