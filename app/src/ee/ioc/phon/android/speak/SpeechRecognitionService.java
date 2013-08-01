@@ -480,6 +480,7 @@ public class SpeechRecognitionService extends RecognitionService {
 		releaseResources();
 		try {
 			Log.i("Callback: error: " + errorCode);
+			if (mAudioPauser != null) mAudioPauser.resume();
 			listener.error(errorCode);
 		} catch (RemoteException e) {
 			handleRemoteException(e);
