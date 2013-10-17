@@ -17,14 +17,25 @@ The latest stable APK is available on
 Compilation
 -----------
 
-Go into the app-directory and execute
+Point to the SDK directory by setting the environment variable
+`ANDROID_HOME`, e.g.
 
-	ant clean release
+	ANDROID_HOME=${HOME}/myapps/android-studio/sdk/
 
-Note that you need to have 2 additional files that are not part of this
-repository:
+Then run
 
-  - app/local.properties (pointer to the Android SDK)
-  - app/speak.keystore (release keys)
+	gradle build
 
-Read the Android developer docs for instructions on how to generate them.
+For the listing of more Gradle tasks, run:
+
+	gradle tasks
+
+
+If you have access to the release keystore then
+
+  - point to its location by setting the environment variable `KEYSTORE`
+  - set `KEY_ALIAS` to the key alias
+  - create the file `gradle.properties` containing the lines:
+
+		storePassword=<password1>
+		keyPassword=<password2>
