@@ -84,7 +84,7 @@ button as part of their user interface. Examples include:&lt;/p>
 &amp;nbsp;&amp;nbsp;&amp;bull; SMS apps (e.g. GO SMS Pro, SMS Popup);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools (e.g. Google Translate, Dictionary.com);&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; calculators (e.g. WolframAlpha);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. Google Maps, Google Docs, YouTube).
+&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. Google Maps, Google Drive, YouTube).
 
 		&lt;p>%1$s is
 		pre-configured to
@@ -103,7 +103,7 @@ and English, covering domains like unit conversion, address queries, setting the
 More grammars are available at
 &lt;a href="http://kaljurand.github.io/Grammars/">http://kaljurand.github.io/Grammars/&lt;/a>.&lt;/p>
 
-		&lt;p>Documentation, source code, and the list of requested features and known issues are available at
+		&lt;p>Documentation, source code, and the list of requested features and known issues are available at the
 		&lt;a
 		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p></string>
 

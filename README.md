@@ -22,10 +22,6 @@ Point to the SDK directory by setting the environment variable
 
 	ANDROID_HOME=${HOME}/myapps/android-studio/sdk/
 
-If you have the release keystore then
-point to its location by setting the
-environment variable `KEYSTORE`. Also set `KEY_ALIAS` to the key alias.
-
 Then run
 
 	gradle build
@@ -33,3 +29,13 @@ Then run
 For the listing of more Gradle tasks, run:
 
 	gradle tasks
+
+
+If you have access to the release keystore then
+
+  - point to its location by setting the environment variable `KEYSTORE`
+  - set `KEY_ALIAS` to the key alias
+  - create the file `gradle.properties` containing the lines:
+
+		storePassword=<password1>
+		keyPassword=<password2>
