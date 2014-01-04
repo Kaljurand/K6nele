@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.7.+'
     }
 }
 
@@ -29,7 +29,7 @@ android {
     // We support API level 8, but use isChangingConfigurations() when API 11+
     // is available.
     compileSdkVersion 15
-    buildToolsVersion "18.1.1"
+    buildToolsVersion "19.0.1"
 
     sourceSets {
         main {

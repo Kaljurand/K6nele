@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto"
-    android:versionCode="842"
-    android:versionName="0.8.42" >
+    android:versionCode="843"
+    android:versionName="0.8.43" >
 
     <!-- API level 3: some default button was not found, but we didn't explore it further. -->
     <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
@@ -75,10 +75,20 @@
             </intent-filter>
         </receiver>
 
-        <!-- We fall back to the application label because this is a launcher activity. -->
+        <!--
+        The purpose of MAIN/DEFAULT/exported=true is to support the creation of "activity shortcut",
+        e.g. via Nova Launcher, i.e. the user can create an additional icon that launches directly
+        into the Preferences.
+        -->
         <activity
             android:name=".Preferences"
+            android:exported="true"
             android:label="@string/labelActivityPreferences" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".AboutActivity"
@@ -111,6 +121,11 @@
         <activity
             android:name=".demo.RepeaterDemo"
             android:label="@string/labelActivityRepeaterDemo" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".demo.VoiceSearchDemo"
