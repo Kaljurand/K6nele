@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RecognizerIntent;
@@ -59,7 +59,8 @@ public class SimpleDemo extends AbstractRecognizerDemoActivity {
 	 * <p>Show the results i.e. an ordered list of transcription candidates.</p>
 	 */
 	@Override
-	protected void onSuccess(List<String> matches) {
+	protected void onSuccess(Intent intent) {
+        ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 		mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
 	}
 

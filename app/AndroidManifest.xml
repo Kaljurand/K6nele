@@ -119,6 +119,10 @@
             android:label="@string/labelActivitySimpleDemo" >
         </activity>
         <activity
+            android:name=".demo.ExtrasDemo"
+            android:label="@string/labelActivityExtrasDemo" >
+        </activity>
+        <activity
             android:name=".demo.RepeaterDemo"
             android:label="@string/labelActivityRepeaterDemo" >
             <intent-filter>

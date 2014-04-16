@@ -345,22 +345,25 @@ public class Utils {
 	}
 
 
-	private static List<String> ppBundle(String bundleName, Bundle bundle) {
-		List<String> strings = new ArrayList<String>();
-		for (String key : bundle.keySet()) {
-			Object value = bundle.get(key);
-			if (value instanceof Bundle) {
-				strings.addAll(ppBundle(bundleName + key + "/", (Bundle) value));
-			} else {
-				if (value instanceof Object[]) {
-					strings.add(bundleName + key + ": " + Arrays.toString((Object[]) value));
-				} else {
-					strings.add(bundleName + key + ": " + value);
-				}
-			}
-		}
-		return strings;
-	}
+    private static List<String> ppBundle(String bundleName, Bundle bundle) {
+        List<String> strings = new ArrayList<String>();
+        for (String key : bundle.keySet()) {
+            Object value = bundle.get(key);
+            String name = bundleName + key;
+            if (value instanceof Bundle) {
+                strings.addAll(ppBundle(name + "/", (Bundle) value));
+            } else {
+                if (value instanceof Object[]) {
+                    strings.add(name + ": " + Arrays.toString((Object[]) value));
+                } else if (value instanceof float[]) {
+                    strings.add(name + ": " + Arrays.toString((float[]) value));
+                } else {
+                    strings.add(name + ": " + value);
+                }
+            }
+        }
+        return strings;
+    }
 
 
 	/**

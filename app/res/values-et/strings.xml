@@ -12,6 +12,7 @@
     <string name="labelActivityPreferences">Kõnele seaded</string> <!-- references @string/labelApp -->
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
+    <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityRepeaterDemo">Kordaja demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
@@ -43,6 +44,7 @@
     <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
+    <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
     <string name="summaryRepeaterDemo">Transkribeerib kõne, näitab parimat tulemust,
 		transkribeerib uuesti, … Kõnele saab menüü abil omistada
 		grammatika.</string>

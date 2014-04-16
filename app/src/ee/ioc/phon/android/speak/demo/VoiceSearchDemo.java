@@ -23,8 +23,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-import java.util.List;
-
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RecognizerIntent;
 
@@ -55,7 +53,7 @@ public class VoiceSearchDemo extends AbstractRecognizerDemoActivity implements O
 
 
 	@Override
-	protected void onSuccess(List<String> matches) {
+	protected void onSuccess(Intent intent) {
 		finish();
 	}
 

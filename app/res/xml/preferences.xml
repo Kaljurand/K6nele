@@ -76,6 +76,13 @@
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
             <Preference
+                android:summary="@string/summaryExtrasDemo"
+                android:title="@string/labelActivityExtrasDemo" >
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.ExtrasDemo"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            <Preference
                 android:summary="@string/summaryRepeaterDemo"
                 android:title="@string/labelActivityRepeaterDemo" >
                 <intent

@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.demo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Extras;
@@ -50,7 +49,7 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 
 	private long mGrammarId;
 
-	protected abstract void onSuccess(List<String> matches);
+	protected abstract void onSuccess(Intent intent);
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -90,8 +89,7 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE) {
 			switch (resultCode) {
 			case RESULT_OK:
-				ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-				onSuccess(matches);
+				onSuccess(data);
 				break;
 			case RecognizerIntent.RESULT_AUDIO_ERROR:
 				toast(getString(R.string.errorResultAudioError));

@@ -33,6 +33,7 @@
     <string name="labelActivityGrammarList">Grammars</string>
     <string name="labelActivityServerList">Recognizer servers</string>
     <string name="labelActivitySimpleDemo">Simple demo</string>
+    <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityRepeaterDemo">Repeater demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
 
@@ -59,6 +60,7 @@
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
+    <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
 

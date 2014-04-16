@@ -78,7 +78,8 @@ public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnCl
 
 
 	@Override
-	protected void onSuccess(List<String> matches) {
+	protected void onSuccess(Intent intent) {
+        ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 		if (! matches.isEmpty()) {
 			mMatches.add(0, matches.get(0));
 			updateListView(mMatches);
