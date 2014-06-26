@@ -52,6 +52,7 @@ public class ExtrasDemo extends AbstractRecognizerDemoActivity {
     protected void onSuccess(Intent intent) {
         List<String> list = Utils.ppBundle(intent.getExtras());
         Intent details = new Intent(this, DetailsActivity.class);
+        details.setData(intent.getData());
         details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, list.toArray(new String[list.size()]));
         startActivity(details);
         finish();

@@ -19,6 +19,8 @@ package ee.ioc.phon.android.speak;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * <p>Simple activity for displaying String-arrays.
@@ -42,7 +45,14 @@ public class DetailsActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle extras = getIntent().getExtras();
+        Intent intent = getIntent();
+
+        Uri audioUri = intent.getData();
+        if (audioUri != null) {
+            playAudio(audioUri);
+        }
+
+        Bundle extras = intent.getExtras();
 		if (extras != null) {
 			String title = extras.getString(EXTRA_TITLE);
 			if (title == null) {
@@ -67,4 +77,22 @@ public class DetailsActivity extends ListActivity {
 			}
 		}
 	}
+
+    /**
+     * @param uri audio URI to be played
+     * TODO: do error checking and put strings to resources
+     */
+    private void playAudio(Uri uri) {
+        final MediaPlayer mp = MediaPlayer.create(this, uri);
+        int duration = mp.getDuration();
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mp.release();
+                Toast.makeText(getApplicationContext(), "Done playing the audio", Toast.LENGTH_LONG).show();
+            }
+        });
+        mp.start();
+        Toast.makeText(this, "Playing the recorded audio: " + duration + " ms", Toast.LENGTH_LONG).show();
+    }
 }
