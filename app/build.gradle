@@ -1,19 +1,4 @@
-// Note: This only affects the code running the build, not the project.
-// The project itself needs to declare its own repositories and dependencies.
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
-    }
-}
-
 apply plugin: 'android'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
