@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
-    android:installLocation="auto"
-    android:versionCode="843"
-    android:versionName="0.8.43" >
+    android:installLocation="auto" >
 
-    <!-- API level 3: some default button was not found, but we didn't explore it further. -->
-    <!-- API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION -->
-    <!-- API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService -->
-    <!-- TODO: setting targetSdkVersion=15 would switch on StrictMode -->
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="8" />
 
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
@@ -120,6 +111,7 @@
         </activity>
         <activity
             android:name=".demo.ExtrasDemo"
+            android:exported="true"
             android:label="@string/labelActivityExtrasDemo" >
         </activity>
         <activity
@@ -163,6 +155,12 @@
             android:name=".provider.AppsContentProvider"
             android:authorities="ee.ioc.phon.android.speak.provider.AppsContentProvider"
             android:exported="false" />
+
+        <provider
+            android:name=".provider.FileContentProvider"
+            android:authorities="ee.ioc.phon.android.speak.provider.FileContentProvider"
+            android:permission="android.permission.RECORD_AUDIO"
+            android:exported="true" />
     </application>
 
 </manifest>

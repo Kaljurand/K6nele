@@ -187,6 +187,9 @@
     <string name="dialogTitleHypotheses">Kas ütlesite &#8230;</string>
     <string name="toastForwardedMatches">Tuvastasin: %1$s</string>
     <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
+    <string name="toastRequestedAudioFormatNotSupported">Audioformaat pole toetatud: %1$s</string>
+    <string name="toastPlayingAudio">Mängin lindistust: %1$s, %2$s, %3$d ms</string>
+    <string name="toastPlayingAudioDone">Lindistuse lõpp</string>
     <string name="entryGrammarName1">[piiramata sisend]</string>
     <string name="entryGrammarDesc1">Selle grammatika saab omistada rakendustele, kus te
 		soovite igal juhul vabas vormis rääkida, sõltumata sellest, kas
@@ -195,6 +198,7 @@
 		rakendus</string>
 
     <!-- Error messages used in exceptions and toasts -->
+    <string name="errorFailedPlayAudio">Lindistatud heli mahamängimine luhtus: %1$s, %2$s</string>
     <string name="errorFailedLaunchApp">See rakendus pole käivitatav või pole (enam)
 		installeeritud: %1$s</string>
     <string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>

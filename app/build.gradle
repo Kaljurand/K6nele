@@ -14,7 +14,21 @@ android {
     // We support API level 8, but use isChangingConfigurations() when API 11+
     // is available.
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
+
+
+    // API level 3: some default button was not found, but we didn't explore it further.
+    // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
+    // API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService
+    // TODO: setting targetSdkVersion=15 would switch on StrictMode
+    defaultConfig {
+        packageName 'ee.ioc.phon.android.speak'
+        minSdkVersion 8
+        targetSdkVersion 8
+        versionCode 843
+        versionName '0.8.43'
+    }
+
 
     sourceSets {
         main {

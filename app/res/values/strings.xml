@@ -115,11 +115,15 @@ More grammars are available at
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
+    <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
+    <string name="toastPlayingAudio">Playing the recorded audio: %1$s, %2$s, %3$d ms</string>
+    <string name="toastPlayingAudioDone">Done playing the audio</string>
     <string name="errorRecognizerNotPresent">There is no activity that provides speech recognition service.</string>
 
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
     <string name="errorFailedLaunchApp">This app is not launchable or is not installed (anymore): %1$s</string>
+    <string name="errorFailedPlayAudio">Failed to play the recorded audio: %1$s, %2$s</string>
     <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
     <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
     <string name="errorResultClientError">General client error</string>

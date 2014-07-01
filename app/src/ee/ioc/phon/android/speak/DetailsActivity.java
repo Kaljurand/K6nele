@@ -31,9 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * <p>Simple activity for displaying String-arrays.
+ * <p>Simple activity that displays the String-array attached to the intent and plays the
+ * audio data contained in the intent data.
  * Not really meant for the end-users.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class DetailsActivity extends ListActivity {
@@ -41,18 +42,20 @@ public class DetailsActivity extends ListActivity {
 	public static final String EXTRA_TITLE = "EXTRA_TITLE";
 	public static final String EXTRA_STRING_ARRAY = "EXTRA_STRING_ARRAY";
 
+	private MediaPlayer mMediaPlayer;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
+		Intent intent = getIntent();
 
-        Uri audioUri = intent.getData();
-        if (audioUri != null) {
-            playAudio(audioUri);
-        }
+		Uri audioUri = intent.getData();
+		if (audioUri != null) {
+			playAudio(audioUri, intent.getType());
+		}
 
-        Bundle extras = intent.getExtras();
+		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			String title = extras.getString(EXTRA_TITLE);
 			if (title == null) {
@@ -78,21 +81,35 @@ public class DetailsActivity extends ListActivity {
 		}
 	}
 
-    /**
-     * @param uri audio URI to be played
-     * TODO: do error checking and put strings to resources
-     */
-    private void playAudio(Uri uri) {
-        final MediaPlayer mp = MediaPlayer.create(this, uri);
-        int duration = mp.getDuration();
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mp.release();
-                Toast.makeText(getApplicationContext(), "Done playing the audio", Toast.LENGTH_LONG).show();
-            }
-        });
-        mp.start();
-        Toast.makeText(this, "Playing the recorded audio: " + duration + " ms", Toast.LENGTH_LONG).show();
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mMediaPlayer != null) {
+			mMediaPlayer.release();
+		}
+	}
+
+	/**
+	 * @param uri audio URI to be played
+	 */
+	private void playAudio(Uri uri, String type) {
+		mMediaPlayer = MediaPlayer.create(this, uri);
+		if (mMediaPlayer == null) {
+			toast(String.format(getString(R.string.errorFailedPlayAudio), uri.toString(), type));
+		} else {
+			int duration = mMediaPlayer.getDuration();
+			mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+				@Override
+				public void onCompletion(MediaPlayer mediaPlayer) {
+					toast(getString(R.string.toastPlayingAudioDone));
+				}
+			});
+			mMediaPlayer.start();
+			toast(String.format(getString(R.string.toastPlayingAudio), uri.toString(), type, duration));
+		}
+	}
+
+	private void toast(String message) {
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+	}
 }

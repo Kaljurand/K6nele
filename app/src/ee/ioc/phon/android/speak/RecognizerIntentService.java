@@ -188,9 +188,19 @@ public class RecognizerIntentService extends Service {
 	public byte[] getCompleteRecording() {
 		if (mRecorder == null) {
 			return new byte[0];
-
 		}
 		return mRecorder.getCompleteRecording();
+	}
+
+
+	/**
+	 * @return complete audio data from the beginning of the recording, with wav-header
+	 */
+	public byte[] getCompleteRecordingAsWav() {
+		if (mRecorder == null) {
+			return new byte[0];
+		}
+		return mRecorder.getCompleteRecordingAsWav();
 	}
 
 

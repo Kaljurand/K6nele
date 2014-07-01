@@ -32,6 +32,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +58,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -69,6 +72,7 @@ import org.apache.commons.io.IOUtils;
 
 import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.android.speak.RecognizerIntentService.State;
+import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
@@ -171,6 +175,7 @@ public class RecognizerIntentActivity extends Activity {
 	private ChunkedWebRecSessionBuilder mRecSessionBuilder;
 
 	private Resources mRes;
+	private MediaPlayer mMediaPlayer;
 
 	private PendingIntent mExtraResultsPendingIntent;
 
@@ -416,6 +421,11 @@ public class RecognizerIntentActivity extends Activity {
 		} else if (mIsStartActivity || isFinishing()) {
 			stopService(new Intent(this, RecognizerIntentService.class));
 		}
+
+		if (mMediaPlayer != null) {
+			mMediaPlayer.release();
+			mMediaPlayer = null;
+		}
 	}
 
 
@@ -657,8 +667,38 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void setResultIntent(ArrayList<String> matches) {
+	/**
+	 * Sets the RESULT_OK intent. Adds the recorded audio data if the caller has requested it
+	 * and the requested format is supported or unset.
+	 */
+	private void setResultIntent(final Handler handler, ArrayList<String> matches) {
 		Intent intent = new Intent();
+		if (mExtras.getBoolean(Extras.GET_AUDIO)) {
+			String audioFormat = mExtras.getString(Extras.GET_AUDIO_FORMAT);
+			if (audioFormat == null) {
+				audioFormat = Constants.DEFAULT_AUDIO_FORMAT;
+			}
+			if (Constants.SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
+				try {
+					FileOutputStream fos = openFileOutput(Constants.AUDIO_FILENAME, Context.MODE_PRIVATE);
+					fos.write(mService.getCompleteRecordingAsWav());
+					fos.close();
+
+					Uri uri = Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + Constants.AUDIO_FILENAME);
+					// TODO: not sure about the type (or if it's needed)
+					intent.setDataAndType(uri, audioFormat);
+				} catch (FileNotFoundException e) {
+					Log.e(LOG_TAG, "FileNotFoundException: " + e.getMessage());
+				} catch (IOException e) {
+					Log.e(LOG_TAG, "IOException: " + e.getMessage());
+				}
+			} else {
+				if (Log.DEBUG) {
+					handler.sendMessage(createMessage(MSG_TOAST,
+							String.format(getString(R.string.toastRequestedAudioFormatNotSupported), audioFormat)));
+				}
+			}
+		}
 		intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
 		setResult(Activity.RESULT_OK, intent);
 	}
@@ -689,7 +729,8 @@ public class RecognizerIntentActivity extends Activity {
 
 	private boolean playSound(int sound) {
 		if (mPrefs.getBoolean("keyAudioCues", true)) {
-			MediaPlayer.create(this, sound).start();
+			mMediaPlayer = MediaPlayer.create(this, sound);
+			mMediaPlayer.start();
 			return true;
 		}
 		return false;
@@ -799,7 +840,7 @@ public class RecognizerIntentActivity extends Activity {
 				handleResultsByWebSearch(this, handler, matches);
 				return;
 			} else {
-				setResultIntent(matches);
+				setResultIntent(handler, matches);
 			}
 		} else {
 			Bundle bundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);

@@ -18,50 +18,49 @@ package ee.ioc.phon.android.speak.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import java.util.List;
 
 import ee.ioc.phon.android.speak.DetailsActivity;
+import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RecognizerIntent;
 import ee.ioc.phon.android.speak.Utils;
 
 public class ExtrasDemo extends AbstractRecognizerDemoActivity {
 
-    private ListView mList;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		Intent intent = createRecognizerIntent();
 
-        Intent intent = createRecognizerIntent();
+		if (getRecognizers(intent).size() == 0) {
+			toast(getString(R.string.errorRecognizerNotPresent));
+			finish();
+		} else {
+			launchRecognizerIntent(intent);
+		}
+	}
 
-        if (getRecognizers(intent).size() == 0) {
-            toast(getString(R.string.errorRecognizerNotPresent));
-            finish();
-        } else {
-            launchRecognizerIntent(intent);
-        }
-    }
+	/**
+	 * Show the resulting extras
+	 */
+	@Override
+	protected void onSuccess(Intent intent) {
+		List<String> list = Utils.ppBundle(intent.getExtras());
+		Intent details = new Intent(this, DetailsActivity.class);
+		details.setData(intent.getData());
+		details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, list.toArray(new String[list.size()]));
+		startActivity(details);
+		finish();
+	}
 
-    /**
-     * Show the resulting extras
-     */
-    @Override
-    protected void onSuccess(Intent intent) {
-        List<String> list = Utils.ppBundle(intent.getExtras());
-        Intent details = new Intent(this, DetailsActivity.class);
-        details.setData(intent.getData());
-        details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, list.toArray(new String[list.size()]));
-        startActivity(details);
-        finish();
-    }
-
-    private static Intent createRecognizerIntent() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
-        intent.putExtra("android.speech.extra.GET_AUDIO", true);
-        return intent;
-    }
+	private static Intent createRecognizerIntent() {
+		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+		intent.putExtra(Extras.GET_AUDIO, true);
+		intent.putExtra(Extras.GET_AUDIO_FORMAT, (String) null);
+		//intent.putExtra(Extras.GET_AUDIO_FORMAT, Constants.SUPPORTED_AUDIO_FORMATS.iterator().next());
+		return intent;
+	}
 }

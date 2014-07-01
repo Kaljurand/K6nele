@@ -37,6 +37,11 @@ public class Extras {
 	// should be transcribed.
 	public static final String EXTRA_PHRASE = "ee.ioc.phon.android.extra.PHRASE";
 
+	// Caller is interested in the recorded audio data (boolean)
+	public static final String GET_AUDIO = "android.speech.extra.GET_AUDIO";
+
+	// Caller wants to have the audio data in a certain format (String)
+	public static final String GET_AUDIO_FORMAT = "android.speech.extra.GET_AUDIO_FORMAT";
 
 	/**
 	 * <p>Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
