@@ -474,7 +474,7 @@ public class RecognizerIntentActivity extends Activity {
 
 	private void setGui() {
 		if (mService == null) {
-			setGuiError(RecognizerIntent.RESULT_CLIENT_ERROR);
+			// in onResume() the service might not be ready yet
 			return;
 		}
 		switch(mService.getState()) {
