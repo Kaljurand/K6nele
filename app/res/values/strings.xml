@@ -158,7 +158,7 @@ More grammars are available at
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
-    <string name="promptDefault">Speak a web search query</string>
+    <string name="promptSearch">Speak a web search query</string>
     <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
     <string name="phraseDemo">Kuuuurija istus töööös jääääres.</string>
 

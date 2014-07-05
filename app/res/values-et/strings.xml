@@ -210,7 +210,7 @@
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="noteMaxRecordingTimeExceeded">Lindistamise ajalimiit on ületatud</string>
-    <string name="promptDefault">Öelge veebiotsingu päring</string>
+    <string name="promptSearch">Öelge veebiotsingu päring</string>
     <string name="promptDemo">Öelge nt: Üheksasada üheksakümmend üheksa tuhat üheksasada üheksakümmend üheksa ööd</string>
     <string name="phraseDemo">Lampjalgadega stampvambilgi on rambikramp.</string>
 

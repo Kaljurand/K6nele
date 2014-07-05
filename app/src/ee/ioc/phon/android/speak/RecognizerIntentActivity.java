@@ -624,13 +624,13 @@ public class RecognizerIntentActivity extends Activity {
 		}
 	}
 
-
-	private String getPrompt() {
-		if (mExtraResultsPendingIntent == null && getCallingActivity() == null) {
-			return getString(R.string.promptDefault);
-		}
-		return mExtras.getString(RecognizerIntent.EXTRA_PROMPT);
-	}
+    private String getPrompt() {
+        String prompt = mExtras.getString(RecognizerIntent.EXTRA_PROMPT);
+        if (prompt == null && mExtraResultsPendingIntent == null && getCallingActivity() == null) {
+            return getString(R.string.promptSearch);
+        }
+        return prompt;
+    }
 
 
 	private void stopChronometer() {
