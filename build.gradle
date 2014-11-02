@@ -3,12 +3,42 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.14.+'
     }
 }
 
 allprojects {
     repositories {
         mavenCentral()
+    }
+}
+
+
+// Converts the SVG launcher icon to multiple resolution PNGs
+task makeIcons << {
+    def dir_res = 'app/res/'
+    def dir_svg = 'images/'
+
+    def launcher_fn_svg = 'ic_launcher.svg'
+    def launcher_fn_png = 'ic_launcher.png'
+
+    def sizeLogo = 512
+    def sizeMap = [ 'mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192 ]
+
+    def convertSvg = {
+        size, dir_in, dir_out ->
+            println "Converting launcher icon into ${dir_out} ..."
+            def output1 = exec {
+                commandLine 'mkdir', '-p', dir_out
+            }
+            def output2 = exec {
+                commandLine 'rsvg-convert', '-f', 'png', '-w', size, '-h', size, '-o', dir_out + launcher_fn_png, dir_in + launcher_fn_svg
+            }
+    }
+
+    convertSvg(sizeLogo, dir_svg, dir_svg)
+
+    sizeMap.each {
+        key, val -> convertSvg(val, dir_svg, dir_res + 'drawable-' + key + '/')
     }
 }
