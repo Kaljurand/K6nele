@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ee.ioc.phon.android.speak.VoiceImeView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="0dp"
+    android:background="@color/grey3"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="1dp"
+        android:scaleType="fitXY">
+
+        <TextView
+            android:id="@+id/tvInstruction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:padding="1dp"
+            android:textColor="@color/grey1"
+            android:textSize="@dimen/textSize" />
+
+        <ImageButton
+            android:id="@+id/bImeStartStop"
+            android:layout_width="@dimen/layoutHeightButtonMicrophone"
+            android:layout_height="@dimen/layoutHeightButtonMicrophone"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:background="@drawable/button_ime_mic"
+            android:contentDescription="@string/cdMicrophone"
+            android:gravity="center"
+            android:src="@drawable/ic_btn_speak_now" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llError"
+        android:layout_width="250dip"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:orientation="vertical"
+        android:padding="1dp"
+        android:scaleType="fitXY">
+
+        <TextView
+            android:id="@+id/tvErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:gravity="center"
+            android:padding="1dp"
+            android:textColor="@color/grey1"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</ee.ioc.phon.android.speak.VoiceImeView>

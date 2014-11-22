@@ -1,1 +1,2 @@
+include ':kaldi_android_lib'
 include ':app'

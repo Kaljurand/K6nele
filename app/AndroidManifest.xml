@@ -151,6 +151,15 @@
                 android:resource="@xml/recognizer" />
         </service>
 
+        <service android:name="VoiceImeService"
+            android:label="@string/labelApp"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data android:name="android.view.im" android:resource="@xml/input_method" />
+        </service>
+
         <provider
             android:name=".provider.AppsContentProvider"
             android:authorities="ee.ioc.phon.android.speak.provider.AppsContentProvider"

@@ -1,0 +1,10 @@
+apply plugin: 'android-library'
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1'
+    defaultConfig {
+        applicationId 'kaldi.speechkit'
+        minSdkVersion 8
+        targetSdkVersion 8
+    }
+}
