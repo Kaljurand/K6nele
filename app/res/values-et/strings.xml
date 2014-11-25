@@ -54,11 +54,14 @@
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
     <string name="buttonStop">Lõpeta!</string>
+    <string name="buttonImeSpeak">Vajutage nupule ja rääkige</string>
+    <string name="buttonImeStop">Lõpetamiseks vajutage nupule</string>
     <string name="buttonYes">Jah</string>
     <string name="buttonNo">Ei</string>
     <string name="buttonOk">OK</string>
     <string name="buttonCancel">Loobu</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
+    <string name="statusImeTranscribing">Oodake…</string>
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s
 		&lt;br/>
 		v%3$s, autor:
@@ -207,6 +210,7 @@
 		parasjagu lindistab?</string>
     <string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
 		võrguühendus on sisse lülitatud?</string>
+    <string name="errorImeResultNetworkError">VIGA: Internetiühendus puudub</string>
     <string name="errorResultClientError">Kliendi viga</string>
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige

@@ -709,6 +709,7 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
+    // TODO: Use AudioCue
 	private void playStartSound() {
 		boolean soundPlayed = playSound(R.raw.explore_begin);
 		if (soundPlayed) {
@@ -728,7 +729,8 @@ public class RecognizerIntentActivity extends Activity {
 
 
 	private boolean playSound(int sound) {
-		if (mPrefs.getBoolean("keyAudioCues", true)) {
+        if (mPrefs.getBoolean(mRes.getString(R.string.keyAudioCues),
+                mRes.getBoolean(R.bool.defaultAudioCues))) {
 			mMediaPlayer = MediaPlayer.create(this, sound);
 			mMediaPlayer.start();
 			return true;

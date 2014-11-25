@@ -1,47 +1,30 @@
 package kaldi.speechkit;
 
+import org.apache.http.message.BasicNameValuePair;
 
-import android.content.Context;
+import java.util.List;
 
 import kaldi.speechkit.Recognizer.Listener;
 
 public class SpeechKit {
-    private String serverAddr;
-    private int serverPort;
+    private String mWsServiceUrl;
+    private List<BasicNameValuePair> mEditorInfo;
 
-
-    public SpeechKit(String appId, String appKey, String serverAddr, int serverPort) {
-        this.serverAddr = serverAddr;
-        this.serverPort = serverPort;
+    private SpeechKit(String wsServiceUrl, List<BasicNameValuePair> editorInfo) {
+        mWsServiceUrl = wsServiceUrl;
+        mEditorInfo = editorInfo;
     }
 
-    public static SpeechKit initialize(Context c, String appId, String appKey, String serverAddr, int serverPort) {
-
-        return new SpeechKit(appId, appKey, serverAddr, serverPort);
-    }
-
-    public void connect() {
-
+    public static SpeechKit initialize(String wsService, List<BasicNameValuePair> editorInfo) {
+        return new SpeechKit(wsService, editorInfo);
     }
 
     public Recognizer createRecognizer(String language, Listener _listener) {
-        return new Recognizer(this.serverAddr, this.serverPort, language, _listener);
+        return new Recognizer(mWsServiceUrl, language, _listener, mEditorInfo);
     }
 
-    public void setDefaultRecognizerPrompts() {
-
+    public String getServiceUrl() {
+        return mWsServiceUrl;
     }
 
-    public String getHostAddr() {
-        return serverAddr;
-    }
-
-    public int getPort() {
-        return serverPort;
-    }
-
-    public String getSessionId() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

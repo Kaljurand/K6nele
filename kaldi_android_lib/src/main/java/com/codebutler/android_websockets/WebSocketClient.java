@@ -28,14 +28,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import kaldi.speechkit.Recognizer;
-
 public class WebSocketClient {
     private static final String TAG = "WebSocketClient";
 
     private URI                      mURI;
     private Listener                 mListener;
-    private Recognizer.Listener		 recogListener;
     private Socket                   mSocket;
     private Thread                   mThread;
     private HandlerThread            mHandlerThread;
@@ -64,26 +61,6 @@ public class WebSocketClient {
         mHandler = new Handler(mHandlerThread.getLooper());
     }
 
-    public WebSocketClient(
-			URI uri,
-			Listener listener,
-			Recognizer.Listener recogListener, List<BasicNameValuePair> extraHeaders) {
-    	mURI          = uri;
-        mListener     = listener;
-        this.recogListener = recogListener;
-        mExtraHeaders = extraHeaders;
-        mConnected    = false;
-        mParser       = new HybiParser(this);
-
-        mHandlerThread = new HandlerThread("websocket-thread");
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
-		// TODO Auto-generated constructor stub
-	}
-    
-    public Recognizer.Listener getRecogListener(){
-    	return recogListener;
-    }
 	public Listener getListener() {
         return mListener;
     }

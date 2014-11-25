@@ -8,28 +8,21 @@ import com.codebutler.android_websockets.WebSocketClient;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Recognizer implements RecorderListener {
 
-    // TODO: make configurable
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
-    private static final String WS_DIR = "/dev/duplex-speech-api/ws/";
-
     private static final String WS_ARGS =
             "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     protected static final String TAG = "Recognizer";
-    Listener recogListener;
-    JSONObject message;
-    int num_worker;
-    String hypothesis = "";
-    List<BasicNameValuePair> extraHeaders = Arrays.asList(
+    private String mWsServiceUrl;
+    private Listener recogListener;
+    private static final List<BasicNameValuePair> extraHeaders = Arrays.asList(
             new BasicNameValuePair("Cookie", "session=abcd"),
             new BasicNameValuePair("content-type", "audio/x-raw"),
             new BasicNameValuePair("+layout", "(string)interleaved"),
@@ -47,13 +40,12 @@ public class Recognizer implements RecorderListener {
     private Handler _handler_Error;
     private Handler _handler_Finish;
     private boolean mIsRecording;
-    public Recognizer() {
 
-    }
-
-    public Recognizer(String serverAddr, int serverPort, String language, Listener _listener) {
-        // TODO Auto-generated constructor stub
-        this.recogListener = _listener;
+    public Recognizer(String wsServiceUrl, String language, Listener listener, List<BasicNameValuePair> editorInfo) {
+        mWsServiceUrl = wsServiceUrl;
+        this.recogListener = listener;
+        List<BasicNameValuePair> headersWithEditorInfo = new ArrayList<BasicNameValuePair>(extraHeaders);
+        headersWithEditorInfo.addAll(editorInfo);
 
         _handler_partialResult = new Handler() {
             @Override
@@ -96,34 +88,29 @@ public class Recognizer implements RecorderListener {
 
             @Override
             public void onMessage(byte[] data) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void onMessage(String message) {
-                // TODO Auto-generated method stub
                 Log.d(TAG, message);
                 handelResult(message);
             }
 
             @Override
             public void onError(Exception error) {
-                // TODO Auto-generated method stub
                 //recogListener.onError(error);
                 handelError(error);
             }
 
             @Override
             public void onDisconnect(int code, String reason) {
-                // TODO Auto-generated method stub
                 Log.d(TAG, "Disconnect! " + reason);
                 handelFinish(reason);
             }
 
             @Override
             public void onConnect() {
-                // TODO Auto-generated method stub
                 recogListener.onRecordingBegin();
                 startRecord();
             }
@@ -133,46 +120,38 @@ public class Recognizer implements RecorderListener {
 
             @Override
             public void onMessage(byte[] data) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void onMessage(String message) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void onError(Exception error) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void onDisconnect(int code, String reason) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void onConnect() {
-                // TODO Auto-generated method stub
-
             }
         };
 
 
         ws_client_speech = new WebSocketClient(
-                URI.create("ws://" + serverAddr + ":" + serverPort + WS_DIR + "speech" + WS_ARGS),
+                URI.create(mWsServiceUrl + "speech" + WS_ARGS),
                 server_speech_listener,
-                recogListener,
-                extraHeaders);
+                headersWithEditorInfo);
 
+        // TODO: do we need the extra headers for the status
+        /*
         ws_client_status = new WebSocketClient(
                 URI.create("ws://" + serverAddr + ":" + serverPort + WS_DIR + "status"),
                 server_status_listener,
                 extraHeaders);
+                */
 
         // Initial recorder
         recorderInstance = new PcmRecorder();

@@ -11,7 +11,13 @@
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
+    <string name="keyAudioCues" translatable="false">keyAudioCues</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+
+    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
+    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
+    <string name="defaultWsService" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/</string>
+
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
     <string-array name="valuesAutoStopAfterTime" translatable="false">
@@ -67,11 +73,14 @@
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
     <string name="buttonStop">Speak now!\nTap when finished</string>
+    <string name="buttonImeSpeak">Tap &amp; Speak</string>
+    <string name="buttonImeStop">Speak now! Tap when finished</string>
     <string name="buttonYes">Yes</string>
     <string name="buttonNo">No</string>
     <string name="buttonOk">OK</string>
     <string name="buttonCancel">Cancel</string>
     <string name="statusTranscribing">Transcribing…</string>
+    <string name="statusImeTranscribing">Still transcribing…</string>
 
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
@@ -126,6 +135,7 @@ More grammars are available at
     <string name="errorFailedPlayAudio">Failed to play the recorded audio: %1$s, %2$s</string>
     <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
     <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
+    <string name="errorImeResultNetworkError">ERROR: No internet connection</string>
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
     <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>

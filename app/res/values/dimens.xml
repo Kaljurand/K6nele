@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textSize">14sp</dimen>
+    <dimen name="textSize1">12sp</dimen>
+    <dimen name="textSize2">14sp</dimen>
+    <dimen name="textSize3">18sp</dimen>
+    <dimen name="textSize4">22sp</dimen>
     <dimen name="layoutHeightButtonMicrophone">80dp</dimen>
+    <dimen name="layoutMargin0">1dp</dimen>
+    <dimen name="layoutMargin1">8dp</dimen>
+    <dimen name="layoutMargin2">16dp</dimen>
 </resources>

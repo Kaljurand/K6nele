@@ -4,63 +4,65 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:layout_margin="0dp"
-    android:background="@color/grey3"
+    android:background="@drawable/rectangle_gradient"
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="1dp"
-        android:scaleType="fitXY">
-
-        <TextView
-            android:id="@+id/tvInstruction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="1dp"
-            android:gravity="center"
-            android:padding="1dp"
-            android:textColor="@color/grey1"
-            android:textSize="@dimen/textSize" />
+        android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/bImeStartStop"
-            android:layout_width="@dimen/layoutHeightButtonMicrophone"
-            android:layout_height="@dimen/layoutHeightButtonMicrophone"
-            android:layout_gravity="center"
-            android:layout_margin="2dp"
-            android:background="@drawable/button_ime_mic"
-            android:contentDescription="@string/cdMicrophone"
-            android:gravity="center"
-            android:src="@drawable/ic_btn_speak_now" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llError"
-        android:layout_width="250dip"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:orientation="vertical"
-        android:padding="1dp"
-        android:scaleType="fitXY">
+            android:id="@+id/bImeKeyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tvErrorMessage"
+            android:background="@drawable/button_go"
+            android:padding="@dimen/layoutMargin1"
+            android:src="@drawable/ic_notification_ime_default" />
 
         <TextView
             android:id="@+id/tvErrorMessage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="1dp"
+            android:layout_margin="@dimen/layoutMargin1"
+            android:ellipsize="start"
             android:gravity="center"
-            android:padding="1dp"
-            android:textColor="@color/grey1"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:singleLine="true"
+            android:textColor="@color/grey300"
+            android:textSize="@dimen/textSize2" />
+
+        <ImageButton
+            android:id="@+id/bImeGo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/tvErrorMessage"
+            android:background="@drawable/button_go"
+            android:padding="@dimen/layoutMargin1"
+            android:src="@drawable/ic_search_api_holo_dark" />
+    </RelativeLayout>
+
+    <ee.ioc.phon.android.speak.MicButton
+        android:id="@+id/bImeStartStop"
+        android:layout_width="@dimen/layoutHeightButtonMicrophone"
+        android:layout_height="@dimen/layoutHeightButtonMicrophone"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/layoutMargin1"
+        android:background="@drawable/button_mic"
+        android:contentDescription="@string/cdMicrophone"
+        android:gravity="center"
+        android:src="@drawable/ic_btn_speak_now" />
+
+    <TextView
+        android:id="@+id/tvInstruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/layoutMargin2"
+        android:gravity="center"
+        android:text="@string/buttonImeSpeak"
+        android:textColor="@color/grey200"
+        android:textSize="@dimen/textSize3" />
 
 </ee.ioc.phon.android.speak.VoiceImeView>
