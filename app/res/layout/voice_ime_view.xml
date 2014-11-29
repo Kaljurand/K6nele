@@ -6,6 +6,7 @@
     android:layout_alignParentBottom="true"
     android:background="@drawable/rectangle_gradient"
     android:gravity="center"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -16,15 +17,17 @@
             android:id="@+id/bImeKeyboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tvErrorMessage"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/button_go"
             android:padding="@dimen/layoutMargin1"
             android:src="@drawable/ic_notification_ime_default" />
 
         <TextView
-            android:id="@+id/tvErrorMessage"
+            android:id="@+id/tvMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_margin="@dimen/layoutMargin1"
             android:ellipsize="start"
@@ -37,7 +40,8 @@
             android:id="@+id/bImeGo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/tvErrorMessage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/button_go"
             android:padding="@dimen/layoutMargin1"
             android:src="@drawable/ic_search_api_holo_dark" />

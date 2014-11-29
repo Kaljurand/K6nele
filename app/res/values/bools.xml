@@ -7,6 +7,7 @@
     locale but assume Estonian even if the app does not specify it (e.g. Arvutaja v4).
     -->
     <bool name="defaultRespectLocale">false</bool>
+    <bool name="defaultAutoStart">false</bool>
     <bool name="defaultAudioCues">true</bool>
 
 </resources>

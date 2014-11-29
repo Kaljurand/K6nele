@@ -6,6 +6,7 @@
     android:layout_alignParentBottom="true"
     android:background="@drawable/rectangle_gradient"
     android:gravity="center"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -34,7 +35,7 @@
             android:src="@drawable/ic_search_api_holo_dark" />
 
         <TextView
-            android:id="@+id/tvErrorMessage"
+            android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

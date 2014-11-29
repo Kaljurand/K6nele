@@ -33,6 +33,7 @@ public class MicButton extends ImageButton {
 
     private int mVolumeLevel = 0;
     private int mMaxLevel;
+    private AudioPauser mAudioPauser;
 
     public MicButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -53,22 +54,26 @@ public class MicButton extends ImageButton {
     public void setState(Constants.State state) {
         switch (state) {
             case INIT:
+                mAudioPauser.resume();
                 clearAnimation();
                 setBackgroundDrawable(mDrawableMic);
                 break;
             case RECORDING:
                 if (mAudioCue != null) mAudioCue.playStartSoundAndSleep();
+                mAudioPauser.pause();
                 setBackgroundDrawable(mVolumeLevels.get(0));
                 break;
             case LISTENING:
                 break;
             case TRANSCRIBING:
                 if (mAudioCue != null) mAudioCue.playStopSound();
+                mAudioPauser.resume();
                 setBackgroundDrawable(mDrawableMicTranscribing);
                 startAnimation(mAnimFadeInOutInf);
                 break;
             case ERROR:
                 if (mAudioCue != null) mAudioCue.playErrorSound();
+                mAudioPauser.resume();
                 clearAnimation();
                 setBackgroundDrawable(mDrawableMic);
                 break;
@@ -122,6 +127,7 @@ public class MicButton extends ImageButton {
         } else {
             mAudioCue = null;
         }
+        mAudioPauser = new AudioPauser(context);
         initAnimations(context);
     }
 

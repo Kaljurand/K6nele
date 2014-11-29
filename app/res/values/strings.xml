@@ -9,6 +9,7 @@
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyService" translatable="false">keyService</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
+    <string name="keyAutoStart" translatable="false">keyAutoStart</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>
@@ -84,18 +85,17 @@
 
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
-		v%3$s by &lt;a href="https://plus.google.com/111912457138686732050/about">Kaarel Kaljurand&lt;/a></string>
+		v%3$s by &lt;a href="https://plus.google.com/+KaarelKaljurand">Kaarel Kaljurand&lt;/a></string>
     <string name="tvAbout">&lt;p>%1$s
 is an app that offers speech-to-text service to other apps.
 Apps that allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
 
-&amp;nbsp;&amp;nbsp;&amp;bull; keyboards (e.g. SlideIT, GO Keyboard);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; note taking and TODO-list apps (e.g. Evernote, Astrid Tasks, Out of Milk, Mighty Grocery Shopping List);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; SMS apps (e.g. GO SMS Pro, SMS Popup);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools (e.g. Google Translate, Dictionary.com);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; note taking and TODO-list apps;&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; SMS apps;&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools;&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; calculators (e.g. WolframAlpha);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. Google Maps, Google Drive, YouTube).
+&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. GMail, Google Drive, YouTube).
 
 		&lt;p>%1$s is
 		pre-configured to
@@ -113,6 +113,12 @@ improve the recognition quality and map the recognized speech automatically to t
 and English, covering domains like unit conversion, address queries, setting the alarm clock.
 More grammars are available at
 &lt;a href="http://kaljurand.github.io/Grammars/">http://kaljurand.github.io/Grammars/&lt;/a>.&lt;/p>
+
+&lt;p>%1$s can also be used as a (one-button) keyboard: tap the big yellow button and start dictating, the words
+        appear immediately in the text area;
+        swipe left to delete the last word;
+        swipe right to enter a newline character.
+        Note that this currently works only with Estonian-language input.&lt;/p>
 
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at the
 		&lt;a

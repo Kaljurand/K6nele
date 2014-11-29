@@ -52,6 +52,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -379,7 +380,7 @@ public class RecognizerIntentActivity extends Activity {
 		});
 
 		// Settings button
-		((Button) findViewById(R.id.bSettings)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.bSettings)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				mIsStartActivity = true;
 				startActivity(new Intent(getApplicationContext(), Preferences.class));
@@ -429,12 +430,14 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.recognizer, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (Log.DEBUG) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.recognizer, menu);
+        }
+        return true;
+    }
 
 
 	/**

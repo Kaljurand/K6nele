@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
@@ -13,7 +14,14 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class VoiceImeService extends InputMethodService {
+
+    // Maximum number of characters that left-swipe is willing to delete
+    private static final int MAX_DELETABLE_CONTEXT = 100;
+    private static final Pattern WHITESPACE = Pattern.compile("\\s{1,}");
 
     private InputMethodManager mInputMethodManager;
 
@@ -39,7 +47,8 @@ public class VoiceImeService extends InputMethodService {
     }
 
     /**
-     * TODO: send the input type to the server so that a relevant LM could be picked
+     * We check the type of editor control and if we probably cannot handle it (email addresses,
+     * dates) or do not want to (passwords) then we hand the editing over to an other keyboard.
      */
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
@@ -52,30 +61,33 @@ public class VoiceImeService extends InputMethodService {
             case InputType.TYPE_CLASS_NUMBER:
                 break;
             case InputType.TYPE_CLASS_DATETIME:
+                switchIme();
                 break;
             case InputType.TYPE_CLASS_PHONE:
+                switchIme();
                 break;
             case InputType.TYPE_CLASS_TEXT:
                 int variation = attribute.inputType & InputType.TYPE_MASK_VARIATION;
                 if (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     Log.i("onStartInput: password: " + variation);
-                    handleLanguageSwitch();
+                    // We refuse to recognize passwords for privacy reasons.
+                    switchIme();
                 }
 
                 if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
                         || variation == InputType.TYPE_TEXT_VARIATION_URI
                         || variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+                    switchIme();
                 }
 
                 if ((attribute.inputType & InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE) != 0) {
+                    switchIme();
                 }
                 break;
 
             default:
         }
-
-
     }
 
     @Override
@@ -110,13 +122,18 @@ public class VoiceImeService extends InputMethodService {
 
                 @Override
                 public void onKeyboard() {
-                    handleLanguageSwitch();
+                    switchIme();
                 }
 
                 @Override
                 public void onGo() {
                     keyDownUp(KeyEvent.KEYCODE_ENTER);
                     handleClose();
+                }
+
+                @Override
+                public void deleteLastWord() {
+                    handleDelete(getCurrentInputConnection());
                 }
             });
         }
@@ -137,12 +154,42 @@ public class VoiceImeService extends InputMethodService {
                 candidatesStart, candidatesEnd);
     }
 
-    private void commitTyped(InputConnection inputConnection, String str, int prevLength) {
+    private static void commitTyped(InputConnection inputConnection, String str, int prevLength) {
         if (inputConnection != null && str != null && str.length() > 0) {
             if (prevLength > 0) {
                 inputConnection.deleteSurroundingText(prevLength, 0);
             }
             inputConnection.commitText(str, 1);
+        }
+    }
+
+    /**
+     * Deletes all characters up to the leftmost whitespace from the cursor (including the whitespace)
+     * TODO: maybe expensive?
+     */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    private static void handleDelete(InputConnection inputConnection) {
+        if (inputConnection != null) {
+            // If something is selected then delete the selection and return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
+                    && inputConnection.getSelectedText(0) != null) {
+                inputConnection.commitText("", 0);
+            } else {
+                CharSequence beforeCursor = inputConnection.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
+                if (beforeCursor != null) {
+                    int beforeCursorLength = beforeCursor.length();
+                    Matcher m = WHITESPACE.matcher(beforeCursor);
+                    int lastIndex = 0;
+                    while (m.find()) {
+                        lastIndex = m.start();
+                    }
+                    if (lastIndex > 0) {
+                        inputConnection.deleteSurroundingText(beforeCursorLength - lastIndex, 0);
+                    } else if (beforeCursorLength < MAX_DELETABLE_CONTEXT) {
+                        inputConnection.deleteSurroundingText(beforeCursorLength, 0);
+                    }
+                }
+            }
         }
     }
 
@@ -174,7 +221,7 @@ public class VoiceImeService extends InputMethodService {
      * a password, or explicitly presses the "switch keyboard" button.
      * TODO: not sure it is the best way to do it
      */
-    private void handleLanguageSwitch() {
+    private void switchIme() {
         final IBinder token = getToken();
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

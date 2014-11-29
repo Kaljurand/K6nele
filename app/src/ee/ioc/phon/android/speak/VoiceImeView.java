@@ -1,6 +1,8 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.View;
@@ -29,22 +31,39 @@ public class VoiceImeView extends LinearLayout {
         void onKeyboard();
 
         void onGo();
+
+        void deleteLastWord();
     }
 
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeGo;
     private TextView mTvInstruction;
-    private TextView mTvErrorMessage;
+    private TextView mTvMessage;
 
     private VoiceImeViewListener mListener;
     private Recognizer mCurrentRecognizer;
     private SpeechKit mSpeechKit;
+    SharedPreferences mPrefs;
 
     private Constants.State mState = Constants.State.INIT;
 
     public VoiceImeView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        setOnTouchListener(new OnSwipeTouchListener(context) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.deleteLastWord();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                mListener.onFinalResult("\n");
+            }
+        });
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public void setListener(EditorInfo attribute, final VoiceImeViewListener listener) {
@@ -53,15 +72,15 @@ public class VoiceImeView extends LinearLayout {
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBImeGo = (ImageButton) findViewById(R.id.bImeGo);
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
-        mTvErrorMessage = (TextView) findViewById(R.id.tvErrorMessage);
+        mTvMessage = (TextView) findViewById(R.id.tvMessage);
 
         setText(mTvInstruction, R.string.buttonImeSpeak);
         setVisibility(mBImeKeyboard, View.VISIBLE);
         setVisibility(mBImeGo, View.VISIBLE);
-        setText(mTvErrorMessage, "");
+        setText(mTvMessage, "");
         List<BasicNameValuePair> editorInfo = setEditorInfo(attribute);
         mSpeechKit = SpeechKit.initialize(getResources().getString(R.string.defaultWsService), editorInfo);
-        //setText(mTvErrorMessage, editorInfo.toString());
+        //setText(mTvMessage, editorInfo.toString());
 
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -91,7 +110,11 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
-        // TODO: launch recognition immediately
+        // Launch recognition immediately (if set so)
+        if (mPrefs.getBoolean(getResources().getString(R.string.keyAutoStart),
+                getResources().getBoolean(R.bool.defaultAutoStart))) {
+            startSession();
+        }
     }
 
     private void startSession() {
@@ -124,6 +147,7 @@ public class VoiceImeView extends LinearLayout {
             mCurrentRecognizer.cancel();
             mCurrentRecognizer = null;
         }
+        setInitState();
     }
 
 
@@ -160,7 +184,7 @@ public class VoiceImeView extends LinearLayout {
                     setMicButtonState(mBImeStartStop, mState);
                     setText(mTvInstruction, R.string.errorImeResultNetworkError);
                 } else {
-                    setText(mTvErrorMessage, lastChars(error.getMessage(), false));
+                    setText(mTvMessage, lastChars(error.getMessage(), false));
                 }
             }
 
@@ -169,7 +193,7 @@ public class VoiceImeView extends LinearLayout {
                 Log.i("onPartialResult");
                 final String str = text.getText();
                 mListener.onPartialResult(str);
-                setText(mTvErrorMessage, lastChars(str, false));
+                setText(mTvMessage, lastChars(str, false));
             }
 
             @Override
@@ -177,20 +201,25 @@ public class VoiceImeView extends LinearLayout {
                 Log.i("onFinalResult");
                 final String str = text.getText();
                 mListener.onFinalResult(str);
-                setText(mTvErrorMessage, lastChars(str, true));
+                setText(mTvMessage, lastChars(str, true));
             }
 
             @Override
             public void onFinish(final String reason) {
                 Log.i("onFinish");
-                mState = Constants.State.INIT;
-                setMicButtonState(mBImeStartStop, mState);
-                setText(mTvInstruction, R.string.buttonImeSpeak);
-                setText(mTvErrorMessage, lastChars(reason, false));
-                setVisibility(mBImeKeyboard, View.VISIBLE);
-                setVisibility(mBImeGo, View.VISIBLE);
+                setInitState();
+                // TODO: not sure how to display the "reason"
+                //setText(mTvMessage, lastChars(reason, false));
             }
         };
+    }
+
+    private void setInitState() {
+        mState = Constants.State.INIT;
+        setMicButtonState(mBImeStartStop, mState);
+        setText(mTvInstruction, R.string.buttonImeSpeak);
+        setVisibility(mBImeKeyboard, View.VISIBLE);
+        setVisibility(mBImeGo, View.VISIBLE);
     }
 
     private String lastChars(String str, boolean isFinal) {
@@ -206,39 +235,47 @@ public class VoiceImeView extends LinearLayout {
     }
 
     private void setText(final TextView textView, final CharSequence text) {
-        textView.post(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(text);
-            }
-        });
+        if (textView != null) {
+            textView.post(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText(text);
+                }
+            });
+        }
     }
 
     private void setText(final TextView textView, final int text) {
-        textView.post(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(text);
-            }
-        });
+        if (textView != null) {
+            textView.post(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText(text);
+                }
+            });
+        }
     }
 
     private void setMicButtonState(final MicButton button, final Constants.State state) {
-        button.post(new Runnable() {
-            @Override
-            public void run() {
-                button.setState(state);
-            }
-        });
+        if (button != null) {
+            button.post(new Runnable() {
+                @Override
+                public void run() {
+                    button.setState(state);
+                }
+            });
+        }
     }
 
     private void setVisibility(final View view, final int visibility) {
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                view.setVisibility(visibility);
-            }
-        });
+        if (view != null) {
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+                    view.setVisibility(visibility);
+                }
+            });
+        }
     }
 
     private String asString(Object o) {

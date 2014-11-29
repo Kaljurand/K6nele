@@ -11,12 +11,13 @@
 
     <!-- Settings, Prompt, transcription progress monitor, start/stop button, volume monitor, waveform -->
 
-    <Button
+    <ImageButton
         android:id="@+id/bSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="@drawable/ic_menu_preferences" />
+        android:background="@drawable/button_go"
+        android:src="@drawable/ic_menu_preferences" />
 
     <LinearLayout
         android:layout_width="250dip"

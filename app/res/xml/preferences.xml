@@ -12,8 +12,8 @@
 
     <PreferenceCategory android:title="@string/titleCategoryUi" >
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="keyAutoStart"
+            android:defaultValue="@bool/defaultAutoStart"
+            android:key="@string/keyAutoStart"
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
         <CheckBoxPreference
@@ -22,8 +22,8 @@
             android:summary="@string/summaryAutoStopAfterPause"
             android:title="@string/titleAutoStopAfterPause" />
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="keyAudioCues"
+            android:defaultValue="@bool/defaultAudioCues"
+            android:key="@string/keyAudioCues"
             android:summary="@string/summaryAudioCues"
             android:title="@string/titleAudioCues" />
     </PreferenceCategory>

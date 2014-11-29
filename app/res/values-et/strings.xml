@@ -66,7 +66,7 @@
 		&lt;br/>
 		v%3$s, autor:
 		&lt;a
-		href="https://plus.google.com/111912457138686732050/about">Kaarel
+		href="https://plus.google.com/+KaarelKaljurand">Kaarel
 		Kaljurand&lt;/a> </string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
@@ -80,39 +80,14 @@
 		Populaarsemad näited
 		sellistest rakendustest on&lt;/p>
 
-		&amp;nbsp;&amp;nbsp;&amp;bull;
-		klaviatuurirakendused (nt
-		SlideIT, GO Keyboard);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused (nt Google Maps, Waze);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; märkmete ja meeldetuletuste rakendused (nt
-		Evernote, Astrid Tasks, Taskos
-		To Do List, Out of Milk,
-		Mighty Grocery Shopping
-		List);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull;
-		lühisõnumirakendused (nt SMS Popup, GO
-		SMS Pro);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt Arvutaja, Edwin, Speaktoit);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused;&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; märkmete ja meeldetuletuste rakendused (nt Google Keep);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; lühisõnumirakendused;&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt Arvutaja);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull; kalkulaatorid (nt WolframAlpha);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; sõnastiku- ja
-		tõlketeenused (nt Google
-		Translate);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; sõnastiku- ja tõlketeenused (nt Google Translate);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull;
-		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, Google Maps, Google Drive, YouTube).
-
-		&lt;p>Tüüpiliselt kasutab
-		telefon kõne
-		tekstiks
-		teisendamiseks Google\'i kõnetuvastusserverit,
-		aga see ei toeta
-		eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab
-		kasutada
-		kõne
-		transkribeerimiseks TTÜ Küberneetika Instituudi foneetika
-		ja
-		kõnetehnoloogia labori
-		kõnetuvastusserverit &lt;a
-		href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>.&lt;/p>
+		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, GMail, Google Drive, YouTube).
 
 		&lt;p>Samuti võimaldab &lt;b>%1$s&lt;/b> omistada rakendustele
 		grammatikaid, et tõlkida tuvastustulemus rakenduse-spetsiifilisse
@@ -121,12 +96,28 @@
 		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
 		ning kaardirakendusele või bussiaegade rakendusele Eesti aadresside grammatika.
 		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
-		Nt rakenduses Speaktoit saab hommikuse äratuskella paika seada fraasiga \"ärata mind seitse kolmkümmend\",
+		Nt rakenduses X saab hommikuse äratuskella paika seada fraasiga \"ärata mind seitse kolmkümmend\",
 		eeldusel, et sellele rakendusele on omistatud Alarm-grammatika. Vt ka
 		&lt;a
 		href="http://kaljurand.github.io/Grammars/">grammatikate
 		projekti
 		kodulehekülge&lt;/a>.&lt;/p>
+
+        &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur: pärast kollasele nupule
+        vajutamist ja rääkimise alustamist hakkavad tuvastatud sõnad kohe ekraanile ilmuma.
+        Rääkida võib ükskõik kui kaua ning pausid kõnetuvastussessiooni ei katkesta. Selle
+        lõpetamiseks tuleb lihtsalt uuesti nupule vajutada.
+        Svaip vasakule kustutab kursorile eelneva sõna.
+        Svaip paremale teeb reavahetuse (mida saab ka dikteerides \"uus rida\").
+        Dikteerimiskeelena on hetkel toetatud ainult eesti keel.&lt;/p>
+
+        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks Google\'i kõnetuvastusserverit,
+		aga see ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
+		transkribeerimiseks TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori
+		kõnetuvastusserverit &lt;a href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>.
+        Kõnele sisselülitamiseks on vaja muuta Androidi seadeid menüüs \"Keeled ja sisestamine\" kahes kohas:
+        \"Klaviatuur ja sisestusmeetodid\" ning \"Kõne\". Samuti võib olla vaja kustutada rakenduse
+        \"Google\'i otsing\" vaikeväärtused.&lt;/p>
 
 		&lt;p>Kuna &lt;b>%1$s&lt;/b>
 		kasutab kõne transkribeerimiseks veebiteenust, siis peab olema
