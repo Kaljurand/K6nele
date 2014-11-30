@@ -199,9 +199,14 @@
     <string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
     <string name="errorResultAudioError">Lindistamine luhtus. Võibolla mõni teine rakendus
 		parasjagu lindistab?</string>
+    <string name="errorImeResultAudioError">VIGA: lindistamine luhtus</string>
     <string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
 		võrguühendus on sisse lülitatud?</string>
-    <string name="errorImeResultNetworkError">VIGA: Internetiühendus puudub</string>
+    <string name="errorImeResultNetworkError">VIGA: netiühendus puudub</string>
+    <string name="errorImeResultNetworkTimeoutError">VIGA: server ei tööta</string>
+    <string name="errorImeResultRecognizerBusy">VIGA: tuvastajal pole vabu ühendusi</string>
+    <string name="errorImeResultClientError">VIGA: kliendi viga</string>
+    <string name="errorImeResultServerError">VIGA: kõnetuvastusserveri viga</string>
     <string name="errorResultClientError">Kliendi viga</string>
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige

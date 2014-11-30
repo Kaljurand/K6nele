@@ -6,33 +6,33 @@ import android.media.MediaRecorder;
 
 public class PcmRecorder implements Runnable {
 
-    public static final int frequency = 16000;
+    public interface RecorderListener {
+        void onRecorderBuffer(byte[] buffer);
+    }
+
+    private static final int frequency = 16000;
     private static final int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
-    private static final String TAG = "PcmRecorder";
     private final Object mutex = new Object();
-    int bufferRead = 0;
-    byte[] tempBuffer;
-    int cAmplitude;
-    int bufferSize;
-    RecorderListener rl;
-    AudioRecord recordInstance;
+    private int bufferRead = 0;
+    private byte[] tempBuffer;
+    private int bufferSize;
+    private RecorderListener mListener;
+    private AudioRecord recordInstance;
     private volatile boolean isRecording;
 
     public PcmRecorder() {
-        // TODO Auto-generated constructor stub
+        // TODO: maybe do this later
         android.os.Process
                 .setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-
 
         bufferSize = AudioRecord.getMinBufferSize(frequency,
                 AudioFormat.CHANNEL_IN_MONO, audioEncoding);
 
         tempBuffer = new byte[bufferSize];
+
         recordInstance = new AudioRecord(
                 MediaRecorder.AudioSource.MIC, frequency,
                 AudioFormat.CHANNEL_IN_MONO, audioEncoding, bufferSize);
-
-
     }
 
     public void run() {
@@ -50,38 +50,15 @@ public class PcmRecorder implements Runnable {
             bufferRead = recordInstance.read(tempBuffer, 0, bufferSize);
 
             if (bufferRead == AudioRecord.ERROR_INVALID_OPERATION) {
-                throw new IllegalStateException(
-                        "read() returned AudioRecord.ERROR_INVALID_OPERATION");
+                throw new IllegalStateException("read() returned AudioRecord.ERROR_INVALID_OPERATION");
             } else if (bufferRead == AudioRecord.ERROR_BAD_VALUE) {
-                throw new IllegalStateException(
-                        "read() returned AudioRecord.ERROR_BAD_VALUE");
+                throw new IllegalStateException("read() returned AudioRecord.ERROR_BAD_VALUE");
             } else if (bufferRead == AudioRecord.ERROR_INVALID_OPERATION) {
-                throw new IllegalStateException(
-                        "read() returned AudioRecord.ERROR_INVALID_OPERATION");
+                throw new IllegalStateException("read() returned AudioRecord.ERROR_INVALID_OPERATION");
             }
-            rl.onRecorderBuffer(tempBuffer);
-
-			/*
-			for (int i=0; i<bufferRead/2; i++)
-			{ // 16bit sample size
-				short curSample = getShort(tempBuffer[i*2], tempBuffer[i*2+1]);
-				if (curSample > cAmplitude)
-				{ // Check amplitude
-					cAmplitude = curSample;
-				}
-			}
-			*/
-            //this.ws_client_speech.send(tempBuffer);
-
+            mListener.onRecorderBuffer(tempBuffer);
         }
         recordInstance.stop();
-    }
-
-    public int getMaxAmplitude() {
-        int result = cAmplitude;
-        cAmplitude = 0;
-        return result;
-
     }
 
     public boolean isRecording() {
@@ -99,20 +76,7 @@ public class PcmRecorder implements Runnable {
         }
     }
 
-    public void setOutputFile(String audioPath) {
-        // TODO Auto-generated method stub
-
+    public void setListener(RecorderListener listener) {
+        mListener = listener;
     }
-
-    public int getSampleRate() {
-        // TODO Auto-generated method stub
-        return frequency;
-    }
-
-    public void setListener(Recognizer recognizer) {
-        // TODO Auto-generated method stub
-        rl = recognizer;
-    }
-
-
 }

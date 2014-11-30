@@ -2,264 +2,222 @@ package kaldi.speechkit;
 
 import android.os.Handler;
 import android.os.Message;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 
-import com.codebutler.android_websockets.WebSocketClient;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.WebSocket;
 
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
-public class Recognizer implements RecorderListener {
+// TODO: remove logging
+// TODO: communicate audio errors
+
+public class Recognizer {
 
     private static final String WS_ARGS =
             "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
-    protected static final String TAG = "Recognizer";
+    protected static final String TAG = "ee.ioc.phon.android.speak";
     private String mWsServiceUrl;
-    private Listener recogListener;
-    private static final List<BasicNameValuePair> extraHeaders = Arrays.asList(
-            new BasicNameValuePair("Cookie", "session=abcd"),
-            new BasicNameValuePair("content-type", "audio/x-raw"),
-            new BasicNameValuePair("+layout", "(string)interleaved"),
-            new BasicNameValuePair("+rate", "16000"),
-            new BasicNameValuePair("+format", "S16LE"),
-            new BasicNameValuePair("+channels", "1")
-    );
-    private WebSocketClient ws_client_speech;
-    private WebSocketClient ws_client_status;
-    private PcmRecorder recorderInstance;
-    private WebSocketClient.Listener server_status_listener;
-    private WebSocketClient.Listener server_speech_listener;
+    private PcmRecorder mPcmRecorder;
+    private Listener mRecogListener;
+    private List<BasicNameValuePair> mHeadersWithEditorInfo;
+
     private Thread thRecord;
-    private Handler _handler_partialResult;
-    private Handler _handler_Error;
-    private Handler _handler_Finish;
+    private Handler mHandlerResult;
+    private Handler mHandlerError;
+    private Handler mHandlerFinish;
     private boolean mIsRecording;
+
+    private WebSocket mWebSocket;
 
     public Recognizer(String wsServiceUrl, String language, Listener listener, List<BasicNameValuePair> editorInfo) {
         mWsServiceUrl = wsServiceUrl;
-        this.recogListener = listener;
-        List<BasicNameValuePair> headersWithEditorInfo = new ArrayList<BasicNameValuePair>(extraHeaders);
-        headersWithEditorInfo.addAll(editorInfo);
+        mRecogListener = listener;
+        mHeadersWithEditorInfo = editorInfo;
 
-        _handler_partialResult = new Handler() {
+        mHandlerResult = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                String text = (String) msg.obj;
-                Result tmpResult = null;
                 try {
-                    tmpResult = Result.parseResult(text);
-                } catch (JSONException e) {
-                    recogListener.onError(new Exception(e.getMessage()));
+                    Response response = Response.parseResponse((String) msg.obj);
+                    if (response instanceof Response.ResponseResult) {
+                        Response.ResponseResult responseResult = (Response.ResponseResult) response;
+                        String text = responseResult.getText();
+                        if (responseResult.isFinal()) {
+                            mRecogListener.onFinalResult(text);
+                        } else {
+                            mRecogListener.onPartialResult(text);
+                        }
+                    }
+                } catch (Response.ResponseException e) {
+                    Log.e(TAG, "Malformed JSON response: " + msg.obj, e);
+                    mRecogListener.onError(SpeechRecognizer.ERROR_SERVER);
                 }
-
-                if (tmpResult == null) {
-                    recogListener.onError(new Exception(text));
-                } else if (tmpResult.isFinal())
-                    recogListener.onFinalResult(tmpResult);
-                else
-                    recogListener.onPartialResult(tmpResult);
-
             }
         };
 
-        _handler_Error = new Handler() {
+        mHandlerError = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                Exception error = (Exception) msg.obj;
-                recogListener.onError(error);
-
+                Exception e = (Exception) msg.obj;
+                Log.e(TAG, "Socket error?", e);
+                if (e instanceof TimeoutException) {
+                    mRecogListener.onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
+                } else {
+                    mRecogListener.onError(SpeechRecognizer.ERROR_NETWORK);
+                }
             }
         };
-        _handler_Finish = new Handler() {
+
+        mHandlerFinish = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                String reason = (String) msg.obj;
-                recogListener.onFinish(reason);
-
+                mRecogListener.onFinish();
             }
         };
-        server_speech_listener = new WebSocketClient.Listener() {
-
-            @Override
-            public void onMessage(byte[] data) {
-
-            }
-
-            @Override
-            public void onMessage(String message) {
-                Log.d(TAG, message);
-                handelResult(message);
-            }
-
-            @Override
-            public void onError(Exception error) {
-                //recogListener.onError(error);
-                handelError(error);
-            }
-
-            @Override
-            public void onDisconnect(int code, String reason) {
-                Log.d(TAG, "Disconnect! " + reason);
-                handelFinish(reason);
-            }
-
-            @Override
-            public void onConnect() {
-                recogListener.onRecordingBegin();
-                startRecord();
-            }
-        };
-
-        server_status_listener = new WebSocketClient.Listener() {
-
-            @Override
-            public void onMessage(byte[] data) {
-            }
-
-            @Override
-            public void onMessage(String message) {
-            }
-
-            @Override
-            public void onError(Exception error) {
-            }
-
-            @Override
-            public void onDisconnect(int code, String reason) {
-            }
-
-            @Override
-            public void onConnect() {
-            }
-        };
-
-
-        ws_client_speech = new WebSocketClient(
-                URI.create(mWsServiceUrl + "speech" + WS_ARGS),
-                server_speech_listener,
-                headersWithEditorInfo);
-
-        // TODO: do we need the extra headers for the status
-        /*
-        ws_client_status = new WebSocketClient(
-                URI.create("ws://" + serverAddr + ":" + serverPort + WS_DIR + "status"),
-                server_status_listener,
-                extraHeaders);
-                */
-
-        // Initial recorder
-        recorderInstance = new PcmRecorder();
-
-        recorderInstance.setListener(Recognizer.this);
-
     }
 
-    private void handelResult(String text) {
-        Message msg = new Message();
-        String textTochange = text;
-        msg.obj = textTochange;
-        _handler_partialResult.sendMessage(msg);
-    }
-
-    private void handelError(Exception error) {
-        Message msg = new Message();
-        msg.obj = error;
-        _handler_Error.sendMessage(msg);
-    }
-
-    private void handelFinish(String reason) {
-        Message msg = new Message();
-        msg.obj = reason;
-        _handler_Finish.sendMessage(msg);
-    }
 
     public boolean isRecording() {
         return mIsRecording;
     }
 
+    public void setListener(Listener listener) {
+        mRecogListener = listener;
+    }
+
     public void start() {
-
-        //if (! ws_client_status.isConnected())
-        //	ws_client_status.connect();
-        if (!ws_client_speech.isConnected())
-            ws_client_speech.connect();
-
-        mIsRecording = true;
-    }
-
-    public void setListener(Listener _listener) {
-        // TODO Auto-generated method stub
-        this.recogListener = _listener;
-    }
-
-    public void cancel() {
-        // TODO Auto-generated method stub
-
-        // Stop recording
-
-        // Stop web socket
-        if (ws_client_speech != null && ws_client_speech.isConnected()) {
-            ws_client_speech.disconnect();
-        }
-        if (ws_client_status != null && ws_client_speech.isConnected()) {
-            ws_client_status.disconnect();
-        }
-        mIsRecording = false;
-    }
-
-    public float getAudioLevel() {
-        // TODO Auto-generated method stub
-        return 0;
+        mPcmRecorder = new PcmRecorder();
+        newsocket(mWsServiceUrl + "speech" + WS_ARGS, mHeadersWithEditorInfo, mPcmRecorder);
     }
 
     public void stopRecording() {
-        // TODO Auto-generated method stub
         stopRecord();
-        // Send EOS signal
-        if (ws_client_speech.isConnected())
-            ws_client_speech.send("EOS");
-        // Notify
-        recogListener.onRecordingDone();
+        if (mWebSocket != null) {
+            mWebSocket.send("EOS");
+        }
+        // TODO: fire this only if the recorder says that it is done
+        mRecogListener.onRecordingDone();
         mIsRecording = false;
     }
 
-    public void startRecord() {
-        // TODO Auto-generated method stub
-        thRecord = new Thread(recorderInstance);
+    public void cancel() {
+        stopRecord();
+        if (mWebSocket != null) {
+            mWebSocket.send("EOS");
+            mWebSocket.close(); // TODO: or end?
+        }
+        mIsRecording = false;
+    }
+
+    private void startRecord() {
+        thRecord = new Thread(mPcmRecorder);
         thRecord.start();
-        recorderInstance.setRecording(true);
+        mPcmRecorder.setRecording(true);
+        mIsRecording = true;
     }
 
-    public void stopRecord() {
-        recorderInstance.setRecording(false);
-
+    private void stopRecord() {
+        mPcmRecorder.setRecording(false);
     }
 
-    @Override
-    public void onRecorderBuffer(byte[] buffer) {
-        // TODO: not properly closed
-        Log.d(TAG, "read " + buffer.length);
-        ws_client_speech.send(buffer);
+
+    private void newsocket(String get, List<BasicNameValuePair> headers, final PcmRecorder audioRecorder) {
+        // TODO: add headers to "get"
+        AsyncHttpClient.getDefaultInstance().websocket(get, "my-protocol", new AsyncHttpClient.WebSocketConnectCallback() {
+
+            @Override
+            public void onCompleted(Exception ex, final WebSocket webSocket) {
+                if (ex != null) {
+                    handelError(ex);
+                    return;
+                }
+
+                mWebSocket = webSocket;
+
+                audioRecorder.setListener(new PcmRecorder.RecorderListener() {
+                    public void onRecorderBuffer(byte[] buffer) {
+                        Log.d(TAG, "read " + buffer.length);
+                        webSocket.send(buffer);
+                    }
+                });
+
+                // Start recording
+                mRecogListener.onRecordingBegin();
+                startRecord();
+
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    public void onStringAvailable(String s) {
+                        Log.d(TAG, s);
+                        handelResult(s);
+                    }
+                });
+
+                webSocket.setClosedCallback(new CompletedCallback() {
+                    @Override
+                    public void onCompleted(Exception ex) {
+                        Log.d(TAG, "ClosedCallback: ", ex);
+                        if (ex == null) {
+                            handelFinish();
+                        } else {
+                            handelError(ex);
+                        }
+                    }
+                });
+
+                webSocket.setEndCallback(new CompletedCallback() {
+                    @Override
+                    public void onCompleted(Exception ex) {
+                        Log.d(TAG, "EndCallback: ", ex);
+                        if (ex == null) {
+                            handelFinish();
+                        } else {
+                            handelError(ex);
+                        }
+                    }
+                });
+            }
+        });
     }
 
+    private void handelResult(String text) {
+        Message msg = new Message();
+        msg.obj = text;
+        mHandlerResult.sendMessage(msg);
+    }
+
+    private void handelError(Exception error) {
+        Message msg = new Message();
+        msg.obj = error;
+        mHandlerError.sendMessage(msg);
+    }
+
+    private void handelFinish() {
+        Message msg = new Message();
+        mHandlerFinish.sendMessage(msg);
+    }
+
+
+    /**
+     * These methods will be called by the GUI.
+     */
     public interface Listener {
-        abstract void onRecordingBegin();
+        void onRecordingBegin();
 
-        abstract void onRecordingDone();
+        void onRecordingDone();
 
-        abstract void onError(Exception error);
+        void onError(int errorCode);
 
-        abstract void onPartialResult(Result text);
+        void onPartialResult(String text);
 
-        abstract void onFinalResult(Result result);
+        void onFinalResult(String text);
 
-        abstract void onFinish(String reason);
+        void onFinish();
     }
-
 }

@@ -140,10 +140,15 @@ More grammars are available at
     <string name="errorFailedLaunchApp">This app is not launchable or is not installed (anymore): %1$s</string>
     <string name="errorFailedPlayAudio">Failed to play the recorded audio: %1$s, %2$s</string>
     <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
+    <string name="errorImeResultAudioError">ERROR: audio recording failed</string>
     <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
-    <string name="errorImeResultNetworkError">ERROR: No internet connection</string>
+    <string name="errorImeResultNetworkError">ERROR: no network connection</string>
+    <string name="errorImeResultNetworkTimeoutError">ERROR: network connection timeout</string>
+    <string name="errorImeResultRecognizerBusy">ERROR: no recognizer slots available</string>
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
+    <string name="errorImeResultClientError">ERROR: general client error</string>
+    <string name="errorImeResultServerError">ERROR: recognizer server error</string>
     <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>
     <string name="errorCantCreateRecorder">ERROR: Failed to create an audio recorder</string>
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>

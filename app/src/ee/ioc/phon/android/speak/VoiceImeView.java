@@ -3,6 +3,7 @@ package ee.ioc.phon.android.speak;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,12 +14,10 @@ import android.widget.TextView;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 
 import kaldi.speechkit.Recognizer;
-import kaldi.speechkit.Result;
 import kaldi.speechkit.SpeechKit;
 
 public class VoiceImeView extends LinearLayout {
@@ -42,11 +41,11 @@ public class VoiceImeView extends LinearLayout {
     private TextView mTvMessage;
 
     private VoiceImeViewListener mListener;
-    private Recognizer mCurrentRecognizer;
+    private Recognizer mRecognizer;
     private SpeechKit mSpeechKit;
     SharedPreferences mPrefs;
 
-    private Constants.State mState = Constants.State.INIT;
+    private Constants.State mState;
 
     public VoiceImeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -74,10 +73,8 @@ public class VoiceImeView extends LinearLayout {
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
         mTvMessage = (TextView) findViewById(R.id.tvMessage);
 
-        setText(mTvInstruction, R.string.buttonImeSpeak);
-        setVisibility(mBImeKeyboard, View.VISIBLE);
-        setVisibility(mBImeGo, View.VISIBLE);
-        setText(mTvMessage, "");
+        setGuiInitState(0);
+
         List<BasicNameValuePair> editorInfo = setEditorInfo(attribute);
         mSpeechKit = SpeechKit.initialize(getResources().getString(R.string.defaultWsService), editorInfo);
         //setText(mTvMessage, editorInfo.toString());
@@ -87,9 +84,7 @@ public class VoiceImeView extends LinearLayout {
                 if (mState == Constants.State.INIT) {
                     startSession();
                 } else if (mState == Constants.State.RECORDING) {
-                    mCurrentRecognizer.stopRecording();
-                } else if (mState == Constants.State.ERROR) {
-                    startSession();
+                    mRecognizer.stopRecording();
                 } else if (mState == Constants.State.TRANSCRIBING) {
                     closeSession();
                 }
@@ -120,14 +115,13 @@ public class VoiceImeView extends LinearLayout {
     private void startSession() {
         if (mSpeechKit != null) {
             Recognizer.Listener recognizerListener = getRecognizerListener();
-            if (mCurrentRecognizer == null) {
+            if (mRecognizer == null) {
                 // TODO: the language code is currently ignored
-                mCurrentRecognizer = mSpeechKit.createRecognizer("et_EE", recognizerListener);
+                mRecognizer = mSpeechKit.createRecognizer("et_EE", recognizerListener);
             } else {
-                mCurrentRecognizer.setListener(recognizerListener);
+                mRecognizer.setListener(recognizerListener);
             }
-
-            mCurrentRecognizer.start();
+            mRecognizer.start();
         }
     }
 
@@ -143,11 +137,11 @@ public class VoiceImeView extends LinearLayout {
     }
 
     void closeSession() {
-        if (mCurrentRecognizer != null) {
-            mCurrentRecognizer.cancel();
-            mCurrentRecognizer = null;
+        if (mRecognizer != null) {
+            mRecognizer.cancel();
+            mRecognizer = null;
         }
-        setInitState();
+        setGuiInitState(0);
     }
 
 
@@ -173,51 +167,70 @@ public class VoiceImeView extends LinearLayout {
             }
 
             /**
-             * TODO: review the error conditions
+             * TODO: review the error codes
              */
             @Override
-            public void onError(final Exception error) {
+            public void onError(final int errorCode) {
                 Log.i("onError");
-                mState = Constants.State.ERROR;
-                Log.e(error.getMessage());
-                if (error instanceof UnknownHostException) {
-                    setMicButtonState(mBImeStartStop, mState);
-                    setText(mTvInstruction, R.string.errorImeResultNetworkError);
-                } else {
-                    setText(mTvMessage, lastChars(error.getMessage(), false));
+                if (mRecognizer != null) {
+                    mRecognizer.cancel();
+                    mRecognizer = null;
+                }
+                setMicButtonState(mBImeStartStop, Constants.State.ERROR);
+                switch (errorCode) {
+                    case SpeechRecognizer.ERROR_AUDIO:
+                        // TODO
+                        setGuiInitState(R.string.errorImeResultAudioError);
+                        break;
+                    case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                        // TODO: fire this if no slots are available
+                        setGuiInitState(R.string.errorImeResultRecognizerBusy);
+                        break;
+                    case SpeechRecognizer.ERROR_SERVER:
+                        setGuiInitState(R.string.errorImeResultServerError);
+                        break;
+                    case SpeechRecognizer.ERROR_NETWORK:
+                        setGuiInitState(R.string.errorImeResultNetworkError);
+                        break;
+                    case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                        setGuiInitState(R.string.errorImeResultNetworkTimeoutError);
+                        break;
+                    default:
+                        setGuiInitState(R.string.errorImeResultClientError);
                 }
             }
 
             @Override
-            public void onPartialResult(Result text) {
+            public void onPartialResult(final String text) {
                 Log.i("onPartialResult");
-                final String str = text.getText();
-                mListener.onPartialResult(str);
-                setText(mTvMessage, lastChars(str, false));
+                mListener.onPartialResult(text);
+                setText(mTvMessage, lastChars(text, false));
             }
 
             @Override
-            public void onFinalResult(Result text) {
+            public void onFinalResult(final String text) {
                 Log.i("onFinalResult");
-                final String str = text.getText();
-                mListener.onFinalResult(str);
-                setText(mTvMessage, lastChars(str, true));
+                mListener.onFinalResult(text);
+                setText(mTvMessage, lastChars(text, true));
             }
 
             @Override
-            public void onFinish(final String reason) {
+            public void onFinish() {
                 Log.i("onFinish");
-                setInitState();
-                // TODO: not sure how to display the "reason"
-                //setText(mTvMessage, lastChars(reason, false));
+                setGuiInitState(0);
             }
         };
     }
 
-    private void setInitState() {
+    private void setGuiInitState(int message) {
         mState = Constants.State.INIT;
         setMicButtonState(mBImeStartStop, mState);
         setText(mTvInstruction, R.string.buttonImeSpeak);
+        if (message == 0) {
+            setText(mTvMessage, "");
+        } else {
+            setText(mTvMessage, message);
+        }
         setVisibility(mBImeKeyboard, View.VISIBLE);
         setVisibility(mBImeGo, View.VISIBLE);
     }
@@ -229,7 +242,7 @@ public class VoiceImeView extends LinearLayout {
             str = str.replaceAll("\\n", "↲");
         }
         if (isFinal) {
-            return "[" + str + "]";
+            return str + "#";
         }
         return str;
     }

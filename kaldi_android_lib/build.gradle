@@ -1,4 +1,9 @@
 apply plugin: 'android-library'
+
+dependencies {
+    compile 'com.koushikdutta.async:androidasync:2.+'
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion '21.1'
