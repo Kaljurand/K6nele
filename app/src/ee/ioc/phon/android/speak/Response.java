@@ -1,4 +1,4 @@
-package kaldi.speechkit;
+package ee.ioc.phon.android.speak;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,15 +22,11 @@ public class Response {
             } catch (JSONException e) {
             }
 
-            try {
-                return new ResponseAdaptationState(status, json.getJSONObject("adaptation_state"));
-            } catch (JSONException e) {
-            }
+            return new ResponseAdaptationState(status, json.getJSONObject("adaptation_state"));
+
         } catch (JSONException e) {
             throw new ResponseException(e);
         }
-
-        throw new ResponseException();
     }
 
 
@@ -72,10 +68,6 @@ public class Response {
 
 
     public static class ResponseException extends Exception {
-        public ResponseException() {
-            super();
-        }
-
         public ResponseException(JSONException e) {
             super(e);
         }

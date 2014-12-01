@@ -59,14 +59,18 @@ public class VoiceImeService extends InputMethodService {
 
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:
+                Log.i("onStartInput: NUMBER");
                 break;
             case InputType.TYPE_CLASS_DATETIME:
+                Log.i("onStartInput: DATETIME");
                 switchIme();
                 break;
             case InputType.TYPE_CLASS_PHONE:
+                Log.i("onStartInput: PHONE");
                 switchIme();
                 break;
             case InputType.TYPE_CLASS_TEXT:
+                Log.i("onStartInput: TEXT");
                 int variation = attribute.inputType & InputType.TYPE_MASK_VARIATION;
                 if (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
@@ -75,14 +79,20 @@ public class VoiceImeService extends InputMethodService {
                     switchIme();
                 }
 
-                if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-                        || variation == InputType.TYPE_TEXT_VARIATION_URI
-                        || variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+                if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
+                    Log.i("onStartInput: EMAIL_ADDRESS");
                     switchIme();
+                } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
+                    Log.i("onStartInput: URI");
+                    // URI bar of Chrome and Firefox, can also handle search queries, thus supported
+                } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+                    Log.i("onStartInput: FILTER");
+                    // List filtering? Used in the Dialer search bar, thus supported
                 }
 
+                // This is used in the standard search bar (e.g. in Google Play).
                 if ((attribute.inputType & InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE) != 0) {
-                    switchIme();
+                    Log.i("onStartInput: FLAG_AUTO_COMPLETE");
                 }
                 break;
 
@@ -222,6 +232,7 @@ public class VoiceImeService extends InputMethodService {
      * TODO: not sure it is the best way to do it
      */
     private void switchIme() {
+        closeInputView();
         final IBinder token = getToken();
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

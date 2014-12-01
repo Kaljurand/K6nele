@@ -104,7 +104,7 @@ public class ChunkedWebRecSessionBuilder {
 
 
 	public void setUserAgentComment(String caller) {
-		mUserAgentComment = makeUserAgentComment(Utils.getVersionName(mContext), caller);
+		mUserAgentComment = Utils.makeUserAgentComment("RecognizerIntentActivity", Utils.getVersionName(mContext), caller);
 	}
 
 
@@ -295,14 +295,5 @@ public class ChunkedWebRecSessionBuilder {
 		}
 
 		return null;
-	}
-
-
-	private static String makeUserAgentComment(String versionName, String caller) {
-		return "RecognizerIntentActivity/" + versionName + "; " +
-				Build.MANUFACTURER + "/" +
-				Build.DEVICE + "/" +
-				Build.DISPLAY + "; " +
-				caller;
 	}
 }

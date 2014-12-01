@@ -1,10 +1,10 @@
-package kaldi.speechkit;
+package ee.ioc.phon.android.speak;
 
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.List;
 
-import kaldi.speechkit.Recognizer.Listener;
+import ee.ioc.phon.android.speak.Recognizer.Listener;
 
 public class SpeechKit {
     private String mWsServiceUrl;

@@ -33,6 +33,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -390,4 +391,13 @@ public class Utils {
 		}
 		return null;
 	}
+
+
+    public static String makeUserAgentComment(String tag, String versionName, String caller) {
+        return tag + "/" + versionName + "; " +
+                Build.MANUFACTURER + "/" +
+                Build.DEVICE + "/" +
+                Build.DISPLAY + "; " +
+                caller;
+    }
 }

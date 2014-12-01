@@ -8,7 +8,7 @@ dependencies {
     //compile 'com.googlecode.json-simple:json-simple:1.1.1'
     // TODO: start using Guava
     //compile 'com.google.guava:guava:11.0.2'
-    compile project(':kaldi_android_lib')
+    compile 'com.koushikdutta.async:androidasync:2.+'
 }
 
 android {

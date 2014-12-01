@@ -17,9 +17,6 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.Arrays;
 import java.util.List;
 
-import kaldi.speechkit.Recognizer;
-import kaldi.speechkit.SpeechKit;
-
 public class VoiceImeView extends LinearLayout {
 
     interface VoiceImeViewListener {
@@ -43,7 +40,8 @@ public class VoiceImeView extends LinearLayout {
     private VoiceImeViewListener mListener;
     private Recognizer mRecognizer;
     private SpeechKit mSpeechKit;
-    SharedPreferences mPrefs;
+    private Context mContext;
+    private SharedPreferences mPrefs;
 
     private Constants.State mState;
 
@@ -62,6 +60,7 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
+        mContext = context;
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -126,16 +125,22 @@ public class VoiceImeView extends LinearLayout {
     }
 
     private List<BasicNameValuePair> setEditorInfo(EditorInfo attribute) {
+        String packageName = asString(attribute.packageName);
         return Arrays.asList(
-                new BasicNameValuePair("actionLabel", asString(attribute.actionLabel)),
-                new BasicNameValuePair("fieldName", asString(attribute.fieldName)),
-                new BasicNameValuePair("hintText", asString(attribute.hintText)),
-                new BasicNameValuePair("inputType", String.valueOf(attribute.inputType)),
+                new BasicNameValuePair("action-label", asString(attribute.actionLabel)),
+                new BasicNameValuePair("field-name", asString(attribute.fieldName)),
+                new BasicNameValuePair("hint-text", asString(attribute.hintText)),
+                new BasicNameValuePair("input-type", String.valueOf(attribute.inputType)),
                 new BasicNameValuePair("label", asString(attribute.label)),
-                new BasicNameValuePair("packageName", asString(attribute.packageName))
+                new BasicNameValuePair("package-name", packageName),
+                new BasicNameValuePair("user-agent",
+                        Utils.makeUserAgentComment("K6nele",
+                                Utils.getVersionName(mContext), packageName)),
+                new BasicNameValuePair("user-id", Utils.getUniqueId(mPrefs))
         );
     }
 
+    // TODO: close the session here
     void closeSession() {
         if (mRecognizer != null) {
             mRecognizer.cancel();
@@ -242,7 +247,7 @@ public class VoiceImeView extends LinearLayout {
             str = str.replaceAll("\\n", "↲");
         }
         if (isFinal) {
-            return str + "#";
+            return str + "■";
         }
         return str;
     }

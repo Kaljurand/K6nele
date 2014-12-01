@@ -39,3 +39,10 @@ If you have access to the release keystore then
 
 		storePassword=<password1>
 		keyPassword=<password2>
+
+
+Contributions
+-------------
+
+The client for https://github.com/alumae/kaldi-gstreamer-server
+was originally based on https://github.com/truongdq54/kaldi-gstreamer-android-client

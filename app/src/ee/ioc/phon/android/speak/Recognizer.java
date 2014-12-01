@@ -1,14 +1,14 @@
-package kaldi.speechkit;
+package ee.ioc.phon.android.speak;
 
 import android.os.Handler;
 import android.os.Message;
 import android.speech.SpeechRecognizer;
-import android.util.Log;
 
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.List;
@@ -22,7 +22,6 @@ public class Recognizer {
     private static final String WS_ARGS =
             "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
-    protected static final String TAG = "ee.ioc.phon.android.speak";
     private String mWsServiceUrl;
     private PcmRecorder mPcmRecorder;
     private Listener mRecogListener;
@@ -56,7 +55,7 @@ public class Recognizer {
                         }
                     }
                 } catch (Response.ResponseException e) {
-                    Log.e(TAG, "Malformed JSON response: " + msg.obj, e);
+                    Log.e((String) msg.obj, e);
                     mRecogListener.onError(SpeechRecognizer.ERROR_SERVER);
                 }
             }
@@ -66,7 +65,7 @@ public class Recognizer {
             @Override
             public void handleMessage(Message msg) {
                 Exception e = (Exception) msg.obj;
-                Log.e(TAG, "Socket error?", e);
+                Log.e("Socket error?", e);
                 if (e instanceof TimeoutException) {
                     mRecogListener.onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
                 } else {
@@ -94,7 +93,8 @@ public class Recognizer {
 
     public void start() {
         mPcmRecorder = new PcmRecorder();
-        newsocket(mWsServiceUrl + "speech" + WS_ARGS, mHeadersWithEditorInfo, mPcmRecorder);
+        newsocket(mWsServiceUrl + "speech" + WS_ARGS + "&" + URLEncodedUtils.format(mHeadersWithEditorInfo, "utf-8"),
+                mPcmRecorder);
     }
 
     public void stopRecording() {
@@ -128,8 +128,8 @@ public class Recognizer {
     }
 
 
-    private void newsocket(String get, List<BasicNameValuePair> headers, final PcmRecorder audioRecorder) {
-        // TODO: add headers to "get"
+    private void newsocket(String get, final PcmRecorder audioRecorder) {
+        Log.i(get);
         AsyncHttpClient.getDefaultInstance().websocket(get, "my-protocol", new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
@@ -143,8 +143,10 @@ public class Recognizer {
 
                 audioRecorder.setListener(new PcmRecorder.RecorderListener() {
                     public void onRecorderBuffer(byte[] buffer) {
-                        Log.d(TAG, "read " + buffer.length);
-                        webSocket.send(buffer);
+                        if (buffer != null) {
+                            Log.i("read " + buffer.length);
+                            webSocket.send(buffer);
+                        }
                     }
                 });
 
@@ -154,7 +156,7 @@ public class Recognizer {
 
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
-                        Log.d(TAG, s);
+                        Log.i(s);
                         handelResult(s);
                     }
                 });
@@ -162,7 +164,7 @@ public class Recognizer {
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        Log.d(TAG, "ClosedCallback: ", ex);
+                        Log.e("ClosedCallback: ", ex);
                         if (ex == null) {
                             handelFinish();
                         } else {
@@ -174,7 +176,7 @@ public class Recognizer {
                 webSocket.setEndCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        Log.d(TAG, "EndCallback: ", ex);
+                        Log.e("EndCallback: ", ex);
                         if (ex == null) {
                             handelFinish();
                         } else {
