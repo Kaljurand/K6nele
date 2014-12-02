@@ -38,8 +38,7 @@ public class VoiceImeView extends LinearLayout {
     private TextView mTvMessage;
 
     private VoiceImeViewListener mListener;
-    private Recognizer mRecognizer;
-    private SpeechKit mSpeechKit;
+    private WebSocketRecognizer mRecognizer;
     private Context mContext;
     private SharedPreferences mPrefs;
 
@@ -75,15 +74,16 @@ public class VoiceImeView extends LinearLayout {
         setGuiInitState(0);
 
         List<BasicNameValuePair> editorInfo = setEditorInfo(attribute);
-        mSpeechKit = SpeechKit.initialize(getResources().getString(R.string.defaultWsService), editorInfo);
+        WebSocketRecognizer.Listener recognizerListener = getRecognizerListener();
+        mRecognizer = new WebSocketRecognizer(getResources().getString(R.string.defaultWsService), recognizerListener, editorInfo);
         //setText(mTvMessage, editorInfo.toString());
 
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mState == Constants.State.INIT) {
-                    startSession();
+                    if (mRecognizer != null) mRecognizer.start();
                 } else if (mState == Constants.State.RECORDING) {
-                    mRecognizer.stopRecording();
+                    if (mRecognizer != null) mRecognizer.stopRecording();
                 } else if (mState == Constants.State.TRANSCRIBING) {
                     closeSession();
                 }
@@ -107,22 +107,10 @@ public class VoiceImeView extends LinearLayout {
         // Launch recognition immediately (if set so)
         if (mPrefs.getBoolean(getResources().getString(R.string.keyAutoStart),
                 getResources().getBoolean(R.bool.defaultAutoStart))) {
-            startSession();
-        }
-    }
-
-    private void startSession() {
-        if (mSpeechKit != null) {
-            Recognizer.Listener recognizerListener = getRecognizerListener();
-            if (mRecognizer == null) {
-                // TODO: the language code is currently ignored
-                mRecognizer = mSpeechKit.createRecognizer("et_EE", recognizerListener);
-            } else {
-                mRecognizer.setListener(recognizerListener);
-            }
             mRecognizer.start();
         }
     }
+
 
     private List<BasicNameValuePair> setEditorInfo(EditorInfo attribute) {
         String packageName = asString(attribute.packageName);
@@ -150,8 +138,8 @@ public class VoiceImeView extends LinearLayout {
     }
 
 
-    Recognizer.Listener getRecognizerListener() {
-        return new Recognizer.Listener() {
+    WebSocketRecognizer.Listener getRecognizerListener() {
+        return new WebSocketRecognizer.Listener() {
 
             @Override
             public void onRecordingBegin() {
@@ -171,9 +159,6 @@ public class VoiceImeView extends LinearLayout {
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }
 
-            /**
-             * TODO: review the error codes
-             */
             @Override
             public void onError(final int errorCode) {
                 Log.i("onError");
@@ -184,7 +169,6 @@ public class VoiceImeView extends LinearLayout {
                 setMicButtonState(mBImeStartStop, Constants.State.ERROR);
                 switch (errorCode) {
                     case SpeechRecognizer.ERROR_AUDIO:
-                        // TODO
                         setGuiInitState(R.string.errorImeResultAudioError);
                         break;
                     case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
@@ -223,6 +207,11 @@ public class VoiceImeView extends LinearLayout {
             public void onFinish() {
                 Log.i("onFinish");
                 setGuiInitState(0);
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+                setMicButtonVolumeLevel(mBImeStartStop, rmsdB);
             }
         };
     }
@@ -269,6 +258,17 @@ public class VoiceImeView extends LinearLayout {
                 @Override
                 public void run() {
                     textView.setText(text);
+                }
+            });
+        }
+    }
+
+    private void setMicButtonVolumeLevel(final MicButton button, final float rmsdB) {
+        if (button != null) {
+            button.post(new Runnable() {
+                @Override
+                public void run() {
+                    button.setVolumeLevel(rmsdB);
                 }
             });
         }

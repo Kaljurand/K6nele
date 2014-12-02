@@ -126,7 +126,14 @@ public class VoiceImeService extends InputMethodService {
 
                 @Override
                 public void onFinalResult(String text) {
-                    commitTyped(getCurrentInputConnection(), text + " ", mPrevLength);
+                    int lastIndex = text.length() - 1;
+                    if (lastIndex != -1) {
+                        // TODO: improve
+                        if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
+                            text += " ";
+                        }
+                        commitTyped(getCurrentInputConnection(), text, mPrevLength);
+                    }
                     mPrevLength = 0;
                 }
 

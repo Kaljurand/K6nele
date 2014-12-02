@@ -296,6 +296,17 @@ public class RawAudioRecorder {
 		return bytes;
 	}
 
+    /**
+     * Returns the recorded bytes since the last call, and resets the recording.
+     * @return bytes that have been recorded since this method was last called
+     */
+    public synchronized byte[] consumeRecordingAndTruncate() {
+        byte[] bytes = getCurrentRecording(mConsumedLength);
+        Log.i(LOG_TAG, "Copied from position: " + mConsumedLength + ": " + bytes.length + " bytes");
+        mRecordedLength = 0;
+        mConsumedLength = mRecordedLength;
+        return bytes;
+    }
 
 	private byte[] getCurrentRecording(int startPos) {
 		int len = getLength() - startPos;
