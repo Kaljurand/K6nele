@@ -397,6 +397,7 @@ public class RawAudioRecorder {
 						while (mRecorder != null && mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 							int status = read(mRecorder);
 							if (status < 0) {
+                                setState(RawAudioRecorder.State.ERROR);
 								break;
 							}
 						}

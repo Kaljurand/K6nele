@@ -30,6 +30,8 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_margin="@dimen/layoutMargin1"
+            android:layout_toLeftOf="@+id/bImeGo"
+            android:layout_toRightOf="@+id/bImeKeyboard"
             android:ellipsize="start"
             android:gravity="center"
             android:singleLine="true"

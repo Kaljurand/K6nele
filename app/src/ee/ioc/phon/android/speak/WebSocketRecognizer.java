@@ -60,6 +60,10 @@ public class WebSocketRecognizer {
                         } else {
                             mRecogListener.onPartialResult(text);
                         }
+                    } else if (response instanceof Response.ResponseMessage) {
+                        Response.ResponseMessage responseMessage = (Response.ResponseMessage) response;
+                        Log.i(responseMessage.getStatus() + ": " + responseMessage.getMessage());
+                        mRecogListener.onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
                     }
                 } catch (Response.ResponseException e) {
                     Log.e((String) msg.obj, e);
@@ -102,6 +106,7 @@ public class WebSocketRecognizer {
      * Opens the socket and starts recording and sending the recorded packages.
      */
     public void start() {
+        Log.i("start");
         try {
             startRecord();
             mRecogListener.onRecordingBegin();
@@ -145,7 +150,7 @@ public class WebSocketRecognizer {
     public void cancel() {
         stopRecording0();
         if (mWebSocket != null) {
-            mWebSocket.close(); // TODO: or end?
+            mWebSocket.end(); // TODO: or close?
         }
     }
 
@@ -187,7 +192,7 @@ public class WebSocketRecognizer {
             @Override
             public void onCompleted(Exception ex, final WebSocket webSocket) {
                 if (ex != null) {
-                    handelError(ex);
+                    handleError(ex);
                     return;
                 }
 
@@ -197,7 +202,7 @@ public class WebSocketRecognizer {
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
                         Log.i(s);
-                        handelResult(s);
+                        handleResult(s);
                     }
                 });
 
@@ -206,9 +211,9 @@ public class WebSocketRecognizer {
                     public void onCompleted(Exception ex) {
                         Log.e("ClosedCallback: ", ex);
                         if (ex == null) {
-                            handelFinish();
+                            handleFinish();
                         } else {
-                            handelError(ex);
+                            handleError(ex);
                         }
                     }
                 });
@@ -218,9 +223,9 @@ public class WebSocketRecognizer {
                     public void onCompleted(Exception ex) {
                         Log.e("EndCallback: ", ex);
                         if (ex == null) {
-                            handelFinish();
+                            handleFinish();
                         } else {
-                            handelError(ex);
+                            handleError(ex);
                         }
                     }
                 });
@@ -261,19 +266,19 @@ public class WebSocketRecognizer {
         mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
     }
 
-    private void handelResult(String text) {
+    private void handleResult(String text) {
         Message msg = new Message();
         msg.obj = text;
         mHandlerResult.sendMessage(msg);
     }
 
-    private void handelError(Exception error) {
+    private void handleError(Exception error) {
         Message msg = new Message();
         msg.obj = error;
         mHandlerError.sendMessage(msg);
     }
 
-    private void handelFinish() {
+    private void handleFinish() {
         Message msg = new Message();
         mHandlerFinish.sendMessage(msg);
     }

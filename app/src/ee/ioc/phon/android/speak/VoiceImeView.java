@@ -76,14 +76,14 @@ public class VoiceImeView extends LinearLayout {
         List<BasicNameValuePair> editorInfo = setEditorInfo(attribute);
         WebSocketRecognizer.Listener recognizerListener = getRecognizerListener();
         mRecognizer = new WebSocketRecognizer(getResources().getString(R.string.defaultWsService), recognizerListener, editorInfo);
-        //setText(mTvMessage, editorInfo.toString());
 
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mState == Constants.State.INIT) {
-                    if (mRecognizer != null) mRecognizer.start();
+                Log.i("mBImeStartStop.setOnClickListener: " + mState);
+                if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
+                    mRecognizer.start();
                 } else if (mState == Constants.State.RECORDING) {
-                    if (mRecognizer != null) mRecognizer.stopRecording();
+                    mRecognizer.stopRecording();
                 } else if (mState == Constants.State.TRANSCRIBING) {
                     closeSession();
                 }
@@ -111,6 +111,11 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
+    public void closeSession() {
+        if (mRecognizer != null) mRecognizer.cancel();
+        setGuiInitState(0);
+    }
+
 
     private List<BasicNameValuePair> setEditorInfo(EditorInfo attribute) {
         String packageName = asString(attribute.packageName);
@@ -128,17 +133,8 @@ public class VoiceImeView extends LinearLayout {
         );
     }
 
-    // TODO: close the session here
-    void closeSession() {
-        if (mRecognizer != null) {
-            mRecognizer.cancel();
-            mRecognizer = null;
-        }
-        setGuiInitState(0);
-    }
 
-
-    WebSocketRecognizer.Listener getRecognizerListener() {
+    private WebSocketRecognizer.Listener getRecognizerListener() {
         return new WebSocketRecognizer.Listener() {
 
             @Override
@@ -147,6 +143,7 @@ public class VoiceImeView extends LinearLayout {
                 mState = Constants.State.RECORDING;
                 setMicButtonState(mBImeStartStop, mState);
                 setText(mTvInstruction, R.string.buttonImeStop);
+                setText(mTvMessage, "");
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
                 setVisibility(mBImeGo, View.INVISIBLE);
             }
@@ -162,17 +159,14 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onError(final int errorCode) {
                 Log.i("onError");
-                if (mRecognizer != null) {
-                    mRecognizer.cancel();
-                    mRecognizer = null;
-                }
+                mRecognizer.cancel();
+
                 setMicButtonState(mBImeStartStop, Constants.State.ERROR);
                 switch (errorCode) {
                     case SpeechRecognizer.ERROR_AUDIO:
                         setGuiInitState(R.string.errorImeResultAudioError);
                         break;
                     case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                        // TODO: fire this if no slots are available
                         setGuiInitState(R.string.errorImeResultRecognizerBusy);
                         break;
                     case SpeechRecognizer.ERROR_SERVER:
@@ -221,7 +215,8 @@ public class VoiceImeView extends LinearLayout {
         setMicButtonState(mBImeStartStop, mState);
         setText(mTvInstruction, R.string.buttonImeSpeak);
         if (message == 0) {
-            setText(mTvMessage, "");
+            // Do not clear a possible error message
+            //setText(mTvMessage, "");
         } else {
             setText(mTvMessage, message);
         }
@@ -236,7 +231,7 @@ public class VoiceImeView extends LinearLayout {
             str = str.replaceAll("\\n", "↲");
         }
         if (isFinal) {
-            return str + "■";
+            return str + "▪";
         }
         return str;
     }

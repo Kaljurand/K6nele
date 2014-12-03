@@ -5,12 +5,17 @@ import org.json.JSONObject;
 
 
 /**
- * Parses the JSON package delivered by the webservice.
+ * Parses the JSON object delivered by the webservice. It can be in one of the following forms:
+ * <pre>
+ * {"status": 9, "message": "No decoder available, try again later"}
+ *
+ * {"status": 0, "result": {"hypotheses": [{"transcript": "elas metsas..."}], "final": false}}
+ * {"status": 0, "result": {"hypotheses": [{"transcript": "elas metsas..."}], "final": true}}
+ *
+ * {"status": 0, "adaptation_state": {"type": "string+gzip+base64", "value": "eJxlvcu7"}}
+ * </pre>
  */
-public class Response {
-
-    private Response() {
-    }
+public abstract class Response {
 
     public static Response parseResponse(String data) throws ResponseException {
         try {
@@ -22,6 +27,11 @@ public class Response {
             } catch (JSONException e) {
             }
 
+            try {
+                return new ResponseMessage(status, json.getString("message"));
+            } catch (JSONException e) {
+            }
+
             return new ResponseAdaptationState(status, json.getJSONObject("adaptation_state"));
 
         } catch (JSONException e) {
@@ -30,14 +40,10 @@ public class Response {
     }
 
 
-    /*
-    {"status": 0, "result": {"hypotheses": [{"transcript": "elas metsas..."}], "final": false}}
-    {"status": 0, "result": {"hypotheses": [{"transcript": "elas metsas..."}], "final": true}}
-    */
     public static class ResponseResult extends Response {
-        private int mStatus;
-        private String mText;
-        private boolean mIsFinal;
+        private final int mStatus;
+        private final String mText;
+        private final boolean mIsFinal;
 
         public ResponseResult(int status, JSONObject result) throws JSONException {
             mStatus = status;
@@ -58,11 +64,26 @@ public class Response {
         }
     }
 
-    /*
-    {"status": 0, "adaptation_state": {"type": "string+gzip+base64", "value": "eJxlvcu7"}}
-    */
     public static class ResponseAdaptationState extends Response {
         public ResponseAdaptationState(int status, JSONObject result) throws JSONException {
+        }
+    }
+
+    public static class ResponseMessage extends Response {
+        private final int mStatus;
+        private final String mMessage;
+
+        public ResponseMessage(int status, String message) throws JSONException {
+            mStatus = status;
+            mMessage = message;
+        }
+
+        public int getStatus() {
+            return mStatus;
+        }
+
+        public String getMessage() {
+            return mMessage;
         }
     }
 
