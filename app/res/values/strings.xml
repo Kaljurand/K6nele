@@ -31,6 +31,9 @@
 
     <string name="descriptionApp">speech-to-text service for Android apps</string>
 
+    <string name="labelSpeechRecognitionService">Kõnele (grammar support)</string>
+    <string name="labelWebSocketRecognizer">Kõnele (fast recognition)</string>
+
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAbout">About</string>

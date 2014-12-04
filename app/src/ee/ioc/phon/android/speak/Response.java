@@ -1,7 +1,10 @@
 package ee.ioc.phon.android.speak;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 /**
@@ -42,21 +45,26 @@ public abstract class Response {
 
     public static class ResponseResult extends Response {
         private final int mStatus;
-        private final String mText;
+        private final ArrayList<String> mHypotheses = new ArrayList<>();
         private final boolean mIsFinal;
 
         public ResponseResult(int status, JSONObject result) throws JSONException {
             mStatus = status;
-            mText = result.getJSONArray("hypotheses").getJSONObject(0).getString("transcript");
             mIsFinal = result.getBoolean("final");
+
+            JSONArray array = result.getJSONArray("hypotheses");
+
+            for (int i = 0; i < array.length(); i++) {
+                mHypotheses.add(array.getJSONObject(i).getString("transcript"));
+            }
         }
 
         public int getStatus() {
             return mStatus;
         }
 
-        public String getText() {
-            return mText;
+        public ArrayList<String> getHypotheses() {
+            return mHypotheses;
         }
 
         public boolean isFinal() {

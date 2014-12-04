@@ -1,8 +1,12 @@
 package ee.ioc.phon.android.speak;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
 import android.util.AttributeSet;
@@ -12,10 +16,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class VoiceImeView extends LinearLayout {
 
@@ -38,7 +39,7 @@ public class VoiceImeView extends LinearLayout {
     private TextView mTvMessage;
 
     private VoiceImeViewListener mListener;
-    private WebSocketRecognizer mRecognizer;
+    private SpeechRecognizer mRecognizer;
     private Context mContext;
     private SharedPreferences mPrefs;
 
@@ -63,7 +64,7 @@ public class VoiceImeView extends LinearLayout {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void setListener(EditorInfo attribute, final VoiceImeViewListener listener) {
+    public void setListener(final EditorInfo attribute, final VoiceImeViewListener listener) {
         mListener = listener;
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
@@ -73,17 +74,21 @@ public class VoiceImeView extends LinearLayout {
 
         setGuiInitState(0);
 
-        List<BasicNameValuePair> editorInfo = setEditorInfo(attribute);
-        WebSocketRecognizer.Listener recognizerListener = getRecognizerListener();
-        mRecognizer = new WebSocketRecognizer(getResources().getString(R.string.defaultWsService), recognizerListener, editorInfo);
+        RecognitionListener recognizerListener = getRecognizerListener();
+
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(),
+                new ComponentName("ee.ioc.phon.android.speak",
+                        "ee.ioc.phon.android.speak.WebSocketRecognizer"));
+
+        mRecognizer.setRecognitionListener(recognizerListener);
 
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("mBImeStartStop.setOnClickListener: " + mState);
                 if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
-                    mRecognizer.start();
+                    mRecognizer.startListening(getRecognizerIntent(attribute));
                 } else if (mState == Constants.State.RECORDING) {
-                    mRecognizer.stopRecording();
+                    mRecognizer.stopListening();
                 } else if (mState == Constants.State.TRANSCRIBING) {
                     closeSession();
                 }
@@ -107,7 +112,7 @@ public class VoiceImeView extends LinearLayout {
         // Launch recognition immediately (if set so)
         if (mPrefs.getBoolean(getResources().getString(R.string.keyAutoStart),
                 getResources().getBoolean(R.bool.defaultAutoStart))) {
-            mRecognizer.start();
+            mRecognizer.startListening(getRecognizerIntent(attribute));
         }
     }
 
@@ -116,30 +121,17 @@ public class VoiceImeView extends LinearLayout {
         setGuiInitState(0);
     }
 
-
-    private List<BasicNameValuePair> setEditorInfo(EditorInfo attribute) {
-        String packageName = asString(attribute.packageName);
-        return Arrays.asList(
-                new BasicNameValuePair("action-label", asString(attribute.actionLabel)),
-                new BasicNameValuePair("field-name", asString(attribute.fieldName)),
-                new BasicNameValuePair("hint-text", asString(attribute.hintText)),
-                new BasicNameValuePair("input-type", String.valueOf(attribute.inputType)),
-                new BasicNameValuePair("label", asString(attribute.label)),
-                new BasicNameValuePair("package-name", packageName),
-                new BasicNameValuePair("user-agent",
-                        Utils.makeUserAgentComment("K6nele",
-                                Utils.getVersionName(mContext), packageName)),
-                new BasicNameValuePair("user-id", Utils.getUniqueId(mPrefs))
-        );
-    }
-
-
-    private WebSocketRecognizer.Listener getRecognizerListener() {
-        return new WebSocketRecognizer.Listener() {
+    private RecognitionListener getRecognizerListener() {
+        return new RecognitionListener() {
 
             @Override
-            public void onRecordingBegin() {
-                Log.i("onRecordingBegin");
+            public void onReadyForSpeech(Bundle params) {
+                // TODO: future work
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+                Log.i("onBeginningOfSpeech");
                 mState = Constants.State.RECORDING;
                 setMicButtonState(mBImeStartStop, mState);
                 setText(mTvInstruction, R.string.buttonImeStop);
@@ -149,8 +141,8 @@ public class VoiceImeView extends LinearLayout {
             }
 
             @Override
-            public void onRecordingDone() {
-                Log.i("onRecordingDone");
+            public void onEndOfSpeech() {
+                Log.i("onEndOfSpeech");
                 mState = Constants.State.TRANSCRIBING;
                 setMicButtonState(mBImeStartStop, mState);
                 setText(mTvInstruction, R.string.statusImeTranscribing);
@@ -184,30 +176,52 @@ public class VoiceImeView extends LinearLayout {
             }
 
             @Override
-            public void onPartialResult(final String text) {
-                Log.i("onPartialResult");
+            public void onPartialResults(final Bundle bundle) {
+                Log.i("onPartialResults");
+                String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
                 mListener.onPartialResult(text);
                 setText(mTvMessage, lastChars(text, false));
             }
 
             @Override
-            public void onFinalResult(final String text) {
-                Log.i("onFinalResult");
-                mListener.onFinalResult(text);
-                setText(mTvMessage, lastChars(text, true));
+            public void onEvent(int eventType, Bundle params) {
+                // TODO: not sure how this can be generated by the service
             }
 
             @Override
-            public void onFinish() {
-                Log.i("onFinish");
-                setGuiInitState(0);
+            public void onResults(final Bundle bundle) {
+                Log.i("onResults");
+                String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+                mListener.onFinalResult(text);
+                setText(mTvMessage, lastChars(text, true));
+
+                // If we are in the transcribing-state while receiving the final package,
+                // then we assume that the socket will close soon, and we move to the INIT state.
+                // TODO: there is no callback for the socket close event, otherwise this if-then
+                // would not be needed.
+                if (mState == Constants.State.TRANSCRIBING) {
+                    setGuiInitState(0);
+                }
             }
 
             @Override
             public void onRmsChanged(float rmsdB) {
+                Log.i("onRmsChanged");
                 setMicButtonVolumeLevel(mBImeStartStop, rmsdB);
             }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+                // TODO: future work
+            }
         };
+    }
+
+    private static String selectSingleResult(ArrayList<String> results) {
+        if (results == null || results.size() < 1) {
+            return "";
+        }
+        return results.get(0);
     }
 
     private void setGuiInitState(int message) {
@@ -300,5 +314,30 @@ public class VoiceImeView extends LinearLayout {
             return ss.subSequence(0, ss.length()).toString();
         }
         return o.toString();
+    }
+
+    private Intent getRecognizerIntent(EditorInfo attribute) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
+        intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
+        return intent;
+    }
+
+    private Bundle toBundle(EditorInfo attribute) {
+        Bundle bundle = new Bundle();
+        String packageName = asString(attribute.packageName);
+        bundle.putString("action-label", asString(attribute.actionLabel));
+        bundle.putString("field-name", asString(attribute.fieldName));
+        bundle.putString("hint-text", asString(attribute.hintText));
+        bundle.putString("input-type", String.valueOf(attribute.inputType));
+        bundle.putString("label", asString(attribute.label));
+        bundle.putString("package-name", packageName);
+        bundle.putString("user-agent",
+                Utils.makeUserAgentComment("K6nele",
+                        Utils.getVersionName(mContext), packageName));
+        bundle.putString("user-id", Utils.getUniqueId(mPrefs));
+        return bundle;
     }
 }

@@ -37,6 +37,12 @@ public class Extras {
 	// should be transcribed.
 	public static final String EXTRA_PHRASE = "ee.ioc.phon.android.extra.PHRASE";
 
+    // Bundle with information about the editor in which the IME is running
+    public static final String EXTRA_EDITOR_INFO = "ee.ioc.phon.android.extra.EDITOR_INFO";
+
+    // Boolean to indicate that the recognition service should not stop after delivering the first result
+    public static final String EXTRA_UNLIMITED_DURATION = "ee.ioc.phon.android.extra.UNLIMITED_DURATION";
+
 	// Caller is interested in the recorded audio data (boolean)
 	public static final String GET_AUDIO = "android.speech.extra.GET_AUDIO";
 

@@ -136,7 +136,25 @@
         <service
             android:name="SpeechRecognitionService"
             android:exported="true"
-            android:label="@string/labelApp"
+            android:label="@string/labelSpeechRecognitionService"
+            android:permission="android.permission.RECORD_AUDIO" >
+            <intent-filter>
+
+                <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.speech"
+                android:resource="@xml/recognizer" />
+        </service>
+
+        <service
+            android:name="WebSocketRecognizer"
+            android:exported="true"
+            android:label="@string/labelWebSocketRecognizer"
             android:permission="android.permission.RECORD_AUDIO" >
             <intent-filter>
 

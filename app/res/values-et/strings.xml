@@ -4,6 +4,9 @@
     <string name="labelApp">Kõnele</string>
     <string name="descriptionApp">kõnetuvastusmoodul Androidi rakendustele</string>
 
+    <string name="labelSpeechRecognitionService">Kõnele (grammatikate toega)</string>
+    <string name="labelWebSocketRecognizer">Kõnele (kiire tuvastusega)</string>
+
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAppList">Rakendused</string>

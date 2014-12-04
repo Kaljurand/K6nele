@@ -1,9 +1,13 @@
 package ee.ioc.phon.android.speak;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.RemoteException;
+import android.speech.RecognitionService;
 import android.speech.SpeechRecognizer;
 
 import com.koushikdutta.async.callback.CompletedCallback;
@@ -14,20 +18,19 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-public class WebSocketRecognizer {
+public class WebSocketRecognizer extends RecognitionService {
 
     private static final String PROTOCOL = "";
 
     private static final String WS_ARGS =
             "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
-    private String mWsServiceUrl;
     private RawAudioRecorder mRecorder;
-    private Listener mRecogListener;
-    private List<BasicNameValuePair> mHeadersWithEditorInfo;
+    private Callback mListener;
 
     private Handler mHandlerResult;
     private Handler mHandlerError;
@@ -42,10 +45,14 @@ public class WebSocketRecognizer {
 
     private WebSocket mWebSocket;
 
-    public WebSocketRecognizer(String wsServiceUrl, Listener listener, List<BasicNameValuePair> editorInfo) {
-        mWsServiceUrl = wsServiceUrl;
-        mRecogListener = listener;
-        mHeadersWithEditorInfo = editorInfo;
+
+    /**
+     * Opens the socket and starts recording and sending the recorded packages.
+     */
+    @Override
+    protected void onStartListening(final Intent recognizerIntent, Callback listener) {
+        Log.i("onStartListening");
+        mListener = listener;
 
         mHandlerResult = new Handler() {
             @Override
@@ -54,20 +61,28 @@ public class WebSocketRecognizer {
                     Response response = Response.parseResponse((String) msg.obj);
                     if (response instanceof Response.ResponseResult) {
                         Response.ResponseResult responseResult = (Response.ResponseResult) response;
-                        String text = responseResult.getText();
+                        ArrayList<String> hypotheses = responseResult.getHypotheses();
                         if (responseResult.isFinal()) {
-                            mRecogListener.onFinalResult(text);
+                            onResults(toBundle(hypotheses));
+                            // We stop listening unless the caller explicitly asks us to carry on,
+                            // by setting EXTRA_UNLIMITED_DURATION=true
+                            if (!recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false)) {
+                                onStopListening(mListener);
+                            }
                         } else {
-                            mRecogListener.onPartialResult(text);
+                            // We fire this only if the caller wanted partial results
+                            if (recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)) {
+                                onPartialResults(toBundle(hypotheses));
+                            }
                         }
                     } else if (response instanceof Response.ResponseMessage) {
                         Response.ResponseMessage responseMessage = (Response.ResponseMessage) response;
                         Log.i(responseMessage.getStatus() + ": " + responseMessage.getMessage());
-                        mRecogListener.onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
+                        onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
                     }
                 } catch (Response.ResponseException e) {
                     Log.e((String) msg.obj, e);
-                    mRecogListener.onError(SpeechRecognizer.ERROR_SERVER);
+                    onError(SpeechRecognizer.ERROR_SERVER);
                 }
             }
         };
@@ -78,9 +93,9 @@ public class WebSocketRecognizer {
                 Exception e = (Exception) msg.obj;
                 Log.e("Socket error?", e);
                 if (e instanceof TimeoutException) {
-                    mRecogListener.onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
+                    onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
                 } else {
-                    mRecogListener.onError(SpeechRecognizer.ERROR_NETWORK);
+                    onError(SpeechRecognizer.ERROR_NETWORK);
                 }
             }
         };
@@ -88,44 +103,42 @@ public class WebSocketRecognizer {
         mHandlerFinish = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                mRecogListener.onFinish();
             }
         };
-    }
 
-
-    /**
-     * @return true iff audio recorder is currently recording
-     */
-    public boolean isRecording() {
-        return mRecorder.getState() == RawAudioRecorder.State.RECORDING;
-    }
-
-
-    /**
-     * Opens the socket and starts recording and sending the recorded packages.
-     */
-    public void start() {
-        Log.i("start");
         try {
+            onReadyForSpeech(new Bundle());
             startRecord();
-            mRecogListener.onRecordingBegin();
-            startSocket(mWsServiceUrl + "speech" + WS_ARGS + "&" + URLEncodedUtils.format(mHeadersWithEditorInfo, "utf-8"));
+            onBeginningOfSpeech();
+            startSocket(getWsServiceUrl(recognizerIntent) + "speech" + WS_ARGS + getEditorInfo(recognizerIntent));
         } catch (IOException e) {
-            mRecogListener.onError(SpeechRecognizer.ERROR_AUDIO);
+            onError(SpeechRecognizer.ERROR_AUDIO);
+        }
+    }
+
+    /**
+     * Stops the recording and closes the socket.
+     */
+    @Override
+    protected void onCancel(Callback listener) {
+        stopRecording0();
+        if (mWebSocket != null) {
+            mWebSocket.end(); // TODO: or close?
         }
     }
 
     /**
      * Stops the recording and informs the socket that no more packages are coming.
      */
-    public void stopRecording() {
+    @Override
+    protected void onStopListening(Callback listener) {
         stopRecording0();
-        mRecogListener.onRecordingDone();
+        onEndOfSpeech();
     }
 
+
     // TODO: review this
-    public void stopRecording0() {
+    private void stopRecording0() {
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
         if (mWebSocket != null) {
@@ -141,16 +154,6 @@ public class WebSocketRecognizer {
         if (mSendLooper != null) {
             mSendLooper.quit();
             mSendLooper = null;
-        }
-    }
-
-    /**
-     * Stops the recording and closes the socket.
-     */
-    public void cancel() {
-        stopRecording0();
-        if (mWebSocket != null) {
-            mWebSocket.end(); // TODO: or close?
         }
     }
 
@@ -255,7 +258,7 @@ public class WebSocketRecognizer {
         mShowVolumeTask = new Runnable() {
             public void run() {
                 if (mRecorder != null) {
-                    mRecogListener.onRmsChanged(mRecorder.getRmsdb());
+                    onRmsChanged(mRecorder.getRmsdb());
                     mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
 
                 }
@@ -278,28 +281,87 @@ public class WebSocketRecognizer {
         mHandlerError.sendMessage(msg);
     }
 
+    // TODO: there does not seem to be an official call back for the socket closing
     private void handleFinish() {
-        Message msg = new Message();
-        mHandlerFinish.sendMessage(msg);
+        //Message msg = new Message();
+        //mHandlerFinish.sendMessage(msg);
     }
 
+    private void onReadyForSpeech(Bundle bundle) {
+        try {
+            mListener.readyForSpeech(bundle);
+        } catch (RemoteException e) {
+        }
+    }
 
-    /**
-     * These methods will be called by the GUI.
-     */
-    public interface Listener {
-        void onRecordingBegin();
+    private void onRmsChanged(float rms) {
+        try {
+            mListener.rmsChanged(rms);
+        } catch (RemoteException e) {
+        }
+    }
 
-        void onRecordingDone();
+    private void onError(int errorCode) {
+        try {
+            mListener.error(errorCode);
+        } catch (RemoteException e) {
+        }
+    }
 
-        void onError(int errorCode);
+    private void onResults(Bundle bundle) {
+        try {
+            mListener.results(bundle);
+        } catch (RemoteException e) {
+        }
+    }
 
-        void onPartialResult(String text);
+    private void onPartialResults(Bundle bundle) {
+        try {
+            mListener.partialResults(bundle);
+        } catch (RemoteException e) {
+        }
+    }
 
-        void onFinalResult(String text);
+    private void onBeginningOfSpeech() {
+        try {
+            mListener.beginningOfSpeech();
+        } catch (RemoteException e) {
+        }
+    }
 
-        void onFinish();
+    private void onEndOfSpeech() {
+        try {
+            mListener.endOfSpeech();
+        } catch (RemoteException e) {
+        }
+    }
 
-        void onRmsChanged(float rms);
+    private Bundle toBundle(ArrayList<String> hypotheses) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
+        return bundle;
+    }
+
+    private String getWsServiceUrl(Intent intent) {
+        String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
+        if (url == null) {
+            return getResources().getString(R.string.defaultWsService);
+        }
+        return url;
+    }
+
+    private String getEditorInfo(Intent intent) {
+        Bundle bundle = intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO);
+        if (bundle == null) {
+            return "";
+        }
+        List<BasicNameValuePair> list = new ArrayList<>();
+        for (String key : bundle.keySet()) {
+            list.add(new BasicNameValuePair(key, bundle.getString(key)));
+        }
+        if (list.size() == 0) {
+            return "";
+        }
+        return "&" + URLEncodedUtils.format(list, "utf-8");
     }
 }
