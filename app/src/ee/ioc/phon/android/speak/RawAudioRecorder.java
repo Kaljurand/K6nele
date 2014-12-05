@@ -338,7 +338,6 @@ public class RawAudioRecorder {
 		long sumOfSquares = getRms(mRecordedLength, mBuffer.length);
 		double rootMeanSquare = Math.sqrt(sumOfSquares / (mBuffer.length / 2));
 		if (rootMeanSquare > 1) {
-			Log.i(LOG_TAG, "getRmsdb(): " + rootMeanSquare);
 			// TODO: why 10?
 			return (float) (10 * Math.log10(rootMeanSquare));
 		}

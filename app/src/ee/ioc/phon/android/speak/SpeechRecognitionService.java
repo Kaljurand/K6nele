@@ -484,7 +484,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * About RemoteException see
 	 * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
 	 */
-	private void handleRemoteException(RemoteException e) {
+	private static void handleRemoteException(RemoteException e) {
 		Log.e(e.getMessage());
 	}
 }

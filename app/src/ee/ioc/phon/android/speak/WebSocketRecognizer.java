@@ -18,6 +18,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -110,7 +111,7 @@ public class WebSocketRecognizer extends RecognitionService {
             onReadyForSpeech(new Bundle());
             startRecord();
             onBeginningOfSpeech();
-            startSocket(getWsServiceUrl(recognizerIntent) + "speech" + WS_ARGS + getEditorInfo(recognizerIntent));
+            startSocket(getWsServiceUrl(recognizerIntent) + "speech" + WS_ARGS + getQueryParams(recognizerIntent));
         } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_AUDIO);
         }
@@ -122,9 +123,11 @@ public class WebSocketRecognizer extends RecognitionService {
     @Override
     protected void onCancel(Callback listener) {
         stopRecording0();
-        if (mWebSocket != null) {
+        if (mWebSocket != null && mWebSocket.isOpen()) {
             mWebSocket.end(); // TODO: or close?
         }
+        // We are ready for new speech
+        onReadyForSpeech(new Bundle());
     }
 
     /**
@@ -141,14 +144,12 @@ public class WebSocketRecognizer extends RecognitionService {
     private void stopRecording0() {
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
-        if (mWebSocket != null) {
+        if (mWebSocket != null && mWebSocket.isOpen()) {
             mWebSocket.send("EOS");
         }
 
         if (mRecorder != null) {
-            mRecorder.stop();
             mRecorder.release();
-            mRecorder = null;
         }
 
         if (mSendLooper != null) {
@@ -166,7 +167,6 @@ public class WebSocketRecognizer extends RecognitionService {
     private void startRecord() throws IOException {
         mRecorder = new RawAudioRecorder();
         if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
-            mRecorder = null;
             throw new IOException();
         }
 
@@ -276,6 +276,9 @@ public class WebSocketRecognizer extends RecognitionService {
     }
 
     private void handleError(Exception error) {
+        // As soon as there is an error we shut down the socket and the recorder
+        onCancel(mListener);
+
         Message msg = new Message();
         msg.obj = error;
         mHandlerError.sendMessage(msg);
@@ -283,6 +286,7 @@ public class WebSocketRecognizer extends RecognitionService {
 
     // TODO: there does not seem to be an official call back for the socket closing
     private void handleFinish() {
+        onCancel(mListener);
         //Message msg = new Message();
         //mHandlerFinish.sendMessage(msg);
     }
@@ -336,12 +340,6 @@ public class WebSocketRecognizer extends RecognitionService {
         }
     }
 
-    private Bundle toBundle(ArrayList<String> hypotheses) {
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
-        return bundle;
-    }
-
     private String getWsServiceUrl(Intent intent) {
         String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
         if (url == null) {
@@ -350,18 +348,69 @@ public class WebSocketRecognizer extends RecognitionService {
         return url;
     }
 
-    private String getEditorInfo(Intent intent) {
-        Bundle bundle = intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO);
-        if (bundle == null) {
-            return "";
-        }
+    /**
+     * Extracts the editor info, and uses
+     * ChunkedWebRecSessionBuilder to extract some additional extras.
+     * TODO: unify this better
+     */
+    private String getQueryParams(Intent intent) {
         List<BasicNameValuePair> list = new ArrayList<>();
-        for (String key : bundle.keySet()) {
-            list.add(new BasicNameValuePair(key, bundle.getString(key)));
+        flattenBundle("editorInfo_", list, intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO));
+
+        try {
+            ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, intent.getExtras(), null);
+            if (Log.DEBUG) Log.i(builder.toStringArrayList());
+            // TODO: review these parameter names
+            listAdd(list, "lang", builder.getLang());
+            listAdd(list, "lm", toString(builder.getGrammarUrl()));
+            listAdd(list, "output-lang", builder.getGrammarTargetLang());
+            listAdd(list, "user-agent", builder.getUserAgentComment());
+            listAdd(list, "calling-package", builder.getCaller());
+            listAdd(list, "user-id", builder.getDeviceId());
+            listAdd(list, "partial", "" + builder.isPartialResults());
+        } catch (MalformedURLException e) {
         }
+
         if (list.size() == 0) {
             return "";
         }
         return "&" + URLEncodedUtils.format(list, "utf-8");
+    }
+
+
+    private static boolean listAdd(List<BasicNameValuePair> list, String key, String value) {
+        if (value == null || value.length() == 0) {
+            return false;
+        }
+        return list.add(new BasicNameValuePair(key, value));
+    }
+
+    private static void flattenBundle(String prefix, List<BasicNameValuePair> list, Bundle bundle) {
+        if (bundle != null) {
+            for (String key : bundle.keySet()) {
+                Object value = bundle.get(key);
+                if (value != null) {
+                    if (value instanceof Bundle) {
+                        flattenBundle(prefix + key + "_", list, bundle);
+                    } else {
+                        list.add(new BasicNameValuePair(prefix + key, toString(value)));
+                    }
+                }
+            }
+        }
+    }
+
+    private static Bundle toBundle(ArrayList<String> hypotheses) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
+        return bundle;
+    }
+
+    // TODO: replace by a built-in
+    private static String toString(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        return obj.toString();
     }
 }

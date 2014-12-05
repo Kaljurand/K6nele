@@ -34,9 +34,14 @@ public class VoiceImeService extends InputMethodService {
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
     }
 
+    /**
+     * This is called at configuration change. We just kill the running session.
+     * TODO: better handle configuration changes
+     */
     @Override
     public void onInitializeInterface() {
         Log.i("onInitializeInterface");
+        closeInputView();
     }
 
     @Override
@@ -52,10 +57,8 @@ public class VoiceImeService extends InputMethodService {
      */
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
-        Log.i("onStartInput");
         super.onStartInput(attribute, restarting);
-        Log.i("onStartInput: inputType: " + attribute.inputType);
-        Log.i("onStartInput: imeOptions: " + attribute.imeOptions);
+        Log.i("onStartInput: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
 
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:
@@ -113,47 +116,52 @@ public class VoiceImeService extends InputMethodService {
         super.onStartInputView(attribute, restarting);
         closeInputView();
 
-        if (mInputView != null) {
-            mInputView.setListener(attribute, new VoiceImeView.VoiceImeViewListener() {
+        mInputView.setListener(attribute, new VoiceImeView.VoiceImeViewListener() {
 
-                int mPrevLength = 0;
+            int mPrevLength = 0;
 
-                @Override
-                public void onPartialResult(String text) {
-                    commitTyped(getCurrentInputConnection(), text, mPrevLength);
-                    mPrevLength = text.length();
-                }
+            @Override
+            public void onPartialResult(String text) {
+                commitTyped(getCurrentInputConnection(), text, mPrevLength);
+                mPrevLength = text.length();
+            }
 
-                @Override
-                public void onFinalResult(String text) {
-                    int lastIndex = text.length() - 1;
-                    if (lastIndex != -1) {
-                        // TODO: improve
-                        if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
-                            text += " ";
-                        }
-                        commitTyped(getCurrentInputConnection(), text, mPrevLength);
+            @Override
+            public void onFinalResult(String text) {
+                int lastIndex = text.length() - 1;
+                if (lastIndex != -1) {
+                    // TODO: improve
+                    if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
+                        text += " ";
                     }
-                    mPrevLength = 0;
+                    commitTyped(getCurrentInputConnection(), text, mPrevLength);
                 }
+                mPrevLength = 0;
+            }
 
-                @Override
-                public void onKeyboard() {
-                    switchIme();
-                }
+            @Override
+            public void onKeyboard() {
+                switchIme();
+            }
 
-                @Override
-                public void onGo() {
-                    keyDownUp(KeyEvent.KEYCODE_ENTER);
-                    handleClose();
-                }
+            @Override
+            public void onGo() {
+                keyDownUp(KeyEvent.KEYCODE_ENTER);
+                handleClose();
+            }
 
-                @Override
-                public void deleteLastWord() {
-                    handleDelete(getCurrentInputConnection());
-                }
-            });
-        }
+            @Override
+            public void deleteLastWord() {
+                handleDelete(getCurrentInputConnection());
+            }
+        });
+    }
+
+    @Override
+    public void onFinishInputView(boolean finishingInput) {
+        Log.i("onFinishInputView");
+        super.onFinishInputView(finishingInput);
+        closeInputView();
     }
 
     @Override
@@ -218,7 +226,7 @@ public class VoiceImeService extends InputMethodService {
 
     private void handleClose() {
         requestHideSelf(0);
-        mInputView.closeSession();
+        closeInputView();
     }
 
     private IBinder getToken() {
@@ -247,10 +255,10 @@ public class VoiceImeService extends InputMethodService {
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 mInputMethodManager.switchToLastInputMethod(token);
             } else {
-                handleClose();
+                mInputMethodManager.showInputMethodPicker();
             }
         } catch (NoSuchMethodError e) {
-            Log.e("cannot set the previous input method:");
+            Log.e("IME switch failed", e);
         }
     }
 

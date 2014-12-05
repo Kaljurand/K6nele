@@ -4,7 +4,7 @@
     <string name="labelApp">Kõnele</string>
     <string name="descriptionApp">kõnetuvastusmoodul Androidi rakendustele</string>
 
-    <string name="labelSpeechRecognitionService">Kõnele (grammatikate toega)</string>
+    <string name="labelSpeechRecognitionService">Kõnele (grammatikatoega)</string>
     <string name="labelWebSocketRecognizer">Kõnele (kiire tuvastusega)</string>
 
     <!-- Activity labels -->

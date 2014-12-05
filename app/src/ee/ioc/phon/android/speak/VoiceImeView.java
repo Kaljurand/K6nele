@@ -126,7 +126,8 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onReadyForSpeech(Bundle params) {
-                // TODO: future work
+                Log.i("onReadyForSpeech");
+                setGuiInitState(0);
             }
 
             @Override
@@ -206,7 +207,7 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onRmsChanged(float rmsdB) {
-                Log.i("onRmsChanged");
+                //Log.i("onRmsChanged");
                 setMicButtonVolumeLevel(mBImeStartStop, rmsdB);
             }
 
@@ -320,6 +321,7 @@ public class VoiceImeView extends LinearLayout {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, mContext.getPackageName());
         intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
         intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
         return intent;
@@ -327,17 +329,15 @@ public class VoiceImeView extends LinearLayout {
 
     private Bundle toBundle(EditorInfo attribute) {
         Bundle bundle = new Bundle();
-        String packageName = asString(attribute.packageName);
-        bundle.putString("action-label", asString(attribute.actionLabel));
-        bundle.putString("field-name", asString(attribute.fieldName));
-        bundle.putString("hint-text", asString(attribute.hintText));
-        bundle.putString("input-type", String.valueOf(attribute.inputType));
+        bundle.putBundle("extras", attribute.extras);
+        bundle.putString("actionLabel", asString(attribute.actionLabel));
+        bundle.putString("fieldName", asString(attribute.fieldName));
+        bundle.putString("hintText", asString(attribute.hintText));
+        bundle.putString("inputType", String.valueOf(attribute.inputType));
         bundle.putString("label", asString(attribute.label));
-        bundle.putString("package-name", packageName);
-        bundle.putString("user-agent",
-                Utils.makeUserAgentComment("K6nele",
-                        Utils.getVersionName(mContext), packageName));
-        bundle.putString("user-id", Utils.getUniqueId(mPrefs));
+        // This line gets the actual caller package registered in the package registry.
+        // The key needs to be "packageName".
+        bundle.putString("packageName", asString(attribute.packageName));
         return bundle;
     }
 }
