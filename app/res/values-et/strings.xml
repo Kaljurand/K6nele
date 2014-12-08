@@ -226,6 +226,9 @@
     <string name="cdWaveform">Sisendkõne pilt</string>
     <string name="cdVolume">Valjuse näit</string>
     <string name="cdAppIcon">Logo</string>
+    <string name="cdChangeInputMethod">Vahetage sisestusmeetodit</string>
+    <string name="cdGo">Käivitage otsing</string>
+    <string name="cdSettings">Kõnele seaded</string>
 
     <string-array name="entriesAutoStopAfterTime">
         <item>2 sek</item>

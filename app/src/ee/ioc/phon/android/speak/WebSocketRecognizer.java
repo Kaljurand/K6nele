@@ -18,6 +18,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,13 @@ public class WebSocketRecognizer extends RecognitionService {
     private static final String WS_ARGS =
             "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
-    private RawAudioRecorder mRecorder;
-    private Callback mListener;
+    private static final int MSG_RESULT = 1;
+    private static final int MSG_ERROR = 2;
 
-    private Handler mHandlerResult;
-    private Handler mHandlerError;
-    private Handler mHandlerFinish;
+    private RawAudioRecorder mRecorder;
+    private RecognitionService.Callback mListener;
+
+    private MyHandler mMyHandler;
 
     private volatile Looper mSendLooper;
     private volatile Handler mSendHandler;
@@ -51,61 +53,15 @@ public class WebSocketRecognizer extends RecognitionService {
      * Opens the socket and starts recording and sending the recorded packages.
      */
     @Override
-    protected void onStartListening(final Intent recognizerIntent, Callback listener) {
+    protected void onStartListening(final Intent recognizerIntent, RecognitionService.Callback listener) {
         Log.i("onStartListening");
         mListener = listener;
 
-        mHandlerResult = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                try {
-                    Response response = Response.parseResponse((String) msg.obj);
-                    if (response instanceof Response.ResponseResult) {
-                        Response.ResponseResult responseResult = (Response.ResponseResult) response;
-                        ArrayList<String> hypotheses = responseResult.getHypotheses();
-                        if (responseResult.isFinal()) {
-                            onResults(toBundle(hypotheses));
-                            // We stop listening unless the caller explicitly asks us to carry on,
-                            // by setting EXTRA_UNLIMITED_DURATION=true
-                            if (!recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false)) {
-                                onStopListening(mListener);
-                            }
-                        } else {
-                            // We fire this only if the caller wanted partial results
-                            if (recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)) {
-                                onPartialResults(toBundle(hypotheses));
-                            }
-                        }
-                    } else if (response instanceof Response.ResponseMessage) {
-                        Response.ResponseMessage responseMessage = (Response.ResponseMessage) response;
-                        Log.i(responseMessage.getStatus() + ": " + responseMessage.getMessage());
-                        onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
-                    }
-                } catch (Response.ResponseException e) {
-                    Log.e((String) msg.obj, e);
-                    onError(SpeechRecognizer.ERROR_SERVER);
-                }
-            }
-        };
-
-        mHandlerError = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Exception e = (Exception) msg.obj;
-                Log.e("Socket error?", e);
-                if (e instanceof TimeoutException) {
-                    onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
-                } else {
-                    onError(SpeechRecognizer.ERROR_NETWORK);
-                }
-            }
-        };
-
-        mHandlerFinish = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-            }
-        };
+        mMyHandler = new MyHandler(this,
+                listener,
+                recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
+                recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
+        );
 
         try {
             onReadyForSpeech(new Bundle());
@@ -121,7 +77,7 @@ public class WebSocketRecognizer extends RecognitionService {
      * Stops the recording and closes the socket.
      */
     @Override
-    protected void onCancel(Callback listener) {
+    protected void onCancel(RecognitionService.Callback listener) {
         stopRecording0();
         if (mWebSocket != null && mWebSocket.isOpen()) {
             mWebSocket.end(); // TODO: or close?
@@ -134,7 +90,7 @@ public class WebSocketRecognizer extends RecognitionService {
      * Stops the recording and informs the socket that no more packages are coming.
      */
     @Override
-    protected void onStopListening(Callback listener) {
+    protected void onStopListening(RecognitionService.Callback listener) {
         stopRecording0();
         onEndOfSpeech();
     }
@@ -195,7 +151,7 @@ public class WebSocketRecognizer extends RecognitionService {
             @Override
             public void onCompleted(Exception ex, final WebSocket webSocket) {
                 if (ex != null) {
-                    handleError(ex);
+                    handleException(ex);
                     return;
                 }
 
@@ -216,7 +172,7 @@ public class WebSocketRecognizer extends RecognitionService {
                         if (ex == null) {
                             handleFinish();
                         } else {
-                            handleError(ex);
+                            handleException(ex);
                         }
                     }
                 });
@@ -228,7 +184,7 @@ public class WebSocketRecognizer extends RecognitionService {
                         if (ex == null) {
                             handleFinish();
                         } else {
-                            handleError(ex);
+                            handleException(ex);
                         }
                     }
                 });
@@ -271,24 +227,21 @@ public class WebSocketRecognizer extends RecognitionService {
 
     private void handleResult(String text) {
         Message msg = new Message();
+        msg.what = MSG_RESULT;
         msg.obj = text;
-        mHandlerResult.sendMessage(msg);
+        mMyHandler.sendMessage(msg);
     }
 
-    private void handleError(Exception error) {
-        // As soon as there is an error we shut down the socket and the recorder
-        onCancel(mListener);
-
+    private void handleException(Exception error) {
         Message msg = new Message();
+        msg.what = MSG_ERROR;
         msg.obj = error;
-        mHandlerError.sendMessage(msg);
+        mMyHandler.sendMessage(msg);
     }
 
     // TODO: there does not seem to be an official call back for the socket closing
     private void handleFinish() {
         onCancel(mListener);
-        //Message msg = new Message();
-        //mHandlerFinish.sendMessage(msg);
     }
 
     private void onReadyForSpeech(Bundle bundle) {
@@ -310,6 +263,8 @@ public class WebSocketRecognizer extends RecognitionService {
             mListener.error(errorCode);
         } catch (RemoteException e) {
         }
+        // As soon as there is an error we shut down the socket and the recorder
+        onCancel(mListener);
     }
 
     private void onResults(Bundle bundle) {
@@ -412,5 +367,65 @@ public class WebSocketRecognizer extends RecognitionService {
             return null;
         }
         return obj.toString();
+    }
+
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<WebSocketRecognizer> mRef;
+        private final RecognitionService.Callback mCallback;
+        private final boolean mIsUnlimitedDuration;
+        private final boolean mIsPartialResults;
+
+        public MyHandler(WebSocketRecognizer c, RecognitionService.Callback callback, boolean isUnlimitedDuration, boolean isPartialResults) {
+            mRef = new WeakReference<WebSocketRecognizer>(c);
+            mCallback = callback;
+            mIsUnlimitedDuration = isUnlimitedDuration;
+            mIsPartialResults = isPartialResults;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            WebSocketRecognizer outerClass = mRef.get();
+            if (outerClass != null) {
+                if (msg.what == MSG_ERROR) {
+                    Exception e = (Exception) msg.obj;
+                    Log.e("Socket error?", e);
+                    if (e instanceof TimeoutException) {
+                        outerClass.onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
+                    } else {
+                        outerClass.onError(SpeechRecognizer.ERROR_NETWORK);
+                    }
+                } else if (msg.what == MSG_RESULT) {
+                    try {
+                        Response response = Response.parseResponse((String) msg.obj);
+                        if (response instanceof Response.ResponseResult) {
+                            Response.ResponseResult responseResult = (Response.ResponseResult) response;
+                            ArrayList<String> hypotheses = responseResult.getHypotheses();
+                            if (responseResult.isFinal()) {
+                                outerClass.onResults(toBundle(hypotheses));
+                                // We stop listening unless the caller explicitly asks us to carry on,
+                                // by setting EXTRA_UNLIMITED_DURATION=true
+                                if (!mIsUnlimitedDuration) {
+                                    outerClass.onStopListening(mCallback);
+                                }
+                            } else {
+                                // We fire this only if the caller wanted partial results
+                                if (mIsPartialResults) {
+                                    outerClass.onPartialResults(toBundle(hypotheses));
+                                }
+                            }
+                        } else if (response instanceof Response.ResponseMessage) {
+                            Response.ResponseMessage responseMessage = (Response.ResponseMessage) response;
+                            Log.i(responseMessage.getStatus() + ": " + responseMessage.getMessage());
+                            outerClass.onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
+                        }
+                    } catch (Response.ResponseException e) {
+                        Log.e((String) msg.obj, e);
+                        outerClass.onError(SpeechRecognizer.ERROR_SERVER);
+                    }
+                }
+            }
+        }
+
     }
 }

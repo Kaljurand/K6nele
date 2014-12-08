@@ -29,8 +29,8 @@ public class VoiceImeService extends InputMethodService {
 
     @Override
     public void onCreate() {
-        Log.i("onCreate");
         super.onCreate();
+        Log.i("onCreate");
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
     }
 
@@ -66,11 +66,11 @@ public class VoiceImeService extends InputMethodService {
                 break;
             case InputType.TYPE_CLASS_DATETIME:
                 Log.i("onStartInput: DATETIME");
-                switchIme();
+                switchIme(false);
                 break;
             case InputType.TYPE_CLASS_PHONE:
                 Log.i("onStartInput: PHONE");
-                switchIme();
+                switchIme(false);
                 break;
             case InputType.TYPE_CLASS_TEXT:
                 Log.i("onStartInput: TEXT");
@@ -79,12 +79,12 @@ public class VoiceImeService extends InputMethodService {
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     Log.i("onStartInput: password: " + variation);
                     // We refuse to recognize passwords for privacy reasons.
-                    switchIme();
+                    switchIme(false);
                 }
 
                 if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
                     Log.i("onStartInput: EMAIL_ADDRESS");
-                    switchIme();
+                    switchIme(false);
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
                     Log.i("onStartInput: URI");
                     // URI bar of Chrome and Firefox, can also handle search queries, thus supported
@@ -105,16 +105,21 @@ public class VoiceImeService extends InputMethodService {
 
     @Override
     public void onFinishInput() {
-        Log.i("onFinishInput");
         super.onFinishInput();
+        Log.i("onFinishInput");
         closeInputView();
     }
 
     @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
-        Log.i("onStartInputView");
         super.onStartInputView(attribute, restarting);
+        Log.i("onStartInputView: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
+
         closeInputView();
+
+        if (restarting) {
+            return;
+        }
 
         mInputView.setListener(attribute, new VoiceImeView.VoiceImeViewListener() {
 
@@ -140,8 +145,8 @@ public class VoiceImeService extends InputMethodService {
             }
 
             @Override
-            public void onKeyboard() {
-                switchIme();
+            public void onSwitchIme(boolean isAskUser) {
+                switchIme(isAskUser);
             }
 
             @Override
@@ -159,8 +164,8 @@ public class VoiceImeService extends InputMethodService {
 
     @Override
     public void onFinishInputView(boolean finishingInput) {
-        Log.i("onFinishInputView");
         super.onFinishInputView(finishingInput);
+        Log.i("onFinishInputView: " + finishingInput);
         closeInputView();
     }
 
@@ -242,23 +247,28 @@ public class VoiceImeService extends InputMethodService {
     }
 
     /**
-     * Switching to another IME (the previous one). Either when the user tries to edit
-     * a password, or explicitly presses the "switch keyboard" button.
+     * Switching to another IME (ideally the previous one). Either when the user tries to edit
+     * a password, or explicitly presses the "switch IME" button.
      * TODO: not sure it is the best way to do it
      */
-    private void switchIme() {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void switchIme(boolean isAskUser) {
         closeInputView();
-        final IBinder token = getToken();
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mInputMethodManager.switchToNextInputMethod(getToken(), false /* not onlyCurrentIme */);
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                mInputMethodManager.switchToLastInputMethod(token);
-            } else {
-                mInputMethodManager.showInputMethodPicker();
+        if (isAskUser) {
+            mInputMethodManager.showInputMethodPicker();
+        } else {
+            final IBinder token = getToken();
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    mInputMethodManager.switchToNextInputMethod(getToken(), false /* not onlyCurrentIme */);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    mInputMethodManager.switchToLastInputMethod(token);
+                } else {
+                    mInputMethodManager.showInputMethodPicker();
+                }
+            } catch (NoSuchMethodError e) {
+                Log.e("IME switch failed", e);
             }
-        } catch (NoSuchMethodError e) {
-            Log.e("IME switch failed", e);
         }
     }
 

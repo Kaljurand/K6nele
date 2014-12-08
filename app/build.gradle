@@ -15,7 +15,7 @@ android {
     // We support API level 8, but use isChangingConfigurations() when API 11+
     // is available.
     compileSdkVersion 21
-    buildToolsVersion "21.1"
+    buildToolsVersion "21.1.1"
 
 
     // API level 3: some default button was not found, but we didn't explore it further.
@@ -26,8 +26,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 8
         targetSdkVersion 8
-        versionCode 847
-        versionName '0.8.47'
+        versionCode 848
+        versionName '0.8.48'
     }
 
 

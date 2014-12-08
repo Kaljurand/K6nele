@@ -25,7 +25,7 @@ public class VoiceImeView extends LinearLayout {
 
         void onFinalResult(String text);
 
-        void onKeyboard();
+        void onSwitchIme(boolean isAskUser);
 
         void onGo();
 
@@ -40,7 +40,6 @@ public class VoiceImeView extends LinearLayout {
 
     private VoiceImeViewListener mListener;
     private SpeechRecognizer mRecognizer;
-    private Context mContext;
     private SharedPreferences mPrefs;
 
     private Constants.State mState;
@@ -60,7 +59,6 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
-        mContext = context;
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -74,23 +72,21 @@ public class VoiceImeView extends LinearLayout {
 
         setGuiInitState(0);
 
-        RecognitionListener recognizerListener = getRecognizerListener();
-
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(),
                 new ComponentName("ee.ioc.phon.android.speak",
                         "ee.ioc.phon.android.speak.WebSocketRecognizer"));
 
-        mRecognizer.setRecognitionListener(recognizerListener);
+        mRecognizer.setRecognitionListener(getRecognizerListener());
 
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("mBImeStartStop.setOnClickListener: " + mState);
                 if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
-                    mRecognizer.startListening(getRecognizerIntent(attribute));
+                    mRecognizer.startListening(getRecognizerIntent(getContext(), attribute));
                 } else if (mState == Constants.State.RECORDING) {
                     mRecognizer.stopListening();
                 } else if (mState == Constants.State.TRANSCRIBING) {
-                    closeSession();
+                    mRecognizer.cancel();
                 }
             }
         });
@@ -105,20 +101,26 @@ public class VoiceImeView extends LinearLayout {
         mBImeKeyboard.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onKeyboard();
+                mListener.onSwitchIme(false);
+            }
+        });
+
+        mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mListener.onSwitchIme(true);
+                return true;
             }
         });
 
         // Launch recognition immediately (if set so)
-        if (mPrefs.getBoolean(getResources().getString(R.string.keyAutoStart),
-                getResources().getBoolean(R.bool.defaultAutoStart))) {
-            mRecognizer.startListening(getRecognizerIntent(attribute));
+        if (Utils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart)) {
+            mRecognizer.startListening(getRecognizerIntent(getContext(), attribute));
         }
     }
 
     public void closeSession() {
         if (mRecognizer != null) mRecognizer.cancel();
-        setGuiInitState(0);
     }
 
     private RecognitionListener getRecognizerListener() {
@@ -152,7 +154,6 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onError(final int errorCode) {
                 Log.i("onError");
-                mRecognizer.cancel();
 
                 setMicButtonState(mBImeStartStop, Constants.State.ERROR);
                 switch (errorCode) {
@@ -239,7 +240,7 @@ public class VoiceImeView extends LinearLayout {
         setVisibility(mBImeGo, View.VISIBLE);
     }
 
-    private String lastChars(String str, boolean isFinal) {
+    private static String lastChars(String str, boolean isFinal) {
         if (str == null) {
             str = "";
         } else {
@@ -251,7 +252,7 @@ public class VoiceImeView extends LinearLayout {
         return str;
     }
 
-    private void setText(final TextView textView, final CharSequence text) {
+    private static void setText(final TextView textView, final CharSequence text) {
         if (textView != null) {
             textView.post(new Runnable() {
                 @Override
@@ -262,7 +263,7 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
-    private void setText(final TextView textView, final int text) {
+    private static void setText(final TextView textView, final int text) {
         if (textView != null) {
             textView.post(new Runnable() {
                 @Override
@@ -273,7 +274,7 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
-    private void setMicButtonVolumeLevel(final MicButton button, final float rmsdB) {
+    private static void setMicButtonVolumeLevel(final MicButton button, final float rmsdB) {
         if (button != null) {
             button.post(new Runnable() {
                 @Override
@@ -284,7 +285,7 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
-    private void setMicButtonState(final MicButton button, final Constants.State state) {
+    private static void setMicButtonState(final MicButton button, final Constants.State state) {
         if (button != null) {
             button.post(new Runnable() {
                 @Override
@@ -295,7 +296,7 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
-    private void setVisibility(final View view, final int visibility) {
+    private static void setVisibility(final View view, final int visibility) {
         if (view != null) {
             view.post(new Runnable() {
                 @Override
@@ -306,7 +307,7 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
-    private String asString(Object o) {
+    private static String asString(Object o) {
         if (o == null) {
             return null;
         }
@@ -317,17 +318,17 @@ public class VoiceImeView extends LinearLayout {
         return o.toString();
     }
 
-    private Intent getRecognizerIntent(EditorInfo attribute) {
+    private static Intent getRecognizerIntent(Context context, EditorInfo attribute) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, mContext.getPackageName());
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());
         intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
         intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
         return intent;
     }
 
-    private Bundle toBundle(EditorInfo attribute) {
+    private static Bundle toBundle(EditorInfo attribute) {
         Bundle bundle = new Bundle();
         bundle.putBundle("extras", attribute.extras);
         bundle.putString("actionLabel", asString(attribute.actionLabel));
