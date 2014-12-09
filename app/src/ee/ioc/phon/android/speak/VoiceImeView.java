@@ -29,7 +29,9 @@ public class VoiceImeView extends LinearLayout {
 
         void onGo();
 
-        void deleteLastWord();
+        void onDeleteLastWord();
+
+        void onAddNewline();
     }
 
     private MicButton mBImeStartStop;
@@ -50,12 +52,12 @@ public class VoiceImeView extends LinearLayout {
         setOnTouchListener(new OnSwipeTouchListener(context) {
             @Override
             public void onSwipeLeft() {
-                mListener.deleteLastWord();
+                mListener.onDeleteLastWord();
             }
 
             @Override
             public void onSwipeRight() {
-                mListener.onFinalResult("\n");
+                mListener.onAddNewline();
             }
         });
 
@@ -77,19 +79,9 @@ public class VoiceImeView extends LinearLayout {
                         "ee.ioc.phon.android.speak.WebSocketRecognizer"));
 
         mRecognizer.setRecognitionListener(getRecognizerListener());
+        Intent recognizerIntent = getRecognizerIntent(getContext(), attribute);
+        mBImeStartStop.setSpeechRecognizer(mRecognizer, recognizerIntent);
 
-        mBImeStartStop.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.i("mBImeStartStop.setOnClickListener: " + mState);
-                if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
-                    mRecognizer.startListening(getRecognizerIntent(getContext(), attribute));
-                } else if (mState == Constants.State.RECORDING) {
-                    mRecognizer.stopListening();
-                } else if (mState == Constants.State.TRANSCRIBING) {
-                    mRecognizer.cancel();
-                }
-            }
-        });
 
         mBImeGo.setOnClickListener(new OnClickListener() {
             @Override
@@ -115,7 +107,8 @@ public class VoiceImeView extends LinearLayout {
 
         // Launch recognition immediately (if set so)
         if (Utils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart)) {
-            mRecognizer.startListening(getRecognizerIntent(getContext(), attribute));
+            mBImeStartStop.setEnabled(false);
+            mRecognizer.startListening(recognizerIntent);
         }
     }
 
@@ -129,14 +122,13 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onReadyForSpeech(Bundle params) {
                 Log.i("onReadyForSpeech");
-                setGuiInitState(0);
+                setGuiState(Constants.State.LISTENING);
             }
 
             @Override
             public void onBeginningOfSpeech() {
                 Log.i("onBeginningOfSpeech");
-                mState = Constants.State.RECORDING;
-                setMicButtonState(mBImeStartStop, mState);
+                setGuiState(Constants.State.RECORDING);
                 setText(mTvInstruction, R.string.buttonImeStop);
                 setText(mTvMessage, "");
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
@@ -146,16 +138,15 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onEndOfSpeech() {
                 Log.i("onEndOfSpeech");
-                mState = Constants.State.TRANSCRIBING;
-                setMicButtonState(mBImeStartStop, mState);
+                setGuiState(Constants.State.TRANSCRIBING);
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }
 
             @Override
             public void onError(final int errorCode) {
                 Log.i("onError");
+                setGuiState(Constants.State.ERROR);
 
-                setMicButtonState(mBImeStartStop, Constants.State.ERROR);
                 switch (errorCode) {
                     case SpeechRecognizer.ERROR_AUDIO:
                         setGuiInitState(R.string.errorImeResultAudioError);
@@ -181,8 +172,10 @@ public class VoiceImeView extends LinearLayout {
             public void onPartialResults(final Bundle bundle) {
                 Log.i("onPartialResults");
                 String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-                mListener.onPartialResult(text);
-                setText(mTvMessage, lastChars(text, false));
+                if (text != null) {
+                    mListener.onPartialResult(text);
+                    setText(mTvMessage, lastChars(text, false));
+                }
             }
 
             @Override
@@ -194,9 +187,10 @@ public class VoiceImeView extends LinearLayout {
             public void onResults(final Bundle bundle) {
                 Log.i("onResults");
                 String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-                mListener.onFinalResult(text);
-                setText(mTvMessage, lastChars(text, true));
-
+                if (text != null) {
+                    mListener.onFinalResult(text);
+                    setText(mTvMessage, lastChars(text, true));
+                }
                 // If we are in the transcribing-state while receiving the final package,
                 // then we assume that the socket will close soon, and we move to the INIT state.
                 // TODO: there is no callback for the socket close event, otherwise this if-then
@@ -221,9 +215,14 @@ public class VoiceImeView extends LinearLayout {
 
     private static String selectSingleResult(ArrayList<String> results) {
         if (results == null || results.size() < 1) {
-            return "";
+            return null;
         }
         return results.get(0);
+    }
+
+    private void setGuiState(Constants.State state) {
+        mState = state;
+        setMicButtonState(mBImeStartStop, mState);
     }
 
     private void setGuiInitState(int message) {

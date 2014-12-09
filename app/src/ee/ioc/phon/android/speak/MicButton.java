@@ -1,10 +1,12 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
@@ -34,6 +36,7 @@ public class MicButton extends ImageButton {
     private int mVolumeLevel = 0;
     private int mMaxLevel;
     private AudioPauser mAudioPauser;
+    private Constants.State mState;
 
     public MicButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -50,8 +53,31 @@ public class MicButton extends ImageButton {
         init(context, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
+    public void setSpeechRecognizer(final SpeechRecognizer speechRecognizer, final Intent recognizerIntent) {
+        setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setEnabled(false);
+                switch (mState) {
+                    case INIT:
+                    case ERROR:
+                        speechRecognizer.startListening(recognizerIntent);
+                        break;
+                    case RECORDING:
+                        speechRecognizer.stopListening();
+                        break;
+                    case LISTENING:
+                    case TRANSCRIBING:
+                        speechRecognizer.cancel();
+                        break;
+                    default:
+                }
+            }
+        });
+    }
+
 
     public void setState(Constants.State state) {
+        mState = state;
         switch (state) {
             case INIT:
                 mAudioPauser.resume();
@@ -80,6 +106,7 @@ public class MicButton extends ImageButton {
             default:
                 break;
         }
+        setEnabled(true);
     }
 
 
@@ -121,8 +148,7 @@ public class MicButton extends ImageButton {
     }
 
     private void init(Context context, SharedPreferences prefs) {
-        if (prefs.getBoolean(getResources().getString(R.string.keyAudioCues),
-                getResources().getBoolean(R.bool.defaultAudioCues))) {
+        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues)) {
             mAudioCue = new AudioCue(context);
         } else {
             mAudioCue = null;

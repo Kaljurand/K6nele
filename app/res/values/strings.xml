@@ -8,6 +8,7 @@
     <string name="labelApp">Kõnele</string>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyService" translatable="false">keyService</string>
+    <string name="keyServiceContinuous" translatable="false">keyServiceContinuous</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStart" translatable="false">keyAutoStart</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
@@ -48,9 +49,11 @@
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Default server</string>
+    <string name="titleDefaultService">Default server (grammar support)</string>
+    <string name="titleDefaultServiceContinuous">Default server (fast recognition)</string>
     <string name="titleCategoryUi">User interface</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
+    <string name="titleCategoryServers">Servers</string>
     <string name="titleCategoryOther">Other</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>

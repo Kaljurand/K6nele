@@ -21,9 +21,11 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Server</string>
+    <string name="titleDefaultService">Server (grammatikatoega)</string>
+    <string name="titleDefaultServiceContinuous">Server (kiire tuvastusega)</string>
     <string name="titleCategoryUi">Kasutajaliides</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
+    <string name="titleCategoryServers">Serverid</string>
     <string name="titleCategoryOther">Muu</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise

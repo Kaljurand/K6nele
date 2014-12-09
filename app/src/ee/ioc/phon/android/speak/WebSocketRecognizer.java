@@ -7,6 +7,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.speech.RecognitionService;
 import android.speech.SpeechRecognizer;
 
@@ -49,6 +50,12 @@ public class WebSocketRecognizer extends RecognitionService {
     private WebSocket mWebSocket;
 
 
+    public void onDestroy() {
+        super.onDestroy();
+        onCancel0();
+    }
+
+
     /**
      * Opens the socket and starts recording and sending the recorded packages.
      */
@@ -78,12 +85,10 @@ public class WebSocketRecognizer extends RecognitionService {
      */
     @Override
     protected void onCancel(RecognitionService.Callback listener) {
-        stopRecording0();
-        if (mWebSocket != null && mWebSocket.isOpen()) {
-            mWebSocket.end(); // TODO: or close?
-        }
-        // We are ready for new speech
-        onReadyForSpeech(new Bundle());
+        onCancel0();
+        // Send empty results if recognition is cancelled
+        // TEST: if it works with Google Translate and Slide IT
+        onResults(new Bundle());
     }
 
     /**
@@ -96,21 +101,25 @@ public class WebSocketRecognizer extends RecognitionService {
     }
 
 
-    // TODO: review this
     private void stopRecording0() {
-        if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
-        if (mWebSocket != null && mWebSocket.isOpen()) {
-            mWebSocket.send("EOS");
-        }
 
         if (mRecorder != null) {
             mRecorder.release();
         }
+    }
 
+    private void onCancel0() {
+        stopRecording0();
+
+        if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
         if (mSendLooper != null) {
             mSendLooper.quit();
             mSendLooper = null;
+        }
+
+        if (mWebSocket != null && mWebSocket.isOpen()) {
+            mWebSocket.end(); // TODO: or close?
         }
     }
 
@@ -203,9 +212,20 @@ public class WebSocketRecognizer extends RecognitionService {
         mSendTask = new Runnable() {
             public void run() {
                 if (mRecorder != null) {
-                    byte[] buffer = mRecorder.consumeRecordingAndTruncate();
-                    webSocket.send(buffer);
-                    mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_IME_SEND);
+                    if (webSocket != null && webSocket.isOpen()) {
+                        RawAudioRecorder.State recorderState = mRecorder.getState();
+                        Log.i("Recorder state = " + recorderState);
+                        byte[] buffer = mRecorder.consumeRecordingAndTruncate();
+                        // We assume that if only 0 bytes have been recorded then the recording
+                        // has finished and we can notify the server with "EOF".
+                        if (buffer.length > 0 && recorderState == RawAudioRecorder.State.RECORDING) {
+                            webSocket.send(buffer);
+                            mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_IME_SEND);
+                        } else {
+                            Log.i("Sending EOS");
+                            webSocket.send("EOS");
+                        }
+                    }
                 }
             }
         };
@@ -216,7 +236,6 @@ public class WebSocketRecognizer extends RecognitionService {
                 if (mRecorder != null) {
                     onRmsChanged(mRecorder.getRmsdb());
                     mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
-
                 }
             }
         };
@@ -264,7 +283,7 @@ public class WebSocketRecognizer extends RecognitionService {
         } catch (RemoteException e) {
         }
         // As soon as there is an error we shut down the socket and the recorder
-        onCancel(mListener);
+        onCancel0();
     }
 
     private void onResults(Bundle bundle) {
@@ -298,7 +317,11 @@ public class WebSocketRecognizer extends RecognitionService {
     private String getWsServiceUrl(Intent intent) {
         String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
         if (url == null) {
-            return getResources().getString(R.string.defaultWsService);
+            return Utils.getPrefString(
+                    PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()),
+                    getResources(),
+                    R.string.keyServiceContinuous,
+                    R.string.defaultWsService);
         }
         return url;
     }

@@ -135,7 +135,6 @@ public class VoiceImeService extends InputMethodService {
             public void onFinalResult(String text) {
                 int lastIndex = text.length() - 1;
                 if (lastIndex != -1) {
-                    // TODO: improve
                     if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
                         text += " ";
                     }
@@ -156,8 +155,13 @@ public class VoiceImeService extends InputMethodService {
             }
 
             @Override
-            public void deleteLastWord() {
+            public void onDeleteLastWord() {
                 handleDelete(getCurrentInputConnection());
+            }
+
+            @Override
+            public void onAddNewline() {
+                commitTyped(getCurrentInputConnection(), "\n", 0);
             }
         });
     }

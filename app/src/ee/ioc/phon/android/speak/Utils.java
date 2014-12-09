@@ -402,6 +402,10 @@ public class Utils {
     }
 
 
+    public static String getPrefString(SharedPreferences prefs, Resources res, int key, int defaultValue) {
+        return prefs.getString(res.getString(key), res.getString(defaultValue));
+    }
+
     public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {
         return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
     }

@@ -7,10 +7,11 @@ See <https://code.google.com/p/recognizer-intent/> for
 
   - more information
   - issues list
-  - APK downloads
+  - (old) APK downloads
   - end-user and developer documentation
 
-The latest stable APK is available on
+APK downloads are available on the [releases page](https://github.com/Kaljurand/K6nele/releases).
+The latest stable APK is also on
 [Google Play](https://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak).
 
 
@@ -20,7 +21,7 @@ Compilation
 Point to the SDK directory by setting the environment variable
 `ANDROID_HOME`, e.g.
 
-	ANDROID_HOME=${HOME}/myapps/android-studio/sdk/
+	ANDROID_HOME=${HOME}/myapps/android-sdk/
 
 Then run
 

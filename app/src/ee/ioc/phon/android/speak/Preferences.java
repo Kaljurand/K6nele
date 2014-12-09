@@ -74,9 +74,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 		Preference service = (Preference) findPreference(getString(R.string.keyService));
-		service.setSummary(sp.getString(getString(R.string.keyService), getString(R.string.defaultService)));
+        service.setSummary(sp.getString(getString(R.string.keyService), getString(R.string.defaultService)));
 
-		service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
@@ -84,6 +84,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			}
 
 		});
+
+        Preference serviceContinuous = (Preference) findPreference(getString(R.string.keyServiceContinuous));
+        serviceContinuous.setSummary(sp.getString(getString(R.string.keyServiceContinuous), getString(R.string.defaultWsService)));
 	}
 
 
