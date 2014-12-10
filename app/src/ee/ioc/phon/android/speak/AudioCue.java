@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.SystemClock;
 
@@ -32,6 +33,7 @@ public class AudioCue {
 
     private void playSound(int sound) {
         MediaPlayer mp = MediaPlayer.create(mContext, sound);
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {

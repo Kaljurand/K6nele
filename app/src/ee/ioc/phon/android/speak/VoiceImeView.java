@@ -3,15 +3,11 @@ package ee.ioc.phon.android.speak;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
-import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,29 +38,16 @@ public class VoiceImeView extends LinearLayout {
 
     private VoiceImeViewListener mListener;
     private SpeechRecognizer mRecognizer;
-    private SharedPreferences mPrefs;
 
+    private Intent mIntent;
     private Constants.State mState;
 
     public VoiceImeView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        setOnTouchListener(new OnSwipeTouchListener(context) {
-            @Override
-            public void onSwipeLeft() {
-                mListener.onDeleteLastWord();
-            }
-
-            @Override
-            public void onSwipeRight() {
-                mListener.onAddNewline();
-            }
-        });
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void setListener(final EditorInfo attribute, final VoiceImeViewListener listener) {
+    public void setListener(Intent intent, final VoiceImeViewListener listener) {
+        mIntent = intent;
         mListener = listener;
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
@@ -74,14 +57,35 @@ public class VoiceImeView extends LinearLayout {
 
         setGuiInitState(0);
 
-        mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(),
-                new ComponentName("ee.ioc.phon.android.speak",
-                        "ee.ioc.phon.android.speak.WebSocketRecognizer"));
+        if (mRecognizer == null) {
+            mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(),
+                    new ComponentName("ee.ioc.phon.android.speak",
+                            "ee.ioc.phon.android.speak.WebSocketRecognizer"));
+            mRecognizer.setRecognitionListener(getRecognizerListener());
+        } else {
+            mRecognizer.setRecognitionListener(getRecognizerListener());
+            mRecognizer.cancel();
+        }
 
-        mRecognizer.setRecognitionListener(getRecognizerListener());
-        Intent recognizerIntent = getRecognizerIntent(getContext(), attribute);
-        mBImeStartStop.setSpeechRecognizer(mRecognizer, recognizerIntent);
-
+        mBImeStartStop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.setEnabled(false);
+                switch (mState) {
+                    case INIT:
+                    case ERROR:
+                        mRecognizer.startListening(mIntent);
+                        break;
+                    case RECORDING:
+                        mRecognizer.stopListening();
+                        break;
+                    case LISTENING:
+                    case TRANSCRIBING:
+                        mRecognizer.cancel();
+                        break;
+                    default:
+                }
+            }
+        });
 
         mBImeGo.setOnClickListener(new OnClickListener() {
             @Override
@@ -105,15 +109,31 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
-        // Launch recognition immediately (if set so)
-        if (Utils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart)) {
-            mBImeStartStop.setEnabled(false);
-            mRecognizer.startListening(recognizerIntent);
+        setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.onDeleteLastWord();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                mListener.onAddNewline();
+            }
+        });
+    }
+
+    public void start() {
+        if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
+            // TODO: fix this
+            //mBImeStartStop.setEnabled(false);
+            //mRecognizer.startListening(mIntent);
         }
     }
 
     public void closeSession() {
-        if (mRecognizer != null) mRecognizer.cancel();
+        if (mRecognizer != null) {
+            mRecognizer.cancel();
+        }
     }
 
     private RecognitionListener getRecognizerListener() {
@@ -142,9 +162,17 @@ public class VoiceImeView extends LinearLayout {
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }
 
+            /**
+             * We process all possible SpeechRecognizer errors. Most of them
+             * are generated by our implementation, others can be generated by the
+             * framework, e.g. ERROR_CLIENT results from
+             * "stopListening called with no preceding startListening".
+             *
+             * @param errorCode SpeechRecognizer error code
+             */
             @Override
             public void onError(final int errorCode) {
-                Log.i("onError");
+                Log.i("onError: " + errorCode);
                 setGuiState(Constants.State.ERROR);
 
                 switch (errorCode) {
@@ -163,7 +191,20 @@ public class VoiceImeView extends LinearLayout {
                     case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                         setGuiInitState(R.string.errorImeResultNetworkTimeoutError);
                         break;
+                    case SpeechRecognizer.ERROR_CLIENT:
+                        setGuiInitState(R.string.errorImeResultClientError);
+                        break;
+                    case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                        setGuiInitState(R.string.errorImeResultInsufficientPermissions);
+                        break;
+                    case SpeechRecognizer.ERROR_NO_MATCH:
+                        setGuiInitState(R.string.errorImeResultNoMatch);
+                        break;
+                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                        setGuiInitState(R.string.errorImeResultSpeechTimeout);
+                        break;
                     default:
+                        Log.e("This might happen in future Android versions: code " + errorCode);
                         setGuiInitState(R.string.errorImeResultClientError);
                 }
             }
@@ -196,6 +237,9 @@ public class VoiceImeView extends LinearLayout {
                 // TODO: there is no callback for the socket close event, otherwise this if-then
                 // would not be needed.
                 if (mState == Constants.State.TRANSCRIBING) {
+                    setGuiInitState(0);
+                } else if (text == null) {
+                    // If we got empty results then assume that cancel was called
                     setGuiInitState(0);
                 }
             }
@@ -304,40 +348,5 @@ public class VoiceImeView extends LinearLayout {
                 }
             });
         }
-    }
-
-    private static String asString(Object o) {
-        if (o == null) {
-            return null;
-        }
-        if (o instanceof SpannableString) {
-            SpannableString ss = (SpannableString) o;
-            return ss.subSequence(0, ss.length()).toString();
-        }
-        return o.toString();
-    }
-
-    private static Intent getRecognizerIntent(Context context, EditorInfo attribute) {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());
-        intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
-        intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
-        return intent;
-    }
-
-    private static Bundle toBundle(EditorInfo attribute) {
-        Bundle bundle = new Bundle();
-        bundle.putBundle("extras", attribute.extras);
-        bundle.putString("actionLabel", asString(attribute.actionLabel));
-        bundle.putString("fieldName", asString(attribute.fieldName));
-        bundle.putString("hintText", asString(attribute.hintText));
-        bundle.putString("inputType", String.valueOf(attribute.inputType));
-        bundle.putString("label", asString(attribute.label));
-        // This line gets the actual caller package registered in the package registry.
-        // The key needs to be "packageName".
-        bundle.putString("packageName", asString(attribute.packageName));
-        return bundle;
     }
 }

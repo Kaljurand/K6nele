@@ -219,16 +219,21 @@ public class WebSocketRecognizer extends RecognitionService {
                         // We assume that if only 0 bytes have been recorded then the recording
                         // has finished and we can notify the server with "EOF".
                         if (buffer.length > 0 && recorderState == RawAudioRecorder.State.RECORDING) {
+                            Log.i("Sending bytes: " + buffer.length);
                             webSocket.send(buffer);
-                            mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_IME_SEND);
+                            boolean success = mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_IME_SEND);
+                            if (!success) {
+                                Log.i("mSendHandler.postDelayed returned false");
+                            }
                         } else {
-                            Log.i("Sending EOS");
+                            Log.i("Sending: EOS");
                             webSocket.send("EOS");
                         }
                     }
                 }
             }
         };
+
 
         // Monitor the volume level
         mShowVolumeTask = new Runnable() {
@@ -259,6 +264,8 @@ public class WebSocketRecognizer extends RecognitionService {
     }
 
     // TODO: there does not seem to be an official call back for the socket closing
+    // TODO: call onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT); if server initiates close
+    // without having received EOS
     private void handleFinish() {
         onCancel(mListener);
     }
@@ -412,7 +419,6 @@ public class WebSocketRecognizer extends RecognitionService {
             if (outerClass != null) {
                 if (msg.what == MSG_ERROR) {
                     Exception e = (Exception) msg.obj;
-                    Log.e("Socket error?", e);
                     if (e instanceof TimeoutException) {
                         outerClass.onError(SpeechRecognizer.ERROR_NETWORK_TIMEOUT);
                     } else {

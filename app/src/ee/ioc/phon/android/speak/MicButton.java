@@ -1,12 +1,10 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
@@ -52,29 +50,6 @@ public class MicButton extends ImageButton {
         super(context);
         init(context, PreferenceManager.getDefaultSharedPreferences(context));
     }
-
-    public void setSpeechRecognizer(final SpeechRecognizer speechRecognizer, final Intent recognizerIntent) {
-        setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setEnabled(false);
-                switch (mState) {
-                    case INIT:
-                    case ERROR:
-                        speechRecognizer.startListening(recognizerIntent);
-                        break;
-                    case RECORDING:
-                        speechRecognizer.stopListening();
-                        break;
-                    case LISTENING:
-                    case TRANSCRIBING:
-                        speechRecognizer.cancel();
-                        break;
-                    default:
-                }
-            }
-        });
-    }
-
 
     public void setState(Constants.State state) {
         mState = state;

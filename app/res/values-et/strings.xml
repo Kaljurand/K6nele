@@ -21,8 +21,8 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Server (grammatikatoega)</string>
-    <string name="titleDefaultServiceContinuous">Server (kiire tuvastusega)</string>
+    <string name="titleDefaultService">Grammatikatoega server</string>
+    <string name="titleDefaultServiceContinuous">Kiire tuvastusega server</string>
     <string name="titleCategoryUi">Kasutajaliides</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
     <string name="titleCategoryServers">Serverid</string>
@@ -204,14 +204,20 @@
     <string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
     <string name="errorResultAudioError">Lindistamine luhtus. Võibolla mõni teine rakendus
 		parasjagu lindistab?</string>
-    <string name="errorImeResultAudioError">VIGA: lindistamine luhtus</string>
     <string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
 		võrguühendus on sisse lülitatud?</string>
+
+    // SpeechRecognizer error messages (9) shown in the IME
+    <string name="errorImeResultAudioError">VIGA: lindistamine luhtus</string>
     <string name="errorImeResultNetworkError">VIGA: netiühendus puudub</string>
     <string name="errorImeResultNetworkTimeoutError">VIGA: server ei tööta</string>
     <string name="errorImeResultRecognizerBusy">VIGA: tuvastajal pole vabu ühendusi</string>
-    <string name="errorImeResultClientError">VIGA: kliendi viga</string>
+    <string name="errorImeResultClientError">VIGA: rakenduse viga</string>
     <string name="errorImeResultServerError">VIGA: kõnetuvastusserveri viga</string>
+    <string name="errorImeResultSpeechTimeout">VIGA: kõnet polnud kuulda</string>
+    <string name="errorImeResultNoMatch">VIGA: transkribeerimine luhtus</string>
+    <string name="errorImeResultInsufficientPermissions">VIGA: vajalikud õigused puuduvad</string>
+
     <string name="errorResultClientError">Kliendi viga</string>
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
