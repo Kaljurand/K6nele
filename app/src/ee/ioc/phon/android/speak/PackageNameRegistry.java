@@ -83,7 +83,7 @@ public class PackageNameRegistry {
 		}
 	}
 
-
+/*
 	public PackageNameRegistry(Activity activity, String packageName) {
 		mContext = activity.getBaseContext();
 
@@ -119,7 +119,7 @@ public class PackageNameRegistry {
 			cursor.close();
 		}
 	}
-
+*/
 
 	public String getGrammarUrl() {
 		if (mGrammarId == 0) {

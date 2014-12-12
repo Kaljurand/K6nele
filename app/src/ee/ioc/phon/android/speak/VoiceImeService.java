@@ -169,6 +169,11 @@ public class VoiceImeService extends InputMethodService {
             public void onAddNewline() {
                 commitTyped(getCurrentInputConnection(), "\n", 0);
             }
+
+            @Override
+            public void onAddSpace() {
+                commitTyped(getCurrentInputConnection(), " ", 0);
+            }
         });
 
         // Launch recognition immediately (if set so)

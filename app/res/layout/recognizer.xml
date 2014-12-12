@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="right"
+    android:gravity="end"
     android:orientation="vertical"
     android:paddingBottom="0dip"
     android:paddingLeft="0dip"
@@ -59,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/statusTranscribing"
                 android:textColor="@color/grey2"
                 android:textSize="18sp" />

@@ -46,6 +46,7 @@
 
         <EditTextPreference
             android:defaultValue="@string/defaultWsService"
+            android:inputType="textUri"
             android:key="@string/keyServiceContinuous"
             android:summary="@string/defaultWsService"
             android:title="@string/titleDefaultServiceContinuous"></EditTextPreference>

@@ -21,10 +21,10 @@ android {
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
     // API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService
-    // TODO: setting targetSdkVersion=15 would switch on StrictMode
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 8
+        // TODO: make this the highest possible one we do not rely on the old-style menus anymore
         targetSdkVersion 8
         versionCode 848
         versionName '0.8.48'

@@ -28,6 +28,8 @@ public class VoiceImeView extends LinearLayout {
         void onDeleteLastWord();
 
         void onAddNewline();
+
+        void onAddSpace();
     }
 
     private MicButton mBImeStartStop;
@@ -118,6 +120,15 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onSwipeRight() {
                 mListener.onAddNewline();
+            }
+        });
+
+        // TODO: rather add it to the whole LinearLayout
+        mTvInstruction.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mListener.onAddSpace();
+                return true;
             }
         });
     }

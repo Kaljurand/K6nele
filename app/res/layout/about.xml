@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="fill"
-        android:padding="6dp" >
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/itemAppIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="7dp"
+            android:layout_marginEnd="@dimen/layoutMargin1"
+            android:layout_marginRight="@dimen/layoutMargin1"
             android:adjustViewBounds="true"
             android:contentDescription="@string/cdAppIcon"
             android:scaleType="fitCenter"
@@ -24,6 +25,7 @@
             android:id="@+id/tvAboutHeader"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/itemAppIcon"
             android:layout_toRightOf="@+id/itemAppIcon"
             android:bufferType="spannable"
             android:textSize="16sp" />
