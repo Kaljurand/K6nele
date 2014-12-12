@@ -3,7 +3,9 @@ package ee.ioc.phon.android.speak;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
@@ -60,9 +62,7 @@ public class VoiceImeView extends LinearLayout {
         setGuiInitState(0);
 
         if (mRecognizer == null) {
-            mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(),
-                    new ComponentName("ee.ioc.phon.android.speak",
-                            "ee.ioc.phon.android.speak.WebSocketRecognizer"));
+            mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(), getRecognizerService());
             mRecognizer.setRecognitionListener(getRecognizerListener());
         } else {
             mRecognizer.setRecognitionListener(getRecognizerListener());
@@ -359,5 +359,22 @@ public class VoiceImeView extends LinearLayout {
                 }
             });
         }
+    }
+
+    /**
+     * If nothing is selected then use the default.
+     * If the Android's default is selected the return null.
+     */
+    private ComponentName getRecognizerService() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String selectedRecognizerService =
+                Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
+
+        if (selectedRecognizerService == null) {
+            selectedRecognizerService = getResources().getString(R.string.defaultImeRecognizerService);
+        }
+
+        String[] pkgAndCls = selectedRecognizerService.split("\\|");
+        return new ComponentName(pkgAndCls[0], pkgAndCls[1]);
     }
 }

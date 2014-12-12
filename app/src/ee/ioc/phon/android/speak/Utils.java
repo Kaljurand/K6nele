@@ -54,7 +54,7 @@ import org.apache.commons.io.FileUtils;
 
 /**
  * <p>Some useful static methods.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class Utils {
@@ -113,7 +113,7 @@ public class Utils {
 	/**
 	 * <p>Returns a bitmap that visualizes the given waveform (byte array),
 	 * i.e. a sequence of 16-bit integers.</p>
-	 * 
+	 *
 	 * TODO: show to high/low points in other color
 	 * TODO: show end pause data with another color
 	 */
@@ -404,6 +404,10 @@ public class Utils {
 
     public static String getPrefString(SharedPreferences prefs, Resources res, int key, int defaultValue) {
         return prefs.getString(res.getString(key), res.getString(defaultValue));
+    }
+
+    public static String getPrefString(SharedPreferences prefs, Resources res, int key) {
+        return prefs.getString(res.getString(key), null);
     }
 
     public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {

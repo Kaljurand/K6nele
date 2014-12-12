@@ -21,12 +21,13 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Grammatikatoega server</string>
-    <string name="titleDefaultServiceContinuous">Kiire tuvastusega server</string>
-    <string name="titleCategoryUi">Kasutajaliides</string>
+    <string name="titleDefaultServiceGrammar">Aadress</string>
+    <string name="titleDefaultServiceContinuous">Aadress</string>
+    <string name="titleCategoryUi">Otsingupaneel</string>
+    <string name="titleCategoryIme">Sisestusmeetod</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
-    <string name="titleCategoryServers">Serverid</string>
-    <string name="titleCategoryOther">Muu</string>
+    <string name="titleCategoryServerGrammar">Kõnele server (grammatikatoega)</string>
+    <string name="titleCategoryServerContinuous">Kõnele server (kiire tuvastusega)</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
 		kõnesisendi kasutamiseks</string>
@@ -55,6 +56,9 @@
 		grammatika.</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
+
+    <string name="titleImeRecognitionService">Kõnetuvastusteenus</string>
+    <string name="dialogTitleImeRecognitionService">Kõnetuvastusteenus</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
@@ -94,8 +98,20 @@
 		&amp;nbsp;&amp;nbsp;&amp;bull;
 		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, GMail, Google Drive, YouTube).
 
-		&lt;p>Samuti võimaldab &lt;b>%1$s&lt;/b> omistada rakendustele
-		grammatikaid, et tõlkida tuvastustulemus rakenduse-spetsiifilisse
+        &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur, mida saab kasutada kõikide
+        tekstiväljade täitmiseks (väljaarvatud parooliväljad). Kollasele nupule vajutamine
+        käivitab/lõpetab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kõrvale.
+        Svaip vasakule kustutab kursorile eelneva sõna.
+        Svaip paremale teeb reavahetuse. Pikk vajutus
+        nupu all olevale tekstile lisab kursori kõrvale tühiku.&lt;/p>
+
+        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks Google\'i kõnetuvastusteenust,
+		aga see ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
+		transkribeerimiseks kahte TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori
+		kõnetuvastusserverit, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
+
+        &lt;p>Grammatikatoega server võimaldab (muuhulgas) rakendustele omistada grammatikaid,
+        et tõlkida tuvastustulemus rakenduse-spetsiifilisse
 		keelde. Nt
 		kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
 		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
@@ -108,24 +124,16 @@
 		projekti
 		kodulehekülge&lt;/a>.&lt;/p>
 
-        &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur: pärast kollasele nupule
-        vajutamist ja rääkimise alustamist hakkavad tuvastatud sõnad kohe ekraanile ilmuma.
-        Rääkida võib ükskõik kui kaua ning pausid kõnetuvastussessiooni ei katkesta. Selle
-        lõpetamiseks tuleb lihtsalt uuesti nupule vajutada.
-        Svaip vasakule kustutab kursorile eelneva sõna.
-        Svaip paremale teeb reavahetuse (mida saab ka dikteerides \"uus rida\").
-        Dikteerimiskeelena on hetkel toetatud ainult eesti keel.&lt;/p>
+        &lt;p>Kiire tuvastusega server tagastab tuvastustulemuse juba rääkimise ajal, on üldiselt
+        oluliselt täpsem, ning võimaldab
+        dikteerida kirjavahemärke (nt \"koma\", \"uus rida\").&lt;/p>
 
-        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks Google\'i kõnetuvastusserverit,
-		aga see ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
-		transkribeerimiseks TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori
-		kõnetuvastusserverit &lt;a href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>.
-        Kõnele sisselülitamiseks on vaja muuta Androidi seadeid menüüs \"Keeled ja sisestamine\" kahes kohas:
+        &lt;p>Kõnele sisselülitamiseks on vaja muuta Androidi seadeid menüüs \"Keeled ja sisestamine\" kahes kohas:
         \"Klaviatuur ja sisestusmeetodid\" ning \"Kõne\". Samuti võib olla vaja kustutada rakenduse
         \"Google\'i otsing\" vaikeväärtused.&lt;/p>
 
 		&lt;p>Kuna &lt;b>%1$s&lt;/b>
-		kasutab kõne transkribeerimiseks veebiteenust, siis peab olema
+		kasutab kõne transkribeerimiseks veebiteenusi, siis peab olema
 		telefonis sisselülitatud internetiühendus.
 		Sõltuvalt
 		mobiilioperaatori

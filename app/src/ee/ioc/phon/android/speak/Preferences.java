@@ -21,6 +21,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -28,17 +31,24 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.speech.RecognitionService;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Preferences activity. Updates some preference-summaries automatically,
  * if the user changes a preference.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	private static final int ACTIVITY_SELECT_SERVER_URL = 1;
+
+    private SharedPreferences mPrefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		addPreferencesFromResource(R.xml.preferences);
 
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		setSummary(
 				(Preference) findPreference(getString(R.string.keyAutoStopAfterTime)),
@@ -87,6 +99,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
         Preference serviceContinuous = (Preference) findPreference(getString(R.string.keyServiceContinuous));
         serviceContinuous.setSummary(sp.getString(getString(R.string.keyServiceContinuous), getString(R.string.defaultWsService)));
+
+        populateRecognitionServices();
 	}
 
 
@@ -139,5 +153,53 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	private void toast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
+
+    /**
+     * TODO: if nothing is selected then set ours as the default
+     */
+    private void populateRecognitionServices() {
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> services = pm.queryIntentServices(
+                new Intent(RecognitionService.SERVICE_INTERFACE), 0);
+
+        // Currently selected service (identified by class name)
+        String selectedService = Utils.getPrefString(mPrefs, getResources(), R.string.keyImeRecognitionService);
+        int selectedIndex = 0;
+
+        Log.i("populateRecognitionServices: " + selectedService);
+
+        CharSequence[] entries = new CharSequence[services.size()];
+        CharSequence[] entryValues = new CharSequence[services.size()];
+
+        int index = 0;
+        for (ResolveInfo ri : services) {
+            ServiceInfo si = ri.serviceInfo;
+            if (si == null) {
+                Log.i("serviceInfo == null");
+                continue;
+            }
+            String pkg = si.packageName;
+            String cls = si.name;
+            CharSequence label = si.loadLabel(pm);
+            Log.i(label + " :: " + pkg + " :: " + cls);
+            entries[index] = label;
+            String value = pkg + '|' + cls;
+            entryValues[index] = value;
+            Log.i("populateRecognitionServices: " + entryValues[index]);
+            if (value.equals(selectedService)) {
+                selectedIndex = index;
+            }
+            index++;
+        }
+
+        // TODO: the summary is not updated
+        if (services.size() > 0) {
+            ListPreference list = (ListPreference) findPreference(getString(R.string.keyImeRecognitionService));
+            list.setEntries(entries);
+            list.setEntryValues(entryValues);
+            list.setValueIndex(selectedIndex);
+            list.setSummary(list.getEntry());
+        }
+    }
 
 }

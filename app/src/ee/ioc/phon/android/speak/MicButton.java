@@ -122,8 +122,9 @@ public class MicButton extends ImageButton {
         mAnimFadeInOutInf = AnimationUtils.loadAnimation(context, R.anim.fade_inout_inf);
     }
 
+    // TODO: get the prefs outside of this class, from the attrs
     private void init(Context context, SharedPreferences prefs) {
-        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues)) {
+        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues)) {
             mAudioCue = new AudioCue(context);
         } else {
             mAudioCue = null;

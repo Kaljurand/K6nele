@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Preference android:title="@string/labelActivityAbout">
+        <intent
+            android:targetClass="ee.ioc.phon.android.speak.AboutActivity"
+            android:targetPackage="ee.ioc.phon.android.speak" />
+    </Preference>
+
     <PreferenceCategory android:title="@string/titleCategoryUi">
         <CheckBoxPreference
             android:defaultValue="@bool/defaultAutoStart"
@@ -17,6 +23,26 @@
             android:key="@string/keyAudioCues"
             android:summary="@string/summaryAudioCues"
             android:title="@string/titleAudioCues" />
+        // TODO: make the service of the main panel also user selectable
+    </PreferenceCategory>
+    // IME has independent UI settings, but the labels are shared with the main panel.
+    <PreferenceCategory android:title="@string/titleCategoryIme">
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeAutoStart"
+            android:key="@string/keyImeAutoStart"
+            android:summary="@string/summaryAutoStart"
+            android:title="@string/titleAutoStart" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeAudioCues"
+            android:key="@string/keyImeAudioCues"
+            android:summary="@string/summaryAudioCues"
+            android:title="@string/titleAudioCues" />
+        <ListPreference
+            android:dialogTitle="@string/dialogTitleImeRecognitionService"
+            android:entries="@array/empty"
+            android:entryValues="@array/empty"
+            android:key="@string/keyImeRecognitionService"
+            android:title="@string/titleImeRecognitionService" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/titleCategoryApps">
         <Preference
@@ -34,24 +60,17 @@
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/titleCategoryServers">
+
+    // Settings that apply to the grammar server
+    <PreferenceCategory android:title="@string/titleCategoryServerGrammar">
         <Preference
             android:key="@string/keyService"
             android:summary="@string/defaultService"
-            android:title="@string/titleDefaultService">
+            android:title="@string/titleDefaultServiceGrammar">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.ServerListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
-
-        <EditTextPreference
-            android:defaultValue="@string/defaultWsService"
-            android:inputType="textUri"
-            android:key="@string/keyServiceContinuous"
-            android:summary="@string/defaultWsService"
-            android:title="@string/titleDefaultServiceContinuous"></EditTextPreference>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/titleCategoryOther">
         <ListPreference
             android:defaultValue="@string/defaultAutoStopAfterTime"
             android:entries="@array/entriesAutoStopAfterTime"
@@ -107,10 +126,14 @@
         </PreferenceScreen>
     </PreferenceCategory>
 
-    <Preference android:title="@string/labelActivityAbout">
-        <intent
-            android:targetClass="ee.ioc.phon.android.speak.AboutActivity"
-            android:targetPackage="ee.ioc.phon.android.speak" />
-    </Preference>
+    // Settings that apply to the continuous server
+    <PreferenceCategory android:title="@string/titleCategoryServerContinuous">
+        <EditTextPreference
+            android:defaultValue="@string/defaultWsService"
+            android:inputType="textUri"
+            android:key="@string/keyServiceContinuous"
+            android:summary="@string/defaultWsService"
+            android:title="@string/titleDefaultServiceContinuous"></EditTextPreference>
+    </PreferenceCategory>
 
 </PreferenceScreen>

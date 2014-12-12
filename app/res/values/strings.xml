@@ -14,7 +14,11 @@
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>
+    <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
+    <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
+    <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
     <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+    <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
@@ -29,6 +33,7 @@
         <item>20</item>
         <item>30</item>
     </string-array>
+    <string-array name="empty" translatable="false"></string-array>
 
     <string name="descriptionApp">speech-to-text service for Android apps</string>
 
@@ -49,12 +54,13 @@
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Default server (grammar support)</string>
-    <string name="titleDefaultServiceContinuous">Default server (fast recognition)</string>
-    <string name="titleCategoryUi">User interface</string>
+    <string name="titleDefaultServiceGrammar">URL</string>
+    <string name="titleDefaultServiceContinuous">URL</string>
+    <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
-    <string name="titleCategoryServers">Servers</string>
-    <string name="titleCategoryOther">Other</string>
+    <string name="titleCategoryIme">Input method</string>
+    <string name="titleCategoryServerGrammar">Server with grammar support</string>
+    <string name="titleCategoryServerContinuous">Server with fast recognition</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
     <string name="titleAutoStart">Auto start</string>
@@ -76,6 +82,8 @@
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
+    <string name="titleImeRecognitionService">Recognition service</string>
+    <string name="dialogTitleImeRecognitionService">Recognition service</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
