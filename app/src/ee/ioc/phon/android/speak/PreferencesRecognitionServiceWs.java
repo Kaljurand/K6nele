@@ -18,15 +18,11 @@ package ee.ioc.phon.android.speak;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 
-/**
- * <p>Preferences activity. Updates some preference-summaries automatically,
- * if the user changes a preference.</p>
- *
- * @author Kaarel Kaljurand
- */
 public class PreferencesRecognitionServiceWs extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
@@ -36,7 +32,24 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity implemen
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO
+        Preference pref = findPreference(key);
+        if (pref instanceof EditTextPreference) {
+            EditTextPreference etp = (EditTextPreference) pref;
+            pref.setSummary(etp.getText());
+        }
     }
 }

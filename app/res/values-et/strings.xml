@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="labelApp">Kõnele</string>
-    <string name="descriptionApp">kõnetuvastusmoodul Androidi rakendustele</string>
+    <string name="descriptionApp">kõnetuvastusteenused Androidi rakendustele</string>
 
-    <string name="labelSpeechRecognitionService">Kõnele (grammatikatoega)</string>
-    <string name="labelWebSocketRecognizer">Kõnele (kiire tuvastusega)</string>
+    <string name="labelRecognitionServiceHttp">Kõnele (grammatikatoega)</string>
+    <string name="labelRecognitionServiceWs">Kõnele (kiire tuvastusega)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
@@ -22,7 +21,7 @@
 
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
-    <string name="titleCategoryIme">Sisestusmeetod</string>
+    <string name="titleCategoryIme">Kõneklaviatuur</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
@@ -53,7 +52,7 @@
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
 
-    <string name="titleImeRecognitionService">Kõnetuvastusteenus</string>
+    <string name="titleRecognitionService">Kõnetuvastusteenus</string>
     <string name="dialogTitleImeRecognitionService">Kõnetuvastusteenus</string>
 
     <!-- RecognizerIntent activity -->
@@ -249,14 +248,17 @@
         <item>20 sek</item>
         <item>30 sek</item>
     </string-array>
-    <string name="labelActivityPreferencesRecognitionServiceHttp">HTTP-põhine kõnetuvastusteenus</string>
-    <string name="labelActivityPreferencesRecognitionServiceWs">WebSockets-põhine kõnetuvastusteenus</string>
-    <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid</string>
-    <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust</string>
+
+    <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>
+    <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust. WebSocket-põhine server.</string>
     <string name="titleCategoryServices">Kõnetuvastusteenused</string>
-    <string name="titleServiceHttp">Teenus, mis kasutab HTTP-serverit</string>
-    <string name="titleServiceWs">Teenus, mis kasutab WebSockets-serverit</string>
+    <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
+    <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
-    <string name="titleDefaultServiceWs">WebSockets-aadress</string>
+    <string name="titleDefaultServiceWs">WebSocket-aadress</string>
+    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammatikatoega). Ainuvõimalik valik Kõnele praeguses versioonis.</string>
+    <string name="labelDefaultRecognitionService">Süsteemne vaikeväärtus</string>
 
 </resources>

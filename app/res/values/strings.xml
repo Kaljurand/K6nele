@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--
-    As long as this app is Estonian-specific we set the Estonian
-    name as the default name, this way the app is easier to find on Google Play (for Estonians).
-    -->
-    <string name="labelApp">Kõnele</string>
+    <string name="labelApp" translatable="false">Kõnele</string>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="keyServerHttp" translatable="false">keyServerHttp</string>
     <string name="keyServerWs" translatable="false">keyServerWs</string>
@@ -19,6 +15,7 @@
     <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
+    <string name="keyDefaultRecognitionService" translatable="false">keyDefaultRecognitionService</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
@@ -35,17 +32,18 @@
     </string-array>
     <string-array name="empty" translatable="false"></string-array>
 
-    <string name="descriptionApp">speech-to-text service for Android apps</string>
+    <string name="descriptionApp">speech-to-text services for Android apps</string>
 
-    <string name="labelSpeechRecognitionService">Kõnele (grammar support)</string>
-    <string name="labelWebSocketRecognizer">Kõnele (fast recognition)</string>
+    <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
+    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammar support). Cannot be changed in this Kõnele version.</string>
+    <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAbout">About</string>
     <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
-    <string name="labelActivityPreferencesRecognitionServiceHttp">Kõnele service based on HTTP-server</string>
-    <string name="labelActivityPreferencesRecognitionServiceWs">Kõnele service based on WebSockets-server</string>
+    <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
@@ -54,18 +52,19 @@
     <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityRepeaterDemo">Repeater demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
+    <string name="labelDefaultRecognitionService">System default</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
-    <string name="titleDefaultServiceWs">WebSockets URL</string>
+    <string name="titleDefaultServiceWs">WebSocket URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
     <string name="titleCategoryIme">Input method</string>
     <string name="titleCategoryServices">Recognition services</string>
-    <string name="titleServiceHttp">Service based on an HTTP-server</string>
-    <string name="titleServiceWs">Service based on a WebSockets-server</string>
-    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework</string>
-    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition</string>
+    <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
+    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on a HTTP-server.</string>
+    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
     <string name="titleAutoStart">Auto start</string>
@@ -87,7 +86,7 @@
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
-    <string name="titleImeRecognitionService">Recognition service</string>
+    <string name="titleRecognitionService">Recognition service</string>
     <string name="dialogTitleImeRecognitionService">Recognition service</string>
 
     <!-- RecognizerIntent activity -->
@@ -106,7 +105,7 @@
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
 		v%3$s by &lt;a href="https://plus.google.com/+KaarelKaljurand">Kaarel Kaljurand&lt;/a></string>
     <string name="tvAbout">&lt;p>%1$s
-is an app that offers speech-to-text service to other apps.
+is an app that offers speech-to-text services to other apps.
 Apps that allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
 

@@ -24,6 +24,12 @@
             android:summary="@string/summaryAudioCues"
             android:title="@string/titleAudioCues" />
         // TODO: make the service of the main panel also user selectable
+        <ListPreference
+            android:enabled="false"
+            android:entries="@array/empty"
+            android:entryValues="@array/empty"
+            android:summary="@string/labelRecognitionServiceHttpWithComment"
+            android:title="@string/titleRecognitionService" />
     </PreferenceCategory>
     // IME has independent UI settings, but the labels are shared with the main panel.
     <PreferenceCategory android:title="@string/titleCategoryIme">
@@ -42,7 +48,7 @@
             android:entries="@array/empty"
             android:entryValues="@array/empty"
             android:key="@string/keyImeRecognitionService"
-            android:title="@string/titleImeRecognitionService" />
+            android:title="@string/titleRecognitionService" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/titleCategoryApps">
         <Preference

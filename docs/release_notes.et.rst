@@ -6,12 +6,12 @@ v0.8.xx
 
 Lisati kõneklaviatuur (nn "input method editor (IME)"):
 
-  - vajutus kollasele nupule käivitab/lõpetab kõnetuvastuse
-  - svaip vasakule kustutab kursorist vasakul asuva sõna
-  - svaip paremale lisab reavahetuse
-  - pikk vajutus nupu all olevale tekstile lisab tühiku
-  - vajutus klaviatuuriikoonile vahetab klaviatuuri (pikk vajutus avab klaviatuurivahetusmenüü)
-  - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal)
+- vajutus kollasele nupule käivitab/lõpetab kõnetuvastuse
+- svaip vasakule kustutab kursorist vasakul asuva sõna
+- svaip paremale lisab reavahetuse
+- pikk vajutus nupu all olevale tekstile lisab tühiku
+- vajutus klaviatuuriikoonile vahetab klaviatuuri (pikk vajutus avab klaviatuurivahetusmenüü)
+- vajutus otsinguikoonile käivitab otsingu (ainult otsingureal)
 
 Sisselülitamine menüüs "Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid".
 Kõneklaviatuuri saab kasutada kõikide seadmesse installeeritud kõnetuvastusteenustega

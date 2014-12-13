@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.text.SpannableString;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
@@ -156,7 +155,7 @@ public class VoiceImeService extends InputMethodService {
 
             @Override
             public void onGo() {
-                keyDownUp(KeyEvent.KEYCODE_ENTER);
+                performGo();
                 handleClose();
             }
 
@@ -293,14 +292,16 @@ public class VoiceImeService extends InputMethodService {
         }
     }
 
+
     /**
-     * Helper to send a key down / key up pair to the current editor.
+     * Performs the Go-action, e.g. to launch search on a searchbar.
      */
-    private void keyDownUp(int keyEventCode) {
-        getCurrentInputConnection().sendKeyEvent(
-                new KeyEvent(KeyEvent.ACTION_DOWN, keyEventCode));
-        getCurrentInputConnection().sendKeyEvent(
-                new KeyEvent(KeyEvent.ACTION_UP, keyEventCode));
+    private void performGo() {
+        // Does not work on Google Searchbar
+        // getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_DONE);
+
+        // Works in Google Searchbar, GF Translator
+        getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_GO);
     }
 
 

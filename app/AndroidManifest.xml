@@ -149,7 +149,7 @@
         <service
             android:name="WebSocketRecognizer"
             android:exported="true"
-            android:label="@string/labelWebSocketRecognizer"
+            android:label="@string/labelRecognitionServiceWs"
             android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>
 
@@ -167,7 +167,7 @@
         <service
             android:name="SpeechRecognitionService"
             android:exported="true"
-            android:label="@string/labelSpeechRecognitionService"
+            android:label="@string/labelRecognitionServiceHttp"
             android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>
 

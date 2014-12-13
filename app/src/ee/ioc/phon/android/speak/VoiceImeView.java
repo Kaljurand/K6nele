@@ -62,7 +62,7 @@ public class VoiceImeView extends LinearLayout {
         setGuiInitState(0);
 
         if (mRecognizer == null) {
-            mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext(), getRecognizerService());
+            mRecognizer = createSpeechRecognizer();
             mRecognizer.setRecognitionListener(getRecognizerListener());
         } else {
             mRecognizer.setRecognitionListener(getRecognizerListener());
@@ -362,19 +362,26 @@ public class VoiceImeView extends LinearLayout {
     }
 
     /**
-     * If nothing is selected then use the default.
-     * If the Android's default is selected the return null.
+     * Constructs SpeechRecognizer based on the user settings.
+     * 1. If the user has selected no service then return K6nele(fast)
+     * 2. If the user has selected "default" then return the system default
+     * 3. Otherwise return the service that the user has selected
+     *
+     * @return SpeechRecognizer
      */
-    private ComponentName getRecognizerService() {
+    private SpeechRecognizer createSpeechRecognizer() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         String selectedRecognizerService =
                 Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
 
         if (selectedRecognizerService == null) {
             selectedRecognizerService = getResources().getString(R.string.defaultImeRecognizerService);
+        } else if (selectedRecognizerService.equals(getResources().getString(R.string.keyDefaultRecognitionService))) {
+            return SpeechRecognizer.createSpeechRecognizer(getContext());
         }
 
         String[] pkgAndCls = selectedRecognizerService.split("\\|");
-        return new ComponentName(pkgAndCls[0], pkgAndCls[1]);
+
+        return SpeechRecognizer.createSpeechRecognizer(getContext(), new ComponentName(pkgAndCls[0], pkgAndCls[1]));
     }
 }

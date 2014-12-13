@@ -31,17 +31,9 @@ import android.widget.Toast;
 
 import ee.ioc.phon.android.speak.provider.Server;
 
-/**
- * <p>Preferences activity. Updates some preference-summaries automatically,
- * if the user changes a preference.</p>
- *
- * @author Kaarel Kaljurand
- */
 public class PreferencesRecognitionServiceHttp extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
     private static final int ACTIVITY_SELECT_SERVER_URL = 1;
-
-    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +41,6 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
         addPreferencesFromResource(R.xml.preferences_server_http);
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         setSummary(
                 (Preference) findPreference(getString(R.string.keyAutoStopAfterTime)),
