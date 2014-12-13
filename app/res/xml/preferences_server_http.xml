@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    // Settings that apply to the HTTP-based server (also denoted as "grammar supporting")
+    <Preference
+        android:key="@string/keyServerHttp"
+        android:summary="@string/defaultServerHttp"
+        android:title="@string/titleDefaultServiceHttp">
+        <intent
+            android:targetClass="ee.ioc.phon.android.speak.ServerListActivity"
+            android:targetPackage="ee.ioc.phon.android.speak" />
+    </Preference>
+    <ListPreference
+        android:defaultValue="@string/defaultAutoStopAfterTime"
+        android:entries="@array/entriesAutoStopAfterTime"
+        android:entryValues="@array/valuesAutoStopAfterTime"
+        android:key="@string/keyAutoStopAfterTime"
+        android:summary="@string/summaryAutoStopAfterTime"
+        android:title="@string/titleAutoStopAfterTime" />
+    <ListPreference
+        android:defaultValue="@string/defaultRecordingRate"
+        android:entries="@array/entriesRecordingRate"
+        android:entryValues="@array/valuesRecordingRate"
+        android:key="@string/keyRecordingRate"
+        android:summary="@string/summaryRecordingRate"
+        android:title="@string/titleRecordingRate" />
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultRespectLocale"
+        android:key="@string/keyRespectLocale"
+        android:summary="@string/summaryRespectLocale"
+        android:title="@string/titleRespectLocale" />
+
+    <PreferenceScreen
+        android:summary="@string/summaryScreenDemos"
+        android:title="@string/titleScreenDemos">
+        <Preference
+            android:summary="@string/summarySimpleDemo"
+            android:title="@string/labelActivitySimpleDemo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.demo.SimpleDemo"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
+        <Preference
+            android:summary="@string/summaryExtrasDemo"
+            android:title="@string/labelActivityExtrasDemo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.demo.ExtrasDemo"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
+        <Preference
+            android:summary="@string/summaryRepeaterDemo"
+            android:title="@string/labelActivityRepeaterDemo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.demo.RepeaterDemo"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
+        <Preference
+            android:summary="@string/summaryVoiceSearchDemo"
+            android:title="@string/labelActivityVoiceSearchDemo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.demo.VoiceSearchDemo"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
+    </PreferenceScreen>
+</PreferenceScreen>

@@ -7,8 +7,8 @@
     -->
     <string name="labelApp">Kõnele</string>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="keyService" translatable="false">keyService</string>
-    <string name="keyServiceContinuous" translatable="false">keyServiceContinuous</string>
+    <string name="keyServerHttp" translatable="false">keyServerHttp</string>
+    <string name="keyServerWs" translatable="false">keyServerWs</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStart" translatable="false">keyAutoStart</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
@@ -17,12 +17,12 @@
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
     <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
-    <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+    <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
-    <string name="defaultWsService" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/</string>
+    <string name="defaultServerWs" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/</string>
 
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
@@ -44,6 +44,8 @@
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAbout">About</string>
     <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
+    <string name="labelActivityPreferencesRecognitionServiceHttp">Kõnele service based on HTTP-server</string>
+    <string name="labelActivityPreferencesRecognitionServiceWs">Kõnele service based on WebSockets-server</string>
     <string name="labelActivityDetails">Details</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
@@ -54,13 +56,16 @@
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultServiceGrammar">URL</string>
-    <string name="titleDefaultServiceContinuous">URL</string>
+    <string name="titleDefaultServiceHttp">HTTP URL</string>
+    <string name="titleDefaultServiceWs">WebSockets URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
     <string name="titleCategoryIme">Input method</string>
-    <string name="titleCategoryServerGrammar">Server with grammar support</string>
-    <string name="titleCategoryServerContinuous">Server with fast recognition</string>
+    <string name="titleCategoryServices">Recognition services</string>
+    <string name="titleServiceHttp">Service based on an HTTP-server</string>
+    <string name="titleServiceWs">Service based on a WebSockets-server</string>
+    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework</string>
+    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
     <string name="titleAutoStart">Auto start</string>

@@ -19,7 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemServerId"
-        android:text="@string/defaultService"
+        android:text="@string/defaultServerHttp"
         android:textSize="14sp" />
 
     <!-- TODO: This could be used to indicate the default server -->

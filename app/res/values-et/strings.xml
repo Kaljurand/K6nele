@@ -21,13 +21,9 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultServiceGrammar">Aadress</string>
-    <string name="titleDefaultServiceContinuous">Aadress</string>
     <string name="titleCategoryUi">Otsingupaneel</string>
     <string name="titleCategoryIme">Sisestusmeetod</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
-    <string name="titleCategoryServerGrammar">Kõnele server (grammatikatoega)</string>
-    <string name="titleCategoryServerContinuous">Kõnele server (kiire tuvastusega)</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
 		kõnesisendi kasutamiseks</string>
@@ -253,5 +249,14 @@
         <item>20 sek</item>
         <item>30 sek</item>
     </string-array>
+    <string name="labelActivityPreferencesRecognitionServiceHttp">HTTP-põhine kõnetuvastusteenus</string>
+    <string name="labelActivityPreferencesRecognitionServiceWs">WebSockets-põhine kõnetuvastusteenus</string>
+    <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid</string>
+    <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust</string>
+    <string name="titleCategoryServices">Kõnetuvastusteenused</string>
+    <string name="titleServiceHttp">Teenus, mis kasutab HTTP-serverit</string>
+    <string name="titleServiceWs">Teenus, mis kasutab WebSockets-serverit</string>
+    <string name="titleDefaultServiceHttp">HTTP-aadress</string>
+    <string name="titleDefaultServiceWs">WebSockets-aadress</string>
 
 </resources>

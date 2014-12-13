@@ -80,6 +80,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".PreferencesRecognitionServiceHttp"
+            android:exported="false"
+            android:label="@string/labelActivityPreferencesRecognitionServiceHttp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".PreferencesRecognitionServiceWs"
+            android:exported="false"
+            android:label="@string/labelActivityPreferencesRecognitionServiceWs">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".AboutActivity"
             android:label="@string/labelActivityAbout"></activity>
@@ -138,7 +161,7 @@
 
             <meta-data
                 android:name="android.speech"
-                android:resource="@xml/recognizer" />
+                android:resource="@xml/recognition_service_ws" />
         </service>
 
         <service
@@ -156,7 +179,7 @@
 
             <meta-data
                 android:name="android.speech"
-                android:resource="@xml/recognizer" />
+                android:resource="@xml/recognition_service_http" />
         </service>
 
         <service

@@ -58,17 +58,6 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		setSummary(
-				(Preference) findPreference(getString(R.string.keyAutoStopAfterTime)),
-				getString(R.string.summaryAutoStopAfterTime),
-				sp.getString(getString(R.string.keyAutoStopAfterTime), "?"));
-
-		setSummary(
-				(Preference) findPreference(getString(R.string.keyRecordingRate)),
-				getString(R.string.summaryRecordingRate),
-				sp.getString(getString(R.string.keyRecordingRate), "?"));
-
 	}
 
 
@@ -83,27 +72,11 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	protected void onResume() {
 		super.onResume();
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-		Preference service = (Preference) findPreference(getString(R.string.keyService));
-        service.setSummary(sp.getString(getString(R.string.keyService), getString(R.string.defaultService)));
-
-        service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
-				return true;
-			}
-
-		});
-
-        Preference serviceContinuous = (Preference) findPreference(getString(R.string.keyServiceContinuous));
-        serviceContinuous.setSummary(sp.getString(getString(R.string.keyServiceContinuous), getString(R.string.defaultWsService)));
-
         populateRecognitionServices();
 	}
 
 
+    // TODO: update summary here
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Preference pref = findPreference(key);
 		if (pref instanceof EditTextPreference) {
@@ -137,7 +110,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				if (url != null) {
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 					SharedPreferences.Editor editor = prefs.edit();
-					editor.putString(getString(R.string.keyService), url);
+					editor.putString(getString(R.string.keyServerHttp), url);
 					editor.commit();
 				}
 			}
@@ -147,8 +120,10 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 
 	private void setSummary(Preference pref, String strText, String strArg) {
-		pref.setSummary(String.format(strText, strArg));
-	}
+        if (pref != null) {
+            pref.setSummary(String.format(strText, strArg));
+        }
+    }
 
 	private void toast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -192,7 +167,6 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
             index++;
         }
 
-        // TODO: the summary is not updated
         if (services.size() > 0) {
             ListPreference list = (ListPreference) findPreference(getString(R.string.keyImeRecognitionService));
             list.setEntries(entries);

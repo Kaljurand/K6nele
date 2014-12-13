@@ -101,7 +101,7 @@ public class ChunkedWebRecSessionBuilder {
 
         // Calling the constructor modifies the database
 		PackageNameRegistry wrapper = new PackageNameRegistry(context, mCaller);
-		String urlService = prefs.getString(context.getString(R.string.keyService), context.getString(R.string.defaultService));
+		String urlService = prefs.getString(context.getString(R.string.keyServerHttp), context.getString(R.string.defaultServerHttp));
 		setFromExtras(extras, wrapper, urlService);
 		mNbest = makeNbest(extras, callingActivity);
 	}

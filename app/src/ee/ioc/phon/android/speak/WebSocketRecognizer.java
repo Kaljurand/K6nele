@@ -327,8 +327,8 @@ public class WebSocketRecognizer extends RecognitionService {
             return Utils.getPrefString(
                     PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()),
                     getResources(),
-                    R.string.keyServiceContinuous,
-                    R.string.defaultWsService);
+                    R.string.keyServerWs,
+                    R.string.defaultServerWs);
         }
         return url;
     }
