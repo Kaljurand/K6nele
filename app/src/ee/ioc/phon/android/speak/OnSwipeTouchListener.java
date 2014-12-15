@@ -20,6 +20,10 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
     public void onSwipeRight() {
     }
 
+    public void onDoubleTapMotion() {
+    }
+
+
     public boolean onTouch(View v, MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
     }
@@ -47,6 +51,12 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
                 return true;
             }
             return false;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            onDoubleTapMotion();
+            return true;
         }
     }
 }

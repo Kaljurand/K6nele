@@ -78,16 +78,14 @@ public class VoiceImeService extends InputMethodService {
                 switchIme(false);
                 break;
             case InputType.TYPE_CLASS_TEXT:
-                Log.i("onStartInput: TEXT");
                 int variation = attribute.inputType & InputType.TYPE_MASK_VARIATION;
+                Log.i("onStartInput: TEXT, variation: " + variation);
                 if (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    Log.i("onStartInput: password: " + variation);
+                    Log.i("onStartInput: PASSWORD || VISIBLE_PASSWORD");
                     // We refuse to recognize passwords for privacy reasons.
                     switchIme(false);
-                }
-
-                if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
+                } else if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
                     Log.i("onStartInput: EMAIL_ADDRESS");
                     switchIme(false);
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {

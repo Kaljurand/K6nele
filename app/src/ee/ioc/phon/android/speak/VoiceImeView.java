@@ -121,14 +121,10 @@ public class VoiceImeView extends LinearLayout {
             public void onSwipeRight() {
                 mListener.onAddNewline();
             }
-        });
 
-        // TODO: rather add it to the whole LinearLayout
-        mTvInstruction.setOnLongClickListener(new OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onDoubleTapMotion() {
                 mListener.onAddSpace();
-                return true;
             }
         });
     }

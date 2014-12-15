@@ -49,7 +49,6 @@ public class WebSocketRecognizer extends RecognitionService {
 
     private WebSocket mWebSocket;
 
-
     public void onDestroy() {
         super.onDestroy();
         onCancel0();
