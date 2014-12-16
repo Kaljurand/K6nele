@@ -7,6 +7,27 @@
             android:targetPackage="ee.ioc.phon.android.speak" />
     </Preference>
 
+    // Speech keyboard settings
+    <PreferenceCategory android:title="@string/titleCategoryIme">
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeAutoStart"
+            android:key="@string/keyImeAutoStart"
+            android:summary="@string/summaryAutoStart"
+            android:title="@string/titleAutoStart" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeAudioCues"
+            android:key="@string/keyImeAudioCues"
+            android:summary="@string/summaryAudioCues"
+            android:title="@string/titleAudioCues" />
+        <ListPreference
+            android:dialogTitle="@string/dialogTitleImeRecognitionService"
+            android:entries="@array/empty"
+            android:entryValues="@array/empty"
+            android:key="@string/keyImeRecognitionService"
+            android:title="@string/titleRecognitionService" />
+    </PreferenceCategory>
+
+    // Voice search dialog
     <PreferenceCategory android:title="@string/titleCategoryUi">
         <CheckBoxPreference
             android:defaultValue="@bool/defaultAutoStart"
@@ -31,25 +52,6 @@
             android:summary="@string/labelRecognitionServiceHttpWithComment"
             android:title="@string/titleRecognitionService" />
     </PreferenceCategory>
-    // IME has independent UI settings, but the labels are shared with the main panel.
-    <PreferenceCategory android:title="@string/titleCategoryIme">
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultImeAutoStart"
-            android:key="@string/keyImeAutoStart"
-            android:summary="@string/summaryAutoStart"
-            android:title="@string/titleAutoStart" />
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultImeAudioCues"
-            android:key="@string/keyImeAudioCues"
-            android:summary="@string/summaryAudioCues"
-            android:title="@string/titleAudioCues" />
-        <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionService"
-            android:entries="@array/empty"
-            android:entryValues="@array/empty"
-            android:key="@string/keyImeRecognitionService"
-            android:title="@string/titleRecognitionService" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/titleCategoryApps">
         <Preference
             android:summary="@string/summaryAppList"
@@ -67,7 +69,6 @@
         </Preference>
     </PreferenceCategory>
 
-    <!-- TODO: load from resource not from intent -->
     <PreferenceCategory android:title="@string/titleCategoryServices">
         <Preference
             android:summary="@string/summaryServiceHttp"

@@ -284,12 +284,12 @@ public class WebSocketRecognizer extends RecognitionService {
     }
 
     private void onError(int errorCode) {
+        // As soon as there is an error we shut down the socket and the recorder
+        onCancel0();
         try {
             mListener.error(errorCode);
         } catch (RemoteException e) {
         }
-        // As soon as there is an error we shut down the socket and the recorder
-        onCancel0();
     }
 
     private void onResults(Bundle bundle) {
@@ -428,9 +428,14 @@ public class WebSocketRecognizer extends RecognitionService {
                         Response response = Response.parseResponse((String) msg.obj);
                         if (response instanceof Response.ResponseResult) {
                             Response.ResponseResult responseResult = (Response.ResponseResult) response;
-                            ArrayList<String> hypotheses = responseResult.getHypotheses();
                             if (responseResult.isFinal()) {
-                                outerClass.onResults(toBundle(hypotheses));
+                                ArrayList<String> hypotheses = responseResult.getHypotheses();
+                                if (hypotheses == null || hypotheses.isEmpty()) {
+                                    Log.i("Empty final result (" + hypotheses + "), stopping");
+                                    outerClass.onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
+                                } else {
+                                    outerClass.onResults(toBundle(hypotheses));
+                                }
                                 // We stop listening unless the caller explicitly asks us to carry on,
                                 // by setting EXTRA_UNLIMITED_DURATION=true
                                 if (!mIsUnlimitedDuration) {
@@ -439,7 +444,12 @@ public class WebSocketRecognizer extends RecognitionService {
                             } else {
                                 // We fire this only if the caller wanted partial results
                                 if (mIsPartialResults) {
-                                    outerClass.onPartialResults(toBundle(hypotheses));
+                                    ArrayList<String> hypotheses = responseResult.getHypotheses();
+                                    if (hypotheses == null || hypotheses.isEmpty()) {
+                                        Log.i("Empty non-final result (" + hypotheses + "), ignoring");
+                                    } else {
+                                        outerClass.onPartialResults(toBundle(hypotheses));
+                                    }
                                 }
                             }
                         } else if (response instanceof Response.ResponseMessage) {

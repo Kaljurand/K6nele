@@ -57,13 +57,13 @@
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleDefaultServiceWs">WebSocket URL</string>
-    <string name="titleCategoryUi">Voice search panel</string>
+    <string name="titleCategoryUi">Voice search panel (red button)</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
-    <string name="titleCategoryIme">Input method</string>
+    <string name="titleCategoryIme">Speech keyboard (yellow button)</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
-    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on a HTTP-server.</string>
+    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>
     <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
@@ -117,9 +117,9 @@ button as part of their user interface. Examples include:&lt;/p>
 
 		&lt;p>%1$s is
 		pre-configured to
-		use an online Estonian speech-to-text service
-		(&lt;a
-		href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>)
+		use online Estonian speech-to-text services
+		(see &lt;a
+		href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>)
 		but
 		you can reconfigure it to use any online speech-to-text server
 		provided
@@ -133,14 +133,12 @@ More grammars are available at
 &lt;a href="http://kaljurand.github.io/Grammars/">http://kaljurand.github.io/Grammars/&lt;/a>.&lt;/p>
 
 &lt;p>%1$s can also be used as a (one-button) keyboard: tap the big yellow button and start dictating, the words
-        appear immediately in the text area;
-        swipe left to delete the last word;
-        swipe right to enter a newline character.
-        Note that this currently works only with Estonian-language input.&lt;/p>
+        appear immediately in the text area.
+        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space.&lt;/p>
 
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at the
 		&lt;a
-		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p></string>
+		href="http://github.com/Kaljurand/K6nele">%1$s website&lt;/a>.&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>

@@ -176,6 +176,7 @@ public class VoiceImeService extends InputMethodService {
         // Launch recognition immediately (if set so)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+            Log.i("Auto-starting");
             mInputView.start();
         }
     }

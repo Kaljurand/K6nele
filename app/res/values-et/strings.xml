@@ -20,8 +20,8 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleCategoryUi">Otsingupaneel</string>
-    <string name="titleCategoryIme">Kõneklaviatuur</string>
+    <string name="titleCategoryUi">Otsingupaneel (punase nupuga)</string>
+    <string name="titleCategoryIme">Kõneklaviatuur (kollase nupuga)</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
@@ -95,31 +95,29 @@
 
         &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur, mida saab kasutada kõikide
         tekstiväljade täitmiseks (väljaarvatud parooliväljad). Kollasele nupule vajutamine
-        käivitab/lõpetab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kõrvale.
+        käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
         Svaip vasakule kustutab kursorile eelneva sõna.
-        Svaip paremale teeb reavahetuse. Pikk vajutus
-        nupu all olevale tekstile lisab kursori kõrvale tühiku.&lt;/p>
+        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku.&lt;/p>
 
-        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks Google\'i kõnetuvastusteenust,
-		aga see ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
+        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks teenusi,
+		mis ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
 		transkribeerimiseks kahte TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori
 		kõnetuvastusserverit, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
 
-        &lt;p>Grammatikatoega server võimaldab (muuhulgas) rakendustele omistada grammatikaid,
+        &lt;p>&lt;b>Grammatikatoega server&lt;/b> võimaldab (muuhulgas) rakendustele omistada grammatikaid,
         et tõlkida tuvastustulemus rakenduse-spetsiifilisse
 		keelde. Nt
 		kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
 		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
 		ning kaardirakendusele või bussiaegade rakendusele Eesti aadresside grammatika.
 		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
-		Nt rakenduses X saab hommikuse äratuskella paika seada fraasiga \"ärata mind seitse kolmkümmend\",
-		eeldusel, et sellele rakendusele on omistatud Alarm-grammatika. Vt ka
+		Vt ka
 		&lt;a
 		href="http://kaljurand.github.io/Grammars/">grammatikate
 		projekti
 		kodulehekülge&lt;/a>.&lt;/p>
 
-        &lt;p>Kiire tuvastusega server tagastab tuvastustulemuse juba rääkimise ajal, on üldiselt
+        &lt;p>&lt;b>Kiire tuvastusega server&lt;/b> tagastab tuvastustulemuse juba rääkimise ajal, on üldiselt
         oluliselt täpsem, ning võimaldab
         dikteerida kirjavahemärke (nt \"koma\", \"uus rida\").&lt;/p>
 
@@ -144,7 +142,7 @@
 		&lt;p>Põhjalikum
 		dokumentatsioon on saadaval
 		&lt;a
-		href="http://recognizer-intent.googlecode.com">%1$s veebilehel&lt;/a>.
+		href="http://github.com/Kaljurand/K6nele">%1$s veebilehel&lt;/a>.
 		Samuti on seal võimalik tutvuda rakenduse lähtekoodiga ning teavitada
 		autorit rakenduse
 		puudustest.&lt;/p></string>

@@ -10,7 +10,7 @@ tänu millele saadetakse transkriptsioon
 rakendusele juba rääkimise ajal ning tuvastustäpsus on oluliselt parem. (Hetkel puudub
 serveril grammatikatugi, mistõttu toetab Kõnele ka varasemat grammatikatoega serverit.)
 Juhul kui see teenus on määratud kogu seadmes vaikimisi kõnetuvastusteenuseks
-"``Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend``", siis on võimalik seda kasutada
+``Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend``, siis on võimalik seda kasutada
 ka teistes rakendustes, nt Google'i tõlkerakendus (Google Translate) kasutab
 vaikimisi määratud kõnetuvastusteenust keelte jaoks, mida ta ise ei toeta (nt eesti keel).
 
@@ -25,7 +25,7 @@ vaikimisi määratud kõnetuvastusteenust keelte jaoks, mida ta ise ei toeta (nt
 - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal)
 
 Kõneklaviatuuri kasutamiseks tuleb see ennem sisselülitada süsteemses menüüs
-"``Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid``".
+``Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid``.
 Kõneklaviatuur kasutab vaikimisi uut kõnetuvastusteenust, kuid põhimõttelistelt
 saab seda kasutada kõikide seadmesse installeeritud kõnetuvastusteenustega
 (nt Kõnele grammatika-teadlik teenus ja Google'i teenus), muutes kõneklaviatuuri vastavat
