@@ -43,6 +43,10 @@ public class Extras {
     // Boolean to indicate that the recognition service should not stop after delivering the first result
     public static final String EXTRA_UNLIMITED_DURATION = "ee.ioc.phon.android.extra.UNLIMITED_DURATION";
 
+    // Boolean to indicate that the server has sent final=true, i.e. the following hypotheses
+    // will not be transcriptions of the same audio anymore.
+    public static final String EXTRA_SEMI_FINAL = "ee.ioc.phon.android.extra.SEMI_FINAL";
+
 	// Caller is interested in the recorded audio data (boolean)
 	public static final String GET_AUDIO = "android.speech.extra.GET_AUDIO";
 

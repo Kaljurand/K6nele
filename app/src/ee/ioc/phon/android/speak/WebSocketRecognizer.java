@@ -262,7 +262,6 @@ public class WebSocketRecognizer extends RecognitionService {
         mMyHandler.sendMessage(msg);
     }
 
-    // TODO: there does not seem to be an official call back for the socket closing
     // TODO: call onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT); if server initiates close
     // without having received EOS
     private void handleFinish() {
@@ -384,9 +383,10 @@ public class WebSocketRecognizer extends RecognitionService {
         }
     }
 
-    private static Bundle toBundle(ArrayList<String> hypotheses) {
+    private static Bundle toBundle(ArrayList<String> hypotheses, boolean isFinal) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
+        bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
         return bundle;
     }
 
@@ -434,12 +434,14 @@ public class WebSocketRecognizer extends RecognitionService {
                                     Log.i("Empty final result (" + hypotheses + "), stopping");
                                     outerClass.onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
                                 } else {
-                                    outerClass.onResults(toBundle(hypotheses));
-                                }
-                                // We stop listening unless the caller explicitly asks us to carry on,
-                                // by setting EXTRA_UNLIMITED_DURATION=true
-                                if (!mIsUnlimitedDuration) {
-                                    outerClass.onStopListening(mCallback);
+                                    // We stop listening unless the caller explicitly asks us to carry on,
+                                    // by setting EXTRA_UNLIMITED_DURATION=true
+                                    if (mIsUnlimitedDuration) {
+                                        outerClass.onPartialResults(toBundle(hypotheses, true));
+                                    } else {
+                                        outerClass.onStopListening(mCallback);
+                                        outerClass.onResults(toBundle(hypotheses, true));
+                                    }
                                 }
                             } else {
                                 // We fire this only if the caller wanted partial results
@@ -448,7 +450,7 @@ public class WebSocketRecognizer extends RecognitionService {
                                     if (hypotheses == null || hypotheses.isEmpty()) {
                                         Log.i("Empty non-final result (" + hypotheses + "), ignoring");
                                     } else {
-                                        outerClass.onPartialResults(toBundle(hypotheses));
+                                        outerClass.onPartialResults(toBundle(hypotheses, false));
                                     }
                                 }
                             }

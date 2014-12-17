@@ -24,10 +24,10 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 8
-        // TODO: make this the highest possible one we do not rely on the old-style menus anymore
+        // TODO: make this the highest possible once we do not rely on the old-style menus anymore
         targetSdkVersion 8
-        versionCode 849
-        versionName '0.8.49'
+        versionCode 850
+        versionName '0.8.50'
     }
 
 

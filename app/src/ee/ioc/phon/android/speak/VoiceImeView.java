@@ -220,9 +220,17 @@ public class VoiceImeView extends LinearLayout {
             public void onPartialResults(final Bundle bundle) {
                 Log.i("onPartialResults");
                 String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-                if (text != null) {
-                    mListener.onPartialResult(text);
-                    setText(mTvMessage, lastChars(text, false));
+                if (text == null) {
+                    // This shouldn't really happen
+                } else {
+                    // This can be true only with kaldi-gstreamer-server
+                    boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
+                    if (isSemiFinal) {
+                        mListener.onFinalResult(text);
+                    } else {
+                        mListener.onPartialResult(text);
+                    }
+                    setText(mTvMessage, lastChars(text, isSemiFinal));
                 }
             }
 
@@ -238,12 +246,12 @@ public class VoiceImeView extends LinearLayout {
                 if (text == null) {
                     // If we got empty results then assume that the session ended,
                     // e.g. cancel was called.
-                    // TODO: test this
-                    setGuiInitState(0);
+                    mListener.onFinalResult("");
                 } else {
                     mListener.onFinalResult(text);
                     setText(mTvMessage, lastChars(text, true));
                 }
+                setGuiInitState(0);
             }
 
             @Override
