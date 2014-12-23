@@ -1,0 +1,107 @@
+#summary User Guide
+#labels Featured
+
+This document is an illustrated user guide to the *Kõnele* app for Android.
+
+<wiki:toc max_depth="3" />
+
+==Introduction==
+
+*Kõnele* (`ee.ioc.phon.android.speak`) is a plugin-like utility that allows you to record voice and transcribe it using an online speech recognition service. *Kõnele* is launched from a host app (e.g. Google Maps, GO SMS Pro, Astrid Tasks, ...) by tapping on a microphone button (or something similar) in that app, and the resulting transcription is passed directly to the app.
+
+The main component of *Kõnele* is the recorder/transcriber activity, the operation of which can be configured using the settings.
+
+==Settings==
+
+Settings allow you to configure if the recording starts/stops automatically,
+if audio cues are played before and after the recording,
+which apps should use which grammars etc.
+
+http://wiki.recognizer-intent.googlecode.com/git/settings_top.png
+http://wiki.recognizer-intent.googlecode.com/git/settings_bottom.png
+
+==Recorder/transcriber==
+
+*Kõnele* is launched from a host app (Google Maps on the following screenshots) by tapping on its microphone button.
+
+http://wiki.recognizer-intent.googlecode.com/git/recorder_microphone.png
+
+*Kõnele* then displays a big red button to be tapped on to start the voice recording (or starts recording immediately, if it's set to do that).
+
+http://wiki.recognizer-intent.googlecode.com/git/recorder_tap.png
+
+Now you are expected to speak into the device's microphone for a few seconds. Recording finishes automatically if you make a longer pause (if it is configured this way), or after pressing the big red button again.
+
+http://wiki.recognizer-intent.googlecode.com/git/recorder_speak.png
+
+The waveform of the recorded audio is displayed and a few seconds are required to process the audio (on the server) and deliver the transcription. Note that by looking at the waveform you can find out if the recording was too quiet or too noisy in which case the transcription is likely to be seriously flawed.
+
+http://wiki.recognizer-intent.googlecode.com/git/recorder_transcribing.png
+
+The transcription is delivered directly into the app. It is up to the app (and can possibly be configured in the app) if the transcription is "executed" immediately or if you get a chance to view, edit or regenerate the transcription. On the screenshot below the transcription is immediately "executed" as a !YouTube search. (This screenshot also demonstrates the Estonian user interface of *Kõnele*.)
+
+http://wiki.recognizer-intent.googlecode.com/git/recorder_result_et.png
+
+===Recorder/transcriber error messages===
+
+The most common errors that can happen are:
+
+  * internet connection is not enabled on the device, i.e. the transcription server cannot be contacted
+  * another app is currently recording, i.e. the microphone is blocked
+
+http://wiki.recognizer-intent.googlecode.com/git/img/en/device-2011-12-08-125937.png
+
+==Apps==
+
+In the `Settings/Apps` menu you can see the list of all the apps where you have used *Kõnele* before and sort this list in various ways, e.g. by the frequency of usage. Tapping on the app icon launches the app. Long-tapping on the icon allows you to assign a dedicated speech recognition server to service the app and to assign a grammar to syntactically constrain the voice input used in the app.
+
+http://wiki.recognizer-intent.googlecode.com/git/apps_by_freq.png
+
+==Grammars==
+
+As an advanced feature you can assign predefined grammars to apps (long tap on the app icon to get a context menu), by pointing to the (public) URL of the grammar file. Using a predefined grammar makes the recognition result more reliable but note that you can then only speak the language prescribed by the grammar.
+
+http://wiki.recognizer-intent.googlecode.com/git/img/en/device-2011-12-08-125828.png
+http://wiki.recognizer-intent.googlecode.com/git/img/et/apps_by_grammar_20130120.png
+
+Grammar-based speech recognition is suitable for applications which make use of very simple language (as compared to full natural language), e.g.
+
+  * "switch off the lights",
+  * "convert ten US dollars to euros",
+  * "one plus two times fifty five",
+  * "wake me up tomorrow morning at six".
+
+The following screenshots demonstrate:
+
+  * performing a Google Maps search assisted by a grammar that knows all the Tallinn street addresses;
+  * performing a calculation using the old !SwiftKey X keyboard for voice input, an arithmetical expression grammar (to restrict the input to arithmetical expressions and to normalize the result into the standard numerical notation, and finally Google Search (to evaluate the expression);
+  * resolving the ambiguity of the spoken phrase "kolm minutit sekundites" (_three minutes in seconds_) which can either refer to angles or to time.
+
+http://wiki.recognizer-intent.googlecode.com/git/recorder_result_grammar1_et.png
+http://wiki.recognizer-intent.googlecode.com/git/recorder_result_grammar2_en.png
+http://wiki.recognizer-intent.googlecode.com/git/recorder_result_grammar3_en.png
+
+The speech recognition server http://bark.phon.ioc.ee/speech-api/v1/ supports two grammar formats: JSGF and PGF. The PGF grammars are more powerful in the sense that in addition to recognizing the input speech they also normalize it into the symbolic form used by the application ("two" can be converted into "2", "kilo meters per hour" into "km/h", etc.).
+
+Existing PGF grammars (for Estonian and English) are described at http://kaljurand.github.com/Grammars/.
+The Android app Arvutaja uses Kõnele to support grammar-based voice actions, see http://kaljurand.github.com/Arvutaja/.
+
+
+== Demo video (in Estonian) ==
+
+<wiki:video url="http://www.youtube.com/watch?v=cLRiWgT85Fg"/>
+
+Two permissions are required to run *Kõnele*
+
+    $ aapt dump permissions K6nele-0.8.50.apk
+    package: ee.ioc.phon.android.speak
+    uses-permission: name='android.permission.INTERNET'
+    uses-permission: name='android.permission.RECORD_AUDIO'
+
+## RECORD AUDIO
+
+*Kõnele* needs to have access to the microphone in order to record speech.
+
+## FULL INTERNET ACCESS
+
+*Kõnele* needs to be able to create network sockets to be able to upload the recorded audio to the speech recognition server and download the resulting transcription.
