@@ -43,9 +43,14 @@ ul, ol, dl, figure,
 img {
     max-width: 100%;
     vertical-align: middle;
+    margin: 0.4em; // TODO: added: 20141224/kaarel
 }
 
 
+// TODO: added: 20141224/kaarel
+td {
+    vertical-align: top;
+}
 
 /**
  * Figures

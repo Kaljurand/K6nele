@@ -1,6 +1,6 @@
 # Site settings
 title: Kõnele
-email: kaljurand@gmail.com
+email: kaljurand+k6nele@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
     Kõnele is an Android app that offers speech-to-text services to other apps.
 baseurl: "/K6nele" # the subpath of your site, e.g. /blog/

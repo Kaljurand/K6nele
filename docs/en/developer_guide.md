@@ -3,76 +3,71 @@ layout: page
 title: Developer's Guide
 ---
 
-Introduction
-------------
+## Introduction
 
-Kõnele is a component that helps an Android app to communicate with an online speech recognition server.
+Kõnele is an app that helps another app to communicate with two online speech recognition servers,
+running the following software:
 
-    app <-> Kõnele <-> server
+- continuous full-duplex server, <https://github.com/alumae/kaldi-gstreamer-server>,
+- grammar-supporting server, <https://github.com/alumae/ruby-pocketsphinx-server>.
 
-i.e. you can benefit from Kõnele either by implementing an app or a server.
+You can benefit from Kõnele either by implementing a new app and using
+an existing running server, or deploying a new server and reconfiguring Kõnele to use it.
 
-Calling Kõnele from Android apps
---------------------------------
+## Calling Kõnele as an activity
 
-Kõnele can be potentially used together with any Android app on the phone. How to build speech-enabled apps on Android is explained in:
+Kõnele implements [android.speech.RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) actions `ACTION_RECOGNIZE_SPEECH` and `ACTION_WEB_SEARCH`,
+and supports its EXTRAs up to Android API level 3.
 
-  - <http://developer.android.com/resources/articles/speech-input.html>
-  - <http://developer.android.com/guide/topics/search/search-dialog.html#VoiceSearch>
+In addition to the standard EXTRAs, Kõnele adds the following EXTRAs:
 
-On API level 8+ you can also call Kõnele via [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html). In this case, please use EXTRA_CALLING_PACKAGE to identify your app for Kõnele.
+| `SERVER_URL`            | Web address of the speech recognizer server
+| `GRAMMAR_URL`           | Web address of a speech recognition grammar file
+| `GRAMMAR_TARGET_LANG`   | Identifier of the language into which the recognizer-server should translate the raw speech recognition output
+| `PHRASE`                | Desired transcription for the enclosed audio
 
-Kõnele supports EXTRAs up to Android API Level 3 (see the documentation at <http://developer.android.com/reference/android/speech/RecognizerIntent.html>), and adds some additional EXTRAs:
+(All are prefixed by `ee.ioc.phon.android.extra`, e.g. `ee.ioc.phon.android.extra.SERVER_URL`.)
 
-`ee.ioc.phon.android.extra.SERVER_URL`
-: Web address of the speech recognizer web service
+Note that the end-user _can_ override the server and grammar EXTRAs via a the Kõnele settings, i.e. your app should not assume that the specified server or grammar was actually used.
 
-`ee.ioc.phon.android.extra.GRAMMAR_URL`
-: Web address of a speech recognition grammar file
-
-`ee.ioc.phon.android.extra.GRAMMAR_TARGET_LANG`
-: Identifier of the language into which the recognizer-server should translate the raw speech recognition output
-
-`ee.ioc.phon.android.extra.PHRASE`
-: Desired transcription for the enclosed audio
-
-Note that the end-user *can* override these EXTRAs via a the Apps and Grammars settings, i.e. your app should not assume that the specified server or grammar was actually used.
-
-Calling Kõnele directly
------------------------
-
-If you know that Kõnele is available on the device and is the only one with the required features (e.g. can do Estonian speech recognition, can do grammar-based speech recognition) then you can call it directly (i.e. without any intermediate user-selection):
-
-First define two strings to hold the package and class names of Kõnele:
-
-{% highlight xml %}
-<string name="nameRecognizerPkg" translatable="false">ee.ioc.phon.android.speak</string>
-<string name="nameRecognizerCls" translatable="false">ee.ioc.phon.android.speak.RecognizerIntentActivity</string>
-{% endhighlight %}
-
-and then build a Recognizer-intent that can only be serviced by the specified component (i.e. Kõnele's !RecognizerIntentActivity):
+If you know that Kõnele is available on the device and is the only one with the required features
+then you can call it directly, i.e. without any intermediate user-selection.
+To do this, build a Recognizer-intent that can only be serviced by Kõnele's `RecognizerIntentActivity`.
 
 {% highlight java %}
-String nameRecognizerPkg = getString(R.string.nameRecognizerPkg);
-String nameRecognizerCls = getString(R.string.nameRecognizerCls);
 ...
-mIntent.setComponent(new ComponentName(nameRecognizerPkg, nameRecognizerCls));
+mIntent.setComponent(
+    new ComponentName(
+        "ee.ioc.phon.android.speak",
+        "ee.ioc.phon.android.speak.RecognizerIntentActivity"));
 {% endhighlight %}
+
+## Calling Kõnele as a service
+
+On Android API level 8+ you can also call Kõnele via [android.speech.SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html).
+In this case, please use `EXTRA_CALLING_PACKAGE` to identify your app for Kõnele.
+
+
 
 To obtain a Kõnele-specific [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html) object, use the two-argument call to `createSpeechRecognizer`:
 
 {% highlight java %}
 SpeechRecognizer.createSpeechRecognizer(this,
-    new ComponentName(nameRecognizerPkg,
+    new ComponentName(
+        "ee.ioc.phon.android.speak",
         "ee.ioc.phon.android.speak.SpeechRecognitionService");
     );
 {% endhighlight %}
 
+The available services are:
 
-Calling Kõnele from adb (example)
----------------------------------
+  - `ee.ioc.phon.android.speak.SpeechRecognitionService` (continuous full-duplex server)
+  - `ee.ioc.phon.android.speak.WebSocketRecognizer` (grammar-supporting server)
 
-The following two adb shell commands
+
+## Calling Kõnele via Android Debug Bridge (adb)
+
+The following two `adb shell` commands
 
   - stop a running instance of Kõnele (if present)
   - start Kõnele in a mode where the expected input is an action command in English (e.g. "one plus two") and the output is the corresponding expression ("1+2"), which gets opened in a web-browser
@@ -89,17 +84,7 @@ adb shell am start \
 {% endhighlight %}
 
 
-Interacting with online speech recognition servers
---------------------------------------------------
-
-Kõnele can work with any online speech recognition server, provided that it is accessible via a simple HTTP-interface. The interaction with the server takes place via [Net Speech API]([http://code.google.com/p/net-speech-api/), i.e. the server must be compatible with this API.
-
-Existing server implementations are:
-
-  - <http://github.com/alumae/ruby-pocketsphinx-server>
-
-Sample code
------------
+## Sample code
 
 List of open-source apps that use Kõnele:
 

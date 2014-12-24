@@ -5,7 +5,7 @@ title: Kasutusjuhend
 
 ## Sissejuhatus
 
-__Kõnele__ on kõnetuvastusteenus Androidi rakendustele, võimaldades
+__Kõnele__ on kõnetuvastusteenus Androidi rakendustele, mis võimaldab
 saata e-kirju, sooritada infootsingut, kirjutada märkmeid, anda käske jne kõne abil.
 
 Kõnele kasutab kõne tekstiks teisendamiseks (ehk transkribeerimiseks) TTÜ Küberneetika Instituudi
@@ -20,7 +20,7 @@ transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
 on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
-Android v5 seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
+Android v5 (Lollipop) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
 teistsugune, kuid mitte oluliselt.
 
 (Selle juhendi eelmine versioon on [siin](https://code.google.com/p/recognizer-intent/wiki/UserGuide?wl=et).)
@@ -28,15 +28,15 @@ teistsugune, kuid mitte oluliselt.
 ## Kõnepõhine veebiotsing
 
 Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb punase nupuga paneel.
-Nupule vajutades tuvastab Kõnele sisendkõne ning edastab selle transkriptsiooni
+Nupule vajutades teisendab Kõnele sisendkõne tekstiks ning edastab selle
 edasi seadme veebibrauserile.
 
-<img src="../img/et/Screenshot_2014-12-23-19-35-34.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-36-33.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-37-22.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-22-08-11.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-37-56.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-38-07.png" height="350">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-35-34.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-36-33.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-37-22.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-08-11.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-37-56.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-38-07.png">
 
 Pärast Lindista-nupule vajutamist (seadetes saab ka määrata,
 et lindistamine algab automaatselt, ilma nupule vajutamata),
@@ -47,7 +47,7 @@ katkestada.
 Lindistamise käigus näitab Kõnele mitu sekundit on lindistamine
 juba kestnud ning mitu baiti on salvestus juba ruumi võtnud. Vastav kogus saadetakse
 serverisse transkribeerimiseks.
-Pärast lindistamise lõppu kuvab moodul pildi lindistuse valjuse muutumisest
+Pärast lindistamise lõppu kuvatakse pilt lindistuse valjuse muutumisest
 läbi lindistuse kestuse.
 Selle pildi põhjal on võimalik otsustada, kas lindistus tehniliselt õnnestus või mitte.
 Samal ajal toimub serveris kõne teisendamine tekstiks.
@@ -67,13 +67,13 @@ Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määr
 Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest ning
 seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
 
-<img src="../img/et/Screenshot_2014-12-23-22-07-05.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-22-07-30.png" height="350">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-07-05.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-07-30.png">
 
 Samuti on võimalik vaadata, läbi milliste rakenduste on kõnetuvastust kasutatud ning
 omistada erinevatele rakendustele erinevaid grammatikaid (vt allpool).
 
-Kõnele sisaldab kahte erinevat kõnetuvastusteenust, mis kasutavad vastavalt kaht erinevat
+Kõnele sisaldab kahte erinevat kõnetuvastusteenust, mis kasutavad vastavalt kahte erinevat
 kõnetuvastusserverit:
 
   - "grammatikatoega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/ruby-pocketsphinx-server>)
@@ -103,26 +103,26 @@ Kõnele sisaldab endas sellist klaviatuurirakendust, kuid erinevalt traditsiooni
 tähtede ja numbritega klahvist on Kõnele klaviatuuril ainult üks nupp, mis
 võimaldab kõnesisendit.
 
-<img src="../img/et/Screenshot_2014-12-23-22-23-40.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-22-25-03.png" height="350">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-23-40.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-25-03.png">
 
 Kõnele klaviatuuri kasutamiseks tuleb see ennem sisselülitada Androidi süsteemses menüüs
 `Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`, valides
 seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
 
-<img src="../img/et/Screenshot_2014-12-23-19-32-57.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-33-10.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-33-51.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-34-00.png" height="350">
-<img src="../img/et/Screenshot_2014-12-23-19-34-24.png" height="350">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-32-57.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-10.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-51.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-00.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-24.png">
 
-Uuemates Androidides on lihtne ka teksti kirjutamise ajal klaviatuure
+Android v5+ seadmetes on lihtne ka teksti kirjutamise ajal klaviatuure
 vahetada, nt ühe vajutusega maakera- või klaviatuurikujulisele ikoonile,
 sõltuvalt klaviatuurist.
 
-Kõnele klaviatuur pakub järgnevaid operatsioone:
+Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
+klaviatuur järgmisi operatsioone:
 
-- vajutus kollasele nupule käivitab/lõpetab/katkestab kõnetuvastuse,
 - svaip vasakule kustutab kursorist vasakul asuva sõna,
 - svaip paremale lisab reavahetuse,
 - topeltvajutus lisab tühiku,
@@ -141,13 +141,13 @@ Mõnes rakenduses (nt _Google Keep_) on mikrofoninupp, millele vajutades kutsuta
 pakkuv rakendus, koos oma kasutajaliidesega. Kõnele puhul on selleks ülal kirjeldatud
 punase nupuga paneel. Teisest rakendusest välja kutsutuna
 ei edastata Kõnele tuvastustulemust veebibrauserile, vaid tagastab kutsuvale
-rakendusele (nt _Google Keep_).
+rakendusele (nt _Google Keep_), mis siis sellega edasi toimetab.
 
 Kui seadmes on mitu erinevat kõnetuvastusteenust (üheks on tavaliselt _Google'i otsing_),
 siis palub Android kõigepealt valida, millist neist kasutada. Valitud teenuse võib
 määrata ka vaikimisi valikuks ("alati").
 
-<img src="../img/et/Screenshot_2014-12-23-19-45-10.png" height="350">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-45-10.png">
 
 Juhul kui valikuvõimalust ei tekkinud, st valikudialoogiakent ei kuvatud
 ning kohe käivitus nt _Google'i otsing_, siis järelikult oli see
@@ -160,18 +160,16 @@ määratud vaikimisi tuvastajaks. Sellise vaikeväärtuse saab eemaldad nõnda:
 
 ## Kõnele kutsumine teistest rakendustest (taustateenusena)
 
-(Android v2.2 või uuem)
-
 Androidi rakendused võivad kõnetuvastusteenuse välja kutsuda ka taustateenusena, st ilma kasutajaliideseta.
 Nõnda toimivad paljud mikrofoninupuga klaviatuurirakendused ning intelligentsed abilised,
 mis hoolitsevad ise kogu kasutajaliidese eest (mikrofoninupp, helisignaalid, VU-meeter, veateadete kuvamine jms).
 Selliselt kutsutavad teenused on kirjas menüüs `Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend`,
 kus üks neist on alati seatud vaikimisi teenuseks.
 
-<img src="../img/et/Screenshot_2014-12-23-21-16-00.png" height="350">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
 
 Ühe Kõnele teenustest võib seada vaikimisi teenuseks. See ei garanteeri küll kahjuks, et kõik rakendused
-hakkavad nüüd kõnetuvastuseks Kõnelet kasutama, paljud neist ignoreerivad kasutajamääratud
+hakkavad nüüd kõnetuvastuseks Kõnelet kasutama, sest paljud neist ignoreerivad kasutajamääratud
 vaikeväärtust ja kasutavad endiselt nt Google'i teenust.
 
 Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab kõnetuvastuseks
@@ -187,7 +185,7 @@ Kõnele võimaldab igale Androidi rakendustele, mis on Kõnele vähemalt ühe ko
 omistada tõlkegrammatika.  Grammatika omistamisel rakendusele on sisuliselt kaks funktsiooni:
 
   - deklareerimine, et ainult teatud laused ja sõnavara omab vastava rakenduse kontekstis mõtet, nt mõõtühikute teisendamise rakendus võiks toetada fraase nagu "kaks meetrit jalgades" kuid peaks välistama fraasid nagu "mis ilm on tartus" või "kolm meetrit ruutmeetrites" (viimane kasutab küll õiget sõnavara, kuid teeb seda semantiliselt valel moel). Kui kõnetuvastusserverile sel viisil grammatika esitada, siis on väiksem tõenäosus, et tuvastamisel tehakse viga;
-  - tuvastustulemuse teisendamine mingile lõppkujule, mis sobib kõnetuvastusteenust tarbivale rakendusele paremini, nt mõõtühikute teisendamise rakendused eeldavad tüüpiliselt numbrilist ja SI ühikutest/prefiksitest koosnevat sisendit, st "100 m/s -> km/h", mitte eestikeelset "kui palju on sada meetrit sekundis kilomeetrites tunnis".
+  - tuvastustulemuse "tõlkimine" kujule, mis sobib vastavale rakendusele paremini, nt mõõtühikute teisendamise rakendused eeldavad tüüpiliselt inglise keelest, numbritest ja SI ühikutest/prefiksitest koosnevat sisendit, st "convert 100 m/s to km/h", mitte eestikeelset "kui palju on sada meetrit sekundis kilomeetrites tunnis".
 
 Sellised grammatikad ei kata loomulikku keelt (nt eesti keelt) tervikuna, vaid ainult selle
 mingit piiratud alamosa. Nt lauseid mõõtühikute või valuutade teisendamise kohta,
@@ -200,15 +198,13 @@ Grammatika omistamiseks rakendusele tuleb sellele "Rakendused" loendis pikalt va
 Grammatikate tegemise kohta on võimalik rohkem lugeda aadressil <http://kaljurand.github.io/Grammars/>
 ning nende registreerimine ja kasutamine grammatikatoega serveris on kirjeldatud lehel
 <http://bark.phon.ioc.ee/speech-api/v1>.
-Rakendus [Arvutaja](http://kaljurand.github.io/Arvutaja/) kasutab Kõnelet grammatikatoega kõnetuvastajana.
+Vt ka rakendust [Arvutaja](http://kaljurand.github.io/Arvutaja/), mis kasutab Kõnelet grammatikatoega kõnetuvastajana.
 
 
 <!--
 ## Kasutusnäited
 
 TODO: Google Maps, Google Translate, Google Keep, WolframAlpha
-*Kõnele* on moodul, see tähendab seda, et teda käivitatakse läbi teiste rakenduste.
-
 
 ### Speech recognition using the Direction-grammar
 
