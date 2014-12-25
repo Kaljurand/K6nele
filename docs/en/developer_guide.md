@@ -21,12 +21,15 @@ and supports its EXTRAs up to Android API level 3.
 
 In addition to the standard EXTRAs, Kõnele adds the following EXTRAs:
 
-| `SERVER_URL`            | Web address of the speech recognizer server
-| `GRAMMAR_URL`           | Web address of a speech recognition grammar file
-| `GRAMMAR_TARGET_LANG`   | Identifier of the language into which the recognizer-server should translate the raw speech recognition output
-| `PHRASE`                | Desired transcription for the enclosed audio
+| `SERVER_URL`          | URL                           | Web address of the speech recognizer server
+| `GRAMMAR_URL`         | URL                           | Web address of a speech recognition grammar file
+| `GRAMMAR_TARGET_LANG` | Comma-separated langugae codes| One or more identifiers of languages into which the recognizer-server should translate the raw speech recognition output
+| `PHRASE`              | String                        | Desired transcription (could be used for adaptation)
+| `GET_AUDIO`           | Boolean                       | Return audio iff true
+| `GET_AUDIO_FORMAT`    | Mime type (only "audio/wav")  | Audio format
 
-(All are prefixed by `ee.ioc.phon.android.extra`, e.g. `ee.ioc.phon.android.extra.SERVER_URL`.)
+(The `GET_AUDIO` EXTRAs are prefixed by `android.speech.extra`, all others by
+`ee.ioc.phon.android.extra`, e.g. `ee.ioc.phon.android.extra.SERVER_URL`.)
 
 Note that the end-user _can_ override the server and grammar EXTRAs via a the Kõnele settings, i.e. your app should not assume that the specified server or grammar was actually used.
 
@@ -63,6 +66,9 @@ The available services are:
 
   - `ee.ioc.phon.android.speak.SpeechRecognitionService` (continuous full-duplex server)
   - `ee.ioc.phon.android.speak.WebSocketRecognizer` (grammar-supporting server)
+
+The above-listed EXTRAs are also supported when calling Kõnele as a service, with the
+exception of the `GET_AUDIO` EXTRAs.
 
 
 ## Calling Kõnele via Android Debug Bridge (adb)
