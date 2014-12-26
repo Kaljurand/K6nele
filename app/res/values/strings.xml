@@ -137,8 +137,7 @@ More grammars are available at
         Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space.&lt;/p>
 
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at the
-		&lt;a
-		href="http://github.com/Kaljurand/K6nele">%1$s website&lt;/a>.&lt;/p></string>
+		&lt;a href="http://kaljurand.github.io/K6nele/">%1$s website&lt;/a>.&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>

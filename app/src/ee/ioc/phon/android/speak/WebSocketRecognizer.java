@@ -425,9 +425,10 @@ public class WebSocketRecognizer extends RecognitionService {
                     }
                 } else if (msg.what == MSG_RESULT) {
                     try {
-                        Response response = Response.parseResponse((String) msg.obj);
-                        if (response instanceof Response.ResponseResult) {
-                            Response.ResponseResult responseResult = (Response.ResponseResult) response;
+                        WebSocketResponse response = new WebSocketResponse((String) msg.obj);
+                        int statusCode = response.getStatus();
+                        if (statusCode == WebSocketResponse.STATUS_SUCCESS && response.isResult()) {
+                            WebSocketResponse.Result responseResult = response.parseResult();
                             if (responseResult.isFinal()) {
                                 ArrayList<String> hypotheses = responseResult.getHypotheses();
                                 if (hypotheses == null || hypotheses.isEmpty()) {
@@ -454,18 +455,25 @@ public class WebSocketRecognizer extends RecognitionService {
                                     }
                                 }
                             }
-                        } else if (response instanceof Response.ResponseMessage) {
-                            Response.ResponseMessage responseMessage = (Response.ResponseMessage) response;
-                            Log.i(responseMessage.getStatus() + ": " + responseMessage.getMessage());
+                        } else if (statusCode == WebSocketResponse.STATUS_SUCCESS) {
+                            // TODO: adaptation_state currently not handled
+                        } else if (statusCode == WebSocketResponse.STATUS_ABORTED) {
+                            outerClass.onError(SpeechRecognizer.ERROR_SERVER);
+                        } else if (statusCode == WebSocketResponse.STATUS_NOT_AVAILABLE) {
                             outerClass.onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
+                        } else if (statusCode == WebSocketResponse.STATUS_NO_SPEECH) {
+                            outerClass.onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
+                        } else {
+                            // Server sent unsupported status code, client should be updated
+                            outerClass.onError(SpeechRecognizer.ERROR_CLIENT);
                         }
-                    } catch (Response.ResponseException e) {
+                    } catch (WebSocketResponse.WebSocketResponseException e) {
+                        // This results from a syntactically incorrect server response object
                         Log.e((String) msg.obj, e);
                         outerClass.onError(SpeechRecognizer.ERROR_SERVER);
                     }
                 }
             }
         }
-
     }
 }
