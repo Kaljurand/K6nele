@@ -50,9 +50,7 @@ mIntent.setComponent(
 On Android API level 8+ you can also call Kõnele via [android.speech.SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html).
 In this case, please use `EXTRA_CALLING_PACKAGE` to identify your app for Kõnele.
 
-
-
-To obtain a Kõnele-specific [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html) object, use the two-argument call to `createSpeechRecognizer`:
+To obtain a Kõnele-specific SpeechRecognizer-object, use the two-argument call to `createSpeechRecognizer`:
 
 {% highlight java %}
 SpeechRecognizer.createSpeechRecognizer(this,

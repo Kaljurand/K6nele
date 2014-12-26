@@ -188,7 +188,9 @@ Minor changes:
 
 Now using `netspeechapi-0.1.3.jar` which allows us to tell the server how many transcription hypotheses to generate (`nbest`). This is calculated based on `EXTRA_MAX_RESULTS`:
 
-    int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
+{% highlight java %}
+int nbest = (mExtraMaxResults > 1) ? mExtraMaxResults : 1;
+{% endhighlight %}
 
 Note that if the client does not specify `EXTRA_MAX_RESULTS` then a single hypothesis is generated, but it might have several linearizations which all are returned. However, when the client sets `EXTRA_MAX_RESULTS` to 1 then just one linearization is returned, even if there are more. In case `EXTRA_MAX_RESULTS = 2`, then 2 linearizations are returned but the client won't find out if they are from the same hypothesis, if there are more linearizations, etc. This confusion arises from the fact that we are turning the complex list-of-lists structure returned by the server into the simple list required by the standard `RecognizerIntent` return extra.
 
