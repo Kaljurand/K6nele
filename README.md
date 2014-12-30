@@ -12,16 +12,7 @@ It contains the following main components:
 The main goals of this project is to offer support for Estonian speech recognition on the
 Android platform, as well as grammar-based speech recognition for voice command applications.
 
-See <https://code.google.com/p/recognizer-intent/> for
-
-  - more information
-  - issues list
-  - (old) APK downloads
-  - end-user and developer documentation
-
-APK downloads are available on the [releases page](https://github.com/Kaljurand/K6nele/releases).
-The latest stable APK is also on
-[Google Play](https://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak).
+For more information see <http://kaljurand.github.io/K6nele/>.
 
 
 Compilation
