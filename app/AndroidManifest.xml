@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
-    android:installLocation="auto" >
+    android:installLocation="auto">
 
 
-    <uses-permission android:name="android.permission.INTERNET" >
-    </uses-permission>
-    <uses-permission android:name="android.permission.RECORD_AUDIO" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 
     <application
         android:allowBackup="true"
         android:description="@string/descriptionApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/labelApp"
-        android:theme="@style/RecognizerTheme" >
+        android:supportsRtl="true"
+        android:theme="@style/RecognizerTheme">
 
         <!--
 			android:clearTaskOnLaunch="true"
@@ -35,7 +34,7 @@
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
 
@@ -60,7 +59,7 @@
         <!-- This receiver is exported, i.e. any app can ask which languages K6nele supports. -->
         <receiver
             android:name=".GetLanguageDetailsReceiver"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.speech.action.GET_LANGUAGE_DETAILS" />
             </intent-filter>
@@ -74,49 +73,65 @@
         <activity
             android:name=".Preferences"
             android:exported="true"
-            android:label="@string/labelActivityPreferences" >
+            android:label="@string/labelActivityPreferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".PreferencesRecognitionServiceHttp"
+            android:exported="false"
+            android:label="@string/labelActivityPreferencesRecognitionServiceHttp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".PreferencesRecognitionServiceWs"
+            android:exported="false"
+            android:label="@string/labelActivityPreferencesRecognitionServiceWs">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".AboutActivity"
-            android:label="@string/labelActivityAbout" >
-        </activity>
+            android:label="@string/labelActivityAbout"></activity>
 
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
         <activity
             android:name=".DetailsActivity"
             android:label="@string/labelActivityDetails"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
+            android:theme="@android:style/Theme.Dialog"></activity>
         <activity
             android:name=".AppListActivity"
-            android:label="@string/labelActivityAppList" >
-        </activity>
+            android:label="@string/labelActivityAppList"></activity>
         <activity
             android:name=".GrammarListActivity"
-            android:label="@string/labelActivityGrammarList" >
-        </activity>
+            android:label="@string/labelActivityGrammarList"></activity>
         <activity
             android:name=".ServerListActivity"
-            android:label="@string/labelActivityServerList" >
-        </activity>
+            android:label="@string/labelActivityServerList"></activity>
         <activity
             android:name=".demo.SimpleDemo"
-            android:label="@string/labelActivitySimpleDemo" >
-        </activity>
+            android:label="@string/labelActivitySimpleDemo"></activity>
         <activity
             android:name=".demo.ExtrasDemo"
             android:exported="true"
-            android:label="@string/labelActivityExtrasDemo" >
-        </activity>
+            android:label="@string/labelActivityExtrasDemo"></activity>
         <activity
             android:name=".demo.RepeaterDemo"
-            android:label="@string/labelActivityRepeaterDemo" >
+            android:label="@string/labelActivityRepeaterDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -125,19 +140,17 @@
         </activity>
         <activity
             android:name=".demo.VoiceSearchDemo"
-            android:label="@string/labelActivityVoiceSearchDemo" >
-        </activity>
+            android:label="@string/labelActivityVoiceSearchDemo"></activity>
 
-        <service android:name="RecognizerIntentService" >
-        </service>
+        <service android:name="RecognizerIntentService"></service>
 
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->
         <service
-            android:name="SpeechRecognitionService"
+            android:name="WebSocketRecognizer"
             android:exported="true"
-            android:label="@string/labelApp"
-            android:permission="android.permission.RECORD_AUDIO" >
+            android:label="@string/labelRecognitionServiceWs"
+            android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>
 
                 <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
@@ -148,7 +161,37 @@
 
             <meta-data
                 android:name="android.speech"
-                android:resource="@xml/recognizer" />
+                android:resource="@xml/recognition_service_ws" />
+        </service>
+
+        <service
+            android:name="SpeechRecognitionService"
+            android:exported="true"
+            android:label="@string/labelRecognitionServiceHttp"
+            android:permission="android.permission.RECORD_AUDIO">
+            <intent-filter>
+
+                <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.speech"
+                android:resource="@xml/recognition_service_http" />
+        </service>
+
+        <service
+            android:name="VoiceImeService"
+            android:label="@string/labelApp"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/input_method" />
         </service>
 
         <provider
@@ -159,8 +202,8 @@
         <provider
             android:name=".provider.FileContentProvider"
             android:authorities="ee.ioc.phon.android.speak.provider.FileContentProvider"
-            android:permission="android.permission.RECORD_AUDIO"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.RECORD_AUDIO" />
     </application>
 
 </manifest>

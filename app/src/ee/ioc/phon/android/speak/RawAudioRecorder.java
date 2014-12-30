@@ -125,8 +125,7 @@ public class RawAudioRecorder {
 			mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
 			setState(State.READY);
 		} catch (Exception e) {
-			release();
-			setState(State.ERROR);
+            handleError();
 			if (e.getMessage() == null) {
 				Log.e(LOG_TAG, "Unknown error occured while initializing recording");
 			} else {
@@ -296,6 +295,17 @@ public class RawAudioRecorder {
 		return bytes;
 	}
 
+    /**
+     * Returns the recorded bytes since the last call, and resets the recording.
+     * @return bytes that have been recorded since this method was last called
+     */
+    public synchronized byte[] consumeRecordingAndTruncate() {
+        byte[] bytes = getCurrentRecording(mConsumedLength);
+        Log.i(LOG_TAG, "Copied from position: " + mConsumedLength + ": " + bytes.length + " bytes");
+        mRecordedLength = 0;
+        mConsumedLength = mRecordedLength;
+        return bytes;
+    }
 
 	private byte[] getCurrentRecording(int startPos) {
 		int len = getLength() - startPos;
@@ -327,7 +337,6 @@ public class RawAudioRecorder {
 		long sumOfSquares = getRms(mRecordedLength, mBuffer.length);
 		double rootMeanSquare = Math.sqrt(sumOfSquares / (mBuffer.length / 2));
 		if (rootMeanSquare > 1) {
-			Log.i(LOG_TAG, "getRmsdb(): " + rootMeanSquare);
 			// TODO: why 10?
 			return (float) (10 * Math.log10(rootMeanSquare));
 		}
@@ -386,6 +395,7 @@ public class RawAudioRecorder {
 						while (mRecorder != null && mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 							int status = read(mRecorder);
 							if (status < 0) {
+                                handleError();
 								break;
 							}
 						}
@@ -393,11 +403,11 @@ public class RawAudioRecorder {
 				}.start();
 			} else {
 				Log.e(LOG_TAG, "startRecording() failed");
-				setState(State.ERROR);
+                handleError();
 			}
 		} else {
 			Log.e(LOG_TAG, "start() called on illegal state");
-			setState(State.ERROR);
+            handleError();
 		}
 	}
 
@@ -416,11 +426,11 @@ public class RawAudioRecorder {
 				setState(State.STOPPED);
 			} catch (IllegalStateException e) {
 				Log.e(LOG_TAG, "native stop() called in illegal state: " + e.getMessage());
-				setState(State.ERROR);
+                handleError();
 			}
 		} else {
 			Log.e(LOG_TAG, "stop() called in illegal state");
-			setState(State.ERROR);
+            handleError();
 		}
 	}
 
@@ -480,4 +490,10 @@ public class RawAudioRecorder {
 	private static short getShort(byte argB1, byte argB2) {
 		return (short) (argB1 | (argB2 << 8));
 	}
+
+
+    private void handleError() {
+        setState(State.ERROR);
+        release();
+    }
 }

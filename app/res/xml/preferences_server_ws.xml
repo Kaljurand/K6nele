@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    // Settings that apply to the WebSocket-based server (also denoted as "fast" and "continuous")
+    <EditTextPreference
+        android:defaultValue="@string/defaultServerWs"
+        android:inputType="textUri"
+        android:key="@string/keyServerWs"
+        android:summary="@string/defaultServerWs"
+        android:title="@string/titleDefaultServiceWs"></EditTextPreference>
+</PreferenceScreen>

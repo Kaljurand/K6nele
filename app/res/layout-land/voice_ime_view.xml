@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ee.ioc.phon.android.speak.VoiceImeView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/rectangle_gradient"
+    android:clickable="true"
+    android:gravity="center"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/layoutMargin0">
+
+        <ImageButton
+            android:id="@+id/bImeKeyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/button_go"
+            android:contentDescription="@string/cdChangeInputMethod"
+            android:padding="@dimen/layoutMargin1"
+            android:src="@drawable/ic_notification_ime_default" />
+
+        <ImageButton
+            android:id="@+id/bImeGo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/button_go"
+            android:contentDescription="@string/cdGo"
+            android:padding="@dimen/layoutMargin1"
+            android:src="@drawable/ic_search_api_holo_dark" />
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/bImeKeyboard"
+            android:layout_toLeftOf="@+id/bImeStartStop"
+            android:layout_toRightOf="@+id/bImeKeyboard"
+            android:layout_toStartOf="@+id/bImeStartStop"
+            android:ellipsize="start"
+            android:padding="@dimen/layoutMargin1"
+            android:singleLine="true"
+            android:textColor="@color/grey300"
+            android:textSize="@dimen/textSize2" />
+
+        <TextView
+            android:id="@+id/tvInstruction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/bImeStartStop"
+            android:padding="@dimen/layoutMargin1"
+            android:text="@string/buttonImeSpeak"
+            android:textColor="@color/grey200"
+            android:textSize="@dimen/textSize3" />
+
+        <ee.ioc.phon.android.speak.MicButton
+            android:id="@+id/bImeStartStop"
+            android:layout_width="@dimen/layoutHeightButtonMicrophone"
+            android:layout_height="@dimen/layoutHeightButtonMicrophone"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/bImeGo"
+            android:layout_toStartOf="@+id/bImeGo"
+            android:background="@drawable/button_mic"
+            android:contentDescription="@string/cdMicrophone"
+            android:src="@drawable/ic_btn_speak_now" />
+
+    </RelativeLayout>
+
+</ee.ioc.phon.android.speak.VoiceImeView>

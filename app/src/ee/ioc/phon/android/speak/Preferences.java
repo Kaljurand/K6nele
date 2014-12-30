@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2014, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,125 +16,124 @@
 
 package ee.ioc.phon.android.speak;
 
-import ee.ioc.phon.android.speak.provider.Server;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
+import android.speech.RecognitionService;
+
+import java.util.List;
 
 /**
  * <p>Preferences activity. Updates some preference-summaries automatically,
  * if the user changes a preference.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
-	private static final int ACTIVITY_SELECT_SERVER_URL = 1;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
-
-		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-
-		setSummary(
-				(Preference) findPreference(getString(R.string.keyAutoStopAfterTime)),
-				getString(R.string.summaryAutoStopAfterTime),
-				sp.getString(getString(R.string.keyAutoStopAfterTime), "?"));
-
-		setSummary(
-				(Preference) findPreference(getString(R.string.keyRecordingRate)),
-				getString(R.string.summaryRecordingRate),
-				sp.getString(getString(R.string.keyRecordingRate), "?"));
-
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
+    }
 
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
 
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-		Preference service = (Preference) findPreference(getString(R.string.keyService));
-		service.setSummary(sp.getString(getString(R.string.keyService), getString(R.string.defaultService)));
-
-		service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
-				return true;
-			}
-
-		});
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        populateRecognitionServices(getString(R.string.defaultImeRecognizerService));
+    }
 
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Preference pref = findPreference(key);
-		if (pref instanceof EditTextPreference) {
-			EditTextPreference etp = (EditTextPreference) pref;
-			pref.setSummary(etp.getText());
-		} else if (pref instanceof ListPreference) {
-			ListPreference lp = (ListPreference) pref;
-			if (lp.getTitle().equals(getString(R.string.titleAutoStopAfterTime))) {
-				setSummary(pref, getString(R.string.summaryAutoStopAfterTime), lp.getValue());
-			} else if (lp.getTitle().equals(getString(R.string.titleRecordingRate))) {
-				setSummary(pref, getString(R.string.summaryRecordingRate), lp.getValue());
-			}
-		}
-	}
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Preference pref = findPreference(key);
+        if (pref instanceof ListPreference) {
+            ListPreference lp = (ListPreference) pref;
+            pref.setSummary(lp.getEntry());
+        }
+    }
 
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != Activity.RESULT_OK) {
-			return;
-		}
-		switch (requestCode) {
-		case ACTIVITY_SELECT_SERVER_URL:
-			Uri serverUri = data.getData();
-			if (serverUri == null) {
-				toast(getString(R.string.errorFailedGetServerUrl));
-			} else {
-				long id = Long.parseLong(serverUri.getPathSegments().get(1));
-				String url = Utils.idToValue(this, Server.Columns.CONTENT_URI, Server.Columns._ID, Server.Columns.URL, id);
-				if (url != null) {
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-					SharedPreferences.Editor editor = prefs.edit();
-					editor.putString(getString(R.string.keyService), url);
-					editor.commit();
-				}
-			}
-			break;
-		}
-	}
+    /**
+     * Populates the list of available recognizer services and adds a choice for the system default
+     * service. If no service is currently selected (when the user accesses the preferences menu
+     * for the first time), then selects the item that points to the preferredService (this is
+     * Kõnele's own service).
+     *
+     * @param preferredService Service to select if none was selected
+     */
+    private void populateRecognitionServices(String preferredService) {
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> services = pm.queryIntentServices(
+                new Intent(RecognitionService.SERVICE_INTERFACE), 0);
 
+        int numberOfServices = services.size();
 
-	private void setSummary(Preference pref, String strText, String strArg) {
-		pref.setSummary(String.format(strText, strArg));
-	}
+        // This should never happen because K6nele comes with several services
+        if (numberOfServices == 0) {
+            return;
+        }
 
-	private void toast(String message) {
-		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-	}
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Currently selected service (identified by class name)
+        String selectedService = Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
+        int selectedIndex = -1;
+        int preferredIndex = 0;
 
+        CharSequence[] entries = new CharSequence[numberOfServices + 1];
+        CharSequence[] entryValues = new CharSequence[numberOfServices + 1];
+
+        // System default as the first listed choice
+        entries[0] = getString(R.string.labelDefaultRecognitionService);
+        entryValues[0] = getString(R.string.keyDefaultRecognitionService);
+
+        int index = 1;
+        for (ResolveInfo ri : services) {
+            ServiceInfo si = ri.serviceInfo;
+            if (si == null) {
+                Log.i("serviceInfo == null");
+                continue;
+            }
+            String pkg = si.packageName;
+            String cls = si.name;
+            CharSequence label = si.loadLabel(pm);
+            Log.i(label + " :: " + pkg + " :: " + cls);
+            entries[index] = label;
+            String value = pkg + '|' + cls;
+            entryValues[index] = value;
+            Log.i("populateRecognitionServices: " + entryValues[index]);
+            if (value.equals(selectedService)) {
+                selectedIndex = index;
+            } else if (value.equals(preferredService)) {
+                preferredIndex = index;
+            }
+            index++;
+        }
+
+        if (selectedIndex == -1) {
+            selectedIndex = preferredIndex;
+        }
+
+        ListPreference list = (ListPreference) findPreference(getString(R.string.keyImeRecognitionService));
+        list.setEntries(entries);
+        list.setEntryValues(entryValues);
+        list.setValueIndex(selectedIndex);
+        list.setSummary(list.getEntry());
+    }
 }

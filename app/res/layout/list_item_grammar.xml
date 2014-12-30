@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="fill"
-    android:padding="6dp" >
+    android:padding="6dp">
 
     <TextView
         android:id="@+id/itemGrammarName"
@@ -17,6 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/itemGrammarName"
         android:layout_toRightOf="@+id/itemGrammarName"
         android:padding="1dp"
         android:text="ShoppingAssist"
@@ -37,7 +39,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemGrammarName"
-        android:gravity="right"
+        android:gravity="end"
         android:singleLine="true"
         android:text="123"
         android:textSize="14sp"

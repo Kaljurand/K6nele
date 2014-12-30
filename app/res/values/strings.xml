@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--
-    As long as this app is Estonian-specific we set the Estonian
-    name as the default name, this way the app is easier to find on Google Play (for Estonians).
-    -->
-    <string name="labelApp">Kõnele</string>
+    <string name="labelApp" translatable="false">Kõnele</string>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="keyService" translatable="false">keyService</string>
+    <string name="keyServerHttp" translatable="false">keyServerHttp</string>
+    <string name="keyServerWs" translatable="false">keyServerWs</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
+    <string name="keyAutoStart" translatable="false">keyAutoStart</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
-    <string name="defaultService" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+    <string name="keyAudioCues" translatable="false">keyAudioCues</string>
+    <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
+    <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
+    <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
+    <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
+    <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
+    <string name="keyDefaultRecognitionService" translatable="false">keyDefaultRecognitionService</string>
+
+    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
+    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
+    <string name="defaultServerWs" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/</string>
+
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
     <string-array name="valuesAutoStopAfterTime" translatable="false">
@@ -21,13 +30,20 @@
         <item>20</item>
         <item>30</item>
     </string-array>
+    <string-array name="empty" translatable="false"></string-array>
 
-    <string name="descriptionApp">speech-to-text service for Android apps</string>
+    <string name="descriptionApp">speech-to-text services for Android apps</string>
+
+    <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
+    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammar support). Cannot be changed in this Kõnele version.</string>
+    <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAbout">About</string>
     <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
+    <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
@@ -36,12 +52,19 @@
     <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityRepeaterDemo">Repeater demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
+    <string name="labelDefaultRecognitionService">System default</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Default server</string>
-    <string name="titleCategoryUi">User interface</string>
+    <string name="titleDefaultServiceHttp">HTTP URL</string>
+    <string name="titleDefaultServiceWs">WebSocket URL</string>
+    <string name="titleCategoryUi">Voice search panel (red button)</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
-    <string name="titleCategoryOther">Other</string>
+    <string name="titleCategoryIme">Speech keyboard (yellow button)</string>
+    <string name="titleCategoryServices">Recognition services</string>
+    <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
+    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>
+    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
     <string name="titleAutoStart">Auto start</string>
@@ -63,36 +86,40 @@
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
+    <string name="titleRecognitionService">Recognition service</string>
+    <string name="dialogTitleImeRecognitionService">Recognition service</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
     <string name="buttonStop">Speak now!\nTap when finished</string>
+    <string name="buttonImeSpeak">Tap &amp; Speak</string>
+    <string name="buttonImeStop">Speak now! Tap when finished</string>
     <string name="buttonYes">Yes</string>
     <string name="buttonNo">No</string>
     <string name="buttonOk">OK</string>
     <string name="buttonCancel">Cancel</string>
     <string name="statusTranscribing">Transcribing…</string>
+    <string name="statusImeTranscribing">Still transcribing…</string>
 
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
-		v%3$s by &lt;a href="https://plus.google.com/111912457138686732050/about">Kaarel Kaljurand&lt;/a></string>
+		v%3$s by &lt;a href="https://plus.google.com/+KaarelKaljurand">Kaarel Kaljurand&lt;/a></string>
     <string name="tvAbout">&lt;p>%1$s
-is an app that offers speech-to-text service to other apps.
+is an app that offers speech-to-text services to other apps.
 Apps that allow user input via speech usually have a little microphone
 button as part of their user interface. Examples include:&lt;/p>
 
-&amp;nbsp;&amp;nbsp;&amp;bull; keyboards (e.g. SlideIT, GO Keyboard);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; note taking and TODO-list apps (e.g. Evernote, Astrid Tasks, Out of Milk, Mighty Grocery Shopping List);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; SMS apps (e.g. GO SMS Pro, SMS Popup);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools (e.g. Google Translate, Dictionary.com);&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; note taking and TODO-list apps;&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; SMS apps;&lt;br/>
+&amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools;&lt;br/>
 &amp;nbsp;&amp;nbsp;&amp;bull; calculators (e.g. WolframAlpha);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. Google Maps, Google Drive, YouTube).
+&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. GMail, Google Drive, YouTube).
 
 		&lt;p>%1$s is
 		pre-configured to
-		use an online Estonian speech-to-text service
-		(&lt;a
-		href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>)
+		use online Estonian speech-to-text services
+		(see &lt;a
+		href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>)
 		but
 		you can reconfigure it to use any online speech-to-text server
 		provided
@@ -105,9 +132,12 @@ and English, covering domains like unit conversion, address queries, setting the
 More grammars are available at
 &lt;a href="http://kaljurand.github.io/Grammars/">http://kaljurand.github.io/Grammars/&lt;/a>.&lt;/p>
 
+&lt;p>%1$s can also be used as a (one-button) keyboard: tap the big yellow button and start dictating, the words
+        appear immediately in the text area.
+        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space.&lt;/p>
+
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at the
-		&lt;a
-		href="http://recognizer-intent.googlecode.com">%1$s website&lt;/a>.&lt;/p></string>
+		&lt;a href="http://kaljurand.github.io/K6nele/">%1$s website&lt;/a>.&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
@@ -125,7 +155,20 @@ More grammars are available at
     <string name="errorFailedLaunchApp">This app is not launchable or is not installed (anymore): %1$s</string>
     <string name="errorFailedPlayAudio">Failed to play the recorded audio: %1$s, %2$s</string>
     <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
+
     <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
+
+    // SpeechRecognizer error messages (9) shown in the IME
+    <string name="errorImeResultAudioError">ERROR: audio recording failed</string>
+    <string name="errorImeResultNetworkError">ERROR: no network connection</string>
+    <string name="errorImeResultNetworkTimeoutError">ERROR: network connection timeout</string>
+    <string name="errorImeResultRecognizerBusy">ERROR: no recognizer slots available</string>
+    <string name="errorImeResultSpeechTimeout">ERROR: no speech input detected</string>
+    <string name="errorImeResultNoMatch">ERROR: no transcription found</string>
+    <string name="errorImeResultInsufficientPermissions">ERROR: insufficient permissions</string>
+    <string name="errorImeResultClientError">ERROR: general app error</string>
+    <string name="errorImeResultServerError">ERROR: recognizer server error</string>
+
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
     <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>
@@ -171,6 +214,9 @@ More grammars are available at
     <string name="cdWaveform">Waveform of the spoken input</string>
     <string name="cdVolume">Volume level</string>
     <string name="cdAppIcon">App icon</string>
+    <string name="cdChangeInputMethod">Change input method</string>
+    <string name="cdGo">Launch search</string>
+    <string name="cdSettings">Kõnele settings</string>
 
     <!-- Entries for the database, both apos and its escape character need escaping. -->
     <string name="entryGrammarName1">[unrestricted input]</string>

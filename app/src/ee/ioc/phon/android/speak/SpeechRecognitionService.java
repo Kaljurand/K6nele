@@ -51,14 +51,6 @@ import android.speech.RecognitionService;
  */
 public class SpeechRecognitionService extends RecognitionService {
 
-	// Check the volume 10 times a second
-	private static final int TASK_INTERVAL_VOL = 100;
-	// Wait for 1/2 sec before starting to measure the volume
-	private static final int TASK_DELAY_VOL = 500;
-
-	private static final int TASK_INTERVAL_STOP = 1000;
-	private static final int TASK_DELAY_STOP = 1000;
-
 	private SharedPreferences mPrefs;
 
 	private Handler mVolumeHandler = new Handler();
@@ -237,8 +229,8 @@ public class SpeechRecognitionService extends RecognitionService {
 
 	private void startTasks() {
 		mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
-		mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
-		mStopHandler.postDelayed(mStopTask, TASK_DELAY_STOP);
+		mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
+		mStopHandler.postDelayed(mStopTask, Constants.TASK_DELAY_STOP);
 	}
 
 
@@ -449,7 +441,7 @@ public class SpeechRecognitionService extends RecognitionService {
 						float rmsdb = mRecorder.getRmsdb();
 						Log.i("Callback: rmsChanged: " + rmsdb);
 						listener.rmsChanged(rmsdb);
-						mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
+						mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
 					} catch (RemoteException e) {
 						handleRemoteException(e);
 					}
@@ -468,7 +460,7 @@ public class SpeechRecognitionService extends RecognitionService {
 							) {
 						stopRecording(listener);
 					} else {
-						mStopHandler.postDelayed(this, TASK_INTERVAL_STOP);
+						mStopHandler.postDelayed(this, Constants.TASK_INTERVAL_STOP);
 					}
 				}
 			}
@@ -492,7 +484,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * About RemoteException see
 	 * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
 	 */
-	private void handleRemoteException(RemoteException e) {
+	private static void handleRemoteException(RemoteException e) {
 		Log.e(e.getMessage());
 	}
 }

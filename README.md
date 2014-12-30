@@ -1,16 +1,26 @@
 Kõnele
 ======
 
-Kõnele is an Android app that offers speech-to-text service to other apps.
+Kõnele is an Android app that offers speech-to-text services to other apps.
+It contains the following main components:
+
+  - RecognizerIntent activity
+  - Voice keyboard that implements the input method editor (IME) API
+  - SpeechRecognizer implementation that uses <https://github.com/alumae/kaldi-gstreamer-server>
+  - SpeechRecognizer implementation that uses <https://github.com/alumae/ruby-pocketsphinx-server>
+
+The main goals of this project is to offer support for Estonian speech recognition on the
+Android platform, as well as grammar-based speech recognition for voice command applications.
 
 See <https://code.google.com/p/recognizer-intent/> for
 
   - more information
   - issues list
-  - APK downloads
+  - (old) APK downloads
   - end-user and developer documentation
 
-The latest stable APK is available on
+APK downloads are available on the [releases page](https://github.com/Kaljurand/K6nele/releases).
+The latest stable APK is also on
 [Google Play](https://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak).
 
 
@@ -20,7 +30,7 @@ Compilation
 Point to the SDK directory by setting the environment variable
 `ANDROID_HOME`, e.g.
 
-	ANDROID_HOME=${HOME}/myapps/android-studio/sdk/
+	ANDROID_HOME=${HOME}/myapps/android-sdk/
 
 Then run
 
@@ -39,3 +49,10 @@ If you have access to the release keystore then
 
 		storePassword=<password1>
 		keyPassword=<password2>
+
+
+Contributions
+-------------
+
+The client for https://github.com/alumae/kaldi-gstreamer-server
+was originally based on https://github.com/truongdq54/kaldi-gstreamer-android-client

@@ -73,9 +73,14 @@ public class ChunkedWebRecSessionBuilder {
 	private String mContentType;
 	private String mUserAgentComment;
 	private String mDeviceId;
+    private String mCaller;
 
 	public ChunkedWebRecSessionBuilder(Context context, Bundle extras, ComponentName callingActivity) throws MalformedURLException {
 		mContext = context;
+
+        if (extras == null) {
+            extras = new Bundle();
+        }
 
 		if (Log.DEBUG) Log.i(Utils.ppBundle(extras));
 
@@ -84,27 +89,27 @@ public class ChunkedWebRecSessionBuilder {
 
 		PendingIntent pendingIntent = Utils.getPendingIntent(extras);
 
-		String caller = null;
-
 		if (callingActivity == null) {
 			Caller caller1 = new Caller(pendingIntent, extras);
-			caller = caller1.getActualCaller();
+			mCaller = caller1.getActualCaller();
 			setUserAgentComment(caller1.toString());
 		} else {
 			// TODO: integrate this into the caller-object
-			caller = getCaller(callingActivity, pendingIntent);
-			setUserAgentComment(caller);
+			mCaller = getCaller(callingActivity, pendingIntent);
+			setUserAgentComment(mCaller);
 		}
 
-		PackageNameRegistry wrapper = new PackageNameRegistry(context, caller);
-		String urlService = prefs.getString(context.getString(R.string.keyService), context.getString(R.string.defaultService));
+        // Calling the constructor modifies the database
+		PackageNameRegistry wrapper = new PackageNameRegistry(context, mCaller);
+		String urlService = prefs.getString(context.getString(R.string.keyServerHttp), context.getString(R.string.defaultServerHttp));
 		setFromExtras(extras, wrapper, urlService);
 		mNbest = makeNbest(extras, callingActivity);
 	}
 
 
 	public void setUserAgentComment(String caller) {
-		mUserAgentComment = makeUserAgentComment(Utils.getVersionName(mContext), caller);
+        // TODO: rename "RecognizerIntentActivity" to "K6nele"
+		mUserAgentComment = Utils.makeUserAgentComment("RecognizerIntentActivity", Utils.getVersionName(mContext), caller);
 	}
 
 
@@ -118,24 +123,37 @@ public class ChunkedWebRecSessionBuilder {
 	}
 
 
+    public String getLang() {
+        return mLang;
+    }
+
+    public String getDeviceId() {
+        return mDeviceId;
+    }
+
 	public URL getServerUrl() {
 		return mWsUrl;
 	}
-
 
 	public URL getGrammarUrl() {
 		return mLmUrl;
 	}
 
-
 	public String getGrammarTargetLang() {
 		return mGrammarTargetLang;
 	}
 
+    public String getCaller() {
+        return mCaller;
+    }
 
-	public String getUserAgentComment() {
+    public String getUserAgentComment() {
 		return mUserAgentComment;
 	}
+
+    public boolean isPartialResults() {
+        return mPartialResults;
+    }
 
 
 	public ChunkedWebRecSession build() {
@@ -295,14 +313,5 @@ public class ChunkedWebRecSessionBuilder {
 		}
 
 		return null;
-	}
-
-
-	private static String makeUserAgentComment(String versionName, String caller) {
-		return "RecognizerIntentActivity/" + versionName + "; " +
-				Build.MANUFACTURER + "/" +
-				Build.DEVICE + "/" +
-				Build.DISPLAY + "; " +
-				caller;
 	}
 }

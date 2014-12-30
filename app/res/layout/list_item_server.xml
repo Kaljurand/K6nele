@@ -2,13 +2,13 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="fill"
-    android:padding="8dp" >
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/itemServerId"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="end"
         android:singleLine="true"
         android:text="123"
         android:textSize="14sp"
@@ -19,7 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemServerId"
-        android:text="@string/defaultService"
+        android:text="@string/defaultServerHttp"
         android:textSize="14sp" />
 
     <!-- TODO: This could be used to indicate the default server -->
@@ -28,6 +28,7 @@
         android:id="@+id/itemServerStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:padding="2dp"

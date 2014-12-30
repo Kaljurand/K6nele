@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="labelApp">Kõnele</string>
-    <string name="descriptionApp">kõnetuvastusmoodul Androidi rakendustele</string>
+    <string name="descriptionApp">kõnetuvastusteenused Androidi rakendustele</string>
+
+    <string name="labelRecognitionServiceHttp">Kõnele (grammatikatoega)</string>
+    <string name="labelRecognitionServiceWs">Kõnele (kiire tuvastusega)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
@@ -18,10 +20,9 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultService">Server</string>
-    <string name="titleCategoryUi">Kasutajaliides</string>
+    <string name="titleCategoryUi">Otsingupaneel (punase nupuga)</string>
+    <string name="titleCategoryIme">Kõneklaviatuur (kollase nupuga)</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
-    <string name="titleCategoryOther">Muu</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
 		kõnesisendi kasutamiseks</string>
@@ -51,19 +52,25 @@
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
 
+    <string name="titleRecognitionService">Kõnetuvastusteenus</string>
+    <string name="dialogTitleImeRecognitionService">Kõnetuvastusteenus</string>
+
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
     <string name="buttonStop">Lõpeta!</string>
+    <string name="buttonImeSpeak">Vajutage nupule ja rääkige</string>
+    <string name="buttonImeStop">Lõpetamiseks vajutage nupule</string>
     <string name="buttonYes">Jah</string>
     <string name="buttonNo">Ei</string>
     <string name="buttonOk">OK</string>
     <string name="buttonCancel">Loobu</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
+    <string name="statusImeTranscribing">Oodake…</string>
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s
 		&lt;br/>
 		v%3$s, autor:
 		&lt;a
-		href="https://plus.google.com/111912457138686732050/about">Kaarel
+		href="https://plus.google.com/+KaarelKaljurand">Kaarel
 		Kaljurand&lt;/a> </string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
@@ -77,56 +84,49 @@
 		Populaarsemad näited
 		sellistest rakendustest on&lt;/p>
 
-		&amp;nbsp;&amp;nbsp;&amp;bull;
-		klaviatuurirakendused (nt
-		SlideIT, GO Keyboard);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused (nt Google Maps, Waze);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; märkmete ja meeldetuletuste rakendused (nt
-		Evernote, Astrid Tasks, Taskos
-		To Do List, Out of Milk,
-		Mighty Grocery Shopping
-		List);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull;
-		lühisõnumirakendused (nt SMS Popup, GO
-		SMS Pro);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt Arvutaja, Edwin, Speaktoit);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused;&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; märkmete ja meeldetuletuste rakendused (nt Google Keep);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; lühisõnumirakendused;&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt Arvutaja);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull; kalkulaatorid (nt WolframAlpha);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; sõnastiku- ja
-		tõlketeenused (nt Google
-		Translate);&lt;br/>
+		&amp;nbsp;&amp;nbsp;&amp;bull; sõnastiku- ja tõlketeenused (nt Google Translate);&lt;br/>
 		&amp;nbsp;&amp;nbsp;&amp;bull;
-		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, Google Maps, Google Drive, YouTube).
+		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, GMail, Google Drive, YouTube).
 
-		&lt;p>Tüüpiliselt kasutab
-		telefon kõne
-		tekstiks
-		teisendamiseks Google\'i kõnetuvastusserverit,
-		aga see ei toeta
-		eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab
-		kasutada
-		kõne
-		transkribeerimiseks TTÜ Küberneetika Instituudi foneetika
-		ja
-		kõnetehnoloogia labori
-		kõnetuvastusserverit &lt;a
-		href="http://bark.phon.ioc.ee/speech-api">http://bark.phon.ioc.ee/speech-api&lt;/a>.&lt;/p>
+        &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur, mida saab kasutada kõikide
+        tekstiväljade täitmiseks (väljaarvatud parooliväljad). Kollasele nupule vajutamine
+        käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
+        Svaip vasakule kustutab kursorile eelneva sõna.
+        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku.&lt;/p>
 
-		&lt;p>Samuti võimaldab &lt;b>%1$s&lt;/b> omistada rakendustele
-		grammatikaid, et tõlkida tuvastustulemus rakenduse-spetsiifilisse
+        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks teenusi,
+		mis ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
+		transkribeerimiseks kahte TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori
+		kõnetuvastusserverit, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
+
+        &lt;p>&lt;b>Grammatikatoega server&lt;/b> võimaldab (muuhulgas) rakendustele omistada grammatikaid,
+        et tõlkida tuvastustulemus rakenduse-spetsiifilisse
 		keelde. Nt
 		kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
 		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
 		ning kaardirakendusele või bussiaegade rakendusele Eesti aadresside grammatika.
 		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
-		Nt rakenduses Speaktoit saab hommikuse äratuskella paika seada fraasiga \"ärata mind seitse kolmkümmend\",
-		eeldusel, et sellele rakendusele on omistatud Alarm-grammatika. Vt ka
+		Vt ka
 		&lt;a
 		href="http://kaljurand.github.io/Grammars/">grammatikate
 		projekti
 		kodulehekülge&lt;/a>.&lt;/p>
 
+        &lt;p>&lt;b>Kiire tuvastusega server&lt;/b> tagastab tuvastustulemuse juba rääkimise ajal, on üldiselt
+        oluliselt täpsem, ning võimaldab
+        dikteerida kirjavahemärke (nt \"koma\", \"uus rida\").&lt;/p>
+
+        &lt;p>Kõnele sisselülitamiseks on vaja muuta Androidi seadeid menüüs \"Keeled ja sisestamine\" kahes kohas:
+        \"Klaviatuur ja sisestusmeetodid\" ning \"Kõne\". Samuti võib olla vaja kustutada rakenduse
+        \"Google\'i otsing\" vaikeväärtused.&lt;/p>
+
 		&lt;p>Kuna &lt;b>%1$s&lt;/b>
-		kasutab kõne transkribeerimiseks veebiteenust, siis peab olema
+		kasutab kõne transkribeerimiseks veebiteenusi, siis peab olema
 		telefonis sisselülitatud internetiühendus.
 		Sõltuvalt
 		mobiilioperaatori
@@ -142,7 +142,7 @@
 		&lt;p>Põhjalikum
 		dokumentatsioon on saadaval
 		&lt;a
-		href="http://recognizer-intent.googlecode.com">%1$s veebilehel&lt;/a>.
+		href="http://kaljurand.github.io/K6nele/">%1$s veebilehel&lt;/a>.
 		Samuti on seal võimalik tutvuda rakenduse lähtekoodiga ning teavitada
 		autorit rakenduse
 		puudustest.&lt;/p></string>
@@ -207,6 +207,18 @@
 		parasjagu lindistab?</string>
     <string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
 		võrguühendus on sisse lülitatud?</string>
+
+    // SpeechRecognizer error messages (9) shown in the IME
+    <string name="errorImeResultAudioError">VIGA: lindistamine luhtus</string>
+    <string name="errorImeResultNetworkError">VIGA: netiühendus puudub</string>
+    <string name="errorImeResultNetworkTimeoutError">VIGA: server ei tööta</string>
+    <string name="errorImeResultRecognizerBusy">VIGA: tuvastajal pole vabu ühendusi</string>
+    <string name="errorImeResultClientError">VIGA: rakenduse viga</string>
+    <string name="errorImeResultServerError">VIGA: kõnetuvastusserveri viga</string>
+    <string name="errorImeResultSpeechTimeout">VIGA: kõnet polnud kuulda</string>
+    <string name="errorImeResultNoMatch">VIGA: transkribeerimine luhtus</string>
+    <string name="errorImeResultInsufficientPermissions">VIGA: vajalikud õigused puuduvad</string>
+
     <string name="errorResultClientError">Kliendi viga</string>
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
@@ -223,6 +235,9 @@
     <string name="cdWaveform">Sisendkõne pilt</string>
     <string name="cdVolume">Valjuse näit</string>
     <string name="cdAppIcon">Logo</string>
+    <string name="cdChangeInputMethod">Vahetage sisestusmeetodit</string>
+    <string name="cdGo">Käivitage otsing</string>
+    <string name="cdSettings">Kõnele seaded</string>
 
     <string-array name="entriesAutoStopAfterTime">
         <item>2 sek</item>
@@ -231,5 +246,17 @@
         <item>20 sek</item>
         <item>30 sek</item>
     </string-array>
+
+    <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>
+    <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust. WebSocket-põhine server.</string>
+    <string name="titleCategoryServices">Kõnetuvastusteenused</string>
+    <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
+    <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
+    <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
+    <string name="titleDefaultServiceHttp">HTTP-aadress</string>
+    <string name="titleDefaultServiceWs">WebSocket-aadress</string>
+    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammatikatoega). Ainuvõimalik valik Kõnele praeguses versioonis.</string>
+    <string name="labelDefaultRecognitionService">Süsteemne vaikeväärtus</string>
 
 </resources>

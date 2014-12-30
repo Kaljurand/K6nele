@@ -2,13 +2,14 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="fill"
-    android:padding="6dp" >
+    android:padding="6dp">
 
     <ImageView
         android:id="@+id/itemAppIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/cdAppIcon"
@@ -21,6 +22,7 @@
         android:id="@+id/itemAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/itemAppIcon"
         android:layout_toRightOf="@+id/itemAppIcon"
         android:singleLine="true"
         android:text="Google Maps for Android"
@@ -31,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppName"
+        android:layout_toEndOf="@+id/itemAppIcon"
         android:layout_toRightOf="@+id/itemAppIcon"
         android:text="com.google.android.apps.maps.with.offline.maps.feature"
         android:textSize="14sp" />
@@ -40,7 +43,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppName"
-        android:gravity="right"
+        android:gravity="end"
         android:singleLine="true"
         android:text="123"
         android:textSize="14sp"
@@ -50,6 +53,7 @@
         android:id="@+id/itemAppCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@color/semi_transparent"
@@ -82,7 +86,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppGrammar"
-        android:text="@string/defaultService"
+        android:text="@string/defaultServerHttp"
         android:textColor="@color/orange"
         android:textSize="14sp" />
 

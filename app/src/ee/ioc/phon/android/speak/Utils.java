@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2014, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -33,6 +34,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -52,11 +54,10 @@ import org.apache.commons.io.FileUtils;
 
 /**
  * <p>Some useful static methods.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class Utils {
-	private static final int SAMPLING_RATE = 16000;
 
 	private Utils() {}
 
@@ -112,7 +113,7 @@ public class Utils {
 	/**
 	 * <p>Returns a bitmap that visualizes the given waveform (byte array),
 	 * i.e. a sequence of 16-bit integers.</p>
-	 * 
+	 *
 	 * TODO: show to high/low points in other color
 	 * TODO: show end pause data with another color
 	 */
@@ -390,4 +391,26 @@ public class Utils {
 		}
 		return null;
 	}
+
+
+    public static String makeUserAgentComment(String tag, String versionName, String caller) {
+        return tag + "/" + versionName + "; " +
+                Build.MANUFACTURER + "/" +
+                Build.DEVICE + "/" +
+                Build.DISPLAY + "; " +
+                caller;
+    }
+
+
+    public static String getPrefString(SharedPreferences prefs, Resources res, int key, int defaultValue) {
+        return prefs.getString(res.getString(key), res.getString(defaultValue));
+    }
+
+    public static String getPrefString(SharedPreferences prefs, Resources res, int key) {
+        return prefs.getString(res.getString(key), null);
+    }
+
+    public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {
+        return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
+    }
 }

@@ -57,6 +57,8 @@ import android.os.Bundle;
  */
 public class Caller {
 
+    private static final String KEY_PACKAGE_NAME = "packageName";
+
 	private final String mPrimaryCaller;
 	private final String mSecondaryCaller;
 
@@ -95,7 +97,7 @@ public class Caller {
 	 * @return package name possibly hidden deep into the given bundle
 	 */
 	private static String getPackageName(Bundle bundle) {
-		Object obj = Utils.getBundleValue(bundle, "packageName");
+		Object obj = Utils.getBundleValue(bundle, KEY_PACKAGE_NAME);
 		if (obj instanceof String) {
 			return (String) obj;
 		}
