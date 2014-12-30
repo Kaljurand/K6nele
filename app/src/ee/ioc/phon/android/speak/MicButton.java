@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,14 +29,11 @@ public class MicButton extends ImageButton {
 
     private List<Drawable> mVolumeLevels;
 
-    private Animation mAnimFadeIn;
-    private Animation mAnimFadeOut;
     private Animation mAnimFadeInOutInf;
 
     private int mVolumeLevel = 0;
     private int mMaxLevel;
     private AudioPauser mAudioPauser;
-    private Constants.State mState;
 
     public MicButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -52,7 +51,6 @@ public class MicButton extends ImageButton {
     }
 
     public void setState(Constants.State state) {
-        mState = state;
         switch (state) {
             case INIT:
                 mAudioPauser.resume();
@@ -94,17 +92,6 @@ public class MicButton extends ImageButton {
         }
     }
 
-
-    public void fadeIn() {
-        Animations.startFadeAnimation(mAnimFadeIn, this, View.VISIBLE);
-    }
-
-
-    public void fadeOut() {
-        Animations.startFadeAnimation(mAnimFadeOut, this, View.INVISIBLE);
-    }
-
-
     private void initAnimations(Context context) {
         Resources res = getResources();
         mDrawableMic = res.getDrawable(R.drawable.button_mic);
@@ -117,8 +104,6 @@ public class MicButton extends ImageButton {
         mVolumeLevels.add(res.getDrawable(R.drawable.button_mic_recording_3));
         mMaxLevel = mVolumeLevels.size() - 1;
 
-        mAnimFadeIn = AnimationUtils.loadAnimation(context, R.anim.fade_in);
-        mAnimFadeOut = AnimationUtils.loadAnimation(context, R.anim.fade_out);
         mAnimFadeInOutInf = AnimationUtils.loadAnimation(context, R.anim.fade_inout_inf);
     }
 
@@ -131,6 +116,18 @@ public class MicButton extends ImageButton {
         }
         mAudioPauser = new AudioPauser(context);
         initAnimations(context);
+
+        // Vibrate when the microphone key is pressed down
+        setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // TODO: what is the diff between KEYBOARD_TAP and the other constants?
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                }
+                return false;
+            }
+        });
     }
 
 }
