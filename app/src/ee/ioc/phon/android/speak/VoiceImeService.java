@@ -24,9 +24,6 @@ import java.util.regex.Pattern;
 
 public class VoiceImeService extends InputMethodService {
 
-    // Maximum number of characters that left-swipe is willing to delete
-    private static final int MAX_DELETABLE_CONTEXT = 100;
-    private static final Pattern WHITESPACE = Pattern.compile("\\s{1,}");
 
     private InputMethodManager mInputMethodManager;
 
@@ -126,24 +123,16 @@ public class VoiceImeService extends InputMethodService {
 
         mInputView.setListener(getRecognizerIntent(getApplicationContext(), attribute), new VoiceImeView.VoiceImeViewListener() {
 
-            int mPrevLength = 0;
+            TextUpdater mTextUpdater = new TextUpdater();
 
             @Override
             public void onPartialResult(String text) {
-                commitTyped(getCurrentInputConnection(), text, mPrevLength);
-                mPrevLength = text.length();
+                mTextUpdater.commitPartialResult(getCurrentInputConnection(), text);
             }
 
             @Override
             public void onFinalResult(String text) {
-                int lastIndex = text.length() - 1;
-                if (lastIndex != -1) {
-                    if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
-                        text += " ";
-                    }
-                    commitTyped(getCurrentInputConnection(), text, mPrevLength);
-                }
-                mPrevLength = 0;
+                mTextUpdater.commitFinalResult(getCurrentInputConnection(), text);
             }
 
             @Override
@@ -159,17 +148,17 @@ public class VoiceImeService extends InputMethodService {
 
             @Override
             public void onDeleteLastWord() {
-                handleDelete(getCurrentInputConnection());
+                mTextUpdater.deleteWord(getCurrentInputConnection());
             }
 
             @Override
             public void onAddNewline() {
-                commitTyped(getCurrentInputConnection(), "\n", 0);
+                mTextUpdater.addNewline(getCurrentInputConnection());
             }
 
             @Override
             public void onAddSpace() {
-                commitTyped(getCurrentInputConnection(), " ", 0);
+                mTextUpdater.addSpace(getCurrentInputConnection());
             }
         });
 
@@ -203,44 +192,6 @@ public class VoiceImeService extends InputMethodService {
                 candidatesStart, candidatesEnd);
     }
 
-    private static void commitTyped(InputConnection inputConnection, String str, int prevLength) {
-        if (inputConnection != null && str != null && str.length() > 0) {
-            if (prevLength > 0) {
-                inputConnection.deleteSurroundingText(prevLength, 0);
-            }
-            inputConnection.commitText(str, 1);
-        }
-    }
-
-    /**
-     * Deletes all characters up to the leftmost whitespace from the cursor (including the whitespace)
-     * TODO: maybe expensive?
-     */
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private static void handleDelete(InputConnection inputConnection) {
-        if (inputConnection != null) {
-            // If something is selected then delete the selection and return
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
-                    && inputConnection.getSelectedText(0) != null) {
-                inputConnection.commitText("", 0);
-            } else {
-                CharSequence beforeCursor = inputConnection.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
-                if (beforeCursor != null) {
-                    int beforeCursorLength = beforeCursor.length();
-                    Matcher m = WHITESPACE.matcher(beforeCursor);
-                    int lastIndex = 0;
-                    while (m.find()) {
-                        lastIndex = m.start();
-                    }
-                    if (lastIndex > 0) {
-                        inputConnection.deleteSurroundingText(beforeCursorLength - lastIndex, 0);
-                    } else if (beforeCursorLength < MAX_DELETABLE_CONTEXT) {
-                        inputConnection.deleteSurroundingText(beforeCursorLength, 0);
-                    }
-                }
-            }
-        }
-    }
 
     private void closeInputView() {
         if (mInputView != null) {
@@ -337,5 +288,118 @@ public class VoiceImeService extends InputMethodService {
         // The key needs to be "packageName".
         bundle.putString("packageName", asString(attribute.packageName));
         return bundle;
+    }
+
+
+    private static class TextUpdater {
+
+        // Maximum number of characters that left-swipe is willing to delete
+        private static final int MAX_DELETABLE_CONTEXT = 100;
+        private static final Pattern WHITESPACE = Pattern.compile("\\s{1,}");
+
+        private String mPrevText = "";
+
+        public TextUpdater() {
+        }
+
+
+        /**
+         * Add a space to the end of the text and writes it into the text field.
+         */
+        public void commitFinalResult(InputConnection ic, String text) {
+            int lastIndex = text.length() - 1;
+            if (lastIndex != -1) {
+                if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
+                    text += " ";
+                }
+            }
+            commitText(ic, text);
+            mPrevText = "";
+        }
+
+        /**
+         * Writes the text into the text field and stores it for future reference.
+         */
+        public void commitPartialResult(InputConnection ic, String text) {
+            commitText(ic, text);
+            mPrevText = text;
+        }
+
+        public void addNewline(InputConnection ic) {
+            if (ic != null) {
+                ic.commitText("\n", 1);
+            }
+        }
+
+        public void addSpace(InputConnection ic) {
+            if (ic != null) {
+                ic.commitText(" ", 1);
+            }
+        }
+
+        /**
+         * Deletes all characters up to the leftmost whitespace from the cursor (including the whitespace).
+         * If something is selected then delete the selection.
+         * TODO: maybe expensive?
+         */
+        @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+        public void deleteWord(InputConnection ic) {
+            if (ic != null) {
+                // If something is selected then delete the selection and return
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
+                        && ic.getSelectedText(0) != null) {
+                    ic.commitText("", 0);
+                } else {
+                    CharSequence beforeCursor = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
+                    if (beforeCursor != null) {
+                        int beforeCursorLength = beforeCursor.length();
+                        Matcher m = WHITESPACE.matcher(beforeCursor);
+                        int lastIndex = 0;
+                        while (m.find()) {
+                            lastIndex = m.start();
+                        }
+                        if (lastIndex > 0) {
+                            ic.deleteSurroundingText(beforeCursorLength - lastIndex, 0);
+                        } else if (beforeCursorLength < MAX_DELETABLE_CONTEXT) {
+                            ic.deleteSurroundingText(beforeCursorLength, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Updates the text field, modifying only the parts that have changed.
+         */
+        private void commitText(InputConnection ic, String text) {
+            if (ic != null && text != null && text.length() > 0) {
+                // Calculate the length of the text that has changed
+                String commonPrefix = greatestCommonPrefix(mPrevText, text);
+                int commonPrefixLength = commonPrefix.length();
+                int prevLength = mPrevText.length();
+                int deletableLength = prevLength - commonPrefixLength;
+
+                if (deletableLength > 0) {
+                    ic.deleteSurroundingText(deletableLength, 0);
+                }
+
+                if (commonPrefixLength == 0) {
+                    ic.commitText(text, 1);
+                } else {
+                    ic.commitText(text.substring(commonPrefixLength), 1);
+                }
+            }
+        }
+
+    }
+
+    public static String greatestCommonPrefix(String a, String b) {
+        int minLength = Math.min(a.length(), b.length());
+        for (int i = 0; i < minLength; i++) {
+            if (a.charAt(i) != b.charAt(i)) {
+                return a.substring(0, i);
+            }
+        }
+        return a.substring(0, minLength);
     }
 }
