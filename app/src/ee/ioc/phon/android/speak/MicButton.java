@@ -108,6 +108,7 @@ public class MicButton extends ImageButton {
     }
 
     // TODO: get the prefs outside of this class, from the attrs
+    // TODO: preferences can change meanwhile
     private void init(Context context, SharedPreferences prefs) {
         if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues)) {
             mAudioCue = new AudioCue(context);

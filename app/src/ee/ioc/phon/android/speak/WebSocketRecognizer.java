@@ -143,6 +143,19 @@ public class WebSocketRecognizer extends RecognitionService {
         if (mRecorder.getState() != RawAudioRecorder.State.RECORDING) {
             throw new IOException();
         }
+
+
+        // Monitor the volume level
+        mShowVolumeTask = new Runnable() {
+            public void run() {
+                if (mRecorder != null) {
+                    onRmsChanged(mRecorder.getRmsdb());
+                    mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
+                }
+            }
+        };
+
+        mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
     }
 
 
@@ -234,18 +247,7 @@ public class WebSocketRecognizer extends RecognitionService {
         };
 
 
-        // Monitor the volume level
-        mShowVolumeTask = new Runnable() {
-            public void run() {
-                if (mRecorder != null) {
-                    onRmsChanged(mRecorder.getRmsdb());
-                    mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
-                }
-            }
-        };
-
         mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_IME_SEND);
-        mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
     }
 
     private void handleResult(String text) {

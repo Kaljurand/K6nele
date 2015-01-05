@@ -43,7 +43,7 @@ public class VoiceImeService extends InputMethodService {
     @Override
     public void onInitializeInterface() {
         Log.i("onInitializeInterface");
-        closeInputView();
+        closeSession();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class VoiceImeService extends InputMethodService {
     public void onFinishInput() {
         super.onFinishInput();
         Log.i("onFinishInput");
-        closeInputView();
+        closeSession();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class VoiceImeService extends InputMethodService {
         super.onStartInputView(attribute, restarting);
         Log.i("onStartInputView: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
 
-        closeInputView();
+        closeSession();
 
         if (restarting) {
             return;
@@ -174,15 +174,16 @@ public class VoiceImeService extends InputMethodService {
     public void onFinishInputView(boolean finishingInput) {
         super.onFinishInputView(finishingInput);
         Log.i("onFinishInputView: " + finishingInput);
-        closeInputView();
+        closeSession();
     }
 
     @Override
     public void onCurrentInputMethodSubtypeChanged(InputMethodSubtype subtype) {
         Log.i("onCurrentInputMethodSubtypeChanged");
-        closeInputView();
+        closeSession();
     }
 
+    /*
     @Override
     public void onUpdateSelection(int oldSelStart, int oldSelEnd,
                                   int newSelStart, int newSelEnd,
@@ -191,9 +192,10 @@ public class VoiceImeService extends InputMethodService {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd,
                 candidatesStart, candidatesEnd);
     }
+    */
 
 
-    private void closeInputView() {
+    private void closeSession() {
         if (mInputView != null) {
             mInputView.closeSession();
         }
@@ -201,7 +203,7 @@ public class VoiceImeService extends InputMethodService {
 
     private void handleClose() {
         requestHideSelf(0);
-        closeInputView();
+        closeSession();
     }
 
     private IBinder getToken() {
@@ -223,7 +225,7 @@ public class VoiceImeService extends InputMethodService {
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void switchIme(boolean isAskUser) {
-        closeInputView();
+        closeSession();
         if (isAskUser) {
             mInputMethodManager.showInputMethodPicker();
         } else {
