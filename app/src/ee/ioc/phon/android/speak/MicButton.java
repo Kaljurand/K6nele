@@ -1,10 +1,8 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -37,17 +35,17 @@ public class MicButton extends ImageButton {
 
     public MicButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, PreferenceManager.getDefaultSharedPreferences(context));
+        init(context);
     }
 
     public MicButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, PreferenceManager.getDefaultSharedPreferences(context));
+        init(context);
     }
 
     public MicButton(Context context) {
         super(context);
-        init(context, PreferenceManager.getDefaultSharedPreferences(context));
+        init(context);
     }
 
     public void setState(Constants.State state) {
@@ -92,6 +90,14 @@ public class MicButton extends ImageButton {
         }
     }
 
+    public void setAudioCuesEnabled(boolean enabled) {
+        if (enabled) {
+            mAudioCue = new AudioCue(getContext());
+        } else {
+            mAudioCue = null;
+        }
+    }
+
     private void initAnimations(Context context) {
         Resources res = getResources();
         mDrawableMic = res.getDrawable(R.drawable.button_mic);
@@ -107,14 +113,7 @@ public class MicButton extends ImageButton {
         mAnimFadeInOutInf = AnimationUtils.loadAnimation(context, R.anim.fade_inout_inf);
     }
 
-    // TODO: get the prefs outside of this class, from the attrs
-    // TODO: preferences can change meanwhile
-    private void init(Context context, SharedPreferences prefs) {
-        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues)) {
-            mAudioCue = new AudioCue(context);
-        } else {
-            mAudioCue = null;
-        }
+    private void init(Context context) {
         mAudioPauser = new AudioPauser(context);
         initAnimations(context);
 

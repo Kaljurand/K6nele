@@ -61,6 +61,9 @@ public class VoiceImeView extends LinearLayout {
 
         setGuiInitState(0);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mBImeStartStop.setAudioCuesEnabled(Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
+
         if (mRecognizer == null) {
             mRecognizer = createSpeechRecognizer();
             mRecognizer.setRecognitionListener(getRecognizerListener());
