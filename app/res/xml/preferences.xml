@@ -8,7 +8,17 @@
     </Preference>
 
     // Speech keyboard settings
-    <PreferenceCategory android:title="@string/titleCategoryIme">
+    <PreferenceCategory
+        android:key="@string/keyCategoryIme"
+        android:title="@string/titleCategoryIme">
+        <!-- This preference is a shortcut to the Android IME settings to allow the
+        user to quickly enable the Kõnele IME. If already enabled, this preference is not shown. -->
+        <Preference
+            android:key="@string/keyEnableIme"
+            android:summary="@string/summaryEnableIme"
+            android:title="@string/titleEnableIme">
+            <intent android:action="android.settings.INPUT_METHOD_SETTINGS" />
+        </Preference>
         <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeAutoStart"

@@ -258,5 +258,7 @@
     <string name="titleDefaultServiceWs">WebSocket-aadress</string>
     <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammatikatoega). Ainuvõimalik valik Kõnele praeguses versioonis.</string>
     <string name="labelDefaultRecognitionService">Süsteemne vaikeväärtus</string>
+    <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
+    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Lülitage see Androidi sisestusmeetodite (IME) seadetes sisse.</string>
 
 </resources>

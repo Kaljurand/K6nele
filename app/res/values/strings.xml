@@ -16,6 +16,9 @@
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
     <string name="keyDefaultRecognitionService" translatable="false">keyDefaultRecognitionService</string>
+    // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
+    <string name="keyEnableIme" translatable="false">keyEnableIme</string>
+    <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
@@ -80,6 +83,8 @@
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
+    <string name="titleEnableIme">Enable speech keyboard</string>
+    <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Enable it in the Android input method (IME) settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>

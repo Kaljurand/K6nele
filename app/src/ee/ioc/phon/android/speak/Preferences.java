@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -26,8 +27,11 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionService;
+import android.view.inputmethod.InputMethodInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -58,6 +62,22 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         populateRecognitionServices(getString(R.string.defaultImeRecognizerService));
+
+        // If the K6nele IME is enabled then we remove the link to the IME settings,
+        // if not already removed.
+        // If the IME is not enabled then we add the link. The position of the link seems
+        // to respect the position in preferences.xml.
+        if (isK6neleImeEnabled()) {
+            PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryIme));
+            Preference pref = category.findPreference(getString(R.string.keyEnableIme));
+            if (pref != null) {
+                category.removePreference(pref);
+            }
+        } else {
+            Preference pref = findPreference(getString(R.string.keyEnableIme));
+            PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryIme));
+            category.addPreference(pref);
+        }
     }
 
 
@@ -135,5 +155,18 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         list.setEntryValues(entryValues);
         list.setValueIndex(selectedIndex);
         list.setSummary(list.getEntry());
+    }
+
+
+    private boolean isK6neleImeEnabled() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        for (InputMethodInfo imi : imm.getEnabledInputMethodList()) {
+            if (imi.getPackageName().equals(getPackageName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
