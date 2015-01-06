@@ -29,15 +29,15 @@ import android.media.MediaRecorder;
  * <li>mono</li>
  * <li>16kHz (recommended, but a different sample rate can be specified in the constructor)</li>
  * </ul>
- * 
+ *
  * <p>For example, the corresponding <code>arecord</code> settings are</p>
- * 
+ *
  * <pre>
  * arecord --file-type raw --format=S16_LE --channels 1 --rate 16000
  * </pre>
- * 
+ *
  * TODO: maybe use: ByteArrayOutputStream
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class RawAudioRecorder {
@@ -119,7 +119,7 @@ public class RawAudioRecorder {
 		try {
 			setBufferSizeAndFramePeriod();
 			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
-			if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
+			if (getAudioRecordState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
 			}
 			mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
@@ -350,9 +350,9 @@ public class RawAudioRecorder {
 	 * and compare this number to the numbers obtained previously. We
 	 * return a confidence score (0-INF) of a longer pause having occurred in the
 	 * speech input.</p>
-	 * 
+	 *
 	 * <p>TODO: base the implementation on some well-known technique.</p>
-	 * 
+	 *
 	 * @return positive value which the caller can use to determine if there is a pause
 	 */
 	private double getPauseScore() {
@@ -386,7 +386,7 @@ public class RawAudioRecorder {
 	 * <p>Starts the recording, and sets the state to RECORDING.</p>
 	 */
 	public void start() {
-		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED) {
+		if (getAudioRecordState() == AudioRecord.STATE_INITIALIZED) {
 			mRecorder.startRecording();
 			if (mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 				setState(State.RECORDING);
@@ -419,7 +419,7 @@ public class RawAudioRecorder {
 	public void stop() {
 		// We check the underlying AudioRecord state trying to avoid IllegalStateException.
 		// If it still occurs then we catch it.
-		if (mRecorder.getState() == AudioRecord.STATE_INITIALIZED &&
+		if (getAudioRecordState() == AudioRecord.STATE_INITIALIZED &&
 				mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 			try {
 				mRecorder.stop();
@@ -495,5 +495,12 @@ public class RawAudioRecorder {
     private void handleError() {
         setState(State.ERROR);
         release();
+    }
+
+    private int getAudioRecordState() {
+        if (mRecorder == null) {
+            return AudioRecord.STATE_UNINITIALIZED;
+        }
+        return mRecorder.getState();
     }
 }

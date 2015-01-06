@@ -64,13 +64,10 @@ public class VoiceImeView extends LinearLayout {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         mBImeStartStop.setAudioCuesEnabled(Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
 
-        if (mRecognizer == null) {
-            mRecognizer = createSpeechRecognizer();
-            mRecognizer.setRecognitionListener(getRecognizerListener());
-        } else {
-            mRecognizer.setRecognitionListener(getRecognizerListener());
-            mRecognizer.cancel();
-        }
+        // Cancel a possibly running service and start a new one
+        closeSession();
+        mRecognizer = createSpeechRecognizer(prefs);
+        mRecognizer.setRecognitionListener(getRecognizerListener());
 
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -143,6 +140,7 @@ public class VoiceImeView extends LinearLayout {
     public void closeSession() {
         if (mRecognizer != null) {
             mRecognizer.cancel();
+            // TODO: maybe set to null
         }
     }
 
@@ -371,8 +369,7 @@ public class VoiceImeView extends LinearLayout {
      *
      * @return SpeechRecognizer
      */
-    private SpeechRecognizer createSpeechRecognizer() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+    private SpeechRecognizer createSpeechRecognizer(SharedPreferences prefs) {
         String selectedRecognizerService =
                 Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
 
