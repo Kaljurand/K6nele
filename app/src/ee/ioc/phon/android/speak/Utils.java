@@ -265,8 +265,7 @@ public class Utils {
 
 
 	public static AlertDialog getTextEntryDialog(Context context, String title, String initialText, final ExecutableString ex) {
-		LayoutInflater factory = LayoutInflater.from(context);
-		final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry, null);
+		final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_text_entry, null);
 		final EditText et = (EditText) textEntryView.findViewById(R.id.url_edit);
 		et.setText(initialText);
 		return new AlertDialog.Builder(context)

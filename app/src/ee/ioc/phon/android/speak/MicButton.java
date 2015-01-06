@@ -16,10 +16,6 @@ import java.util.List;
 
 public class MicButton extends ImageButton {
 
-    // TODO: take these from some configuration
-    private static final float DB_MIN = 15.0f;
-    private static final float DB_MAX = 30.0f;
-
     private AudioCue mAudioCue;
 
     private Drawable mDrawableMic;
@@ -82,7 +78,7 @@ public class MicButton extends ImageButton {
 
 
     public void setVolumeLevel(float rmsdB) {
-        int index = (int) ((rmsdB - DB_MIN) / (DB_MAX - DB_MIN) * mMaxLevel);
+        int index = (int) ((rmsdB - Constants.DB_MIN) / (Constants.DB_MAX - Constants.DB_MIN) * mMaxLevel);
         int level = Math.min(Math.max(0, index), mMaxLevel);
         if (level != mVolumeLevel) {
             mVolumeLevel = level;

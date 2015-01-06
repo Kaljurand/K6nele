@@ -180,8 +180,6 @@ public class ChunkedWebRecSessionBuilder {
 			recSession.setDeviceId(mDeviceId);
 		}
 
-		// Inform the server that we want partial results.
-		// TODO: this is not supported yet, neither on the server nor the K6nele side
 		if (mPartialResults) {
 			recSession.setParam("partial", "true");
 		}

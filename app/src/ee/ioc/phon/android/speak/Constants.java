@@ -31,4 +31,8 @@ public class Constants {
     public static final String DEFAULT_AUDIO_FORMAT = "audio/wav";
     public static final Set<String> SUPPORTED_AUDIO_FORMATS =
             new HashSet<String>(Arrays.asList(DEFAULT_AUDIO_FORMAT));
+
+    // TODO: take these from some device specific configuration
+    public static final float DB_MIN = 15.0f;
+    public static final float DB_MAX = 30.0f;
 }

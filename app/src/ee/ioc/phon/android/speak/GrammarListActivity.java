@@ -44,9 +44,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * 
  * <ul>
  * <li>view the content of the grammar (in a browser)</li>
- * <li>notify the speech recognition server to reload the grammar
- * [TODO: remove this from the final version]</li>
- * <li>edit the entry, i.e. the URL</li>
+ * <li>edit the entry, i.e. the name, URL, etc.</li>
  * <li>delete the entry</li>
  * </ul>
  * 

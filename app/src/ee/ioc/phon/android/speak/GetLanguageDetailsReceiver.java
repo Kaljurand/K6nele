@@ -60,6 +60,5 @@ public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 		extras.putString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "et-EE");
 		extras.putStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, mSupportedLanguages);
 		setResultExtras(extras);
-
 	}
 }

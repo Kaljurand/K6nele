@@ -343,14 +343,11 @@ public class RecognizerIntentActivity extends Activity {
 		mRunnableVolume = new Runnable() {
 			public void run() {
 				if (mService != null) {
-					// TODO: take these from some configuration
-					float min = 15.f;
-					float max = 30.f;
 
 					float db = mService.getRmsdb();
 					final int maxLevel = mVolumeLevels.size() - 1;
 
-					int index = (int) ((db - min) / (max - min) * maxLevel);
+					int index = (int) ((db - Constants.DB_MIN) / (Constants.DB_MAX - Constants.DB_MIN) * maxLevel);
 					final int level = Math.min(Math.max(0, index), maxLevel);
 
 					if (level != mLevel) {
