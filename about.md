@@ -22,7 +22,16 @@ Android platform, and to provide grammar-based speech recognition for highly acc
 Kõnele is an open, configurable and powerful alternative to speech recognition services
 currently available on Android.
 
-| <img title="Screenshot: address search using Kõnele" src="{{ site.baseurl }}/images/en/Screenshot_2014-12-23-12-34-27_framed.png"> | <img title="Screenshot: composing an email with Kõnele" src="{{ site.baseurl }}/images/en/Screenshot_2014-12-23-12-30-19_framed.png">
+<table>
+<tr>
+<td class="logo">
+<img class="logo" title="Screenshot: address search using Kõnele" src="{{ site.baseurl }}/images/en/Screenshot_2014-12-23-12-34-27_framed.png">
+</td>
+<td class="logo">
+<img class="logo" title="Screenshot: composing an email with Kõnele" src="{{ site.baseurl }}/images/en/Screenshot_2014-12-23-12-30-19_framed.png">
+</td>
+</tr>
+</table>
 
 ## Features
 

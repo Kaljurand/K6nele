@@ -200,6 +200,17 @@ ning nende registreerimine ja kasutamine grammatikatoega serveris on kirjeldatud
 <http://bark.phon.ioc.ee/speech-api/v1>.
 Vt ka rakendust [Arvutaja](http://kaljurand.github.io/Arvutaja/), mis kasutab Kõnelet grammatikatoega kõnetuvastajana.
 
+## Veaolukorrad
+
+Kõnele kasutamine ebaõnnestub järgmistes olukordades:
+
+- võrguühendus serverini puudub või on liiga aeglane;
+- server ei tööta või on ülekoormatud;
+- rakendusel pole ligipääsu mikrofonile, sest mõni teine rakendus parasjagu lindistab.
+
+Nendes olukordades väljastab Kõnele vastava veateate.
+Muud sorti vead palun raporteerida aadressil <http://github.com/Kaljurand/K6nele/issues>
+või kirjutades <mailto:kaljurand+k6nele@gmail.com>.
 
 <!--
 ## Kasutusnäited
