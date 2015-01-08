@@ -81,6 +81,7 @@ public class WebSocketResponse {
 
     public static class Result {
         private final ArrayList<String> mHypotheses = new ArrayList<>();
+        private final ArrayList<String> mHypothesesPp = new ArrayList<>();
         private final boolean mIsFinal;
 
         public Result(JSONObject result) throws JSONException {
@@ -94,12 +95,19 @@ public class WebSocketResponse {
             JSONArray array = result.getJSONArray("hypotheses");
 
             for (int i = 0; i < array.length(); i++) {
-                mHypotheses.add(array.getJSONObject(i).getString("transcript"));
+                String transcript = array.getJSONObject(i).getString("transcript");
+                mHypotheses.add(transcript);
+                mHypothesesPp.add(pp(transcript));
+
             }
         }
 
         public ArrayList<String> getHypotheses() {
             return mHypotheses;
+        }
+
+        public ArrayList<String> getHypothesesPp() {
+            return mHypothesesPp;
         }
 
         public boolean isFinal() {
@@ -131,5 +139,64 @@ public class WebSocketResponse {
         public WebSocketResponseException(JSONException e) {
             super(e);
         }
+    }
+
+    /**
+     * Pretty-prints the string returned by the server to be ortographically correct (Estonian),
+     * assuming that the string represents a sequence of tokens separated by a single space character.
+     * Note that a text editor (which has additional information about the context of the cursor)
+     * will need to do additional pretty-printing, e.g. capitalization if the cursor follows a
+     * sentence end marker.
+     *
+     * @param str String to be pretty-printed
+     * @return Pretty-printed string
+     */
+    private static String pp(String str) {
+        boolean isSentenceStart = false;
+        boolean isWhitespaceBefore = false;
+        String text = null;
+        // Some defensive space normalization
+        str = str.replaceAll("\n", " \n ").replaceAll(" +", " ").trim();
+        for (String tok : str.split(" ")) {
+            if (tok.length() == 0) {
+                continue;
+            }
+            String glue = " ";
+            char firstChar = tok.charAt(0);
+            if (isWhitespaceBefore
+                    || Constants.CHARACTERS_WS.contains(firstChar)
+                    || Constants.CHARACTERS_PUNCT.contains(firstChar)) {
+                glue = "";
+            }
+
+            if (isSentenceStart) {
+                tok = Character.toUpperCase(firstChar) + tok.substring(1);
+            }
+
+            if (text == null) {
+                text = tok;
+            } else {
+                text += glue + tok;
+            }
+
+            if (Constants.CHARACTERS_WS.contains(firstChar)) {
+                isWhitespaceBefore = true;
+            } else {
+                isWhitespaceBefore = false;
+            }
+
+            // If the token is not a character then we are in the middle of the sentence.
+            // If the token is an EOS character then a new sentences has started.
+            // If the token is some other character other than whitespace (then we are in the
+            // middle of the sentences. (The whitespace characters are transparent.)
+            if (tok.length() > 1) {
+                isSentenceStart = false;
+            } else if (Constants.CHARACTERS_EOS.contains(firstChar)) {
+                isSentenceStart = true;
+            } else if (!isWhitespaceBefore) {
+                isSentenceStart = false;
+            }
+        }
+        return text;
     }
 }

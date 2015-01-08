@@ -432,7 +432,7 @@ public class WebSocketRecognizer extends RecognitionService {
                         if (statusCode == WebSocketResponse.STATUS_SUCCESS && response.isResult()) {
                             WebSocketResponse.Result responseResult = response.parseResult();
                             if (responseResult.isFinal()) {
-                                ArrayList<String> hypotheses = responseResult.getHypotheses();
+                                ArrayList<String> hypotheses = responseResult.getHypothesesPp();
                                 if (hypotheses == null || hypotheses.isEmpty()) {
                                     Log.i("Empty final result (" + hypotheses + "), stopping");
                                     outerClass.onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
@@ -449,7 +449,7 @@ public class WebSocketRecognizer extends RecognitionService {
                             } else {
                                 // We fire this only if the caller wanted partial results
                                 if (mIsPartialResults) {
-                                    ArrayList<String> hypotheses = responseResult.getHypotheses();
+                                    ArrayList<String> hypotheses = responseResult.getHypothesesPp();
                                     if (hypotheses == null || hypotheses.isEmpty()) {
                                         Log.i("Empty non-final result (" + hypotheses + "), ignoring");
                                     } else {

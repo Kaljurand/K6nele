@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 
 public class VoiceImeService extends InputMethodService {
 
-
     private InputMethodManager mInputMethodManager;
 
     private VoiceImeView mInputView;
@@ -306,15 +305,9 @@ public class VoiceImeService extends InputMethodService {
 
 
         /**
-         * Add a space to the end of the text and writes it into the text field.
+         * Writes the text into the text field and forgets the previous entry.
          */
         public void commitFinalResult(InputConnection ic, String text) {
-            int lastIndex = text.length() - 1;
-            if (lastIndex != -1) {
-                if (text.charAt(lastIndex) != '\n' && text.charAt(lastIndex) != ' ') {
-                    text += " ";
-                }
-            }
             commitText(ic, text);
             mPrevText = "";
         }
@@ -385,8 +378,27 @@ public class VoiceImeService extends InputMethodService {
                     ic.deleteSurroundingText(deletableLength, 0);
                 }
 
-                if (commonPrefixLength == 0) {
-                    ic.commitText(text, 1);
+                // If there is no common prefix then we look at the left context of the cursor
+                // to decide which glue symbol to use and whether to capitalize the text.
+                if (commonPrefixLength == 0 && text.length() > 0) {
+                    char firstChar = text.charAt(0);
+                    String glue = " ";
+                    String leftContext = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0).toString();
+
+                    if (Constants.CHARACTERS_WS.contains(firstChar)
+                            || Constants.CHARACTERS_PUNCT.contains(firstChar)
+                            || leftContext.length() == 0
+                            || Constants.CHARACTERS_WS.contains(leftContext.charAt(leftContext.length() - 1))) {
+                        glue = "";
+                    }
+
+                    String leftContextTrimmed = leftContext.trim();
+                    if (leftContext.length() == 0
+                            || Constants.CHARACTERS_EOS.contains(leftContextTrimmed.charAt(leftContextTrimmed.length() - 1))) {
+                        text = Character.toUpperCase(firstChar) + text.substring(1);
+                    }
+
+                    ic.commitText(glue + text, 1);
                 } else {
                     ic.commitText(text.substring(commonPrefixLength), 1);
                 }
