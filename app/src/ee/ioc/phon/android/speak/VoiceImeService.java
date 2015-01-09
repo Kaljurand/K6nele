@@ -182,18 +182,6 @@ public class VoiceImeService extends InputMethodService {
         closeSession();
     }
 
-    /*
-    @Override
-    public void onUpdateSelection(int oldSelStart, int oldSelEnd,
-                                  int newSelStart, int newSelEnd,
-                                  int candidatesStart, int candidatesEnd) {
-        Log.i("onUpdateSelection");
-        super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd,
-                candidatesStart, candidatesEnd);
-    }
-    */
-
-
     private void closeSession() {
         if (mInputView != null) {
             mInputView.closeSession();
@@ -378,30 +366,51 @@ public class VoiceImeService extends InputMethodService {
                     ic.deleteSurroundingText(deletableLength, 0);
                 }
 
-                // If there is no common prefix then we look at the left context of the cursor
-                // to decide which glue symbol to use and whether to capitalize the text.
-                if (commonPrefixLength == 0 && text.length() > 0) {
-                    char firstChar = text.charAt(0);
-                    String glue = " ";
-                    String leftContext = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0).toString();
-
-                    if (Constants.CHARACTERS_WS.contains(firstChar)
-                            || Constants.CHARACTERS_PUNCT.contains(firstChar)
-                            || leftContext.length() == 0
-                            || Constants.CHARACTERS_WS.contains(leftContext.charAt(leftContext.length() - 1))) {
-                        glue = "";
-                    }
-
-                    String leftContextTrimmed = leftContext.trim();
-                    if (leftContext.length() == 0
-                            || Constants.CHARACTERS_EOS.contains(leftContextTrimmed.charAt(leftContextTrimmed.length() - 1))) {
-                        text = Character.toUpperCase(firstChar) + text.substring(1);
-                    }
-
-                    ic.commitText(glue + text, 1);
-                } else {
-                    ic.commitText(text.substring(commonPrefixLength), 1);
+                if (commonPrefixLength == text.length()) {
+                    return;
                 }
+
+                // We look at the left context of the cursor
+                // to decide which glue symbol to use and whether to capitalize the text.
+                CharSequence leftContext = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
+                String glue = "";
+                if (commonPrefixLength == 0) {
+                    char firstChar = text.charAt(0);
+
+                    if (!(leftContext.length() == 0
+                            || Constants.CHARACTERS_WS.contains(firstChar)
+                            || Constants.CHARACTERS_PUNCT.contains(firstChar)
+                            || Constants.CHARACTERS_WS.contains(leftContext.charAt(leftContext.length() - 1)))) {
+                        glue = " ";
+                    }
+                } else {
+                    text = text.substring(commonPrefixLength);
+                }
+
+                // Capitalize if required by left context
+                String leftContextTrimmed = leftContext.toString().trim();
+                if (leftContextTrimmed.length() == 0
+                        || Constants.CHARACTERS_EOS.contains(leftContextTrimmed.charAt(leftContextTrimmed.length() - 1))) {
+                    // Since the text can start with whitespace (newline),
+                    // we capitalize the first non-whitespace character.
+                    int firstNonWhitespaceIndex = -1;
+                    for (int i = 0; i < text.length(); i++) {
+                        if (!Constants.CHARACTERS_WS.contains(text.charAt(i))) {
+                            firstNonWhitespaceIndex = i;
+                            break;
+                        }
+                    }
+                    if (firstNonWhitespaceIndex > -1) {
+                        String newText = text.substring(0, firstNonWhitespaceIndex)
+                                + Character.toUpperCase(text.charAt(firstNonWhitespaceIndex));
+                        if (firstNonWhitespaceIndex < text.length() - 1) {
+                            newText += text.substring(firstNonWhitespaceIndex + 1);
+                        }
+                        text = newText;
+                    }
+                }
+
+                ic.commitText(glue + text, 1);
             }
         }
 

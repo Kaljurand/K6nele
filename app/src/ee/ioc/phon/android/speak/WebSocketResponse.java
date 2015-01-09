@@ -155,8 +155,6 @@ public class WebSocketResponse {
         boolean isSentenceStart = false;
         boolean isWhitespaceBefore = false;
         String text = null;
-        // Some defensive space normalization
-        str = str.replaceAll("\n", " \n ").replaceAll(" +", " ").trim();
         for (String tok : str.split(" ")) {
             if (tok.length() == 0) {
                 continue;
