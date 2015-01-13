@@ -25,6 +25,20 @@ teistsugune, kuid mitte oluliselt.
 
 (Selle juhendi eelmine versioon on [siin](https://code.google.com/p/recognizer-intent/wiki/UserGuide?wl=et).)
 
+## Demo
+
+Järgnev video näitab
+(1) kõnepõhist veebiotsingut;
+(2) kõneklaviatuuri sisse lülitamist ja sellega kirja kirjutamist;
+(3) aadressiotsingut kaardirakenduses;
+(4) Kõnele konfigureerimist Androidi vaikimisi kõnetuvastajaks, ja selle kasutamist _Google Translate_ rakenduses;
+(5) tõlkegrammatika omistamist _Wolfram Alpha_ rakendusele, ja selles mõõtühikuteisendamist;
+(6) _Arvutaja_ rakenduse kasutamist (vahelduseks inglise keeles) äratuskella seadmiseks.
+
+<iframe width="480" height="360" src="https://www.youtube.com/v/gKFIWSA2GWc" frameborder="0"> </iframe>
+
+Allpool tuleb kõikidest nendest kasutusolukordadest lähemalt juttu.
+
 ## Kõnepõhine veebiotsing
 
 Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb punase nupuga paneel.
