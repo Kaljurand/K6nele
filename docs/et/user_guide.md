@@ -35,7 +35,9 @@ Järgnev video näitab
 (5) tõlkegrammatika omistamist _Wolfram Alpha_ rakendusele, ja selles mõõtühikuteisendamist;
 (6) _Arvutaja_ rakenduse kasutamist (vahelduseks inglise keeles) äratuskella seadmiseks.
 
-<iframe width="480" height="360" src="https://www.youtube.com/v/gKFIWSA2GWc" frameborder="0"> </iframe>
+<iframe id="ytplayer" type="text/html" width="480" height="360"
+src="http://www.youtube.com/embed/gKFIWSA2GWc?origin=http://kaljurand.github.io"
+frameborder="0"> </iframe>
 
 Allpool tuleb kõikidest nendest kasutusolukordadest lähemalt juttu.
 
