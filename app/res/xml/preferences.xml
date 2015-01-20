@@ -31,6 +31,11 @@
             android:key="@string/keyImeAudioCues"
             android:summary="@string/summaryAudioCues"
             android:title="@string/titleAudioCues" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeHelpText"
+            android:key="@string/keyImeHelpText"
+            android:summary="@string/summaryImeHelpText"
+            android:title="@string/titleImeHelpText" />
         <ListPreference
             android:dialogTitle="@string/dialogTitleImeRecognitionService"
             android:entries="@array/empty"

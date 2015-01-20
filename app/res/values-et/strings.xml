@@ -260,5 +260,7 @@
     <string name="labelDefaultRecognitionService">Süsteemne vaikeväärtus</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Lülitage see Androidi sisestusmeetodite (IME) seadetes sisse.</string>
+    <string name="summaryImeHelpText">Abitekst</string>
+    <string name="titleImeHelpText">Abitekst</string>
 
 </resources>

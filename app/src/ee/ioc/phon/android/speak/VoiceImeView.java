@@ -64,6 +64,12 @@ public class VoiceImeView extends LinearLayout {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         mBImeStartStop.setAudioCuesEnabled(Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
 
+        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeHelpText, R.bool.defaultImeHelpText)) {
+            mTvInstruction.setVisibility(View.VISIBLE);
+        } else {
+            mTvInstruction.setVisibility(View.GONE);
+        }
+
         // Cancel a possibly running service and start a new one
         closeSession();
         mRecognizer = createSpeechRecognizer(prefs);

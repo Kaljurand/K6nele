@@ -12,6 +12,7 @@
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
+    <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
@@ -83,6 +84,8 @@
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
+    <string name="titleImeHelpText">Help text</string>
+    <string name="summaryImeHelpText">Show help text by the microphone key (which takes more screen space)</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
     <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Enable it in the Android input method (IME) settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>

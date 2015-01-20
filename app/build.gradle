@@ -15,7 +15,7 @@ android {
     // We support API level 8, but use isChangingConfigurations() when API 11+
     // is available.
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
 
     // API level 3: some default button was not found, but we didn't explore it further.
@@ -26,8 +26,8 @@ android {
         minSdkVersion 8
         // TODO: make this the highest possible once we do not rely on the old-style menus anymore
         targetSdkVersion 8
-        versionCode 856
-        versionName '0.8.56'
+        versionCode 857
+        versionName '0.8.57'
     }
 
 

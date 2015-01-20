@@ -32,6 +32,8 @@ task makeIcons << {
                 commandLine 'mkdir', '-p', dir_out
             }
             def output2 = exec {
+                //convert -background none -size 512x512 ic_launcher.svg noh.png
+                // 16-bit/color RGBA, non-interlaced (TODO: we need 32)
                 commandLine 'rsvg-convert', '-f', 'png', '-w', size, '-h', size, '-o', dir_out + launcher_fn_png, dir_in + launcher_fn_svg
             }
     }

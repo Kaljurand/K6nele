@@ -14,5 +14,6 @@
     thus, when using Google's service, the user would want to have the beep off anyway. -->
     <bool name="defaultImeAutoStart">false</bool>
     <bool name="defaultImeAudioCues">false</bool>
+    <bool name="defaultImeHelpText">true</bool>
 
 </resources>
