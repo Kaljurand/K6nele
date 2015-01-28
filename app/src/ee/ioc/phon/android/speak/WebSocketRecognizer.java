@@ -376,7 +376,7 @@ public class WebSocketRecognizer extends RecognitionService {
                 Object value = bundle.get(key);
                 if (value != null) {
                     if (value instanceof Bundle) {
-                        flattenBundle(prefix + key + "_", list, bundle);
+                        flattenBundle(prefix + key + "_", list, (Bundle) value);
                     } else {
                         list.add(new BasicNameValuePair(prefix + key, toString(value)));
                     }
