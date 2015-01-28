@@ -26,8 +26,8 @@ android {
         minSdkVersion 8
         // TODO: make this the highest possible once we do not rely on the old-style menus anymore
         targetSdkVersion 8
-        versionCode 857
-        versionName '0.8.57'
+        versionCode 858
+        versionName '0.8.58'
     }
 
 
