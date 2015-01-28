@@ -233,14 +233,16 @@ public class VoiceImeService extends InputMethodService {
 
 
     /**
-     * Performs the Go-action, e.g. to launch search on a searchbar.
+     * Performs the Search-action, e.g. to launch search on a searchbar.
      */
     private void performGo() {
         // Does not work on Google Searchbar
         // getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_DONE);
 
-        // Works in Google Searchbar, GF Translator
-        getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_GO);
+        // Works in Google Searchbar, GF Translator, but NOT in the Firefox search widget
+        //getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_GO);
+
+        getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_SEARCH);
     }
 
 
