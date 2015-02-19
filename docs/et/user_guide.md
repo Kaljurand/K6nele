@@ -58,7 +58,7 @@ Pärast Lindista-nupule vajutamist (seadetes saab ka määrata,
 et lindistamine algab automaatselt, ilma nupule vajutamata),
 tuleb oma jutt selge ja kõlava häälega mikrofoni rääkida.
 Lindistamine lõpeb pärast pikemat pausi või nupule vajutamist (sõltuvalt
-seadetest). Kui midagi läheb sassi, siis saab BACK-nupule vajutades lindistamise
+seadetest). Kui midagi läheb sassi, siis saab _Back_-nupule vajutades lindistamise
 katkestada.
 Lindistamise käigus näitab Kõnele mitu sekundit on lindistamine
 juba kestnud ning mitu baiti on salvestus juba ruumi võtnud. Vastav kogus saadetakse
@@ -111,8 +111,6 @@ Neist tuleb juttu allpool.
 
 ## Kõnele klaviatuurirakendusena
 
-(Alates Kõnele v0.8.50)
-
 Paljudes Androidi rakendustes on tekstikastid, millele vajutades avaneb klaviatuurirakendus,
 nn sisestusmeetod, inglise keeles "input method editor (IME)".
 Kõnele sisaldab endas sellist klaviatuurirakendust, kuid erinevalt traditsioonilisest
@@ -132,10 +130,6 @@ seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
 <img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-00.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-24.png">
 
-Android v5+ seadmetes on lihtne ka teksti kirjutamise ajal klaviatuure
-vahetada, nt ühe vajutusega maakera- või klaviatuurikujulisele ikoonile,
-sõltuvalt klaviatuurist.
-
 Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuur järgmisi operatsioone:
 
@@ -145,6 +139,18 @@ klaviatuur järgmisi operatsioone:
 - vajutus klaviatuuriikoonile vahetab klaviatuuri,
 - pikk vajutus klaviatuuriikoonile avab klaviatuurivahetusmenüü,
 - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal).
+
+Kõneklaviatuuri on mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
+(nt _Google Keyboard_, _Swype_, _SwiftKey_, _SlideIT_).
+Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
+kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
+Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum.
+Muudes olukordades võib ümberlülituda teisele klaviatuurile.
+Android v5+ seadmetes on lihtne teksti kirjutamise ajal klaviatuure
+vahetada, sest seadme põhinuppude (_Back_, _Home_, _Recent apps_) kõrvale ilmub teksti kirjutamise
+ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Google Keyboard_)
+võimaldavad lisaks klaviatuurivahetust ainult ühe nupuvajutusega
+(maakera- või klaviatuurikujulisele nupule).
 
 Kõneklaviatuur kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid põhimõttelistelt
 saab seda kasutada kõikide seadmesse installeeritud kõnetuvastusteenustega
@@ -187,6 +193,11 @@ kus üks neist on alati seatud vaikimisi teenuseks.
 Ühe Kõnele teenustest võib seada vaikimisi teenuseks. See ei garanteeri küll kahjuks, et kõik rakendused
 hakkavad nüüd kõnetuvastuseks Kõnelet kasutama, sest paljud neist ignoreerivad kasutajamääratud
 vaikeväärtust ja kasutavad endiselt nt Google'i teenust.
+Selline on olukord paljude klaviatuurirakendustega, milles oleva mikrofoninupu vajutamine
+käivitab Google'i kõnetuvastusteenuse, ning seda muuta pole võimalik. Üheks erandiks
+on _SlideIT Keyboard_, mida saab konfigureerida Kõnelet kasutama.
+Hea ülevaade parimatest klaviatuurirakendustest (eesti keeles kirjutamise
+seisukohast) on ajakirjas [[digi] 5/2014](http://www.digi.ee/arhiiv/ajakiri-digi-05-2014).
 
 Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab kõnetuvastuseks
 üldiselt Google'i tuvastajat, kuid keelte jaoks, mida see ei toeta (nt eesti keel)
