@@ -95,6 +95,7 @@ public class DetailsActivity extends ListActivity {
 	private void playAudio(Uri uri, String type) {
 		mMediaPlayer = MediaPlayer.create(this, uri);
 		if (mMediaPlayer == null) {
+            // create can return null, e.g. on Android Wear
 			toast(String.format(getString(R.string.errorFailedPlayAudio), uri.toString(), type));
 		} else {
 			int duration = mMediaPlayer.getDuration();

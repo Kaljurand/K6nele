@@ -732,6 +732,10 @@ public class RecognizerIntentActivity extends Activity {
         if (mPrefs.getBoolean(mRes.getString(R.string.keyAudioCues),
                 mRes.getBoolean(R.bool.defaultAudioCues))) {
 			mMediaPlayer = MediaPlayer.create(this, sound);
+            // create can return null, e.g. on Android Wear
+            if (mMediaPlayer == null) {
+                return false;
+            }
 			mMediaPlayer.start();
 			return true;
 		}

@@ -16,8 +16,9 @@ public class AudioCue {
     }
 
     public void playStartSoundAndSleep() {
-        playSound(R.raw.explore_begin);
-        SystemClock.sleep(DELAY_AFTER_START_BEEP);
+        if (playSound(R.raw.explore_begin)) {
+            SystemClock.sleep(DELAY_AFTER_START_BEEP);
+        }
     }
 
 
@@ -31,8 +32,12 @@ public class AudioCue {
     }
 
 
-    private void playSound(int sound) {
+    private boolean playSound(int sound) {
         MediaPlayer mp = MediaPlayer.create(mContext, sound);
+        // create can return null, e.g. on Android Wear
+        if (mp == null) {
+            return false;
+        }
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -41,6 +46,7 @@ public class AudioCue {
             }
         });
         mp.start();
+        return true;
     }
 
 }
