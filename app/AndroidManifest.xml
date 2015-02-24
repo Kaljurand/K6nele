@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/labelApp"
         android:supportsRtl="true"
-        android:theme="@style/RecognizerTheme">
+        android:theme="@style/Theme.K6nele">
 
         <!--
 			android:clearTaskOnLaunch="true"
@@ -34,7 +34,7 @@
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
 
@@ -105,14 +105,15 @@
 
         <activity
             android:name=".AboutActivity"
-            android:label="@string/labelActivityAbout"></activity>
+            android:label="@string/labelActivityAbout"
+            android:theme="@style/Theme.K6nele.NoActionBar"></activity>
 
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
         <activity
             android:name=".DetailsActivity"
             android:label="@string/labelActivityDetails"
-            android:theme="@android:style/Theme.Dialog"></activity>
+            android:theme="@style/Theme.K6nele.Dialog"></activity>
         <activity
             android:name=".AppListActivity"
             android:label="@string/labelActivityAppList"></activity>

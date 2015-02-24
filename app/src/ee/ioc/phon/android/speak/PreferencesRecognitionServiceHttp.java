@@ -116,7 +116,7 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(getString(R.string.keyServerHttp), url);
-                        editor.commit();
+                        editor.apply();
                     }
                 }
                 break;

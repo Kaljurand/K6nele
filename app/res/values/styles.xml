@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="RecognizerTheme" parent="android:Theme.Black"></style>
+    <style name="Theme.K6nele" parent="@android:style/Theme.DeviceDefault" />
 
-    <!--
-    <style name="Theme.Recognizer" parent="@android:style/Theme.Translucent.NoTitleBar">
-        <item name="android:backgroundDimAmount">0.3</item>
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
+    <style name="Theme.K6nele.NoActionBar" parent="@android:style/Theme.DeviceDefault.NoActionBar" />
 
-    <style name="Theme.Recognition" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-    -->
+    <style name="Theme.K6nele.Dialog" parent="@android:style/Theme.DeviceDefault.Dialog" />
 
 </resources>

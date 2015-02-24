@@ -334,7 +334,7 @@ public class Utils {
 			id = UUID.randomUUID().toString();
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id", id);
-			editor.commit();
+			editor.apply();
 		}
 		return id;
 	}
