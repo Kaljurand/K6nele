@@ -875,16 +875,23 @@ public class RecognizerIntentActivity extends Activity {
 
 		Intent searchIntent;
 		if (results.size() == 1) {
-			searchIntent = new Intent(Intent.ACTION_WEB_SEARCH);
-			searchIntent.putExtra(SearchManager.QUERY, results.get(0));
+            // We construct a list of search intents.
+            // The first one that can be handled by the device is launched.
+            CharSequence query = results.get(0);
+            Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
+            intent1.putExtra(SearchManager.QUERY, query);
+            Intent intent2 = new Intent(Intent.ACTION_SEARCH);
+            intent2.putExtra(SearchManager.QUERY, query);
+
+            Utils.startActivityIfAvailable(this, intent1, intent2);
 		} else {
 			// TODO: it would be a bit cleaner to pass ACTION_WEB_SEARCH
 			// via a pending intent
 			searchIntent = new Intent(this, DetailsActivity.class);
 			searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
 			searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, results.toArray(new String[results.size()]));
-		}
-		startActivity(searchIntent);
+            startActivity(searchIntent);
+        }
 	}
 
 

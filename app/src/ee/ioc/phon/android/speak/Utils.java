@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -411,5 +412,23 @@ public class Utils {
 
     public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {
         return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
+    }
+
+
+    private static boolean isActivityAvailable(Context context, Intent intent) {
+        final PackageManager mgr = context.getPackageManager();
+        List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
+
+    public static boolean startActivityIfAvailable(Context context, Intent... intents) {
+        for (Intent intent : intents) {
+            if (Utils.isActivityAvailable(context, intent)) {
+                context.startActivity(intent);
+                return true;
+            }
+        }
+        return false;
     }
 }
