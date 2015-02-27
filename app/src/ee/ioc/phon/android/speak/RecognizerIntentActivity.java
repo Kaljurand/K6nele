@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ import android.util.SparseArray;
 
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,14 +61,10 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
 
 import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.android.speak.RecognizerIntentService.State;
@@ -84,19 +79,19 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
  * <li>android.speech.action.WEB_SEARCH</li>
  * </ul>
  * <p>We have tried to implement the complete interface of RecognizerIntent as of API level 7 (v2.1).</p>
- * 
+ *
  * <p>It records audio, transcribes it using a speech-to-text server
  * and returns the result as a non-empty list of Strings.
  * In case of <code>android.intent.action.MAIN</code>,
  * it submits the recorded/transcribed audio to a web search.
  * It never returns an error code,
  * all the errors are processed within this activity.</p>
- * 
+ *
  * <p>This activity rewrites the error codes which originally come from the
  * speech recognizer webservice (and which are then rewritten by the net-speech-api)
  * to the RecognizerIntent result error codes. The RecognizerIntent error codes are the
  * following (with my interpretation after the colon):</p>
- * 
+ *
  * <ul>
  * <li>RESULT_AUDIO_ERROR: recording of the audio fails</li>
  * <li>RESULT_NO_MATCH: everything worked great just no transcription was produced</li>
@@ -114,7 +109,7 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
  * </ul>
  * </li>
  * </ul>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class RecognizerIntentActivity extends Activity {
@@ -198,7 +193,7 @@ public class RecognizerIntentActivity extends Activity {
 			mService.setOnResultListener(new RecognizerIntentService.OnResultListener() {
 				public boolean onResult(RecSessionResult result) {
 					// We trust that getLinearizations() returns a non-null non-empty list.
-					ArrayList<String> matches = new ArrayList<String>();
+					ArrayList<String> matches = new ArrayList<>();
 					matches.addAll(result.getLinearizations());
 					returnOrForwardMatches(mMessageHandler, matches);
 					return true;
@@ -257,7 +252,7 @@ public class RecognizerIntentActivity extends Activity {
 		mTvErrorMessage = (TextView) findViewById(R.id.tvErrorMessage);
 
 		mRes = getResources();
-		mVolumeLevels = new ArrayList<Drawable>();
+		mVolumeLevels = new ArrayList<>();
 		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level0));
 		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level1));
 		mVolumeLevels.add(mRes.getDrawable(R.drawable.speak_now_level2));
@@ -377,12 +372,25 @@ public class RecognizerIntentActivity extends Activity {
 		});
 
 		// Settings button
-		((ImageButton) findViewById(R.id.bSettings)).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				mIsStartActivity = true;
-				startActivity(new Intent(getApplicationContext(), Preferences.class));
-			}
-		});
+        // Short click opens the settings
+        ImageButton bSettings = (ImageButton) findViewById(R.id.bSettings);
+        bSettings.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mIsStartActivity = true;
+                startActivity(new Intent(getApplicationContext(), Preferences.class));
+            }
+        });
+
+        // Long click shows some technical details (for developers)
+        bSettings.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
+                details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
+                startActivity(details);
+                return false;
+            }
+        });
 
 		doBindService();
 	}
@@ -435,32 +443,6 @@ public class RecognizerIntentActivity extends Activity {
         }
         return true;
     }
-
-
-	/**
-	 * The menu is only for developers.
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menuRecognizerShowInput:
-			Intent details = new Intent(this, DetailsActivity.class);
-			details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
-			startActivity(details);
-			return true;
-		case R.id.menuRecognizerTest1:
-			transcribeFile("test_kaks_minutit_sekundites.flac", "audio/x-flac;rate=16000");
-			return true;
-		case R.id.menuRecognizerTest3:
-			returnOrForwardMatches(mMessageHandler,
-					new ArrayList<String>(
-							Arrays.asList(mRes.getStringArray(R.array.entriesTestResult))));
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
-
 
 	void doBindService() {
 		// This can be called also on an already running service
@@ -758,7 +740,7 @@ public class RecognizerIntentActivity extends Activity {
 		if (mExtraResultsPendingIntent != null) {
 			pendingIntentTargetPackage = mExtraResultsPendingIntent.getTargetPackage();
 		}
-		List<String> info = new ArrayList<String>();
+		List<String> info = new ArrayList<>();
 		info.add("ID: " + Utils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
 		info.add("User-Agent comment: " + mRecSessionBuilder.getUserAgentComment());
 		info.add("Calling activity class name: " + callingActivityClassName);
@@ -787,7 +769,7 @@ public class RecognizerIntentActivity extends Activity {
 		private final WeakReference<RecognizerIntentActivity> mRef;
 
 		public SimpleMessageHandler(RecognizerIntentActivity c) {
-			mRef = new WeakReference<RecognizerIntentActivity>(c);
+			mRef = new WeakReference<>(c);
 		}
 
 		public void handleMessage(Message msg) {
@@ -843,7 +825,7 @@ public class RecognizerIntentActivity extends Activity {
 			if (getCallingActivity() == null
 					|| RecognizerIntent.ACTION_WEB_SEARCH.equals(getIntent().getAction())
 					|| mExtras.getBoolean(RecognizerIntent.EXTRA_WEB_SEARCH_ONLY)) {
-				handleResultsByWebSearch(this, handler, matches);
+				handleResultsByWebSearch(matches);
 				return;
 			} else {
 				setResultIntent(handler, matches);
@@ -882,7 +864,7 @@ public class RecognizerIntentActivity extends Activity {
 	// In case of multiple hypotheses, ask the user to select from a list dialog.
 	// TODO: fetch also confidence scores and treat a very confident hypothesis
 	// as a single hypothesis.
-	private void handleResultsByWebSearch(final Context context, final Handler handler, final ArrayList<String> results) {
+	private void handleResultsByWebSearch(final ArrayList<String> results) {
 		// Some tweaking to cleanup the UI that would show under the
 		// dialog window that we are about to open.
 		runOnUiThread(new Runnable() {
@@ -921,31 +903,8 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-	private void transcribeFile(String fileName, String contentType) {
-		try {
-			byte[] bytes = getBytesFromAsset(fileName);
-			Log.i(LOG_TAG, "Transcribing bytes: " + bytes.length);
-			mRecSessionBuilder.setContentType(contentType);
-			if (mService.init(mRecSessionBuilder.build())) {
-				mService.transcribe(bytes);
-				setGui();
-			}
-		} catch (IOException e) {
-			// Failed to get data from the asset
-			handleResultError(mMessageHandler, RecognizerIntent.RESULT_CLIENT_ERROR, "file", e);
-		}
-	}
-
-
-	private byte[] getBytesFromAsset(String assetName) throws IOException {
-		InputStream is = getAssets().open(assetName);
-		//long length = getAssets().openFd(assetName).getLength();
-		return IOUtils.toByteArray(is);
-	}
-
-
 	private SparseArray<String> createErrorMessages() {
-		SparseArray<String> errorMessages = new SparseArray<String>();
+		SparseArray<String> errorMessages = new SparseArray<>();
 		errorMessages.put(RecognizerIntent.RESULT_AUDIO_ERROR, getString(R.string.errorResultAudioError));
 		errorMessages.put(RecognizerIntent.RESULT_CLIENT_ERROR, getString(R.string.errorResultClientError));
 		errorMessages.put(RecognizerIntent.RESULT_NETWORK_ERROR, getString(R.string.errorResultNetworkError));
@@ -953,12 +912,4 @@ public class RecognizerIntentActivity extends Activity {
 		errorMessages.put(RecognizerIntent.RESULT_NO_MATCH, getString(R.string.errorResultNoMatch));
 		return errorMessages;
 	}
-
-
-	/*
-	private void test_upload_from_res_raw() {
-		InputStream ins = res.openRawResource(R.raw.test_12345);
-		demoMatch = transcribe(ins, ins.available());
-	}
-	 */
 }
