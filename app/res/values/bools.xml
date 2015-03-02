@@ -8,6 +8,7 @@
     -->
     <bool name="defaultRespectLocale">false</bool>
     <bool name="defaultAutoStart">false</bool>
+    <bool name="defaultAutoStopAfterPause">true</bool>
     <bool name="defaultAudioCues">true</bool>
 
     <!-- For the IME, these are false by default. Google always beeps and it cannot be switched off,

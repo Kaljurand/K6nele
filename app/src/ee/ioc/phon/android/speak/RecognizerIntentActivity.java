@@ -324,7 +324,7 @@ public class RecognizerIntentActivity extends Activity {
 					if (maxRecordingTime < (SystemClock.elapsedRealtime() - mService.getStartTime())) {
 						Log.i(LOG_TAG, "Max recording time exceeded");
 						stopRecording();
-					} else if (mPrefs.getBoolean("keyAutoStopAfterPause", true) && mService.isPausing()) {
+					} else if (Utils.getPrefBoolean(mPrefs, mRes, R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mService.isPausing()) {
 						Log.i(LOG_TAG, "Speaker finished speaking");
 						stopRecording();
 					} else {
@@ -569,7 +569,7 @@ public class RecognizerIntentActivity extends Activity {
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.GONE);
 		setRecorderStyle(mRes.getColor(R.color.red));
-		if (mPrefs.getBoolean("keyAutoStopAfterPause", true)) {
+		if (Utils.getPrefBoolean(mPrefs, mRes, R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause)) {
 			mBStartStop.setVisibility(View.GONE);
 			mIvVolume.setVisibility(View.VISIBLE);
 		} else {

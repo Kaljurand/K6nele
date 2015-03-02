@@ -7,6 +7,7 @@
     <string name="keyServerWs" translatable="false">keyServerWs</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStart" translatable="false">keyAutoStart</string>
+    <string name="keyAutoStopAfterPause" translatable="false">keyAutoStopAfterPause</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>

@@ -9,6 +9,11 @@
             android:targetClass="ee.ioc.phon.android.speak.ServerListActivity"
             android:targetPackage="ee.ioc.phon.android.speak" />
     </Preference>
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultAutoStopAfterPause"
+        android:key="@string/keyAutoStopAfterPause"
+        android:summary="@string/summaryAutoStopAfterPause"
+        android:title="@string/titleAutoStopAfterPause" />
     <ListPreference
         android:defaultValue="@string/defaultAutoStopAfterTime"
         android:entries="@array/entriesAutoStopAfterTime"
