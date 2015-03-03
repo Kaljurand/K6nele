@@ -22,7 +22,7 @@ public class Log {
 
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
-    public static final String LOG_TAG = "ee.ioc.phon.android.speak";
+    public static final String LOG_TAG = "k6nele";
 
     public static void i(String msg) {
         if (DEBUG) android.util.Log.i(LOG_TAG, msg);

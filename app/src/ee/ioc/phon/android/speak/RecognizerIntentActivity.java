@@ -435,15 +435,6 @@ public class RecognizerIntentActivity extends Activity {
 	}
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (Log.DEBUG) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.recognizer, menu);
-        }
-        return true;
-    }
-
 	void doBindService() {
 		// This can be called also on an already running service
 		startService(new Intent(this, RecognizerIntentService.class));
