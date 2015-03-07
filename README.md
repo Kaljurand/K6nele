@@ -26,6 +26,9 @@ Point to the SDK directory by setting the environment variable
 Then run
 
 	gradle build
+	gradle lint
+	gradle installRelease
+	gradle ...
 
 For the listing of more Gradle tasks, run:
 
@@ -42,8 +45,18 @@ If you have access to the release keystore then
 		keyPassword=<password2>
 
 
+Tags
+----
+
+Version tags are set by e.g.
+
+    git tag -a v1.1.02 -m 'version 1.1.02'
+
+The last number should be even.
+
+
 Contributions
 -------------
 
-The client for https://github.com/alumae/kaldi-gstreamer-server
-was originally based on https://github.com/truongdq54/kaldi-gstreamer-android-client
+The client for <https://github.com/alumae/kaldi-gstreamer-server>
+was originally based on <https://github.com/truongdq54/kaldi-gstreamer-android-client>.
