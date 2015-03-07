@@ -5,22 +5,41 @@ title: Release notes
 
 (For more detailed notes see <https://github.com/Kaljurand/K6nele/commits/master>)
 
-There are currently 2 branches:
+There are currently 3 branches:
 
   * v0.7.xx (not maintained):
     * requires Android 1.6+
     * launcher icon opens the settings
-  * v0.8.xx:
+  * v0.8.xx (not maintained):
     * requires Android 2.2+
     * can do everything that v0.7.xx can, but additionally implements the RecognitionService-interface
     * settings are part of the global settings
     * launcher submits the transcription to the standard websearch
+    * starting with v0.8.50 implements the IME interface
+  * v1.1.xx
+    * requires Android 4.1+
+    * Android 4.1+ style UI
 
 ----
 
 (Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>)
 
+## v1.1
+
+### v1.1.02 (2015-03-07) (released on Google Play: 2015-03-06)
+
+- require API >= 16 (Android v4.1 Jelly Bean)
+- modernize the UI (making the menus more accessible)
+- remove some hidden developer features, reducing the APK size by 40k
+- fix crash due to the WEB_SEARCH activity not available on some devices (we now fall back to SEARCH, or no activity if SEARCH is also not available)
+
 ## v0.8
+
+### v0.8.58 (2015-01-29) (released on Google Play: 2015-01-29)
+
+- new setting to remove the help text from the IME, making it consume even less screen space in landscape mode
+- IME: fix stack overflow in some cases
+- IME: improve the search button
 
 ### v0.8.56 (2015-01-10) (released on Google Play: 2015-01-10)
 

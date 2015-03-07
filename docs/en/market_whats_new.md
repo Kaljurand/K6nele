@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Google Play's What's New
+published: false
 ---
 
 Google Play does not preserve the notes on older releases. The page here provides that.
