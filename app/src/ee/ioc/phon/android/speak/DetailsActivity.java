@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -70,12 +71,18 @@ public class DetailsActivity extends ListActivity {
 
 				getListView().setOnItemClickListener(new OnItemClickListener() {
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						Intent intentWebSearch = new Intent(Intent.ACTION_WEB_SEARCH);
-						intentWebSearch.putExtra(SearchManager.QUERY, ((TextView) view).getText());
-						startActivity(intentWebSearch);
-						// TODO: can we finish the parent as well? or maybe return the selection to parent?
-						finish();
-					}
+                        // We construct a list of search intents.
+                        // The first one that can be handled by the device is launched.
+                        CharSequence query = ((TextView) view).getText();
+                        Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
+                        intent1.putExtra(SearchManager.QUERY, query);
+                        Intent intent2 = new Intent(Intent.ACTION_SEARCH);
+                        intent2.putExtra(SearchManager.QUERY, query);
+
+                        Utils.startActivityIfAvailable(DetailsActivity.this, intent1, intent2);
+                        // TODO: can we finish the parent as well? or maybe return the selection to parent?
+                        finish();
+                    }
 				});
 			}
 		}

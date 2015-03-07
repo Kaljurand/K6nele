@@ -52,11 +52,6 @@
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="keyAutoStopAfterPause"
-            android:summary="@string/summaryAutoStopAfterPause"
-            android:title="@string/titleAutoStopAfterPause" />
-        <CheckBoxPreference
             android:defaultValue="@bool/defaultAudioCues"
             android:key="@string/keyAudioCues"
             android:summary="@string/summaryAudioCues"

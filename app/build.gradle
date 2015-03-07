@@ -23,11 +23,10 @@ android {
     // API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
-        minSdkVersion 8
-        // TODO: make this the highest possible once we do not rely on the old-style menus anymore
-        targetSdkVersion 8
-        versionCode 858
-        versionName '0.8.58'
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 1102
+        versionName '1.1.02'
     }
 
 

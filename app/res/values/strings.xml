@@ -7,6 +7,7 @@
     <string name="keyServerWs" translatable="false">keyServerWs</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
     <string name="keyAutoStart" translatable="false">keyAutoStart</string>
+    <string name="keyAutoStopAfterPause" translatable="false">keyAutoStopAfterPause</string>
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>
@@ -230,13 +231,6 @@ More grammars are available at
     <string name="entryGrammarName1">[unrestricted input]</string>
     <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
 
-    <!-- Menus for developers -->
-    <string name="menuRecognizerShowInput" translatable="false">Show input</string>
-    <string name="menuRecognizerTest" translatable="false">Tests</string>
-    <string name="menuRecognizerTest1" translatable="false">Upload /2 min IN s/</string>
-    <string name="menuRecognizerTest2" translatable="false">Upload /mine edasi/</string>
-    <string name="menuRecognizerTest3" translatable="false">Return dummy data</string>
-
     <string-array name="entriesAutoStopAfterTime">
         <item>2 sec</item>
         <item>5 sec</item>
@@ -244,13 +238,7 @@ More grammars are available at
         <item>20 sec</item>
         <item>30 sec</item>
     </string-array>
-    <string-array name="entriesTestResult" translatable="false">
-        <item>Hello, world!</item>
-        <item>2 * 3</item>
-        <item>convert 4.5 km to m</item>
-        <item>map Sõpruse puiestee 214 , Tallinn</item>
-        <item>1 2 3 4 5</item>
-    </string-array>
+
     <string-array name="entriesRecordingRate" translatable="false">
 
         <!-- <item>8 kHz</item> -->

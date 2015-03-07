@@ -456,7 +456,7 @@ public class SpeechRecognitionService extends RecognitionService {
 				if (mRecorder != null) {
 					if (
 							mTimeToFinish < SystemClock.uptimeMillis() ||
-							mPrefs.getBoolean("keyAutoStopAfterPause", true) && mRecorder.isPausing()
+                            Utils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mRecorder.isPausing()
 							) {
 						stopRecording(listener);
 					} else {

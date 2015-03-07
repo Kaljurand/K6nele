@@ -8,7 +8,6 @@
     <color name="orange1">#ffcc99</color>
     <!-- sand(Safe Hex3) -->
     <color name="green1">#99cc33</color>
-    <color name="green2">#00cc00</color>
     <color name="green3">#669900</color>
     <color name="red">#cc0000</color>
     <color name="buttonStroke">#808080</color>
@@ -34,7 +33,6 @@
     <color name="transparent">#00000000</color>
     <color name="very_transparent">#11404040</color>
     <color name="transparent_blue">#990099cc</color>
-    <color name="link">#0000ff</color>
     <color name="buttonNormal1">#ffcc00</color>
     <color name="buttonNormal2">#996600</color>
     <color name="buttonPressed1">#996600</color>

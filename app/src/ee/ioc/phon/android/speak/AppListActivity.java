@@ -97,7 +97,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(getString(R.string.prefCurrentSortOrder), mCurrentSortOrder);
-		editor.commit();
+		editor.apply();
 	}
 
 

@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/labelApp"
         android:supportsRtl="true"
-        android:theme="@style/RecognizerTheme">
+        android:theme="@style/Theme.K6nele">
 
         <!--
 			android:clearTaskOnLaunch="true"
@@ -34,7 +34,7 @@
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
 
@@ -84,7 +84,8 @@
         <activity
             android:name=".PreferencesRecognitionServiceHttp"
             android:exported="false"
-            android:label="@string/labelActivityPreferencesRecognitionServiceHttp">
+            android:label="@string/labelActivityPreferencesRecognitionServiceHttp"
+            android:parentActivityName=".Preferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,7 +96,8 @@
         <activity
             android:name=".PreferencesRecognitionServiceWs"
             android:exported="false"
-            android:label="@string/labelActivityPreferencesRecognitionServiceWs">
+            android:label="@string/labelActivityPreferencesRecognitionServiceWs"
+            android:parentActivityName=".Preferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -105,23 +107,28 @@
 
         <activity
             android:name=".AboutActivity"
-            android:label="@string/labelActivityAbout"></activity>
+            android:label="@string/labelActivityAbout"
+            android:parentActivityName=".Preferences"
+            android:theme="@style/Theme.K6nele.NoActionBar"></activity>
 
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
         <activity
             android:name=".DetailsActivity"
             android:label="@string/labelActivityDetails"
-            android:theme="@android:style/Theme.Dialog"></activity>
+            android:theme="@style/Theme.K6nele.Dialog"></activity>
         <activity
             android:name=".AppListActivity"
-            android:label="@string/labelActivityAppList"></activity>
+            android:label="@string/labelActivityAppList"
+            android:parentActivityName=".Preferences"></activity>
         <activity
             android:name=".GrammarListActivity"
-            android:label="@string/labelActivityGrammarList"></activity>
+            android:label="@string/labelActivityGrammarList"
+            android:parentActivityName=".Preferences"></activity>
         <activity
             android:name=".ServerListActivity"
-            android:label="@string/labelActivityServerList"></activity>
+            android:label="@string/labelActivityServerList"
+            android:parentActivityName=".PreferencesRecognitionServiceHttp"></activity>
         <activity
             android:name=".demo.SimpleDemo"
             android:label="@string/labelActivitySimpleDemo"></activity>
