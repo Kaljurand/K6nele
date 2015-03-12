@@ -1,0 +1,6 @@
+#JSGF V1.0;
+
+grammar numbers;
+
+public <command> = <numbers> ;
+<numbers> = ( one | two | three ) ;
