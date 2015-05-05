@@ -75,9 +75,10 @@ public class VoiceImeView extends LinearLayout {
         mRecognizer = createSpeechRecognizer(prefs);
         mRecognizer.setRecognitionListener(getRecognizerListener());
 
+        // This button can be pressed in any state.
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.setEnabled(false);
+                Log.i("Microphone button pressed: state = " + mState);
                 switch (mState) {
                     case INIT:
                     case ERROR:
@@ -88,6 +89,8 @@ public class VoiceImeView extends LinearLayout {
                         break;
                     case LISTENING:
                     case TRANSCRIBING:
+                        // We enter the INIT-state here, just in case cancel() does not take us there
+                        mState = Constants.State.INIT;
                         mRecognizer.cancel();
                         break;
                     default:
@@ -138,7 +141,6 @@ public class VoiceImeView extends LinearLayout {
     public void start() {
         if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
             // TODO: fix this
-            //mBImeStartStop.setEnabled(false);
             //mRecognizer.startListening(mIntent);
         }
     }

@@ -73,7 +73,6 @@ public class MicButton extends ImageButton {
             default:
                 break;
         }
-        setEnabled(true);
     }
 
 
