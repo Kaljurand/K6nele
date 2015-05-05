@@ -155,13 +155,13 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onReadyForSpeech(Bundle params) {
-                Log.i("onReadyForSpeech");
+                Log.i("onReadyForSpeech: state = " + mState);
                 setGuiState(Constants.State.LISTENING);
             }
 
             @Override
             public void onBeginningOfSpeech() {
-                Log.i("onBeginningOfSpeech");
+                Log.i("onBeginningOfSpeech: state = " + mState);
                 setGuiState(Constants.State.RECORDING);
                 setText(mTvInstruction, R.string.buttonImeStop);
                 setText(mTvMessage, "");
@@ -171,9 +171,14 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onEndOfSpeech() {
-                Log.i("onEndOfSpeech");
-                setGuiState(Constants.State.TRANSCRIBING);
-                setText(mTvInstruction, R.string.statusImeTranscribing);
+                Log.i("onEndOfSpeech: state = " + mState);
+                // We go into the TRANSCRIBING-state only if we were in the RECORDING-state,
+                // otherwise we ignore this event. This improves compatibility with
+                // Google Voice Search, which calls EndOfSpeech after onResults.
+                if (mState == Constants.State.RECORDING) {
+                    setGuiState(Constants.State.TRANSCRIBING);
+                    setText(mTvInstruction, R.string.statusImeTranscribing);
+                }
             }
 
             /**
@@ -225,7 +230,7 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onPartialResults(final Bundle bundle) {
-                Log.i("onPartialResults");
+                Log.i("onPartialResults: state = " + mState);
                 String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
                 if (text == null) {
                     // This shouldn't really happen
@@ -248,7 +253,7 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onResults(final Bundle bundle) {
-                Log.i("onResults");
+                Log.i("onResults: state = " + mState);
                 String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
                 if (text == null) {
                     // If we got empty results then assume that the session ended,
