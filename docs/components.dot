@@ -1,0 +1,79 @@
+/**
+ *
+ * @author Kaarel Kaljurand
+ * @version 2015-05-05
+ */
+
+digraph G {
+
+	node [fillcolor = "white", style = "rounded,filled"];
+
+    "Kõnele Dialog" [fillcolor = "yellow"];
+
+    subgraph cluster_0 {
+        label = "Cloud speech servers";
+        style=filled;
+        "kaldi" [label = "kaldi-gstreamer-server"];
+        "pocketsphinx" [label = "ruby-pocketsphinx-server"];
+        color = "lightblue";
+    }
+
+    // Services record audio, send it to the server, and make the transcription
+    // available via standard Android APIs.
+    // One can configure the server addresses and audio recording parameters
+    // (e.g. sample rate, duration, silence detection).
+    subgraph cluster_1 {
+        label = "Kõnele speech services";
+        "Kõnele fast" [label = "Kõnele service\n(fast recognition)", fillcolor = "yellow"];
+        "Kõnele grammar" [label = "Kõnele service\n(grammar support)", fillcolor = "yellow"];
+        "Kõnele old" [label = "Kõnele service\n(grammar support, OLD)", fillcolor = "yellow"];
+    }
+
+    subgraph cluster_2 {
+        label = "Android speech APIs";
+        style=filled;
+        "Android SpeechRecognizer" ;
+        "Android RecognizerIntent" ;
+        color = "lightgreen";
+    }
+
+    subgraph cluster_3 {
+        label = "Android IMEs";
+        style=filled;
+        "Kõnele IME" [fillcolor = "yellow"];
+        "Google Keyboard" [label = "Google Keyboard, ..."];
+        color = "lightgreen";
+    }
+
+    subgraph cluster_4 {
+        label = "Android apps";
+        style=filled;
+        "Google Keep";
+        "Google Translate";
+        "Arvutaja";
+        color=lightgrey;
+    }
+
+    "kaldi" -> "Kõnele fast" [label = "WebSockets"];
+	"pocketsphinx" -> "Kõnele grammar" [label = "net-speech-api (HTTP)"];
+	"pocketsphinx" -> "Kõnele old" [label = "net-speech-api (HTTP)"];
+
+    // Both services implement Android SpeechRecognizer
+    "Kõnele fast" -> "Android SpeechRecognizer" ;
+    "Kõnele grammar" -> "Android SpeechRecognizer" ;
+
+    //"Google Search" -> "Android RecognizerIntent" ;
+    //"Google Search" -> "Android SpeechRecognizer" ;
+
+    "Kõnele old" -> "Kõnele Dialog" ;
+    "Kõnele Dialog" -> "Android RecognizerIntent" ;
+
+    "Android SpeechRecognizer" -> "Kõnele IME" ;
+    "Android SpeechRecognizer" -> "Arvutaja" ;
+    "Android RecognizerIntent" -> "Google Keep" ;
+    "Google Keyboard" -> "Google Keep";
+    "Kõnele IME" -> "Google Keep";
+    "Android SpeechRecognizer" -> "Google Translate" ;
+    "Google Keyboard" -> "Google Translate";
+    "Kõnele IME" -> "Google Translate";
+}

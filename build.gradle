@@ -14,8 +14,9 @@ allprojects {
 }
 
 
-// Converts the SVG launcher icon to multiple resolution PNGs
-task makeIcons << {
+task(makeIcons) << {
+    description 'Converts the SVG launcher icon to multiple resolution PNGs'
+
     def dir_res = 'app/res/'
     def dir_svg = 'images/'
 
@@ -43,4 +44,21 @@ task makeIcons << {
     sizeMap.each {
         key, val -> convertSvg(val, dir_svg, dir_res + 'drawable-' + key + '/')
     }
+}
+
+task(makeDiagrams) << {
+    description 'Converts dot to SVG'
+
+    def dir = 'docs/'
+
+    def convertDot = {
+        format,fn ->
+            println "Converting ${fn} to ${format} ..."
+            def output = exec {
+                commandLine 'dot', '-O', '-T' + format, fn + '.dot'
+            }
+    }
+
+    convertDot('svg', dir + 'RecognizerService')
+    convertDot('svg', dir + 'components')
 }
