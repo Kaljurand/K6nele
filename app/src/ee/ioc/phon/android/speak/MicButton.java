@@ -52,11 +52,11 @@ public class MicButton extends ImageButton {
                 setBackgroundDrawable(mDrawableMic);
                 break;
             case RECORDING:
+                break;
+            case LISTENING:
                 if (mAudioCue != null) mAudioCue.playStartSoundAndSleep();
                 mAudioPauser.pause();
                 setBackgroundDrawable(mVolumeLevels.get(0));
-                break;
-            case LISTENING:
                 break;
             case TRANSCRIBING:
                 if (mAudioCue != null) mAudioCue.playStopSound();

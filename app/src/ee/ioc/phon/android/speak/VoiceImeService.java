@@ -264,6 +264,11 @@ public class VoiceImeService extends InputMethodService {
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());
         intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
         intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
+        // Declaring that in the IME we would like to allow longer pauses (2 sec).
+        // The service might not implement these (e.g. Kõnele currently does not)
+        // TODO: what is the difference of these two constants?
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
         return intent;
     }
 

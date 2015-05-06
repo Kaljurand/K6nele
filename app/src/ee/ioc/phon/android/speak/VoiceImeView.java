@@ -90,7 +90,7 @@ public class VoiceImeView extends LinearLayout {
                     case LISTENING:
                     case TRANSCRIBING:
                         // We enter the INIT-state here, just in case cancel() does not take us there
-                        mState = Constants.State.INIT;
+                        setGuiInitState(0);
                         mRecognizer.cancel();
                         break;
                     default:
@@ -159,16 +159,16 @@ public class VoiceImeView extends LinearLayout {
             public void onReadyForSpeech(Bundle params) {
                 Log.i("onReadyForSpeech: state = " + mState);
                 setGuiState(Constants.State.LISTENING);
+                setText(mTvInstruction, R.string.buttonImeStop);
+                setText(mTvMessage, "");
+                setVisibility(mBImeKeyboard, View.INVISIBLE);
+                setVisibility(mBImeGo, View.INVISIBLE);
             }
 
             @Override
             public void onBeginningOfSpeech() {
                 Log.i("onBeginningOfSpeech: state = " + mState);
                 setGuiState(Constants.State.RECORDING);
-                setText(mTvInstruction, R.string.buttonImeStop);
-                setText(mTvMessage, "");
-                setVisibility(mBImeKeyboard, View.INVISIBLE);
-                setVisibility(mBImeGo, View.INVISIBLE);
             }
 
             @Override
