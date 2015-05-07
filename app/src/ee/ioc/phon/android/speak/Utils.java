@@ -16,8 +16,10 @@
 
 package ee.ioc.phon.android.speak;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +40,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -48,6 +51,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -60,7 +64,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class Utils {
 
-	private Utils() {}
+	private Utils() {
+	}
 
 
 	public static PendingIntent getPendingIntent(Bundle extras) {
@@ -82,9 +87,9 @@ public class Utils {
 		String value = null;
 		Cursor c = context.getContentResolver().query(
 				contentUri,
-				new String[] { columnUrl },
+				new String[]{columnUrl},
 				columnId + "= ?",
-				new String[] { String.valueOf(id) },
+				new String[]{String.valueOf(id)},
 				null);
 
 		if (c.moveToFirst()) {
@@ -114,7 +119,7 @@ public class Utils {
 	/**
 	 * <p>Returns a bitmap that visualizes the given waveform (byte array),
 	 * i.e. a sequence of 16-bit integers.</p>
-	 *
+	 * <p/>
 	 * TODO: show to high/low points in other color
 	 * TODO: show end pause data with another color
 	 */
@@ -157,7 +162,7 @@ public class Utils {
 		// do one less column to make sure we won't read past
 		// the buffer.
 		try {
-			for (int i = 0; i < w - 1 ; i++) {
+			for (int i = 0; i < w - 1; i++) {
 				final float x = i;
 				for (int j = 0; j < numSamplePerPixel; j++) {
 					final short s = buf.get(index);
@@ -179,7 +184,7 @@ public class Utils {
 	}
 
 
-	static Bitmap bytesToBitmap(byte[] byteBuffer, int w, int h, int startPosition, int endPosition) {
+	private static Bitmap bytesToBitmap(byte[] byteBuffer, int w, int h, int startPosition, int endPosition) {
 		final ShortBuffer waveBuffer = ByteBuffer.wrap(byteBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
 		final Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		final Canvas c = new Canvas(b);
@@ -215,8 +220,8 @@ public class Utils {
 		float x = 0;
 		path.moveTo(x, 0);
 		for (int i = 0; i < count; i++) {
-			final int avabs = getAverageAbs(waveBuffer, startIndex, i , numSamplePerWave);
-			int sign = ( (i & 01) == 0) ? -1 : 1;
+			final int avabs = getAverageAbs(waveBuffer, startIndex, i, numSamplePerWave);
+			int sign = ((i & 01) == 0) ? -1 : 1;
 			final float y = Math.min(yMax, avabs * h * scale) * sign;
 			path.lineTo(x, y);
 			x += deltaX;
@@ -225,7 +230,7 @@ public class Utils {
 		if (deltaX > 4) {
 			paint.setStrokeWidth(2);
 		} else {
-			paint.setStrokeWidth(Math.max(0, (int) (deltaX -.05)));
+			paint.setStrokeWidth(Math.max(0, (int) (deltaX - .05)));
 		}
 		c.drawPath(path, paint);
 		return b;
@@ -249,18 +254,18 @@ public class Utils {
 	public static AlertDialog getYesNoDialog(Context context, String confirmationMessage, final Executable ex) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder
-		.setMessage(confirmationMessage)
-		.setCancelable(false)
-		.setPositiveButton(context.getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				ex.execute();
-			}
-		})
-		.setNegativeButton(context.getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
+				.setMessage(confirmationMessage)
+				.setCancelable(false)
+				.setPositiveButton(context.getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						ex.execute();
+					}
+				})
+				.setNegativeButton(context.getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 		return builder.create();
 	}
 
@@ -270,19 +275,19 @@ public class Utils {
 		final EditText et = (EditText) textEntryView.findViewById(R.id.url_edit);
 		et.setText(initialText);
 		return new AlertDialog.Builder(context)
-		.setTitle(title)
-		.setView(textEntryView)
-		.setPositiveButton(R.string.buttonOk, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				ex.execute(et.getText().toString());
-			}
-		})
-		.setNegativeButton(R.string.buttonCancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				dialog.cancel();
-			}
-		})
-		.create();
+				.setTitle(title)
+				.setView(textEntryView)
+				.setPositiveButton(R.string.buttonOk, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						ex.execute(et.getText().toString());
+					}
+				})
+				.setNegativeButton(R.string.buttonCancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.cancel();
+					}
+				})
+				.create();
 	}
 
 
@@ -346,25 +351,25 @@ public class Utils {
 	}
 
 
-    private static List<String> ppBundle(String bundleName, Bundle bundle) {
-        List<String> strings = new ArrayList<String>();
-        for (String key : bundle.keySet()) {
-            Object value = bundle.get(key);
-            String name = bundleName + key;
-            if (value instanceof Bundle) {
-                strings.addAll(ppBundle(name + "/", (Bundle) value));
-            } else {
-                if (value instanceof Object[]) {
-                    strings.add(name + ": " + Arrays.toString((Object[]) value));
-                } else if (value instanceof float[]) {
-                    strings.add(name + ": " + Arrays.toString((float[]) value));
-                } else {
-                    strings.add(name + ": " + value);
-                }
-            }
-        }
-        return strings;
-    }
+	private static List<String> ppBundle(String bundleName, Bundle bundle) {
+		List<String> strings = new ArrayList<String>();
+		for (String key : bundle.keySet()) {
+			Object value = bundle.get(key);
+			String name = bundleName + key;
+			if (value instanceof Bundle) {
+				strings.addAll(ppBundle(name + "/", (Bundle) value));
+			} else {
+				if (value instanceof Object[]) {
+					strings.add(name + ": " + Arrays.toString((Object[]) value));
+				} else if (value instanceof float[]) {
+					strings.add(name + ": " + Arrays.toString((float[]) value));
+				} else {
+					strings.add(name + ": " + value);
+				}
+			}
+		}
+		return strings;
+	}
 
 
 	/**
@@ -374,7 +379,7 @@ public class Utils {
 	 * contain the given key then returns {@code null}.</p>
 	 *
 	 * @param bundle bundle (e.g. intent extras)
-	 * @param key key of a bundle entry (possibly in an embedded bundle)
+	 * @param key    key of a bundle entry (possibly in an embedded bundle)
 	 * @return first matching key's value
 	 */
 	public static Object getBundleValue(Bundle bundle, String key) {
@@ -393,42 +398,65 @@ public class Utils {
 	}
 
 
-    public static String makeUserAgentComment(String tag, String versionName, String caller) {
-        return tag + "/" + versionName + "; " +
-                Build.MANUFACTURER + "/" +
-                Build.DEVICE + "/" +
-                Build.DISPLAY + "; " +
-                caller;
-    }
+	public static String makeUserAgentComment(String tag, String versionName, String caller) {
+		return tag + "/" + versionName + "; " +
+				Build.MANUFACTURER + "/" +
+				Build.DEVICE + "/" +
+				Build.DISPLAY + "; " +
+				caller;
+	}
 
 
-    public static String getPrefString(SharedPreferences prefs, Resources res, int key, int defaultValue) {
-        return prefs.getString(res.getString(key), res.getString(defaultValue));
-    }
+	public static String getPrefString(SharedPreferences prefs, Resources res, int key, int defaultValue) {
+		return prefs.getString(res.getString(key), res.getString(defaultValue));
+	}
 
-    public static String getPrefString(SharedPreferences prefs, Resources res, int key) {
-        return prefs.getString(res.getString(key), null);
-    }
+	public static String getPrefString(SharedPreferences prefs, Resources res, int key) {
+		return prefs.getString(res.getString(key), null);
+	}
 
-    public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {
-        return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
-    }
-
-
-    private static boolean isActivityAvailable(Context context, Intent intent) {
-        final PackageManager mgr = context.getPackageManager();
-        List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
-    }
+	public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {
+		return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
+	}
 
 
-    public static boolean startActivityIfAvailable(Context context, Intent... intents) {
-        for (Intent intent : intents) {
-            if (Utils.isActivityAvailable(context, intent)) {
-                context.startActivity(intent);
-                return true;
-            }
-        }
-        return false;
-    }
+	private static boolean isActivityAvailable(Context context, Intent intent) {
+		final PackageManager mgr = context.getPackageManager();
+		List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		return list.size() > 0;
+	}
+
+
+	public static boolean startActivityIfAvailable(Context context, Intent... intents) {
+		for (Intent intent : intents) {
+			if (Utils.isActivityAvailable(context, intent)) {
+				context.startActivity(intent);
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * On LOLLIPOP we use a builtin to parse the locale string, and return
+	 * the name of the locale in the language of the current locale. In pre-LOLLIPOP we just return
+	 * the formal name (e.g. "et-ee"), because the Locale-constructor is not able to parse it.
+	 *
+	 * @param localeAsStr Formal name of the locale, e.g. "et-ee"
+	 * @return The name of the locale in the language of the current locale
+	 */
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	public static String makeLangLabel(String localeAsStr) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			return Locale.forLanguageTag(localeAsStr).getDisplayName();
+		}
+		return localeAsStr;
+	}
+
+
+	public static ComponentName getComponentName(String str) {
+		String[] pkgAndCls = str.split("\\|");
+		return new ComponentName(pkgAndCls[0], pkgAndCls[1]);
+	}
 }

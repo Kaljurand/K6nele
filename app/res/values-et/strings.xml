@@ -262,5 +262,7 @@
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Lülitage see Androidi sisestusmeetodite (IME) seadetes sisse.</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
+    <string name="dialogTitleImeRecognitionLanguage">Tuvastuskeel</string>
+    <string name="titleRecognitionLanguage">Tuvastuskeel</string>
 
 </resources>

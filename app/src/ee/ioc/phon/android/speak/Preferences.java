@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2014, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,22 @@
 
 package ee.ioc.phon.android.speak;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.speech.RecognitionService;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * <p>Preferences activity. Updates some preference-summaries automatically,
@@ -61,7 +59,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     protected void onResume() {
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-        populateRecognitionServices(getString(R.string.defaultImeRecognizerService));
+        populateRecognitionServices();
 
         // If the K6nele IME is enabled then we remove the link to the IME settings,
         // if not already removed.
@@ -81,82 +79,46 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     }
 
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         Preference pref = findPreference(key);
+        //ListPreference pref = (ListPreference) mSettingsFragment.findPreference(key);
         if (pref instanceof ListPreference) {
             ListPreference lp = (ListPreference) pref;
             pref.setSummary(lp.getEntry());
+            if (key.equals(getString(R.string.keyImeRecognitionService))) {
+                // Populate the languages available under this service
+                populateLanguages(lp.getValue());
+            } else if (key.equals(getString(R.string.keyImeRecognitionLanguage))) {
+                // Nothing to do
+            }
         }
     }
 
 
-    /**
-     * Populates the list of available recognizer services and adds a choice for the system default
-     * service. If no service is currently selected (when the user accesses the preferences menu
-     * for the first time), then selects the item that points to the preferredService (this is
-     * Kõnele's own service).
-     *
-     * @param preferredService Service to select if none was selected
-     */
-    private void populateRecognitionServices(String preferredService) {
-        PackageManager pm = getPackageManager();
-        List<ResolveInfo> services = pm.queryIntentServices(
-                new Intent(RecognitionService.SERVICE_INTERFACE), 0);
-
-        int numberOfServices = services.size();
-
-        // This should never happen because K6nele comes with several services
-        if (numberOfServices == 0) {
-            return;
-        }
-
+    private void populateRecognitionServices() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Hardcoded "preferred service"
+        String preferredService = getString(R.string.defaultImeRecognizerService);
         // Currently selected service (identified by class name)
         String selectedService = Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
-        int selectedIndex = -1;
-        int preferredIndex = 0;
-
-        CharSequence[] entries = new CharSequence[numberOfServices + 1];
-        CharSequence[] entryValues = new CharSequence[numberOfServices + 1];
-
-        // System default as the first listed choice
-        entries[0] = getString(R.string.labelDefaultRecognitionService);
-        entryValues[0] = getString(R.string.keyDefaultRecognitionService);
-
-        int index = 1;
-        for (ResolveInfo ri : services) {
-            ServiceInfo si = ri.serviceInfo;
-            if (si == null) {
-                Log.i("serviceInfo == null");
-                continue;
-            }
-            String pkg = si.packageName;
-            String cls = si.name;
-            CharSequence label = si.loadLabel(pm);
-            Log.i(label + " :: " + pkg + " :: " + cls);
-            entries[index] = label;
-            String value = pkg + '|' + cls;
-            entryValues[index] = value;
-            Log.i("populateRecognitionServices: " + entryValues[index]);
-            if (value.equals(selectedService)) {
-                selectedIndex = index;
-            } else if (value.equals(preferredService)) {
-                preferredIndex = index;
-            }
-            index++;
-        }
-
-        if (selectedIndex == -1) {
-            selectedIndex = preferredIndex;
-        }
+        RecognitionServiceManager mngr = new RecognitionServiceManager(this, preferredService, selectedService);
 
         ListPreference list = (ListPreference) findPreference(getString(R.string.keyImeRecognitionService));
-        list.setEntries(entries);
-        list.setEntryValues(entryValues);
-        list.setValueIndex(selectedIndex);
+        list.setEntries(mngr.getEntries());
+        list.setEntryValues(mngr.getEntryValues());
+        list.setValueIndex(mngr.getSelectedIndex());
         list.setSummary(list.getEntry());
+        populateLanguages(list.getValue());
     }
 
+    /**
+     * TODO
+     */
+    private void populateLanguages(String selectedRecognizerService) {
+        ListPreference languageList = (ListPreference) findPreference(getString(R.string.keyImeRecognitionLanguage));
+        updateSupportedLanguages(selectedRecognizerService, languageList);
+    }
 
     private boolean isK6neleImeEnabled() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -169,4 +131,96 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
         return false;
     }
+
+
+    /**
+     * Note: According to the <code>BroadcastReceiver</code> documentation,
+     * setPackage is respected only on ICS and later.
+     *
+     * Send a broadcast to find out what is the language preference of
+     * the speech recognizer service that matches the intent.
+     * The expectation is that only one service matches this intent.
+     *
+     * TODO: if the Kõnele Ws service is selected (either directly or as a system default) then
+     * clear the language selection and disable it. This is a temporary solution until
+     * the Ws-service start supporting more languages.
+     *
+     * @param selectedRecognizerService name of the app that is the only one to receive the broadcast
+     */
+    private void updateSupportedLanguages(String selectedRecognizerService, final ListPreference languageList) {
+        Log.i("Selected service: " + selectedRecognizerService);
+        Intent intent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+
+        // TODO: do not set package in case of "system default"
+        // TODO: how to specify the component (one package can contain different components with
+        // different capabilities)
+        intent.setPackage(Utils.getComponentName(selectedRecognizerService).getPackageName());
+        //intent.setComponent(Utils.getComponentName(selectedRecognizerService));
+
+        // This is needed to include newly installed apps or stopped apps
+        // as receivers of the broadcast.
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+        final String selectedLang = languageList.getValue();
+        sendOrderedBroadcast(intent, null, new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (getResultCode() != Activity.RESULT_OK) {
+                    // TODO: handle this error
+                    //toast(getString(R.string.errorNoDefaultRecognizer));
+                    return;
+                }
+
+                Bundle results = getResultExtras(true);
+
+                // Supported languages
+                String prefLang = results.getString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE);
+                ArrayList<CharSequence> allLangs = results.getCharSequenceArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES);
+
+                Log.i("Supported langs: " + prefLang + ": " + allLangs);
+
+                if (allLangs == null) {
+                    allLangs = new ArrayList<>();
+                }
+
+                // Make sure we don't end up with an empty list of languages
+                if (allLangs.isEmpty()) {
+                    if (prefLang == null) {
+                        allLangs.add(getString(R.string.defaultRecognitionLanguage));
+                    } else {
+                        allLangs.add(prefLang);
+                    }
+                }
+
+                // Populate the entry values with the supported languages
+                CharSequence[] entryValues = allLangs.toArray(new CharSequence[allLangs.size()]);
+                languageList.setEntryValues(entryValues);
+
+                // Populate the entries with human-readable language names
+                CharSequence[] entries = new CharSequence[allLangs.size()];
+                for (int i = 0; i < allLangs.size(); i++) {
+                    String ev = entryValues[i].toString();
+                    entries[i] = Utils.makeLangLabel(ev);
+                }
+                languageList.setEntries(entries);
+
+                // Set the selected item
+                if (allLangs.contains(selectedLang)) {
+                    languageList.setValue(selectedLang);
+                } else if (prefLang != null) {
+                    languageList.setValue(prefLang);
+                } else {
+                    languageList.setValueIndex(0);
+                }
+
+                // Update the summary to show the selected value.
+                // This needs to be done onResume and also when the service changes (handled elsewhere).
+                languageList.setSummary(languageList.getEntry());
+
+            }
+        }, null, Activity.RESULT_OK, null, null);
+    }
+
 }

@@ -1,6 +1,5 @@
 package ee.ioc.phon.android.speak;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -119,6 +118,7 @@ public class VoiceImeView extends LinearLayout {
                 return true;
             }
         });
+
 
         setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
@@ -392,8 +392,6 @@ public class VoiceImeView extends LinearLayout {
             return SpeechRecognizer.createSpeechRecognizer(getContext());
         }
 
-        String[] pkgAndCls = selectedRecognizerService.split("\\|");
-
-        return SpeechRecognizer.createSpeechRecognizer(getContext(), new ComponentName(pkgAndCls[0], pkgAndCls[1]));
+        return SpeechRecognizer.createSpeechRecognizer(getContext(), Utils.getComponentName(selectedRecognizerService));
     }
 }

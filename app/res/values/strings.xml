@@ -15,6 +15,7 @@
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
+    <string name="keyImeRecognitionLanguage" translatable="false">keyImeRecognitionLanguage</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
     <string name="keyDefaultRecognitionService" translatable="false">keyDefaultRecognitionService</string>
@@ -36,6 +37,12 @@
         <item>30</item>
     </string-array>
     <string-array name="empty" translatable="false"></string-array>
+
+    <!--
+This is input language that we assume if for some reason we fail to detect
+the user-selected/recognizer-supported input language.
+-->
+    <string name="defaultRecognitionLanguage" translatable="false">et-EE</string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
 
@@ -96,7 +103,9 @@
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
     <string name="titleRecognitionService">Recognition service</string>
+    <string name="titleRecognitionLanguage">Recognition language</string>
     <string name="dialogTitleImeRecognitionService">Recognition service</string>
+    <string name="dialogTitleImeRecognitionLanguage">Recognition language</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>

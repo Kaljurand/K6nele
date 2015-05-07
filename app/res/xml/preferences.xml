@@ -42,6 +42,12 @@
             android:entryValues="@array/empty"
             android:key="@string/keyImeRecognitionService"
             android:title="@string/titleRecognitionService" />
+        <ListPreference
+            android:dialogTitle="@string/dialogTitleImeRecognitionLanguage"
+            android:entries="@array/empty"
+            android:entryValues="@array/empty"
+            android:key="@string/keyImeRecognitionLanguage"
+            android:title="@string/titleRecognitionLanguage" />
     </PreferenceCategory>
 
     // Voice search dialog

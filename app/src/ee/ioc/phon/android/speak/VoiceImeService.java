@@ -269,6 +269,14 @@ public class VoiceImeService extends InputMethodService {
         // TODO: what is the difference of these two constants?
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String selectedLanguage =
+                Utils.getPrefString(prefs, context.getResources(), R.string.keyImeRecognitionLanguage, R.string.defaultRecognitionLanguage);
+
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage);
+        // TODO: make this configurable
+        intent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
         return intent;
     }
 

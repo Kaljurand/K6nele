@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2012-2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 
 package ee.ioc.phon.android.speak;
 
-import java.util.ArrayList;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 /**
  * <p>Provides a list of supported languages. This is asked e.g. by the Google
  * Translate app which wants to determine when to display a microphone
  * button next to the text input box.</p>
- *
+ * <p/>
  * <p>TODO: we just return et_EE and a few other languages,
  * but actually we should query which languages are supported by the
  * currently selected recognizer server, and return these.</p>
@@ -36,29 +36,29 @@ import android.os.Bundle;
  */
 public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 
-	private final ArrayList<String> mSupportedLanguages = new ArrayList<String>();
+    private final ArrayList<String> mSupportedLanguages = new ArrayList<String>();
 
-	private static final String LOG_TAG = GetLanguageDetailsReceiver.class.getName();
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.i("received: " + intent.getAction());
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.i(LOG_TAG, "received: " + intent.getAction());
+        Bundle resultExtras = getResultExtras(true);
 
-		Bundle resultExtras = getResultExtras(true);
+        // TODO: not sure how we are supposed to behave in this case, where
+        // another recognizer has already responded to the broadcast and filled
+        // in its values.
+        if (!resultExtras.isEmpty()) {
+            Log.i("Overwriting extras: " + resultExtras);
+        }
 
-		// TODO: not sure how we are supposed to behave in this case, where
-		// another recognizer has already responded to the broadcast and filled
-		// in its values.
-		if (! resultExtras.isEmpty()) {
-			Log.i("Overwriting extras: " + resultExtras);
-		}
+        // TODO: send different results depending on the service (Ws and Http
+        // in general support different languages). Not sure that the framework supports this.
+        mSupportedLanguages.add("et-EE");
+        mSupportedLanguages.add("en-US");
 
-		mSupportedLanguages.add("et-EE");
-		mSupportedLanguages.add("en-US");
-
-		Bundle extras = new Bundle();
-		extras.putString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "et-EE");
-		extras.putStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, mSupportedLanguages);
-		setResultExtras(extras);
-	}
+        Bundle extras = new Bundle();
+        extras.putString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "et-EE");
+        extras.putStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, mSupportedLanguages);
+        setResultExtras(extras);
+    }
 }
