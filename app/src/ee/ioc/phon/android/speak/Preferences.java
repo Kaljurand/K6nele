@@ -25,7 +25,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.view.inputmethod.InputMethodInfo;
@@ -39,26 +38,32 @@ import java.util.ArrayList;
  *
  * @author Kaarel Kaljurand
  */
-public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class Preferences extends Activity implements OnSharedPreferenceChangeListener {
+
+    private SettingsFragment mSettingsFragment;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mSettingsFragment = new SettingsFragment();
+        // Display the fragment as the main content.
+        getFragmentManager().beginTransaction().replace(android.R.id.content, mSettingsFragment).commit();
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        mPrefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        mPrefs.registerOnSharedPreferenceChangeListener(this);
         populateRecognitionServices();
 
         // If the K6nele IME is enabled then we remove the link to the IME settings,
@@ -66,45 +71,40 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         // If the IME is not enabled then we add the link. The position of the link seems
         // to respect the position in preferences.xml.
         if (isK6neleImeEnabled()) {
-            PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryIme));
+            PreferenceCategory category = (PreferenceCategory) mSettingsFragment.findPreference(getString(R.string.keyCategoryIme));
             Preference pref = category.findPreference(getString(R.string.keyEnableIme));
             if (pref != null) {
                 category.removePreference(pref);
             }
         } else {
-            Preference pref = findPreference(getString(R.string.keyEnableIme));
-            PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryIme));
+            Preference pref = mSettingsFragment.findPreference(getString(R.string.keyEnableIme));
+            PreferenceCategory category = (PreferenceCategory) mSettingsFragment.findPreference(getString(R.string.keyCategoryIme));
             category.addPreference(pref);
         }
     }
 
 
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        Preference pref = findPreference(key);
-        //ListPreference pref = (ListPreference) mSettingsFragment.findPreference(key);
+        Preference pref = mSettingsFragment.findPreference(key);
         if (pref instanceof ListPreference) {
             ListPreference lp = (ListPreference) pref;
             pref.setSummary(lp.getEntry());
             if (key.equals(getString(R.string.keyImeRecognitionService))) {
                 // Populate the languages available under this service
                 populateLanguages(lp.getValue());
-            } else if (key.equals(getString(R.string.keyImeRecognitionLanguage))) {
-                // Nothing to do
             }
         }
     }
 
 
     private void populateRecognitionServices() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         // Hardcoded "preferred service"
         String preferredService = getString(R.string.defaultImeRecognizerService);
         // Currently selected service (identified by class name)
-        String selectedService = Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
+        String selectedService = Utils.getPrefString(mPrefs, getResources(), R.string.keyImeRecognitionService);
         RecognitionServiceManager mngr = new RecognitionServiceManager(this, preferredService, selectedService);
 
-        ListPreference list = (ListPreference) findPreference(getString(R.string.keyImeRecognitionService));
+        ListPreference list = (ListPreference) mSettingsFragment.findPreference(getString(R.string.keyImeRecognitionService));
         list.setEntries(mngr.getEntries());
         list.setEntryValues(mngr.getEntryValues());
         list.setValueIndex(mngr.getSelectedIndex());
@@ -112,11 +112,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         populateLanguages(list.getValue());
     }
 
-    /**
-     * TODO
-     */
+
     private void populateLanguages(String selectedRecognizerService) {
-        ListPreference languageList = (ListPreference) findPreference(getString(R.string.keyImeRecognitionLanguage));
+        ListPreference languageList = (ListPreference) mSettingsFragment.findPreference(getString(R.string.keyImeRecognitionLanguage));
         updateSupportedLanguages(selectedRecognizerService, languageList);
     }
 
