@@ -272,11 +272,13 @@ public class VoiceImeService extends InputMethodService {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String selectedLanguage =
-                Utils.getPrefString(prefs, context.getResources(), R.string.keyImeRecognitionLanguage, R.string.defaultRecognitionLanguage);
+                Utils.getPrefString(prefs, context.getResources(), R.string.keyImeRecognitionLanguage);
 
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage);
-        // TODO: make this configurable
-        intent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
+        if (selectedLanguage != null) {
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage);
+            // TODO: make this configurable
+            intent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
+        }
         return intent;
     }
 

@@ -1,6 +1,6 @@
 package ee.ioc.phon.android.speak;
 
-import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +16,7 @@ public class RecognitionServiceManager {
     private int mSelectedIndex = -1;
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
+
 
     RecognitionServiceManager(Context context, String preferredService, String selectedService) {
         mContext = context;
@@ -57,12 +58,13 @@ public class RecognitionServiceManager {
 
         int preferredIndex = 0;
 
+        // Add one entry for the system default service
         mEntries = new CharSequence[numberOfServices + 1];
         mEntryValues = new CharSequence[numberOfServices + 1];
 
         // System default as the first listed choice
         mEntries[0] = mContext.getString(R.string.labelDefaultRecognitionService);
-        mEntryValues[0] = mContext.getString(R.string.keyDefaultRecognitionService);
+        mEntryValues[0] = "";
 
         int index = 1;
         for (ResolveInfo ri : services) {
@@ -74,14 +76,14 @@ public class RecognitionServiceManager {
             String pkg = si.packageName;
             String cls = si.name;
             CharSequence label = si.loadLabel(pm);
-            Log.i(label + " :: " + pkg + " :: " + cls);
+            String component = (new ComponentName(pkg, cls)).flattenToShortString();
+            Log.i(label + " :: " + component + " :: meta = " + Utils.ppBundle(si.metaData));
             mEntries[index] = label;
-            String value = pkg + '|' + cls;
-            mEntryValues[index] = value;
+            mEntryValues[index] = component;
             Log.i("populateRecognitionServices: " + mEntryValues[index]);
-            if (value.equals(selectedService)) {
+            if (component.equals(selectedService)) {
                 mSelectedIndex = index;
-            } else if (value.equals(preferredService)) {
+            } else if (component.equals(preferredService)) {
                 preferredIndex = index;
             }
             index++;

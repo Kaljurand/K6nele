@@ -17,8 +17,7 @@
     <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
     <string name="keyImeRecognitionLanguage" translatable="false">keyImeRecognitionLanguage</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
-    <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak|ee.ioc.phon.android.speak.WebSocketRecognizer</string>
-    <string name="keyDefaultRecognitionService" translatable="false">keyDefaultRecognitionService</string>
+    <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak/.WebSocketRecognizer</string>
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
     <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
@@ -38,11 +37,7 @@
     </string-array>
     <string-array name="empty" translatable="false"></string-array>
 
-    <!--
-This is input language that we assume if for some reason we fail to detect
-the user-selected/recognizer-supported input language.
--->
-    <string name="defaultRecognitionLanguage" translatable="false">et-EE</string>
+    <string name="defaultRecognitionLanguage" translatable="false">et-ee</string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
 
@@ -194,6 +189,7 @@ More grammars are available at
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
     <string name="noteMaxRecordingTimeExceeded">Max recording time exceeded</string>
+    <string name="noteRecognitionLanguageUndefined">(undefined)</string>
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>

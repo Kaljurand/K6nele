@@ -51,7 +51,7 @@ public class GetLanguageDetailsReceiver extends BroadcastReceiver {
             Log.i("Overwriting extras: " + resultExtras);
         }
 
-        // TODO: send different results depending on the service (Ws and Http
+        // TODO: send different results depending on the service (Ws and Http)
         // in general support different languages). Not sure that the framework supports this.
         mSupportedLanguages.add("et-EE");
         mSupportedLanguages.add("en-US");

@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
@@ -132,34 +134,52 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
 
 
     /**
-     * Note: According to the <code>BroadcastReceiver</code> documentation,
-     * setPackage is respected only on ICS and later.
-     *
      * Send a broadcast to find out what is the language preference of
      * the speech recognizer service that matches the intent.
      * The expectation is that only one service matches this intent.
-     *
-     * TODO: if the Kõnele Ws service is selected (either directly or as a system default) then
-     * clear the language selection and disable it. This is a temporary solution until
-     * the Ws-service start supporting more languages.
+     * (Note: According to the {@link BroadcastReceiver} documentation,
+     * setPackage is respected only on ICS and later.)
+     * <p/>
+     * The input specifies the service to be queries (by a flattened component name). If the name
+     * is empty then we query the system default recognizer.
      *
      * @param selectedRecognizerService name of the app that is the only one to receive the broadcast
      */
     private void updateSupportedLanguages(String selectedRecognizerService, final ListPreference languageList) {
-        Log.i("Selected service: " + selectedRecognizerService);
+        boolean isSystemDefault = false;
+        if (selectedRecognizerService.length() == 0) {
+            isSystemDefault = true;
+            // TODO: could not access it via Settings.Secure.VOICE_RECOGNITION_SERVICE
+            String serviceType = "voice_recognition_service";
+            selectedRecognizerService = Settings.Secure.getString(getContentResolver(), serviceType);
+        }
+
+        Log.i("Selected service (system default = " + isSystemDefault + "): " + selectedRecognizerService);
+
+        // If Kõnele is selected then show only "et-ee" as the available language.
+        // TODO: this is a temporary solution
+        if (ComponentName.unflattenFromString(selectedRecognizerService).getPackageName().equals(getPackageName())) {
+            String defaultLanguage = getString(R.string.defaultRecognitionLanguage);
+            CharSequence[] entryValues = { defaultLanguage };
+            CharSequence[] entries = { Utils.makeLangLabel(defaultLanguage) };
+            updateListPreference(languageList, entries, entryValues, defaultLanguage);
+            return;
+        }
+
         Intent intent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
 
-        // TODO: do not set package in case of "system default"
-        // TODO: how to specify the component (one package can contain different components with
-        // different capabilities)
-        intent.setPackage(Utils.getComponentName(selectedRecognizerService).getPackageName());
-        //intent.setComponent(Utils.getComponentName(selectedRecognizerService));
+        ComponentName serviceComponent = ComponentName.unflattenFromString(selectedRecognizerService);
+        if (serviceComponent != null) {
+            intent.setPackage(serviceComponent.getPackageName());
+            // TODO: ideally we would like to query the component, because the package might
+            // contain services (= components) with different capabilities.
+            //intent.setComponent(serviceComponent);
+        }
 
         // This is needed to include newly installed apps or stopped apps
         // as receivers of the broadcast.
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 
-        final String selectedLang = languageList.getValue();
         sendOrderedBroadcast(intent, null, new BroadcastReceiver() {
 
             @Override
@@ -183,18 +203,14 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
                     allLangs = new ArrayList<>();
                 }
 
-                // Make sure we don't end up with an empty list of languages
-                if (allLangs.isEmpty()) {
-                    if (prefLang == null) {
-                        allLangs.add(getString(R.string.defaultRecognitionLanguage));
-                    } else {
-                        allLangs.add(prefLang);
-                    }
+                // We add the preferred language to the list of supported languages.
+                // Normally it should be there anyway.
+                if (prefLang != null && ! allLangs.contains(prefLang)) {
+                    allLangs.add(prefLang);
                 }
 
                 // Populate the entry values with the supported languages
                 CharSequence[] entryValues = allLangs.toArray(new CharSequence[allLangs.size()]);
-                languageList.setEntryValues(entryValues);
 
                 // Populate the entries with human-readable language names
                 CharSequence[] entries = new CharSequence[allLangs.size()];
@@ -202,23 +218,53 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
                     String ev = entryValues[i].toString();
                     entries[i] = Utils.makeLangLabel(ev);
                 }
-                languageList.setEntries(entries);
 
-                // Set the selected item
-                if (allLangs.contains(selectedLang)) {
-                    languageList.setValue(selectedLang);
-                } else if (prefLang != null) {
-                    languageList.setValue(prefLang);
-                } else {
-                    languageList.setValueIndex(0);
-                }
-
-                // Update the summary to show the selected value.
-                // This needs to be done onResume and also when the service changes (handled elsewhere).
-                languageList.setSummary(languageList.getEntry());
-
+                updateListPreference(languageList, entries, entryValues, prefLang);
             }
         }, null, Activity.RESULT_OK, null, null);
+    }
+
+    /**
+     * Update the list preference preserving the currently selected value.
+     * If it does not exist in the new set of values, then select the default value.
+     * If this also does not exist then select the first item in the updated list.
+     * If the new list is empty, then nothing can be selected.
+     * The list summary is the human-readable entry of the selection, of "(undefined)" in case the
+     * list is empty.
+     *
+     * @param list list preference
+     * @param entries array of entries
+     * @param entryValues array of corresponding values
+     * @param defaultValue the default value
+     */
+    private void updateListPreference(ListPreference list, CharSequence[] entries, CharSequence[] entryValues, String defaultValue) {
+        String currentValue = list.getValue();
+        int selectedIndex = 0;
+
+        int i = 0;
+        for (CharSequence cs : entryValues) {
+            String value = cs.toString();
+            if (value.equals(currentValue)) {
+                selectedIndex = i;
+                break;
+            } else if (value.equals(defaultValue)) {
+                selectedIndex = i;
+            }
+            i++;
+        }
+
+        list.setEntryValues(entryValues);
+        list.setEntries(entries);
+
+        if (entryValues.length > 0) {
+            list.setValueIndex(selectedIndex);
+
+            // Update the summary to show the selected value.
+            // This needs to be done onResume and also when the service changes (handled elsewhere).
+            list.setSummary(list.getEntry());
+        } else {
+            list.setSummary(getString(R.string.noteRecognitionLanguageUndefined));
+        }
     }
 
 }

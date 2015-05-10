@@ -264,5 +264,6 @@
     <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleImeRecognitionLanguage">Tuvastuskeel</string>
     <string name="titleRecognitionLanguage">Tuvastuskeel</string>
+    <string name="noteRecognitionLanguageUndefined">(määramata)</string>
 
 </resources>

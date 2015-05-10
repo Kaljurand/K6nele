@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -388,10 +389,12 @@ public class VoiceImeView extends LinearLayout {
 
         if (selectedRecognizerService == null) {
             selectedRecognizerService = getResources().getString(R.string.defaultImeRecognizerService);
-        } else if (selectedRecognizerService.equals(getResources().getString(R.string.keyDefaultRecognitionService))) {
-            return SpeechRecognizer.createSpeechRecognizer(getContext());
         }
 
-        return SpeechRecognizer.createSpeechRecognizer(getContext(), Utils.getComponentName(selectedRecognizerService));
+        ComponentName recognizerComponentName = ComponentName.unflattenFromString(selectedRecognizerService);
+        if (recognizerComponentName == null) {
+            return SpeechRecognizer.createSpeechRecognizer(getContext());
+        }
+        return SpeechRecognizer.createSpeechRecognizer(getContext(), recognizerComponentName);
     }
 }

@@ -353,6 +353,9 @@ public class Utils {
 
 	private static List<String> ppBundle(String bundleName, Bundle bundle) {
 		List<String> strings = new ArrayList<String>();
+		if (bundle == null) {
+			return strings;
+		}
 		for (String key : bundle.keySet()) {
 			Object value = bundle.get(key);
 			String name = bundleName + key;
@@ -452,11 +455,5 @@ public class Utils {
 			return Locale.forLanguageTag(localeAsStr).getDisplayName();
 		}
 		return localeAsStr;
-	}
-
-
-	public static ComponentName getComponentName(String str) {
-		String[] pkgAndCls = str.split("\\|");
-		return new ComponentName(pkgAndCls[0], pkgAndCls[1]);
 	}
 }
