@@ -144,13 +144,21 @@ Kõneklaviatuuri on mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
 (nt _Google Keyboard_, _Swype_, _SwiftKey_, _SlideIT_).
 Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
 kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
-Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum.
+Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
+(ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi).
 Muudes olukordades võib ümberlülituda teisele klaviatuurile.
 Android v5+ seadmetes on lihtne teksti kirjutamise ajal klaviatuure
 vahetada, sest seadme põhinuppude (_Back_, _Home_, _Recent apps_) kõrvale ilmub teksti kirjutamise
-ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Google Keyboard_)
-võimaldavad lisaks klaviatuurivahetust ainult ühe nupuvajutusega
-(maakera- või klaviatuurikujulisele nupule).
+ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Google Keyboard_ ja _Kõnele_ ise)
+võimaldavad lisaks klaviatuurivahetust ainult ühe nupuvajutusega. Nt, vajutades maakera-ikooni
+_Google Keyboard_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
+_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Google Keyboard_ klaviatuurile.
+Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
+kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">
+&lt;->
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-45-08.png">
 
 Kõneklaviatuur kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid põhimõttelistelt
 saab seda kasutada kõikide seadmesse installeeritud kõnetuvastusteenustega
