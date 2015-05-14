@@ -187,6 +187,12 @@
             <meta-data
                 android:name="android.speech"
                 android:resource="@xml/recognition_service_http" />
+            <!--
+            // TODO: export K6nele functionality via meta-data
+            <meta-data
+                android:name="k6nele.valuesRecordingRate"
+                android:value="string-array/valuesRecordingRate" />
+            -->
         </service>
 
         <service

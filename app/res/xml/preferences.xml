@@ -50,7 +50,7 @@
             android:title="@string/titleRecognitionLanguage" />
     </PreferenceCategory>
 
-    // Voice search dialog
+    // Voice search activity (TODO: unify terminology: dialog, panel, UI)
     <PreferenceCategory android:title="@string/titleCategoryUi">
         <CheckBoxPreference
             android:defaultValue="@bool/defaultAutoStart"
@@ -64,12 +64,15 @@
             android:title="@string/titleAudioCues" />
         // TODO: make the service of the main panel also user selectable
         <ListPreference
+            android:dialogTitle="@string/dialogTitleImeRecognitionLanguage"
             android:enabled="false"
             android:entries="@array/empty"
             android:entryValues="@array/empty"
+            android:key="@string/keyActivityRecognitionService"
             android:summary="@string/labelRecognitionServiceHttpWithComment"
             android:title="@string/titleRecognitionService" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/titleCategoryApps">
         <Preference
             android:summary="@string/summaryAppList"

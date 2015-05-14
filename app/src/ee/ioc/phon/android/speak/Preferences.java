@@ -66,7 +66,9 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
     protected void onResume() {
         super.onResume();
         mPrefs.registerOnSharedPreferenceChangeListener(this);
-        populateRecognitionServices();
+        populateRecognitionServices(R.string.defaultImeRecognizerService, R.string.keyImeRecognitionService);
+        // TODO: future work
+        //populateRecognitionServices(R.string.defaultActivityRecognizerService, R.string.keyActivityRecognitionService);
 
         // If the K6nele IME is enabled then we remove the link to the IME settings,
         // if not already removed.
@@ -99,14 +101,14 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
     }
 
 
-    private void populateRecognitionServices() {
+    private void populateRecognitionServices(int preferredServiceAsInt, int recognitionServicePref) {
         // Hardcoded "preferred service"
-        String preferredService = getString(R.string.defaultImeRecognizerService);
-        // Currently selected service (identified by class name)
-        String selectedService = Utils.getPrefString(mPrefs, getResources(), R.string.keyImeRecognitionService);
+        String preferredService = getString(preferredServiceAsInt);
+        // Currently selected service (identified by class name, or empty string, if "system default")
+        String selectedService = Utils.getPrefString(mPrefs, getResources(), recognitionServicePref);
         RecognitionServiceManager mngr = new RecognitionServiceManager(this, preferredService, selectedService);
 
-        ListPreference list = (ListPreference) mSettingsFragment.findPreference(getString(R.string.keyImeRecognitionService));
+        ListPreference list = (ListPreference) mSettingsFragment.findPreference(getString(recognitionServicePref));
         list.setEntries(mngr.getEntries());
         list.setEntryValues(mngr.getEntryValues());
         list.setValueIndex(mngr.getSelectedIndex());
@@ -160,13 +162,15 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         // TODO: this is a temporary solution
         if (ComponentName.unflattenFromString(selectedRecognizerService).getPackageName().equals(getPackageName())) {
             String defaultLanguage = getString(R.string.defaultRecognitionLanguage);
-            CharSequence[] entryValues = { defaultLanguage };
-            CharSequence[] entries = { Utils.makeLangLabel(defaultLanguage) };
+            CharSequence[] entryValues = {defaultLanguage};
+            CharSequence[] entries = {Utils.makeLangLabel(defaultLanguage)};
             updateListPreference(languageList, entries, entryValues, defaultLanguage);
             return;
         }
 
         Intent intent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+        // TODO: this seems to be only for activities that implement ACTION_WEB_SEARCH
+        //Intent intent = RecognizerIntent.getVoiceDetailsIntent(this);
 
         ComponentName serviceComponent = ComponentName.unflattenFromString(selectedRecognizerService);
         if (serviceComponent != null) {
@@ -205,7 +209,7 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
 
                 // We add the preferred language to the list of supported languages.
                 // Normally it should be there anyway.
-                if (prefLang != null && ! allLangs.contains(prefLang)) {
+                if (prefLang != null && !allLangs.contains(prefLang)) {
                     allLangs.add(prefLang);
                 }
 
@@ -232,9 +236,9 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
      * The list summary is the human-readable entry of the selection, of "(undefined)" in case the
      * list is empty.
      *
-     * @param list list preference
-     * @param entries array of entries
-     * @param entryValues array of corresponding values
+     * @param list         list preference
+     * @param entries      array of entries
+     * @param entryValues  array of corresponding values
      * @param defaultValue the default value
      */
     private void updateListPreference(ListPreference list, CharSequence[] entries, CharSequence[] entryValues, String defaultValue) {

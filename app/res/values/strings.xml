@@ -16,8 +16,10 @@
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
     <string name="keyImeRecognitionLanguage" translatable="false">keyImeRecognitionLanguage</string>
+    <string name="keyActivityRecognitionService" translatable="false">keyActivityRecognitionService</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak/.WebSocketRecognizer</string>
+    <string name="defaultActivityRecognizerService" translatable="false">ee.ioc.phon.android.speak/.SpeechRecognitionService</string>
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
     <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>

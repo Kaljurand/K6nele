@@ -43,17 +43,25 @@ public class RecognitionServiceManager {
      * Kõnele's own service).
      *
      * @param preferredService Service to select if none was selected
+     * @param selectedService Currently selected service (null: nothing selected, "": system default selected, component name: the respective component is selected)
      */
     private void populateRecognitionServices(String preferredService, String selectedService) {
         PackageManager pm = mContext.getPackageManager();
+        int flags = 0;
+        //int flags = PackageManager.GET_META_DATA;
         List<ResolveInfo> services = pm.queryIntentServices(
-                new Intent(RecognitionService.SERVICE_INTERFACE), 0);
+                new Intent(RecognitionService.SERVICE_INTERFACE), flags);
 
         int numberOfServices = services.size();
 
         // This should never happen because K6nele comes with several services
         if (numberOfServices == 0) {
             return;
+        }
+
+        // If system default is currently selected
+        if (selectedService != null && selectedService.length() == 0) {
+            mSelectedIndex = 0;
         }
 
         int preferredIndex = 0;
@@ -77,14 +85,15 @@ public class RecognitionServiceManager {
             String cls = si.name;
             CharSequence label = si.loadLabel(pm);
             String component = (new ComponentName(pkg, cls)).flattenToShortString();
-            Log.i(label + " :: " + component + " :: meta = " + Utils.ppBundle(si.metaData));
+            Log.i(index + ") " + label + ": " + component + ": meta = " + Utils.ppBundle(si.metaData));
             mEntries[index] = label;
             mEntryValues[index] = component;
-            Log.i("populateRecognitionServices: " + mEntryValues[index]);
-            if (component.equals(selectedService)) {
-                mSelectedIndex = index;
-            } else if (component.equals(preferredService)) {
-                preferredIndex = index;
+            if (mSelectedIndex == -1) {
+                if (component.equals(selectedService)) {
+                    mSelectedIndex = index;
+                } else if (component.equals(preferredService)) {
+                    preferredIndex = index;
+                }
             }
             index++;
         }
