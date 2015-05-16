@@ -60,9 +60,7 @@ public class AppListCursorAdapter extends CursorAdapter {
 		Drawable icon = null;
 		try {
 			label = mPm.getApplicationLabel(mPm.getApplicationInfo(packageName, 0)).toString();
-			if (icon == null) {
-				icon = mPm.getApplicationIcon(packageName);
-			}
+			icon = mPm.getApplicationIcon(packageName);
 		} catch (NameNotFoundException e) { }
 
 		// App label which can be "" if the app has been uninstalled.

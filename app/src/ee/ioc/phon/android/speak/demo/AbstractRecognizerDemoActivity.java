@@ -21,7 +21,6 @@ import java.util.List;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.GrammarListActivity;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RecognizerIntent;
 import ee.ioc.phon.android.speak.Utils;
 import ee.ioc.phon.android.speak.provider.Grammar;
 
@@ -30,6 +29,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.speech.RecognizerIntent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -119,8 +119,7 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 
 	protected List<ResolveInfo> getRecognizers(Intent intent) {
 		PackageManager pm = getPackageManager();
-		List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
-		return activities;
+		return pm.queryIntentActivities(intent, 0);
 	}
 
 

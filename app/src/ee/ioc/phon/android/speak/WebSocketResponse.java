@@ -87,11 +87,7 @@ public class WebSocketResponse {
         public Result(JSONObject result) throws JSONException {
             // The "final" field does not have to exist, but if it does
             // then it must be a boolean.
-            if (result.has("final")) {
-                mIsFinal = result.getBoolean("final");
-            } else {
-                mIsFinal = false;
-            }
+            mIsFinal = result.has("final") && result.getBoolean("final");
             JSONArray array = result.getJSONArray("hypotheses");
 
             for (int i = 0; i < array.length(); i++) {
@@ -177,11 +173,7 @@ public class WebSocketResponse {
                 text += glue + tok;
             }
 
-            if (Constants.CHARACTERS_WS.contains(firstChar)) {
-                isWhitespaceBefore = true;
-            } else {
-                isWhitespaceBefore = false;
-            }
+            isWhitespaceBefore = Constants.CHARACTERS_WS.contains(firstChar);
 
             // If the token is not a character then we are in the middle of the sentence.
             // If the token is an EOS character then a new sentences has started.

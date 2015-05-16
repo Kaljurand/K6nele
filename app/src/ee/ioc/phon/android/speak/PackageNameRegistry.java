@@ -19,7 +19,6 @@ package ee.ioc.phon.android.speak;
 import ee.ioc.phon.android.speak.provider.App;
 import ee.ioc.phon.android.speak.provider.Grammar;
 import ee.ioc.phon.android.speak.provider.Server;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;

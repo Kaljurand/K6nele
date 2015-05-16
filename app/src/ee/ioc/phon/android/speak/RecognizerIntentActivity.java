@@ -41,11 +41,10 @@ import android.os.Message;
 import android.os.SystemClock;
 
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -834,7 +833,7 @@ public class RecognizerIntentActivity extends Activity {
 			intent.putExtra(SearchManager.QUERY, match);
 			// This is for SwiftKey X, ...
 			intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
-			String message = "";
+			String message;
 			if (matches.size() == 1) {
 				message = match;
 			} else {

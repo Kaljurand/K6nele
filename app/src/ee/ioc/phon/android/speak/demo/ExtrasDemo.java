@@ -18,13 +18,13 @@ package ee.ioc.phon.android.speak.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 
 import java.util.List;
 
 import ee.ioc.phon.android.speak.DetailsActivity;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RecognizerIntent;
 import ee.ioc.phon.android.speak.Utils;
 
 public class ExtrasDemo extends AbstractRecognizerDemoActivity {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class RawAudioRecorder {
 
 		// recorder stopped
 		STOPPED
-	};
+	}
 
 	private AudioRecord mRecorder = null;
 
@@ -118,7 +118,7 @@ public class RawAudioRecorder {
 		mRecording = new byte[mOneSec * 35];
 		try {
 			setBufferSizeAndFramePeriod();
-			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION, mBufferSize);
+			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_IN_MONO, RESOLUTION, mBufferSize);
 			if (getAudioRecordState() != AudioRecord.STATE_INITIALIZED) {
 				throw new Exception("AudioRecord initialization failed");
 			}
@@ -169,26 +169,8 @@ public class RawAudioRecorder {
 	}
 
 
-	// old version
-	private void setBufferSizeAndFramePeriod_812() {
-		// The interval in which the recorded samples are output to the file
-		// TODO: explain why 120
-		final int TIMER_INTERVAL = 120;
-		mFramePeriod = mSampleRate * TIMER_INTERVAL / 1000;
-		mBufferSize = mFramePeriod * 2 * RESOLUTION_IN_BYTES * CHANNELS;
-
-		// Check to make sure buffer size is not smaller than the smallest allowed one
-		if (mBufferSize < AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION)) {
-			mBufferSize = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
-			// Set frame period and timer interval accordingly
-			mFramePeriod = mBufferSize / ( 2 * RESOLUTION_IN_BYTES * CHANNELS );
-			Log.i(LOG_TAG, "AudioRecord buffer size (MIN): " + mBufferSize);
-		}
-	}
-
-
 	private void setBufferSizeAndFramePeriod() {
-		int minBufferSizeInBytes = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, RESOLUTION);
+		int minBufferSizeInBytes = AudioRecord.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_IN_MONO, RESOLUTION);
 		if (minBufferSizeInBytes == AudioRecord.ERROR_BAD_VALUE) {
 			throw new IllegalArgumentException("AudioRecord.getMinBufferSize: parameters not supported by hardware");
 		} else if (minBufferSizeInBytes == AudioRecord.ERROR) {

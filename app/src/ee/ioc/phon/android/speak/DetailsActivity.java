@@ -18,7 +18,6 @@ package ee.ioc.phon.android.speak;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;

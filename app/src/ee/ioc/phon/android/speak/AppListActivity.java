@@ -281,6 +281,20 @@ public class AppListActivity extends RecognizerIntentListActivity {
 				App.Columns.COUNT
 		};
 
+		// TODO: replaced the deprecated managedQuery with CursorLoader
+		// managedQuery(                  Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+		// CursorLoader (Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+		/*
+		CursorLoader cursorLoader = new CursorLoader(
+				this,
+				CONTENT_URI,
+				columns,
+				null,
+				null,
+				sortOrder
+		);
+		*/
+
 		Cursor managedCursor = managedQuery(
 				CONTENT_URI,
 				columns, 

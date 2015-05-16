@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
 import android.os.SystemClock;
+import android.speech.RecognizerIntent;
 
 import java.io.IOException;
 
@@ -74,7 +75,7 @@ public class RecognizerIntentService extends Service {
 		// Finished recording, transcribing now
 		PROCESSING,
 		// Got an error
-		ERROR;
+		ERROR
 	}
 
 	private State mState = null;
@@ -90,12 +91,12 @@ public class RecognizerIntentService extends Service {
 
 
 	public interface OnResultListener {
-		public boolean onResult(RecSessionResult result);
+		boolean onResult(RecSessionResult result);
 	}
 
 
 	public interface OnErrorListener {
-		public boolean onError(int errorCode, Exception e);
+		boolean onError(int errorCode, Exception e);
 	}
 
 
@@ -344,7 +345,7 @@ public class RecognizerIntentService extends Service {
 						processError(RecognizerIntent.RESULT_NETWORK_ERROR, e);
 						return;
 					}
-					if (consumeAll == false) {
+					if (! consumeAll) {
 						mSendHandler.postDelayed(this, interval);
 					}
 				}

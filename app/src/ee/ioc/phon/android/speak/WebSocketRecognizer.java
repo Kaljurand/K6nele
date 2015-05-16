@@ -9,6 +9,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionService;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
 import com.koushikdutta.async.callback.CompletedCallback;
@@ -408,7 +409,7 @@ public class WebSocketRecognizer extends RecognitionService {
         private final boolean mIsPartialResults;
 
         public MyHandler(WebSocketRecognizer c, RecognitionService.Callback callback, boolean isUnlimitedDuration, boolean isPartialResults) {
-            mRef = new WeakReference<WebSocketRecognizer>(c);
+            mRef = new WeakReference<>(c);
             mCallback = callback;
             mIsUnlimitedDuration = isUnlimitedDuration;
             mIsPartialResults = isPartialResults;

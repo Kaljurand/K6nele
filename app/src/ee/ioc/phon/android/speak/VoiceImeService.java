@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.view.View;
@@ -178,7 +179,7 @@ public class VoiceImeService extends InputMethodService {
 
     @Override
     public void onCurrentInputMethodSubtypeChanged(InputMethodSubtype subtype) {
-        Log.i("onCurrentInputMethodSubtypeChanged");
+        Log.i("onCurrentInputMethodSubtypeChanged: " + subtype);
         closeSession();
     }
 

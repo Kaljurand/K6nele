@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak;
 
 import android.app.PendingIntent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 
 /**
  * <p>Description of the caller that receives the transcription.

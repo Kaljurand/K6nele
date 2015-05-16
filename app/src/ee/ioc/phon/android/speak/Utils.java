@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2014, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package ee.ioc.phon.android.speak;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,7 +39,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.speech.SpeechRecognizer;
+import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -352,7 +351,7 @@ public class Utils {
 
 
 	private static List<String> ppBundle(String bundleName, Bundle bundle) {
-		List<String> strings = new ArrayList<String>();
+		List<String> strings = new ArrayList<>();
 		if (bundle == null) {
 			return strings;
 		}

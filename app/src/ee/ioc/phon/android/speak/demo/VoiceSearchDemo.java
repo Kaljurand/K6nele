@@ -19,12 +19,12 @@ package ee.ioc.phon.android.speak.demo;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RecognizerIntent;
 
 
 /**

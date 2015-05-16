@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ import java.util.ArrayList;
  */
 public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 
-    private final ArrayList<String> mSupportedLanguages = new ArrayList<String>();
+    private final ArrayList<String> mSupportedLanguages = new ArrayList<>();
 
     @Override
     public void onReceive(Context context, Intent intent) {

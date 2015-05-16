@@ -19,6 +19,7 @@ package ee.ioc.phon.android.speak.demo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RecognizerIntent;
 
 
 /**
@@ -47,17 +47,16 @@ import ee.ioc.phon.android.speak.RecognizerIntent;
 public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnClickListener {
 
 	// We make it static so that it would survive Destroy.
-	private static final List<String> mMatches = new ArrayList<String>();
+	private static final List<String> mMatches = new ArrayList<>();
 
 	private final Intent mIntent = createRecognizerIntent();
 	private ListView mList;
-	private ImageButton speakButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.complex_demo);
-		speakButton = (ImageButton) findViewById(R.id.buttonMicrophone);
+		ImageButton speakButton = (ImageButton) findViewById(R.id.buttonMicrophone);
 		mList = (ListView) findViewById(R.id.list_matches);
 		updateListView(mMatches);
 
@@ -107,6 +106,6 @@ public class RepeaterDemo extends AbstractRecognizerDemoActivity implements OnCl
 
 
 	private void updateListView(List<String> list) {
-		mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list));
+		mList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
 	}
 }

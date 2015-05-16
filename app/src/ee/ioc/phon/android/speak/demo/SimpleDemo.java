@@ -18,13 +18,13 @@ package ee.ioc.phon.android.speak.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RecognizerIntent;
 
 
 /**
@@ -61,7 +61,7 @@ public class SimpleDemo extends AbstractRecognizerDemoActivity {
 	@Override
 	protected void onSuccess(Intent intent) {
         ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-		mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
+		mList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matches));
 	}
 
 

@@ -29,6 +29,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 

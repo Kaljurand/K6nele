@@ -26,9 +26,10 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
+
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**
@@ -103,7 +104,7 @@ public class ChunkedWebRecSessionBuilder {
 		PackageNameRegistry wrapper = new PackageNameRegistry(context, mCaller);
 		String urlService = prefs.getString(context.getString(R.string.keyServerHttp), context.getString(R.string.defaultServerHttp));
 		setFromExtras(extras, wrapper, urlService);
-		mNbest = makeNbest(extras, callingActivity);
+		mNbest = makeNbest(extras);
 	}
 
 
@@ -189,7 +190,7 @@ public class ChunkedWebRecSessionBuilder {
 
 
 	public List<String> toStringArrayList() {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add(mWsUrl == null ? null : mWsUrl.toString());
 		list.add(mLmUrl == null ? null : mLmUrl.toString());
 		list.add(mContentType);
@@ -262,7 +263,7 @@ public class ChunkedWebRecSessionBuilder {
 	 * for several results. (TODO: this could be user-configurable.)
 	 * Otherwise we ask for just a single result.</p>
 	 */
-	private static int makeNbest(Bundle extras, ComponentName callingActivity) {
+	private static int makeNbest(Bundle extras) {
 		int maxResults = extras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
 		if (maxResults <= 0) {
 			String model = extras.getString(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
@@ -281,7 +282,7 @@ public class ChunkedWebRecSessionBuilder {
 	 * if this is unspecified then we look into the bundle to see if "selectedLanguage" is set
 	 * (by an IME). If this is also unspecified then we return the current locale as required
 	 * by the Android specification:
-	 * {@link http://developer.android.com/reference/android/speech/RecognizerIntent.html#EXTRA_LANGUAGE}</p>
+	 * {@link RecognizerIntent#EXTRA_LANGUAGE}</p>
 	 *
 	 * <blockquote>
 	 * <p>Optional IETF language tag (as defined by BCP 47), for example "en-US".

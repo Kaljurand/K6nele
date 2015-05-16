@@ -41,6 +41,7 @@ import android.os.Process;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.RecognitionService;
 
@@ -290,11 +291,11 @@ public class SpeechRecognitionService extends RecognitionService {
 		}
 
 		// Utterances OR linearizations
-		ArrayList<String> lins = new ArrayList<String>();
+		ArrayList<String> lins = new ArrayList<>();
 
 		// Utterances and their linearizations in a flat serialization
-		ArrayList<String> everything = new ArrayList<String>();
-		ArrayList<Integer> counts = new ArrayList<Integer>(hyps.size());
+		ArrayList<String> everything = new ArrayList<>();
+		ArrayList<Integer> counts = new ArrayList<>(hyps.size());
 		int count = 0;
 		for (Hypothesis hyp : hyps) {
 			if (count++ >= maxResults) {
