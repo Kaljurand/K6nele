@@ -36,18 +36,12 @@
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
             android:title="@string/titleImeHelpText" />
-        <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionService"
+        <MultiSelectListPreference
+            android:dialogTitle="@string/dialogTitleImeRecognitionServiceLanguage"
             android:entries="@array/empty"
             android:entryValues="@array/empty"
-            android:key="@string/keyImeRecognitionService"
-            android:title="@string/titleRecognitionService" />
-        <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionLanguage"
-            android:entries="@array/empty"
-            android:entryValues="@array/empty"
-            android:key="@string/keyImeRecognitionLanguage"
-            android:title="@string/titleRecognitionLanguage" />
+            android:key="@string/keyImeRecognitionServiceLanguage"
+            android:title="@string/titleRecognitionServiceLanguage" />
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI)
@@ -64,13 +58,13 @@
             android:title="@string/titleAudioCues" />
         // TODO: make the service of the main panel also user selectable
         <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionLanguage"
+            android:dialogTitle="@string/dialogTitleImeRecognitionServiceLanguage"
             android:enabled="false"
             android:entries="@array/empty"
             android:entryValues="@array/empty"
-            android:key="@string/keyActivityRecognitionService"
+            android:key="@string/keyActivityRecognitionServiceLanguage"
             android:summary="@string/labelRecognitionServiceHttpWithComment"
-            android:title="@string/titleRecognitionService" />
+            android:title="@string/titleRecognitionServiceLanguage" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryApps">

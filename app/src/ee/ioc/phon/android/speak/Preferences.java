@@ -25,15 +25,20 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
+import java.util.Set;
+
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 /**
  * <p>Preferences activity. Updates some preference-summaries automatically,
@@ -67,9 +72,8 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
     protected void onResume() {
         super.onResume();
         mPrefs.registerOnSharedPreferenceChangeListener(this);
-        populateRecognitionServices(R.string.defaultImeRecognizerService, R.string.keyImeRecognitionService);
-        // TODO: future work
-        //populateRecognitionServices(R.string.defaultActivityRecognizerService, R.string.keyActivityRecognitionService);
+
+        populateRecognitionServiceLanguageList(R.string.keyImeRecognitionServiceLanguage, R.array.defaultImeRecognizerServiceLanguage);
 
         // If the K6nele IME is enabled then we remove the link to the IME settings,
         // if not already removed.
@@ -94,34 +98,25 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         if (pref instanceof ListPreference) {
             ListPreference lp = (ListPreference) pref;
             pref.setSummary(lp.getEntry());
-            if (key.equals(getString(R.string.keyImeRecognitionService))) {
-                // Populate the languages available under this service
-                populateLanguages(lp.getValue());
-            }
+        } else if (pref instanceof MultiSelectListPreference) {
+            MultiSelectListPreference mslp = (MultiSelectListPreference) pref;
+            // TODO: pretty-print
+            pref.setSummary(TextUtils.join("\n", mslp.getValues()));
         }
     }
 
+    private void populateRecognitionServiceLanguageList(int pref, int fallbackCombos) {
+        Set<String> combos = PreferenceUtils.getPrefStringSet(mPrefs, getResources(), pref);
+        RecognitionServiceManager mngr = new RecognitionServiceManager(this, combos, fallbackCombos);
 
-    private void populateRecognitionServices(int preferredServiceAsInt, int recognitionServicePref) {
-        // Hardcoded "preferred service"
-        String preferredService = getString(preferredServiceAsInt);
-        // Currently selected service (identified by class name, or empty string, if "system default")
-        String selectedService = Utils.getPrefString(mPrefs, getResources(), recognitionServicePref);
-        RecognitionServiceManager mngr = new RecognitionServiceManager(this, preferredService, selectedService);
-
-        ListPreference list = (ListPreference) mSettingsFragment.findPreference(getString(recognitionServicePref));
-        list.setEntries(mngr.getEntries());
-        list.setEntryValues(mngr.getEntryValues());
-        list.setValueIndex(mngr.getSelectedIndex());
-        list.setSummary(list.getEntry());
-        populateLanguages(list.getValue());
+        MultiSelectListPreference mslp = (MultiSelectListPreference) mSettingsFragment.findPreference(getString(pref));
+        mslp.setEntries(mngr.getEntries());
+        mslp.setEntryValues(mngr.getEntryValues());
+        mslp.setValues(mngr.getValues());
+        // TODO: pretty-print
+        mslp.setSummary(TextUtils.join("\n", mslp.getValues()));
     }
 
-
-    private void populateLanguages(String selectedRecognizerService) {
-        ListPreference languageList = (ListPreference) mSettingsFragment.findPreference(getString(R.string.keyImeRecognitionLanguage));
-        updateSupportedLanguages(selectedRecognizerService, languageList);
-    }
 
     private boolean isK6neleImeEnabled() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -165,7 +160,6 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             String defaultLanguage = getString(R.string.defaultRecognitionLanguage);
             CharSequence[] entryValues = {defaultLanguage};
             CharSequence[] entries = {Utils.makeLangLabel(defaultLanguage)};
-            updateListPreference(languageList, entries, entryValues, defaultLanguage);
             return;
         }
 
@@ -223,53 +217,7 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
                     String ev = entryValues[i].toString();
                     entries[i] = Utils.makeLangLabel(ev);
                 }
-
-                updateListPreference(languageList, entries, entryValues, prefLang);
             }
         }, null, Activity.RESULT_OK, null, null);
     }
-
-    /**
-     * Update the list preference preserving the currently selected value.
-     * If it does not exist in the new set of values, then select the default value.
-     * If this also does not exist then select the first item in the updated list.
-     * If the new list is empty, then nothing can be selected.
-     * The list summary is the human-readable entry of the selection, of "(undefined)" in case the
-     * list is empty.
-     *
-     * @param list         list preference
-     * @param entries      array of entries
-     * @param entryValues  array of corresponding values
-     * @param defaultValue the default value
-     */
-    private void updateListPreference(ListPreference list, CharSequence[] entries, CharSequence[] entryValues, String defaultValue) {
-        String currentValue = list.getValue();
-        int selectedIndex = 0;
-
-        int i = 0;
-        for (CharSequence cs : entryValues) {
-            String value = cs.toString();
-            if (value.equals(currentValue)) {
-                selectedIndex = i;
-                break;
-            } else if (value.equals(defaultValue)) {
-                selectedIndex = i;
-            }
-            i++;
-        }
-
-        list.setEntryValues(entryValues);
-        list.setEntries(entries);
-
-        if (entryValues.length > 0) {
-            list.setValueIndex(selectedIndex);
-
-            // Update the summary to show the selected value.
-            // This needs to be done onResume and also when the service changes (handled elsewhere).
-            list.setSummary(list.getEntry());
-        } else {
-            list.setSummary(getString(R.string.noteRecognitionLanguageUndefined));
-        }
-    }
-
 }

@@ -7,24 +7,26 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.speech.RecognitionService;
+import android.text.TextUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class RecognitionServiceManager {
 
     private final Context mContext;
-    private int mSelectedIndex = -1;
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
+    private Set<String> mValues;
+    private String mValuesPp;
 
-
-    RecognitionServiceManager(Context context, String preferredService, String selectedService) {
+    RecognitionServiceManager(Context context, Set<String> combos, int resFallbackCombos) {
         mContext = context;
-        populateRecognitionServices(preferredService, selectedService);
-    }
-
-    public int getSelectedIndex() {
-        return mSelectedIndex;
+        Set<String> fallbackCombos = PreferenceUtils.getStringSetFromStringArray(mContext.getResources(), resFallbackCombos);
+        populateRecognitionServiceLanguageSet(combos, fallbackCombos);
     }
 
     public CharSequence[] getEntries() {
@@ -35,17 +37,20 @@ public class RecognitionServiceManager {
         return mEntryValues;
     }
 
+    public Set<String> getValues() {
+        return mValues;
+    }
+
+    public String getValuesPp() {
+        return mValuesPp;
+    }
+
 
     /**
-     * Populates the list of available recognizer services and adds a choice for the system default
-     * service. If no service is currently selected (when the user accesses the preferences menu
-     * for the first time), then selects the item that points to the preferredService (this is
-     * Kõnele's own service).
-     *
-     * @param preferredService Service to select if none was selected
-     * @param selectedService Currently selected service (null: nothing selected, "": system default selected, component name: the respective component is selected)
+     * TODO: decide which should be selected based on the (possibly stored) selection, or if null/empty
+     * then the fallbackCombo.
      */
-    private void populateRecognitionServices(String preferredService, String selectedService) {
+    private void populateRecognitionServiceLanguageSet(Set<String> combos, Set<String> fallbackCombos) {
         PackageManager pm = mContext.getPackageManager();
         int flags = 0;
         //int flags = PackageManager.GET_META_DATA;
@@ -54,27 +59,12 @@ public class RecognitionServiceManager {
 
         int numberOfServices = services.size();
 
-        // This should never happen because K6nele comes with several services
-        if (numberOfServices == 0) {
-            return;
-        }
+        mEntries = new CharSequence[numberOfServices];
+        mEntryValues = new CharSequence[numberOfServices];
 
-        // If system default is currently selected
-        if (selectedService != null && selectedService.length() == 0) {
-            mSelectedIndex = 0;
-        }
+        Set<String> selectedCombos = new HashSet<>();
 
-        int preferredIndex = 0;
-
-        // Add one entry for the system default service
-        mEntries = new CharSequence[numberOfServices + 1];
-        mEntryValues = new CharSequence[numberOfServices + 1];
-
-        // System default as the first listed choice
-        mEntries[0] = mContext.getString(R.string.labelDefaultRecognitionService);
-        mEntryValues[0] = "";
-
-        int index = 1;
+        int index = 0;
         for (ResolveInfo ri : services) {
             ServiceInfo si = ri.serviceInfo;
             if (si == null) {
@@ -88,19 +78,18 @@ public class RecognitionServiceManager {
             Log.i(index + ") " + label + ": " + component + ": meta = " + Utils.ppBundle(si.metaData));
             mEntries[index] = label;
             mEntryValues[index] = component;
-            if (mSelectedIndex == -1) {
-                if (component.equals(selectedService)) {
-                    mSelectedIndex = index;
-                } else if (component.equals(preferredService)) {
-                    preferredIndex = index;
-                }
+            if (combos.contains(component)) {
+                selectedCombos.add(component);
             }
             index++;
         }
 
-        if (mSelectedIndex == -1) {
-            mSelectedIndex = preferredIndex;
+        if (selectedCombos.isEmpty()) {
+            mValues = fallbackCombos;
+        } else {
+            mValues = selectedCombos;
         }
-    }
 
+        mValuesPp = TextUtils.join("\n", mValues);
+    }
 }

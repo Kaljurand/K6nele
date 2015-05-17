@@ -2,17 +2,12 @@ package ee.ioc.phon.android.speak;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.speech.RecognizerIntent;
 import android.text.InputType;
-import android.text.SpannableString;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
@@ -22,6 +17,8 @@ import android.view.inputmethod.InputMethodSubtype;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class VoiceImeService extends InputMethodService {
 
@@ -121,7 +118,7 @@ public class VoiceImeService extends InputMethodService {
             return;
         }
 
-        mInputView.setListener(getRecognizerIntent(getApplicationContext(), attribute), new VoiceImeView.VoiceImeViewListener() {
+        mInputView.setListener(attribute, new VoiceImeView.VoiceImeViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 
@@ -164,7 +161,7 @@ public class VoiceImeService extends InputMethodService {
 
         // Launch recognition immediately (if set so)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
         }
@@ -244,58 +241,6 @@ public class VoiceImeService extends InputMethodService {
         //getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_GO);
 
         getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_SEARCH);
-    }
-
-
-    private static String asString(Object o) {
-        if (o == null) {
-            return null;
-        }
-        if (o instanceof SpannableString) {
-            SpannableString ss = (SpannableString) o;
-            return ss.subSequence(0, ss.length()).toString();
-        }
-        return o.toString();
-    }
-
-    private static Intent getRecognizerIntent(Context context, EditorInfo attribute) {
-        // TODO: try with another action, or without an action
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.getPackageName());
-        intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
-        intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
-        // Declaring that in the IME we would like to allow longer pauses (2 sec).
-        // The service might not implement these (e.g. Kõnele currently does not)
-        // TODO: what is the difference of these two constants?
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String selectedLanguage =
-                Utils.getPrefString(prefs, context.getResources(), R.string.keyImeRecognitionLanguage);
-
-        if (selectedLanguage != null) {
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage);
-            // TODO: make this configurable
-            intent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
-        }
-        return intent;
-    }
-
-    private static Bundle toBundle(EditorInfo attribute) {
-        Bundle bundle = new Bundle();
-        bundle.putBundle("extras", attribute.extras);
-        bundle.putString("actionLabel", asString(attribute.actionLabel));
-        bundle.putString("fieldName", asString(attribute.fieldName));
-        bundle.putString("hintText", asString(attribute.hintText));
-        bundle.putString("inputType", String.valueOf(attribute.inputType));
-        bundle.putString("label", asString(attribute.label));
-        // This line gets the actual caller package registered in the package registry.
-        // The key needs to be "packageName".
-        bundle.putString("packageName", asString(attribute.packageName));
-        return bundle;
     }
 
 

@@ -19,15 +19,14 @@ package ee.ioc.phon.android.speak;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,6 +39,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.speech.RecognizerIntent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -51,13 +51,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 
 
 /**
  * <p>Some useful static methods.</p>
+ *
+ * TODO: structure more, e.g. move preference utils to a separate class
  *
  * @author Kaarel Kaljurand
  */
@@ -333,18 +334,6 @@ public class Utils {
 	}
 
 
-	public static String getUniqueId(SharedPreferences settings) {
-		String id = settings.getString("id", null);
-		if (id == null) {
-			id = UUID.randomUUID().toString();
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putString("id", id);
-			editor.apply();
-		}
-		return id;
-	}
-
-
 	public static List<String> ppBundle(Bundle bundle) {
 		return ppBundle("/", bundle);
 	}
@@ -409,19 +398,6 @@ public class Utils {
 	}
 
 
-	public static String getPrefString(SharedPreferences prefs, Resources res, int key, int defaultValue) {
-		return prefs.getString(res.getString(key), res.getString(defaultValue));
-	}
-
-	public static String getPrefString(SharedPreferences prefs, Resources res, int key) {
-		return prefs.getString(res.getString(key), null);
-	}
-
-	public static boolean getPrefBoolean(SharedPreferences prefs, Resources res, int key, int defaultValue) {
-		return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
-	}
-
-
 	private static boolean isActivityAvailable(Context context, Intent intent) {
 		final PackageManager mgr = context.getPackageManager();
 		List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -454,5 +430,14 @@ public class Utils {
 			return Locale.forLanguageTag(localeAsStr).getDisplayName();
 		}
 		return localeAsStr;
+	}
+
+	/**
+	 * @param str string like {@code ee.ioc.phon.android.speak/.WebSocketRecognizer;et-ee}
+	 * @return ComponentName in the input string
+	 */
+	public static ComponentName getComponentName(String str) {
+		String[] splits = TextUtils.split(str, ";");
+		return ComponentName.unflattenFromString(splits[0]);
 	}
 }

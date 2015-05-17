@@ -14,11 +14,11 @@
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
-    <string name="keyImeRecognitionService" translatable="false">keyImeRecognitionService</string>
-    <string name="keyImeRecognitionLanguage" translatable="false">keyImeRecognitionLanguage</string>
-    <string name="keyActivityRecognitionService" translatable="false">keyActivityRecognitionService</string>
+    <string name="keyImeRecognitionServiceLanguage" translatable="false">keyImeRecognitionServiceLanguage</string>
+    <string name="keyActivityRecognitionServiceLanguage" translatable="false">keyActivityRecognitionServiceLanguage</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <string name="defaultImeRecognizerService" translatable="false">ee.ioc.phon.android.speak/.WebSocketRecognizer</string>
+    <string name="defaultImeRecognizerServiceLanguage" translatable="false">ee.ioc.phon.android.speak/.WebSocketRecognizer;et-ee</string>
     <string name="defaultActivityRecognizerService" translatable="false">ee.ioc.phon.android.speak/.SpeechRecognitionService</string>
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
@@ -99,10 +99,8 @@
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
-    <string name="titleRecognitionService">Recognition service</string>
-    <string name="titleRecognitionLanguage">Recognition language</string>
-    <string name="dialogTitleImeRecognitionService">Recognition service</string>
-    <string name="dialogTitleImeRecognitionLanguage">Recognition language</string>
+    <string name="titleRecognitionServiceLanguage">Recognition services &amp; languages</string>
+    <string name="dialogTitleImeRecognitionServiceLanguage">Services &amp; languages</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
@@ -258,6 +256,7 @@ More grammars are available at
     <string name="defaultRecordingRate" translatable="false">16000</string>
 
     <!-- Unfortunately cannot use an integer array -->
+    <!-- TODO: there is integer array now -->
     <string-array name="valuesRecordingRate" translatable="false">
 
         <!-- <item>8000</item> -->
@@ -265,6 +264,15 @@ More grammars are available at
         <item>16000</item>
         <item>22050</item>
         <item>44100</item>
+    </string-array>
+
+    <string-array name="defaultImeRecognizerServiceLanguage" translatable="false">
+        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer</item>
+        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;et-ee</item>
+        <item>com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService</item>
+        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService</item>
+        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService;et-ee</item>
+        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService;en-us</item>
     </string-array>
 
 </resources>
