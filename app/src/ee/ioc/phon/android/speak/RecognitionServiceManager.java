@@ -1,14 +1,18 @@
 package ee.ioc.phon.android.speak;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
+import android.os.Bundle;
 import android.speech.RecognitionService;
-import android.text.TextUtils;
+import android.speech.RecognizerIntent;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,51 +22,113 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 public class RecognitionServiceManager {
 
     private final Context mContext;
-    private CharSequence[] mEntries;
-    private CharSequence[] mEntryValues;
-    private Set<String> mValues;
-    private String mValuesPp;
+    private List<String> mServices = new ArrayList<>();
+    private List<String> mServicesPp = new ArrayList<>();
+    private Set<String> mInitiallySelectedCombos = new HashSet<>();
 
-    RecognitionServiceManager(Context context, Set<String> combos, int resFallbackCombos) {
+    interface Listener {
+        void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos, List<String> selectedCombosPp);
+    }
+
+    RecognitionServiceManager(Context context, Set<String> selectedCombos, int resFallbackCombos) {
         mContext = context;
-        Set<String> fallbackCombos = PreferenceUtils.getStringSetFromStringArray(mContext.getResources(), resFallbackCombos);
-        populateRecognitionServiceLanguageSet(combos, fallbackCombos);
-    }
 
-    public CharSequence[] getEntries() {
-        return mEntries;
-    }
-
-    public CharSequence[] getEntryValues() {
-        return mEntryValues;
-    }
-
-    public Set<String> getValues() {
-        return mValues;
-    }
-
-    public String getValuesPp() {
-        return mValuesPp;
+        if (selectedCombos == null || selectedCombos.isEmpty()) {
+            mInitiallySelectedCombos = PreferenceUtils.getStringSetFromStringArray(mContext.getResources(), resFallbackCombos);
+        } else {
+            mInitiallySelectedCombos = selectedCombos;
+        }
+        populateServices();
     }
 
 
     /**
-     * TODO: decide which should be selected based on the (possibly stored) selection, or if null/empty
-     * then the fallbackCombo.
+     * Collect together the languages supported by the given services and call back once done.
      */
-    private void populateRecognitionServiceLanguageSet(Set<String> combos, Set<String> fallbackCombos) {
+    public void populateCombos(Activity activity, final Listener listener) {
+        populateCombos(activity, 0, listener, new ArrayList<String>(), new ArrayList<String>(), new HashSet<String>(), new ArrayList<String>());
+    }
+
+    private void populateCombos(final Activity activity, final int counter, final Listener listener,
+                                final List<String> combos, final List<String> combosPp, final Set<String> selectedCombos, final List<String> selectedCombosPp) {
+
+        if (mServices.size() == counter) {
+            listener.onComplete(combos, combosPp, selectedCombos, selectedCombosPp);
+            return;
+        }
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+        // TODO: this seems to be only for activities that implement ACTION_WEB_SEARCH
+        //Intent intent = RecognizerIntent.getVoiceDetailsIntent(this);
+
+        final String service = mServices.get(counter);
+        ComponentName serviceComponent = ComponentName.unflattenFromString(service);
+        if (serviceComponent != null) {
+            intent.setPackage(serviceComponent.getPackageName());
+            // TODO: ideally we would like to query the component, because the package might
+            // contain services (= components) with different capabilities.
+            //intent.setComponent(serviceComponent);
+        }
+
+        // This is needed to include newly installed apps or stopped apps
+        // as receivers of the broadcast.
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+        activity.sendOrderedBroadcast(intent, null, new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                // Service that does not report which languages it supports
+                if (getResultCode() != Activity.RESULT_OK) {
+                    Log.i(combos.size() + ") NO LANG: " + service);
+                    combos.add(service);
+                    combosPp.add(mServicesPp.get(counter));
+                    populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos, selectedCombosPp);
+                    return;
+                }
+
+                Bundle results = getResultExtras(true);
+
+                // Supported languages
+                String prefLang = results.getString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE);
+                ArrayList<CharSequence> allLangs = results.getCharSequenceArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES);
+
+                Log.i("Supported langs: " + prefLang + ": " + allLangs);
+                if (allLangs == null) {
+                    allLangs = new ArrayList<>();
+                }
+                // We add the preferred language to the list of supported languages, if not already there.
+                if (prefLang != null && !allLangs.contains(prefLang)) {
+                    allLangs.add(prefLang);
+                }
+
+                // TODO: exclude K6nele-fast;en-us
+                for (CharSequence lang : allLangs) {
+                    String combo = service + ";" + lang;
+                    String langPp = Utils.makeLangLabel(lang.toString());
+                    String comboPp = mServicesPp.get(counter) + "\n" + langPp;
+                    Log.i(combos.size() + ") " + combo);
+                    combos.add(combo);
+                    combosPp.add(comboPp);
+                    if (mInitiallySelectedCombos.contains(combo)) {
+                        selectedCombos.add(combo);
+                        selectedCombosPp.add(mServicesPp.get(counter) + " / " + langPp);
+                    }
+                }
+
+                populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos, selectedCombosPp);
+            }
+        }, null, Activity.RESULT_OK, null, null);
+    }
+
+
+    private void populateServices() {
         PackageManager pm = mContext.getPackageManager();
         int flags = 0;
         //int flags = PackageManager.GET_META_DATA;
         List<ResolveInfo> services = pm.queryIntentServices(
                 new Intent(RecognitionService.SERVICE_INTERFACE), flags);
-
-        int numberOfServices = services.size();
-
-        mEntries = new CharSequence[numberOfServices];
-        mEntryValues = new CharSequence[numberOfServices];
-
-        Set<String> selectedCombos = new HashSet<>();
 
         int index = 0;
         for (ResolveInfo ri : services) {
@@ -76,20 +142,9 @@ public class RecognitionServiceManager {
             CharSequence label = si.loadLabel(pm);
             String component = (new ComponentName(pkg, cls)).flattenToShortString();
             Log.i(index + ") " + label + ": " + component + ": meta = " + Utils.ppBundle(si.metaData));
-            mEntries[index] = label;
-            mEntryValues[index] = component;
-            if (combos.contains(component)) {
-                selectedCombos.add(component);
-            }
+            mServices.add(component);
+            mServicesPp.add(label.toString());
             index++;
         }
-
-        if (selectedCombos.isEmpty()) {
-            mValues = fallbackCombos;
-        } else {
-            mValues = selectedCombos;
-        }
-
-        mValuesPp = TextUtils.join("\n", mValues);
     }
 }

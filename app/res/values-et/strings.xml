@@ -52,9 +52,6 @@
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
 
-    <string name="titleRecognitionService">Kõnetuvastusteenus</string>
-    <string name="dialogTitleImeRecognitionService">Kõnetuvastusteenus</string>
-
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
     <string name="buttonStop">Lõpeta!</string>
@@ -262,8 +259,9 @@
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Lülitage see Androidi sisestusmeetodite (IME) seadetes sisse.</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
-    <string name="dialogTitleImeRecognitionLanguage">Tuvastuskeel</string>
-    <string name="titleRecognitionLanguage">Tuvastuskeel</string>
     <string name="noteRecognitionLanguageUndefined">(määramata)</string>
+    <string name="dialogTitleImeRecognitionServiceLanguage">Teenused &amp; keeled</string>
+    <string name="titleRecognitionServiceLanguage">Kõnetuvastusteenused ja keeled</string>
+    <string name="summaryImeRecognitionServiceLanguage">Uuendan…</string>
 
 </resources>

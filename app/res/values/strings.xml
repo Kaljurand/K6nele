@@ -91,6 +91,7 @@
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleImeHelpText">Help text</string>
     <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
+    <string name="summaryImeRecognitionServiceLanguage">Updating…</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
     <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Enable it in the Android input method (IME) settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
@@ -267,10 +268,8 @@ More grammars are available at
     </string-array>
 
     <string-array name="defaultImeRecognizerServiceLanguage" translatable="false">
-        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer</item>
         <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;et-ee</item>
-        <item>com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService</item>
-        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService</item>
+        <item>com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService;en-us</item>
         <item>ee.ioc.phon.android.speak/.SpeechRecognitionService;et-ee</item>
         <item>ee.ioc.phon.android.speak/.SpeechRecognitionService;en-us</item>
     </string-array>
