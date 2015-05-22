@@ -1,7 +1,6 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +40,7 @@ public class VoiceImeView extends LinearLayout {
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeGo;
-    private TextView mTvServiceLanguage;
+    private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
 
@@ -60,7 +60,7 @@ public class VoiceImeView extends LinearLayout {
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBImeGo = (ImageButton) findViewById(R.id.bImeGo);
-        mTvServiceLanguage = (TextView) findViewById(R.id.tvServiceLanguage);
+        mBComboSelector = (Button) findViewById(R.id.tvServiceLanguage);
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
         mTvMessage = (TextView) findViewById(R.id.tvMessage);
 
@@ -109,9 +109,10 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
-        mTvServiceLanguage.setOnClickListener(new OnClickListener() {
+        mBComboSelector.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSlc.next();
                 updateServiceLanguage(mSlc);
             }
         });
@@ -389,8 +390,13 @@ public class VoiceImeView extends LinearLayout {
     private void updateServiceLanguage(ServiceLanguageChooser slc) {
         // Cancel a possibly running service and start a new one
         closeSession();
-        slc.next();
-        mTvServiceLanguage.setText(slc.getLabel());
+        if (slc.size() > 1) {
+            mBComboSelector.setVisibility(View.VISIBLE);
+            Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
+            mBComboSelector.setText(pair.second + " @ " + pair.first);
+        } else {
+            mBComboSelector.setVisibility(View.GONE);
+        }
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(getRecognizerListener());
     }

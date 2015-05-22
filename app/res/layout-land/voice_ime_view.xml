@@ -64,7 +64,7 @@
             android:textColor="@color/grey200"
             android:textSize="@dimen/textSize3" />
 
-        <TextView
+        <Button
             android:id="@+id/tvServiceLanguage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,8 +72,7 @@
             android:layout_toLeftOf="@+id/bImeStartStop"
             android:padding="@dimen/layoutMargin1"
             android:text="[TODO]"
-            android:textColor="@color/grey200"
-            android:textSize="@dimen/textSize3" />
+            android:textSize="@dimen/textSize1" />
 
         <ee.ioc.phon.android.speak.MicButton
             android:id="@+id/bImeStartStop"

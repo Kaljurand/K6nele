@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,5 +45,15 @@ public class PreferenceUtils {
 
     public static Set<String> getStringSetFromStringArray(Resources res, int key) {
         return new HashSet<>(Arrays.asList(res.getStringArray(key)));
+    }
+
+    public static List<String> getStringListFromStringArray(Resources res, int key) {
+        return Arrays.asList(res.getStringArray(key));
+    }
+
+    public static void putPrefString(SharedPreferences prefs, Resources res, int key, String value) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(res.getString(key), value);
+        editor.apply();
     }
 }

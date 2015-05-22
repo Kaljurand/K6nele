@@ -79,17 +79,16 @@
         android:textColor="@color/grey200"
         android:textSize="@dimen/textSize3" />
 
-    <TextView
+    <Button
         android:id="@+id/tvServiceLanguage"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/layoutMargin1"
+        android:ellipsize="end"
         android:gravity="center"
         android:singleLine="true"
-        android:ellipsize="end"
         android:text="Estonian (Estonia) @ Kõnele (fast recognition)"
-        android:textColor="@color/grey200"
-        android:textSize="@dimen/textSize2" />
+        android:textSize="@dimen/textSize1" />
 
 </ee.ioc.phon.android.speak.VoiceImeView>

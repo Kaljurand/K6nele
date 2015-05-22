@@ -27,9 +27,12 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -95,8 +98,15 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             pref.setSummary(lp.getEntry());
         } else if (pref instanceof MultiSelectListPreference) {
             MultiSelectListPreference mslp = (MultiSelectListPreference) pref;
-            // TODO: pretty-print
-            pref.setSummary(TextUtils.join("\n", mslp.getValues()));
+
+            // TODO: refactor
+            List<String> pairs = new ArrayList<>();
+            for (String value : mslp.getValues()) {
+                Pair<String, String> pair = Utils.getLabel(this, value);
+                pairs.add(pair.second + " @ " + pair.first);
+            }
+            Collections.sort(pairs);
+            pref.setSummary(TextUtils.join("\n", pairs));
         }
     }
 

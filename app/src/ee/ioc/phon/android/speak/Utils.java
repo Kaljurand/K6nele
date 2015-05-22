@@ -27,6 +27,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,9 +41,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import org.apache.commons.io.FileUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -51,8 +55,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import org.apache.commons.io.FileUtils;
 
 
 /**
@@ -439,5 +441,25 @@ public class Utils {
 	public static ComponentName getComponentName(String str) {
 		String[] splits = TextUtils.split(str, ";");
 		return ComponentName.unflattenFromString(splits[0]);
+	}
+
+	public static Pair<String, String> getLabel(Context context, String comboAsString) {
+		String recognizer = "???";
+		String language = "???";
+		String[] splits = TextUtils.split(comboAsString, ";");
+		if (splits.length > 0) {
+			PackageManager pm = context.getPackageManager();
+			ComponentName recognizerComponentName = ComponentName.unflattenFromString(splits[0]);
+			try {
+				ServiceInfo si = pm.getServiceInfo(recognizerComponentName, 0);
+				recognizer = si.loadLabel(pm).toString();
+			} catch (PackageManager.NameNotFoundException e) {
+				// ignored
+			}
+		}
+		if (splits.length > 1) {
+			language = Utils.makeLangLabel(splits[1]);
+		}
+		return new Pair<>(recognizer, language);
 	}
 }
