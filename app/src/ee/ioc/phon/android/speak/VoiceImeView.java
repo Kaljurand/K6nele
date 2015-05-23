@@ -64,9 +64,20 @@ public class VoiceImeView extends LinearLayout {
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
         mTvMessage = (TextView) findViewById(R.id.tvMessage);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
+        mSlc = new ServiceLanguageChooser(getContext(), prefs, attribute);
+        if (mSlc.size() > 1) {
+            mBComboSelector.setVisibility(View.VISIBLE);
+        } else {
+            mBComboSelector.setVisibility(View.GONE);
+        }
+        updateServiceLanguage(mSlc);
+
+        setText(mTvMessage, "");
         setGuiInitState(0);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         mBImeStartStop.setAudioCuesEnabled(PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
 
         if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeHelpText, R.bool.defaultImeHelpText)) {
@@ -74,10 +85,6 @@ public class VoiceImeView extends LinearLayout {
         } else {
             mTvInstruction.setVisibility(View.GONE);
         }
-
-        // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
-        mSlc = new ServiceLanguageChooser(getContext(), prefs, attribute);
-        updateServiceLanguage(mSlc);
 
         // This button can be pressed in any state.
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +183,7 @@ public class VoiceImeView extends LinearLayout {
                 setText(mTvMessage, "");
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
                 setVisibility(mBImeGo, View.INVISIBLE);
+                setVisibility(mBComboSelector, View.INVISIBLE);
             }
 
             @Override
@@ -318,6 +326,7 @@ public class VoiceImeView extends LinearLayout {
         }
         setVisibility(mBImeKeyboard, View.VISIBLE);
         setVisibility(mBImeGo, View.VISIBLE);
+        setVisibility(mBComboSelector, View.VISIBLE);
     }
 
     private static String lastChars(String str, boolean isFinal) {
@@ -377,7 +386,7 @@ public class VoiceImeView extends LinearLayout {
     }
 
     private static void setVisibility(final View view, final int visibility) {
-        if (view != null) {
+        if (view != null && view.getVisibility() != View.GONE) {
             view.post(new Runnable() {
                 @Override
                 public void run() {
@@ -388,15 +397,10 @@ public class VoiceImeView extends LinearLayout {
     }
 
     private void updateServiceLanguage(ServiceLanguageChooser slc) {
-        // Cancel a possibly running service and start a new one
+        // Cancel a possibly running service
         closeSession();
-        if (slc.size() > 1) {
-            mBComboSelector.setVisibility(View.VISIBLE);
-            Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
-            mBComboSelector.setText(pair.second + " @ " + pair.first);
-        } else {
-            mBComboSelector.setVisibility(View.GONE);
-        }
+        Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
+        mBComboSelector.setText(pair.second + " @ " + pair.first);
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(getRecognizerListener());
     }

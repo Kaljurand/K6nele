@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/layoutMargin0">
+        android:padding="@dimen/layoutMargin4dp">
 
         <ImageButton
             android:id="@+id/bImeKeyboard"
@@ -51,6 +51,7 @@
             android:ellipsize="start"
             android:padding="@dimen/layoutMargin1"
             android:singleLine="true"
+            android:text="@string/testComboLabel"
             android:textColor="@color/grey300"
             android:textSize="@dimen/textSize2" />
 
@@ -66,13 +67,17 @@
 
         <Button
             android:id="@+id/tvServiceLanguage"
+            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/bImeStartStop"
-            android:layout_toLeftOf="@+id/bImeStartStop"
+            android:layout_below="@+id/tvMessage"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
             android:padding="@dimen/layoutMargin1"
-            android:text="[TODO]"
-            android:textSize="@dimen/textSize1" />
+            android:text="@string/testComboLabel"
+            android:textColor="@color/grey200"
+            android:textSize="@dimen/textSize10sp" />
 
         <ee.ioc.phon.android.speak.MicButton
             android:id="@+id/bImeStartStop"

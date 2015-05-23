@@ -38,21 +38,19 @@ public class ServiceLanguageChooser {
         mAttribute = attribute;
 
         Resources res = context.getResources();
-        Set<String> mCombos = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyImeRecognitionServiceLanguage, R.array.defaultImeRecognizerServiceLanguage);
+        Set<String> mCombos = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyImeRecognitionServiceLanguage);
 
-        if (mCombos.isEmpty()) {
+        if (mCombos == null || mCombos.isEmpty()) {
             // If the user has chosen an empty set of combos
-            mCombosAsList = PreferenceUtils.getStringListFromStringArray(res, R.array.defaultImeRecognizerServiceLanguage);
+            mCombosAsList = PreferenceUtils.getStringListFromStringArray(res, R.array.defaultImeCombos);
         } else {
             mCombosAsList = new ArrayList<>(mCombos);
         }
 
         String currentCombo = PreferenceUtils.getPrefString(prefs, res, R.string.keyCurrentCombo);
-        Log.i("GET: " + currentCombo);
         mIndex = mCombosAsList.indexOf(currentCombo);
         // If the current combo was not found among the choices then select the first combo.
         if (mIndex == -1) {
-            Log.i("NOT FOUND");
             incIndex(prefs, res);
         }
         update();
@@ -157,7 +155,6 @@ public class ServiceLanguageChooser {
         if (++mIndex >= mCombosAsList.size()) {
             mIndex = 0;
         }
-        Log.i("PUT: " + mCombosAsList.get(mIndex));
         PreferenceUtils.putPrefString(prefs, res, R.string.keyCurrentCombo, mCombosAsList.get(mIndex));
     }
 }

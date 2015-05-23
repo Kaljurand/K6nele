@@ -71,7 +71,7 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         super.onResume();
         mPrefs.registerOnSharedPreferenceChangeListener(this);
 
-        populateRecognitionServiceLanguageList(R.string.keyImeRecognitionServiceLanguage, R.array.defaultImeRecognizerServiceLanguage);
+        populateRecognitionServiceLanguageList(R.string.keyImeRecognitionServiceLanguage);
 
         // If the K6nele IME is enabled then we remove the link to the IME settings,
         // if not already removed.
@@ -103,18 +103,18 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             List<String> pairs = new ArrayList<>();
             for (String value : mslp.getValues()) {
                 Pair<String, String> pair = Utils.getLabel(this, value);
-                pairs.add(pair.second + " @ " + pair.first);
+                pairs.add(String.format(getString(R.string.labelComboListItem), pair.first, pair.second));
             }
             Collections.sort(pairs);
             pref.setSummary(TextUtils.join("\n", pairs));
         }
     }
 
-    private void populateRecognitionServiceLanguageList(int pref, int fallbackCombos) {
+    private void populateRecognitionServiceLanguageList(int pref) {
         Set<String> combos = PreferenceUtils.getPrefStringSet(mPrefs, getResources(), pref);
         final MultiSelectListPreference mslp = (MultiSelectListPreference) mSettingsFragment.findPreference(getString(pref));
 
-        RecognitionServiceManager mngr = new RecognitionServiceManager(this, combos, fallbackCombos);
+        RecognitionServiceManager mngr = new RecognitionServiceManager(this, combos);
         mngr.populateCombos(this, new RecognitionServiceManager.Listener() {
             @Override
             public void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos, List<String> selectedCombosPp) {

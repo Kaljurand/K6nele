@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
@@ -25,16 +26,21 @@ public class RecognitionServiceManager {
     private List<String> mServices = new ArrayList<>();
     private List<String> mServicesPp = new ArrayList<>();
     private Set<String> mInitiallySelectedCombos = new HashSet<>();
+    private Set<String> mCombosExcluded = new HashSet<>();
 
     interface Listener {
         void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos, List<String> selectedCombosPp);
     }
 
-    RecognitionServiceManager(Context context, Set<String> selectedCombos, int resFallbackCombos) {
+    RecognitionServiceManager(Context context, Set<String> selectedCombos) {
         mContext = context;
 
-        if (selectedCombos == null || selectedCombos.isEmpty()) {
-            mInitiallySelectedCombos = PreferenceUtils.getStringSetFromStringArray(mContext.getResources(), resFallbackCombos);
+        Resources res = mContext.getResources();
+
+        mCombosExcluded = PreferenceUtils.getStringSetFromStringArray(res, R.array.defaultImeCombosExcluded);
+
+        if (selectedCombos == null) {
+            mInitiallySelectedCombos = PreferenceUtils.getStringSetFromStringArray(res, R.array.defaultImeCombos);
         } else {
             mInitiallySelectedCombos = selectedCombos;
         }
@@ -103,17 +109,18 @@ public class RecognitionServiceManager {
                     allLangs.add(prefLang);
                 }
 
-                // TODO: exclude K6nele-fast;en-us
                 for (CharSequence lang : allLangs) {
                     String combo = service + ";" + lang;
-                    String langPp = Utils.makeLangLabel(lang.toString());
-                    String comboPp = mServicesPp.get(counter) + "\n" + langPp;
-                    Log.i(combos.size() + ") " + combo);
-                    combos.add(combo);
-                    combosPp.add(comboPp);
-                    if (mInitiallySelectedCombos.contains(combo)) {
-                        selectedCombos.add(combo);
-                        selectedCombosPp.add(mServicesPp.get(counter) + " / " + langPp);
+                    if (!mCombosExcluded.contains(combo)) {
+                        String langPp = Utils.makeLangLabel(lang.toString());
+                        String comboPp = mServicesPp.get(counter) + "\n" + langPp;
+                        Log.i(combos.size() + ") " + combo);
+                        combos.add(combo);
+                        combosPp.add(comboPp);
+                        if (mInitiallySelectedCombos.contains(combo)) {
+                            selectedCombos.add(combo);
+                            selectedCombosPp.add(String.format(activity.getString(R.string.labelComboListItem), mServicesPp.get(counter), langPp));
+                        }
                     }
                 }
 
@@ -139,12 +146,14 @@ public class RecognitionServiceManager {
             }
             String pkg = si.packageName;
             String cls = si.name;
-            CharSequence label = si.loadLabel(pm);
             String component = (new ComponentName(pkg, cls)).flattenToShortString();
-            Log.i(index + ") " + label + ": " + component + ": meta = " + Utils.ppBundle(si.metaData));
-            mServices.add(component);
-            mServicesPp.add(label.toString());
-            index++;
+            if (!mCombosExcluded.contains(component)) {
+                CharSequence label = si.loadLabel(pm);
+                Log.i(index + ") " + label + ": " + component + ": meta = " + Utils.ppBundle(si.metaData));
+                mServices.add(component);
+                mServicesPp.add(label.toString());
+                index++;
+            }
         }
     }
 }
