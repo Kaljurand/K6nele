@@ -450,11 +450,13 @@ public class Utils {
 		if (splits.length > 0) {
 			PackageManager pm = context.getPackageManager();
 			ComponentName recognizerComponentName = ComponentName.unflattenFromString(splits[0]);
-			try {
-				ServiceInfo si = pm.getServiceInfo(recognizerComponentName, 0);
-				recognizer = si.loadLabel(pm).toString();
-			} catch (PackageManager.NameNotFoundException e) {
-				// ignored
+			if (recognizerComponentName != null) {
+				try {
+					ServiceInfo si = pm.getServiceInfo(recognizerComponentName, 0);
+					recognizer = si.loadLabel(pm).toString();
+				} catch (PackageManager.NameNotFoundException e) {
+					// ignored
+				}
 			}
 		}
 		if (splits.length > 1) {

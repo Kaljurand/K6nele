@@ -15,8 +15,8 @@
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
-    <string name="keyImeRecognitionServiceLanguage" translatable="false">keyImeRecognitionServiceLanguage</string>
-    <string name="keyActivityRecognitionServiceLanguage" translatable="false">keyActivityRecognitionServiceLanguage</string>
+    <string name="keyImeCombo" translatable="false">keyImeCombo</string>
+    <string name="keyActivityCombo" translatable="false">keyActivityCombo</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>

@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
@@ -32,9 +31,9 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
@@ -71,8 +70,6 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         super.onResume();
         mPrefs.registerOnSharedPreferenceChangeListener(this);
 
-        populateRecognitionServiceLanguageList(R.string.keyImeRecognitionServiceLanguage);
-
         // If the K6nele IME is enabled then we remove the link to the IME settings,
         // if not already removed.
         // If the IME is not enabled then we add the link. The position of the link seems
@@ -88,6 +85,9 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             PreferenceCategory category = (PreferenceCategory) mSettingsFragment.findPreference(getString(R.string.keyCategoryIme));
             category.addPreference(pref);
         }
+
+        Preference pref = mSettingsFragment.findPreference(getString(R.string.keyImeCombo));
+        pref.setSummary(makeSummary(PreferenceUtils.getPrefStringSet(mPrefs, getResources(), R.string.keyImeCombo)));
     }
 
 
@@ -96,36 +96,8 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         if (pref instanceof ListPreference) {
             ListPreference lp = (ListPreference) pref;
             pref.setSummary(lp.getEntry());
-        } else if (pref instanceof MultiSelectListPreference) {
-            MultiSelectListPreference mslp = (MultiSelectListPreference) pref;
-
-            // TODO: refactor
-            List<String> pairs = new ArrayList<>();
-            for (String value : mslp.getValues()) {
-                Pair<String, String> pair = Utils.getLabel(this, value);
-                pairs.add(String.format(getString(R.string.labelComboListItem), pair.first, pair.second));
-            }
-            Collections.sort(pairs);
-            pref.setSummary(TextUtils.join("\n", pairs));
         }
     }
-
-    private void populateRecognitionServiceLanguageList(int pref) {
-        Set<String> combos = PreferenceUtils.getPrefStringSet(mPrefs, getResources(), pref);
-        final MultiSelectListPreference mslp = (MultiSelectListPreference) mSettingsFragment.findPreference(getString(pref));
-
-        RecognitionServiceManager mngr = new RecognitionServiceManager(this, combos);
-        mngr.populateCombos(this, new RecognitionServiceManager.Listener() {
-            @Override
-            public void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos, List<String> selectedCombosPp) {
-                mslp.setEntries(combosPp.toArray(new CharSequence[combosPp.size()]));
-                mslp.setEntryValues(combos.toArray(new CharSequence[combos.size()]));
-                mslp.setValues(selectedCombos);
-                mslp.setSummary(TextUtils.join("\n", selectedCombosPp));
-            }
-        });
-    }
-
 
     private boolean isK6neleImeEnabled() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -137,5 +109,16 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         }
 
         return false;
+    }
+
+
+    private String makeSummary(Collection<String> values) {
+        List<String> pairs = new ArrayList<>();
+        for (String value : values) {
+            Pair<String, String> pair = Utils.getLabel(this, value);
+            pairs.add(String.format(getString(R.string.labelComboListItem), pair.first, pair.second));
+        }
+        Collections.sort(pairs);
+        return TextUtils.join("\n", pairs);
     }
 }

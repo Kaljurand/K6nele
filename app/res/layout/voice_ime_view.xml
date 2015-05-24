@@ -80,12 +80,10 @@
 
     <Button
         android:id="@+id/tvServiceLanguage"
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/layoutMargin4dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/button_combo"
         android:ellipsize="end"
         android:gravity="center"
         android:singleLine="true"

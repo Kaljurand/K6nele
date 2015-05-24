@@ -36,13 +36,14 @@
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
             android:title="@string/titleImeHelpText" />
-        <MultiSelectListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionServiceLanguage"
-            android:entries="@array/empty"
-            android:entryValues="@array/empty"
-            android:key="@string/keyImeRecognitionServiceLanguage"
+        <Preference
+            android:key="@string/keyImeCombo"
             android:summary="@string/summaryImeRecognitionServiceLanguage"
-            android:title="@string/titleRecognitionServiceLanguage" />
+            android:title="@string/titleRecognitionServiceLanguage">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI)
@@ -63,7 +64,7 @@
             android:enabled="false"
             android:entries="@array/empty"
             android:entryValues="@array/empty"
-            android:key="@string/keyActivityRecognitionServiceLanguage"
+            android:key="@string/keyActivityCombo"
             android:summary="@string/labelRecognitionServiceHttpWithComment"
             android:title="@string/titleRecognitionServiceLanguage" />
     </PreferenceCategory>

@@ -38,7 +38,7 @@ public class ServiceLanguageChooser {
         mAttribute = attribute;
 
         Resources res = context.getResources();
-        Set<String> mCombos = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyImeRecognitionServiceLanguage);
+        Set<String> mCombos = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyImeCombo);
 
         if (mCombos == null || mCombos.isEmpty()) {
             // If the user has chosen an empty set of combos

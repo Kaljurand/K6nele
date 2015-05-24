@@ -29,7 +29,7 @@ public class RecognitionServiceManager {
     private Set<String> mCombosExcluded = new HashSet<>();
 
     interface Listener {
-        void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos, List<String> selectedCombosPp);
+        void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos);
     }
 
     RecognitionServiceManager(Context context, Set<String> selectedCombos) {
@@ -47,19 +47,26 @@ public class RecognitionServiceManager {
         populateServices();
     }
 
+    public List<String> getServices() {
+        return mServices;
+    }
+
+    public List<String> getServicesPp() {
+        return mServicesPp;
+    }
 
     /**
      * Collect together the languages supported by the given services and call back once done.
      */
     public void populateCombos(Activity activity, final Listener listener) {
-        populateCombos(activity, 0, listener, new ArrayList<String>(), new ArrayList<String>(), new HashSet<String>(), new ArrayList<String>());
+        populateCombos(activity, 0, listener, new ArrayList<String>(), new ArrayList<String>(), new HashSet<String>());
     }
 
     private void populateCombos(final Activity activity, final int counter, final Listener listener,
-                                final List<String> combos, final List<String> combosPp, final Set<String> selectedCombos, final List<String> selectedCombosPp) {
+                                final List<String> combos, final List<String> combosPp, final Set<String> selectedCombos) {
 
         if (mServices.size() == counter) {
-            listener.onComplete(combos, combosPp, selectedCombos, selectedCombosPp);
+            listener.onComplete(combos, combosPp, selectedCombos);
             return;
         }
 
@@ -90,7 +97,7 @@ public class RecognitionServiceManager {
                     Log.i(combos.size() + ") NO LANG: " + service);
                     combos.add(service);
                     combosPp.add(mServicesPp.get(counter));
-                    populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos, selectedCombosPp);
+                    populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos);
                     return;
                 }
 
@@ -119,12 +126,11 @@ public class RecognitionServiceManager {
                         combosPp.add(comboPp);
                         if (mInitiallySelectedCombos.contains(combo)) {
                             selectedCombos.add(combo);
-                            selectedCombosPp.add(String.format(activity.getString(R.string.labelComboListItem), mServicesPp.get(counter), langPp));
                         }
                     }
                 }
 
-                populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos, selectedCombosPp);
+                populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos);
             }
         }, null, Activity.RESULT_OK, null, null);
     }

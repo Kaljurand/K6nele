@@ -56,4 +56,10 @@ public class PreferenceUtils {
         editor.putString(res.getString(key), value);
         editor.apply();
     }
+
+    public static void putPrefStringSet(SharedPreferences prefs, Resources res, int key, Set<String> value) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet(res.getString(key), value);
+        editor.apply();
+    }
 }

@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -121,6 +122,17 @@ public class VoiceImeView extends LinearLayout {
             public void onClick(View v) {
                 mSlc.next();
                 updateServiceLanguage(mSlc);
+            }
+        });
+
+        mBComboSelector.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Context context = getContext();
+                Intent intent = new Intent(context, ComboSelectorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Utils.startActivityIfAvailable(context, intent);
+                return true;
             }
         });
 
