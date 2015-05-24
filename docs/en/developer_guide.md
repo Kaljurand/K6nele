@@ -1,5 +1,6 @@
 ---
 layout: page
+comments: true
 title: Developer's Guide
 ---
 
