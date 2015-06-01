@@ -254,14 +254,13 @@
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleDefaultServiceWs">WebSocket-aadress</string>
     <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammatikatoega). Ainuvõimalik valik Kõnele praeguses versioonis.</string>
-    <string name="labelDefaultRecognitionService">Süsteemne vaikeväärtus</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
-    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Lülitage see Androidi sisestusmeetodite (IME) seadetes sisse.</string>
+    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
-    <string name="noteRecognitionLanguageUndefined">(määramata)</string>
-    <string name="dialogTitleImeRecognitionServiceLanguage">Teenused &amp; keeled</string>
-    <string name="titleRecognitionServiceLanguage">Kõnetuvastusteenused ja keeled</string>
-    <string name="summaryImeRecognitionServiceLanguage">Uuendan…</string>
+    <string name="dialogTitleCombo">Keeled &amp; teenused</string>
+    <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
+    <string name="summaryImeCombo">Uuendan…</string>
+    <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
 
 </resources>

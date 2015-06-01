@@ -119,7 +119,7 @@
             android:theme="@style/Theme.K6nele.Dialog"></activity>
         <activity
             android:name=".ComboSelectorActivity"
-            android:label="@string/dialogTitleImeRecognitionServiceLanguage"
+            android:label="@string/dialogTitleCombo"
             android:parentActivityName=".Preferences"></activity>
         <activity
             android:name=".AppListActivity"

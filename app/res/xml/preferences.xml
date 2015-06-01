@@ -38,8 +38,8 @@
             android:title="@string/titleImeHelpText" />
         <Preference
             android:key="@string/keyImeCombo"
-            android:summary="@string/summaryImeRecognitionServiceLanguage"
-            android:title="@string/titleRecognitionServiceLanguage">
+            android:summary="@string/summaryImeCombo"
+            android:title="@string/titleCombo">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
@@ -60,13 +60,12 @@
             android:title="@string/titleAudioCues" />
         // TODO: make the service of the main panel also user selectable
         <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionServiceLanguage"
             android:enabled="false"
             android:entries="@array/empty"
             android:entryValues="@array/empty"
             android:key="@string/keyActivityCombo"
             android:summary="@string/labelRecognitionServiceHttpWithComment"
-            android:title="@string/titleRecognitionServiceLanguage" />
+            android:title="@string/titleCombo" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryApps">

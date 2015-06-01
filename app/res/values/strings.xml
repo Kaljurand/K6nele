@@ -38,8 +38,6 @@
     </string-array>
     <string-array name="empty" translatable="false"></string-array>
 
-    <string name="defaultRecognitionLanguage" translatable="false">et-EE</string>
-
     <string name="labelComboListItem" translatable="false">• %2$s @ %1$s</string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
@@ -62,7 +60,6 @@
     <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityRepeaterDemo">Repeater demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
-    <string name="labelDefaultRecognitionService">System default</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
@@ -92,17 +89,17 @@
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleImeHelpText">Help text</string>
     <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
-    <string name="summaryImeRecognitionServiceLanguage">Updating…</string>
+    <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
-    <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Enable it in the Android input method (IME) settings.</string>
+    <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Tap here to enable it in the Android input method (IME) settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
-    <string name="titleRecognitionServiceLanguage">Recognition services &amp; languages</string>
-    <string name="dialogTitleImeRecognitionServiceLanguage">Services &amp; languages</string>
+    <string name="titleCombo">Recognition languages &amp; services</string>
+    <string name="dialogTitleCombo">Languages &amp; services</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
@@ -119,45 +116,39 @@
     <!-- @string/descriptionApp -->
     <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
 		v%3$s by &lt;a href="https://plus.google.com/+KaarelKaljurand">Kaarel Kaljurand&lt;/a></string>
-    <string name="tvAbout">&lt;p>%1$s
-is an app that offers speech-to-text services to other apps.
-Apps that allow user input via speech usually have a little microphone
-button as part of their user interface. Examples include:&lt;/p>
+    <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
+        Many apps contain a text area or a text field (e.g. a search bar) that can be edited using the keyboard.
+        %1$s provides a &lt;b>speech keyboard&lt;/b>, a one-button keyboard, which allows speech to be converted to text.
+        Many apps (e.g. intelligent assistants, keyboard apps, navigation apps) also contain a microphone button
+        that is linked to the &lt;b>standard Android voice search activity&lt;/b>.
+        %1$s provides an implementation of this activity.&lt;/p>
 
-&amp;nbsp;&amp;nbsp;&amp;bull; note taking and TODO-list apps;&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; SMS apps;&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; dictionary and translation tools;&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; calculators (e.g. WolframAlpha);&lt;br/>
-&amp;nbsp;&amp;nbsp;&amp;bull; apps that include the standard search bar (e.g. GMail, Google Drive, YouTube).
+&lt;p>In the background, %1$s uses two speech recognition servers.
+        One supports &lt;b>grammar-based speech recognition&lt;/b>, the other supports &lt;b>continuous full-duplex speech recognition&lt;/b>.
+        Both servers focus on &lt;b>Estonian speech recognition&lt;/b>, but both are based on a fully open-source stack that makes them easy to deploy
+        and customize for other languages.
+        For more information, see &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
 
-		&lt;p>%1$s is
-		pre-configured to
-		use online Estonian speech-to-text services
-		(see &lt;a
-		href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>)
-		but
-		you can reconfigure it to use any online speech-to-text server
-		provided
-		that it implements the same interface.&lt;/p>
+        &lt;p>How to use the speech keyboard? Tap the big yellow button and start dictating, the words
+        appear immediately in the text area.
+        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space.
+        Note that any recognition language and service available on the device can be used on the speech
+        keyboard. However, only the two services of %1$s have been tested.&lt;/p>
 
-&lt;p>%1$s supports grammar-based speech recognition, i.e. you can assign grammars to individual apps in order to
+&lt;p>How to use grammar-based speech recognition? Use the \"Apps &amp; Grammars\" settings to assign grammars to individual apps in order to
 improve the recognition quality and map the recognized speech automatically to the expected application format.
 %1$s is preloaded with links to several speech grammars for Estonian
 and English, covering domains like unit conversion, address queries, setting the alarm clock.
 More grammars are available at
 &lt;a href="http://kaljurand.github.io/Grammars/">http://kaljurand.github.io/Grammars/&lt;/a>.&lt;/p>
 
-&lt;p>%1$s can also be used as a (one-button) keyboard: tap the big yellow button and start dictating, the words
-        appear immediately in the text area.
-        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space.&lt;/p>
-
 		&lt;p>Documentation, source code, and the list of requested features and known issues are available at the
 		&lt;a href="http://kaljurand.github.io/K6nele/">%1$s website&lt;/a>.&lt;/p></string>
 
-    <!-- List view -->
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
+    <string name="emptylistCombos">Currently using Estonian and Kõnele (fast recognition). Tap here to add or change languages and services.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
@@ -191,7 +182,6 @@ More grammars are available at
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
     <string name="noteMaxRecordingTimeExceeded">Max recording time exceeded</string>
-    <string name="noteRecognitionLanguageUndefined">(undefined)</string>
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>

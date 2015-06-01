@@ -22,20 +22,19 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class RecognitionServiceManager {
 
-    private final Context mContext;
+    private final PackageManager mPm;
     private List<String> mServices = new ArrayList<>();
-    private List<String> mServicesPp = new ArrayList<>();
     private Set<String> mInitiallySelectedCombos = new HashSet<>();
     private Set<String> mCombosExcluded = new HashSet<>();
 
     interface Listener {
-        void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos);
+        void onComplete(List<String> combos, Set<String> selectedCombos);
     }
 
     RecognitionServiceManager(Context context, Set<String> selectedCombos) {
-        mContext = context;
+        mPm = context.getPackageManager();
 
-        Resources res = mContext.getResources();
+        Resources res = context.getResources();
 
         mCombosExcluded = PreferenceUtils.getStringSetFromStringArray(res, R.array.defaultImeCombosExcluded);
 
@@ -47,26 +46,18 @@ public class RecognitionServiceManager {
         populateServices();
     }
 
-    public List<String> getServices() {
-        return mServices;
-    }
-
-    public List<String> getServicesPp() {
-        return mServicesPp;
-    }
-
     /**
      * Collect together the languages supported by the given services and call back once done.
      */
     public void populateCombos(Activity activity, final Listener listener) {
-        populateCombos(activity, 0, listener, new ArrayList<String>(), new ArrayList<String>(), new HashSet<String>());
+        populateCombos(activity, 0, listener, new ArrayList<String>(), new HashSet<String>());
     }
 
     private void populateCombos(final Activity activity, final int counter, final Listener listener,
-                                final List<String> combos, final List<String> combosPp, final Set<String> selectedCombos) {
+                                final List<String> combos, final Set<String> selectedCombos) {
 
         if (mServices.size() == counter) {
-            listener.onComplete(combos, combosPp, selectedCombos);
+            listener.onComplete(combos, selectedCombos);
             return;
         }
 
@@ -96,8 +87,7 @@ public class RecognitionServiceManager {
                 if (getResultCode() != Activity.RESULT_OK) {
                     Log.i(combos.size() + ") NO LANG: " + service);
                     combos.add(service);
-                    combosPp.add(mServicesPp.get(counter));
-                    populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos);
+                    populateCombos(activity, counter + 1, listener, combos, selectedCombos);
                     return;
                 }
 
@@ -120,27 +110,24 @@ public class RecognitionServiceManager {
                     String combo = service + ";" + lang;
                     if (!mCombosExcluded.contains(combo)) {
                         String langPp = Utils.makeLangLabel(lang.toString());
-                        String comboPp = mServicesPp.get(counter) + "\n" + langPp;
                         Log.i(combos.size() + ") " + combo);
                         combos.add(combo);
-                        combosPp.add(comboPp);
                         if (mInitiallySelectedCombos.contains(combo)) {
                             selectedCombos.add(combo);
                         }
                     }
                 }
 
-                populateCombos(activity, counter + 1, listener, combos, combosPp, selectedCombos);
+                populateCombos(activity, counter + 1, listener, combos, selectedCombos);
             }
         }, null, Activity.RESULT_OK, null, null);
     }
 
 
     private void populateServices() {
-        PackageManager pm = mContext.getPackageManager();
         int flags = 0;
         //int flags = PackageManager.GET_META_DATA;
-        List<ResolveInfo> services = pm.queryIntentServices(
+        List<ResolveInfo> services = mPm.queryIntentServices(
                 new Intent(RecognitionService.SERVICE_INTERFACE), flags);
 
         int index = 0;
@@ -154,10 +141,8 @@ public class RecognitionServiceManager {
             String cls = si.name;
             String component = (new ComponentName(pkg, cls)).flattenToShortString();
             if (!mCombosExcluded.contains(component)) {
-                CharSequence label = si.loadLabel(pm);
-                Log.i(index + ") " + label + ": " + component + ": meta = " + Utils.ppBundle(si.metaData));
+                Log.i(index + ") " + component + ": meta = " + Utils.ppBundle(si.metaData));
                 mServices.add(component);
-                mServicesPp.add(label.toString());
                 index++;
             }
         }

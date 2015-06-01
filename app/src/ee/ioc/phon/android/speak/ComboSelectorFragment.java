@@ -43,7 +43,7 @@ public class ComboSelectorFragment extends ListFragment {
         mngr.populateCombos(getActivity(), new RecognitionServiceManager.Listener() {
 
             @Override
-            public void onComplete(List<String> combos, List<String> combosPp, Set<String> selectedCombos) {
+            public void onComplete(List<String> combos, Set<String> selectedCombos) {
                 List<Combo> list = new ArrayList<Combo>();
                 for (String comboAsString : combos) {
                     Combo combo = get(comboAsString);
@@ -52,10 +52,16 @@ public class ComboSelectorFragment extends ListFragment {
                     }
                     list.add(combo);
                 }
-                Collections.sort(list, Combo.SORT_BY_LANGAUGE);
+                Collections.sort(list, Combo.SORT_BY_SELECTED_BY_LANGUAGE);
 
-                ArrayAdapter<Combo> adapter = new ComboAdapter(ComboSelectorFragment.this, list);
+                ComboAdapter adapter = new ComboAdapter(ComboSelectorFragment.this, list);
                 setListAdapter(adapter);
+
+                // TODO: the fast scroll handle overlaps with the checkboxes
+                //getListView().setFastScrollEnabled(true);
+
+                // TODO: provide more info about the number of (selected) services and languages
+                //getActivity().getActionBar().setSubtitle("" + adapter.getCount());
             }
         });
 

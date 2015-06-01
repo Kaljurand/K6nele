@@ -10,7 +10,8 @@ import ee.ioc.phon.android.speak.Utils;
 
 public class Combo {
 
-    public static final SortByLangauge SORT_BY_LANGAUGE = new SortByLangauge();
+    public static final Comparator SORT_BY_LANGUAGE = new SortByLanguage();
+    public static final Comparator SORT_BY_SELECTED_BY_LANGUAGE = new SortBySelectedByLanguage();
 
     private final String mId;
     private final String mService;
@@ -38,7 +39,7 @@ public class Combo {
         return mLanguage;
     }
 
-    public String getName() {
+    public String toString() {
         return String.format(mContext.getString(R.string.labelComboListItem), mService, mLanguage);
     }
 
@@ -50,12 +51,25 @@ public class Combo {
         mIsSelected = b;
     }
 
-    private static class SortByLangauge implements Comparator {
+    private static class SortByLanguage implements Comparator {
 
         public int compare(Object o1, Object o2) {
             Combo c1 = (Combo) o1;
             Combo c2 = (Combo) o2;
             return c1.getLanguage().compareToIgnoreCase(c2.getLanguage());
+        }
+    }
+
+    private static class SortBySelectedByLanguage implements Comparator {
+
+        public int compare(Object o1, Object o2) {
+            Combo c1 = (Combo) o1;
+            Combo c2 = (Combo) o2;
+            if (c1.isSelected() && c2.isSelected() || !c1.isSelected() && !c2.isSelected()) {
+                return c1.getLanguage().compareToIgnoreCase(c2.getLanguage());
+            }
+            if (c1.isSelected()) return -1;
+            return 1;
         }
     }
 }

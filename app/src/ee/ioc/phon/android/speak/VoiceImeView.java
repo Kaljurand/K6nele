@@ -61,7 +61,7 @@ public class VoiceImeView extends LinearLayout {
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBImeGo = (ImageButton) findViewById(R.id.bImeGo);
-        mBComboSelector = (Button) findViewById(R.id.tvServiceLanguage);
+        mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
         mTvMessage = (TextView) findViewById(R.id.tvMessage);
 

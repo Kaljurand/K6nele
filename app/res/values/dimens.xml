@@ -6,9 +6,8 @@
     <dimen name="textSize3">18sp</dimen>
     <dimen name="textSize4">22sp</dimen>
     <dimen name="layoutHeightButtonMicrophone">80dp</dimen>
-    <dimen name="layoutMargin2dp">2dp</dimen>
     <dimen name="layoutMargin4dp">4dp</dimen>
     <dimen name="layoutMargin1">8dp</dimen>
     <dimen name="layoutMargin2">16dp</dimen>
-    <dimen name="layoutMargin0dp">0dp</dimen>
+    <dimen name="layoutMargin3">24dp</dimen>
 </resources>

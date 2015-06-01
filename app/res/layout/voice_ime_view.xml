@@ -79,13 +79,16 @@
         android:textSize="@dimen/textSize3" />
 
     <Button
-        android:id="@+id/tvServiceLanguage"
+        android:id="@+id/tvComboSelector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/layoutMargin1"
         android:background="@drawable/button_combo"
         android:ellipsize="end"
         android:gravity="center"
+        android:minHeight="@dimen/layoutMargin3"
+        android:minWidth="@dimen/layoutMargin3"
         android:singleLine="true"
         android:text="@string/testComboLabel"
         android:textColor="@color/grey200"

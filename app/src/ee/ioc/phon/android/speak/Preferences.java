@@ -26,7 +26,6 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
@@ -35,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 /**
@@ -111,14 +111,15 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         return false;
     }
 
-
     private String makeSummary(Collection<String> values) {
-        List<String> pairs = new ArrayList<>();
+        List<Combo> combos = new ArrayList<>();
         for (String value : values) {
-            Pair<String, String> pair = Utils.getLabel(this, value);
-            pairs.add(String.format(getString(R.string.labelComboListItem), pair.first, pair.second));
+            combos.add(new Combo(this, value));
         }
-        Collections.sort(pairs);
-        return TextUtils.join("\n", pairs);
+        if (combos.size() == 0) {
+            return getString(R.string.emptylistCombos);
+        }
+        Collections.sort(combos, Combo.SORT_BY_LANGUAGE);
+        return TextUtils.join("\n", combos);
     }
 }
