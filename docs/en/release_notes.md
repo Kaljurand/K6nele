@@ -16,7 +16,7 @@ There are currently 3 branches:
     * settings are part of the global settings
     * launcher submits the transcription to the standard websearch
     * starting with v0.8.50 implements the IME interface
-  * v1.1.xx
+  * v1.1.xx - v1.2.xx
     * requires Android 4.1+
     * Android 4.1+ style UI
 
@@ -24,7 +24,16 @@ There are currently 3 branches:
 
 (Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>)
 
-## v1.1
+## v1.1 - v1.2
+
+### v1.2.00 (2015-06-03) (released on Google Play: 2015-06-03)
+
+- new setting in the "Speech keyboard" section: list of all the languages supported by one or more of the speech recognition services on the device
+  - tap on the checkboxes to select any number of language/service combinations to be available on the speech keyboard
+- new button on the speech keyboard (visible if more than one language/service combination is selected)
+  - tap to rotate through the selected languages/services, allowing dictation in multiple languages/services without leaving the speech keyboard
+  - long-press to open the full language/service list
+- smaller fixes
 
 ### v1.1.02 (2015-03-07) (released on Google Play: 2015-03-06)
 
