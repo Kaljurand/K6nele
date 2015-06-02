@@ -68,6 +68,7 @@ import java.util.List;
 import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.android.speak.RecognizerIntentService.State;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
@@ -323,7 +324,7 @@ public class RecognizerIntentActivity extends Activity {
 					if (maxRecordingTime < (SystemClock.elapsedRealtime() - mService.getStartTime())) {
 						Log.i(LOG_TAG, "Max recording time exceeded");
 						stopRecording();
-					} else if (Utils.getPrefBoolean(mPrefs, mRes, R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mService.isPausing()) {
+					} else if (PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mService.isPausing()) {
 						Log.i(LOG_TAG, "Speaker finished speaking");
 						stopRecording();
 					} else {
@@ -559,7 +560,7 @@ public class RecognizerIntentActivity extends Activity {
 		mLlProgress.setVisibility(View.VISIBLE);
 		mLlError.setVisibility(View.GONE);
 		setRecorderStyle(mRes.getColor(R.color.red));
-		if (Utils.getPrefBoolean(mPrefs, mRes, R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause)) {
+		if (PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause)) {
 			mBStartStop.setVisibility(View.GONE);
 			mIvVolume.setVisibility(View.VISIBLE);
 		} else {
@@ -731,7 +732,7 @@ public class RecognizerIntentActivity extends Activity {
 			pendingIntentTargetPackage = mExtraResultsPendingIntent.getTargetPackage();
 		}
 		List<String> info = new ArrayList<>();
-		info.add("ID: " + Utils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
+		info.add("ID: " + PreferenceUtils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
 		info.add("User-Agent comment: " + mRecSessionBuilder.getUserAgentComment());
 		info.add("Calling activity class name: " + callingActivityClassName);
 		info.add("Calling activity package name: " + callingActivityPackageName);

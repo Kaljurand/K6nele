@@ -1,6 +1,5 @@
 package ee.ioc.phon.android.speak;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,12 +8,17 @@ import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class VoiceImeView extends LinearLayout {
 
@@ -37,43 +41,51 @@ public class VoiceImeView extends LinearLayout {
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeGo;
+    private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
 
     private VoiceImeViewListener mListener;
     private SpeechRecognizer mRecognizer;
+    private ServiceLanguageChooser mSlc;
 
-    private Intent mIntent;
     private Constants.State mState;
 
     public VoiceImeView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void setListener(Intent intent, final VoiceImeViewListener listener) {
-        mIntent = intent;
+
+    public void setListener(EditorInfo attribute, final VoiceImeViewListener listener) {
         mListener = listener;
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBImeGo = (ImageButton) findViewById(R.id.bImeGo);
+        mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
         mTvMessage = (TextView) findViewById(R.id.tvMessage);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
+        mSlc = new ServiceLanguageChooser(getContext(), prefs, attribute);
+        if (mSlc.size() > 1) {
+            mBComboSelector.setVisibility(View.VISIBLE);
+        } else {
+            mBComboSelector.setVisibility(View.GONE);
+        }
+        updateServiceLanguage(mSlc);
+
+        setText(mTvMessage, "");
         setGuiInitState(0);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mBImeStartStop.setAudioCuesEnabled(Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
+        mBImeStartStop.setAudioCuesEnabled(PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
 
-        if (Utils.getPrefBoolean(prefs, getResources(), R.string.keyImeHelpText, R.bool.defaultImeHelpText)) {
+        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeHelpText, R.bool.defaultImeHelpText)) {
             mTvInstruction.setVisibility(View.VISIBLE);
         } else {
             mTvInstruction.setVisibility(View.GONE);
         }
-
-        // Cancel a possibly running service and start a new one
-        closeSession();
-        mRecognizer = createSpeechRecognizer(prefs);
-        mRecognizer.setRecognitionListener(getRecognizerListener());
 
         // This button can be pressed in any state.
         mBImeStartStop.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +94,7 @@ public class VoiceImeView extends LinearLayout {
                 switch (mState) {
                     case INIT:
                     case ERROR:
-                        mRecognizer.startListening(mIntent);
+                        mRecognizer.startListening(mSlc.getIntent());
                         break;
                     case RECORDING:
                         mRecognizer.stopListening();
@@ -102,6 +114,25 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 mListener.onGo();
+            }
+        });
+
+        mBComboSelector.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSlc.next();
+                updateServiceLanguage(mSlc);
+            }
+        });
+
+        mBComboSelector.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Context context = getContext();
+                Intent intent = new Intent(context, ComboSelectorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Utils.startActivityIfAvailable(context, intent);
+                return true;
             }
         });
 
@@ -164,6 +195,7 @@ public class VoiceImeView extends LinearLayout {
                 setText(mTvMessage, "");
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
                 setVisibility(mBImeGo, View.INVISIBLE);
+                setVisibility(mBComboSelector, View.INVISIBLE);
             }
 
             @Override
@@ -306,6 +338,7 @@ public class VoiceImeView extends LinearLayout {
         }
         setVisibility(mBImeKeyboard, View.VISIBLE);
         setVisibility(mBImeGo, View.VISIBLE);
+        setVisibility(mBComboSelector, View.VISIBLE);
     }
 
     private static String lastChars(String str, boolean isFinal) {
@@ -365,7 +398,7 @@ public class VoiceImeView extends LinearLayout {
     }
 
     private static void setVisibility(final View view, final int visibility) {
-        if (view != null) {
+        if (view != null && view.getVisibility() != View.GONE) {
             view.post(new Runnable() {
                 @Override
                 public void run() {
@@ -375,26 +408,12 @@ public class VoiceImeView extends LinearLayout {
         }
     }
 
-    /**
-     * Constructs SpeechRecognizer based on the user settings.
-     * 1. If the user has selected no service then return K6nele(fast)
-     * 2. If the user has selected "default" then return the system default
-     * 3. Otherwise return the service that the user has selected
-     *
-     * @return SpeechRecognizer
-     */
-    private SpeechRecognizer createSpeechRecognizer(SharedPreferences prefs) {
-        String selectedRecognizerService =
-                Utils.getPrefString(prefs, getResources(), R.string.keyImeRecognitionService);
-
-        if (selectedRecognizerService == null) {
-            selectedRecognizerService = getResources().getString(R.string.defaultImeRecognizerService);
-        }
-
-        ComponentName recognizerComponentName = ComponentName.unflattenFromString(selectedRecognizerService);
-        if (recognizerComponentName == null) {
-            return SpeechRecognizer.createSpeechRecognizer(getContext());
-        }
-        return SpeechRecognizer.createSpeechRecognizer(getContext(), recognizerComponentName);
+    private void updateServiceLanguage(ServiceLanguageChooser slc) {
+        // Cancel a possibly running service
+        closeSession();
+        Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
+        mBComboSelector.setText(pair.second + " @ " + pair.first);
+        mRecognizer = slc.getSpeechRecognizer();
+        mRecognizer.setRecognitionListener(getRecognizerListener());
     }
 }

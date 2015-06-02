@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**
@@ -86,7 +87,7 @@ public class ChunkedWebRecSessionBuilder {
 		if (Log.DEBUG) Log.i(Utils.ppBundle(extras));
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		mDeviceId = Utils.getUniqueId(prefs);
+		mDeviceId = PreferenceUtils.getUniqueId(prefs);
 
 		PendingIntent pendingIntent = Utils.getPendingIntent(extras);
 

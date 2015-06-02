@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.Hypothesis;
 import ee.ioc.phon.netspeechapi.recsession.Linearization;
@@ -457,7 +458,7 @@ public class SpeechRecognitionService extends RecognitionService {
 				if (mRecorder != null) {
 					if (
 							mTimeToFinish < SystemClock.uptimeMillis() ||
-                            Utils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mRecorder.isPausing()
+                            PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mRecorder.isPausing()
 							) {
 						stopRecording(listener);
 					} else {

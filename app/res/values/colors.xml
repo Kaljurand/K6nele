@@ -30,7 +30,7 @@
 
 
     <!-- 1 = top,lighter; 2 = bottom,darker -->
-    <color name="transparent">#00000000</color>
+    <!-- <color name="transparent">#00000000</color> -->
     <color name="very_transparent">#11404040</color>
     <color name="transparent_blue">#990099cc</color>
     <color name="buttonNormal1">#ffcc00</color>

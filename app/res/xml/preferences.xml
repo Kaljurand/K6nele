@@ -36,18 +36,14 @@
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
             android:title="@string/titleImeHelpText" />
-        <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionService"
-            android:entries="@array/empty"
-            android:entryValues="@array/empty"
-            android:key="@string/keyImeRecognitionService"
-            android:title="@string/titleRecognitionService" />
-        <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionLanguage"
-            android:entries="@array/empty"
-            android:entryValues="@array/empty"
-            android:key="@string/keyImeRecognitionLanguage"
-            android:title="@string/titleRecognitionLanguage" />
+        <Preference
+            android:key="@string/keyImeCombo"
+            android:summary="@string/summaryImeCombo"
+            android:title="@string/titleCombo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI)
@@ -64,13 +60,12 @@
             android:title="@string/titleAudioCues" />
         // TODO: make the service of the main panel also user selectable
         <ListPreference
-            android:dialogTitle="@string/dialogTitleImeRecognitionLanguage"
             android:enabled="false"
             android:entries="@array/empty"
             android:entryValues="@array/empty"
-            android:key="@string/keyActivityRecognitionService"
+            android:key="@string/keyActivityCombo"
             android:summary="@string/labelRecognitionServiceHttpWithComment"
-            android:title="@string/titleRecognitionService" />
+            android:title="@string/titleCombo" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryApps">

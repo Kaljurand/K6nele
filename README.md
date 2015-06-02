@@ -25,10 +25,10 @@ Point to the SDK directory by setting the environment variable
 
 Then run
 
-	gradle build
-	gradle lint
-	gradle installRelease
-	gradle ...
+    gradle makeIcons
+    gradle build
+    gradle lint
+    gradle assembleRelease
 
 For the listing of more Gradle tasks, run:
 

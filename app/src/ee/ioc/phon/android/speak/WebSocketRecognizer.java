@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+
 public class WebSocketRecognizer extends RecognitionService {
 
     private static final String PROTOCOL = "";
@@ -325,7 +327,7 @@ public class WebSocketRecognizer extends RecognitionService {
     private String getWsServiceUrl(Intent intent) {
         String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
         if (url == null) {
-            return Utils.getPrefString(
+            return PreferenceUtils.getPrefString(
                     PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()),
                     getResources(),
                     R.string.keyServerWs,
