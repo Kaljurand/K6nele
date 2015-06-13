@@ -330,7 +330,7 @@ Apart from a few UI changes (e.g. some checkboxes are now initially on) all the 
   * tapping on an app icon now launches the app (previously one needed a long-tap to open the context menu which contained the launch option)
   * added: some grammar URLs
   * grammar-URL-based sorting now goes in the different direction
-  * now always building with !ProGuard resulting in a much smaller package size
+  * now always building with ProGuard resulting in a much smaller package size
 
 ### v0.7.15 (2011-08-04)
 

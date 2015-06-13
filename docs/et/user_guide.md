@@ -14,7 +14,7 @@ foneetika ja kõnetehnoloogia laboris (vt <http://phon.ioc.ee>) välja töötatu
 serveripõhist kõnetuvastustarkvara, mis on maailmas hetkel ainus, mis
 sisendina eesti keelt toetab.
 
-Kõnele kasutamiseks peab olema nutiseadmes internetiühendus sisselülitatud.
+Kõnele kasutamiseks peab olema nutiseadmes internetiühendus sisse lülitatud.
 Sõltuvalt mobiilioperaatori teenusepaketist võib interneti kasutamise hind
 sõltuda andmemahtudest. Seega tasub teada, et pooleminutise kõne
 transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
@@ -74,18 +74,18 @@ veebiotsing.
 ## Kõnele seadistamine
 
 Sama punase nupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
-Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates
+Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
 
-  - millist tuvastusserverit vaikimisi kasutatakse;
-  - kas lindistamine algab automaatselt või peab eelnevalt nupule vajutama;
-  - kas lindistamine lõpeb kui sisendkõnesse tekib paus, või alles siis, kui nupule on vajutatud;
-  - kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga.
+- milliseid tuvastusteenusi ja -keeli kasutatakse;
+- kas lindistamine algab automaatselt või peale nupule vajutamist;
+- kas lindistamine lõpeb kui sisendkõnesse tekib paus, või alles siis, kui nupule on vajutatud;
+- kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga.
 
 Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest ning
 seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-07-05.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-07-30.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-23-47-50.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-23-48-00.png">
 
 Samuti on võimalik vaadata, läbi milliste rakenduste on kõnetuvastust kasutatud ning
 omistada erinevatele rakendustele erinevaid grammatikaid (vt allpool).
@@ -118,10 +118,10 @@ Kõnele sisaldab endas sellist klaviatuurirakendust, kuid erinevalt traditsiooni
 tähtede ja numbritega klahvist on Kõnele klaviatuuril ainult üks nupp, mis
 võimaldab kõnesisendit.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-23-40.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-25-03.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-15-41.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-23-30.png">
 
-Kõnele klaviatuuri kasutamiseks tuleb see ennem sisselülitada Androidi süsteemses menüüs
+Kõnele klaviatuuri kasutamiseks tuleb see ennem sisse lülitada Androidi süsteemses menüüs
 `Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`, valides
 seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
 
@@ -147,7 +147,7 @@ Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
 kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
 Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
 (ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi).
-Muudes olukordades võib ümberlülituda teisele klaviatuurile.
+Muudes olukordades võib ümber lülitada teisele klaviatuurile.
 Android v5+ seadmetes on lihtne teksti kirjutamise ajal klaviatuure
 vahetada, sest seadme põhinuppude (_Back_, _Home_, _Recent apps_) kõrvale ilmub teksti kirjutamise
 ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Google Keyboard_ ja _Kõnele_ ise)
@@ -157,19 +157,25 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Google Keyboard_ klaviatuuril
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">
-&lt;->
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-45-08.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-34-17.png">
 
-Kõneklaviatuur kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid põhimõttelistelt
-saab seda kasutada kõikide seadmesse installeeritud kõnetuvastusteenustega
-(nt Kõnele grammatika-teadlik teenus ja Google'i teenus), muutes kõneklaviatuuri vastavat
-seadet Kõnele seadetes.
+Kõneklaviatuur kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
+lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
+keeli (nt Kõnele grammatika-teadlik teenus ja Google'i teenus),
+muutes kõneklaviatuuri vastavat seadet Kõnele seadetes.
+Kui valitud on mitu teenust/keelt, siis on klaviatuuril lisaks veel teenuse/keele vahetamise nupp:
+
+- lühike vajus lülitab järgmisele teenusele/keelele,
+- pikk vajutus kuvab kõik võimalikud teenused/keeled, võimaldades valikut muuta.
+
+(Vt näidet peatükis "Grammatika-põhine kõnetuvastus".)
+
 
 ## Kõnele kutsumine teistest rakendustest (koos kasutajaliidesega)
 
 Mõnes rakenduses (nt _Google Keep_) on mikrofoninupp, millele vajutades kutsutakse välja kõnetuvastusteenust
-pakkuv rakendus, koos oma kasutajaliidesega. Kõnele puhul on selleks ülal kirjeldatud
+pakkuv rakendus, koos oma kasutajaliidesega (nn _RecognizerIntent_).
+Kõnele puhul on selleks ülal kirjeldatud
 punase nupuga paneel. Teisest rakendusest välja kutsutuna
 ei edastata Kõnele tuvastustulemust veebibrauserile, vaid tagastab kutsuvale
 rakendusele (nt _Google Keep_), mis siis sellega edasi toimetab.
@@ -231,7 +237,31 @@ Iga grammatika on esitatud HTTP-veebiaadressina, mis tuleb eelnevalt serveris re
 Kõnele seadetes, menüüs "Grammatikad" on loend juba registreeritud grammatikatest.
 Grammatika omistamiseks rakendusele tuleb sellele "Rakendused" loendis pikalt vajutada (_long tap_).
 
-Grammatikate tegemise kohta on võimalik rohkem lugeda aadressil <http://kaljurand.github.io/Grammars/>
+Vaatleme näitena grammatika-põhist tuvastust rakenduse _Google Now_ otsingureal.
+See rakendus võimaldab loomulikus keeles antud sisendi põhjal teha erinevaid toimingud
+(äratuskella helisema panemine, aadressiotsing, mõõtühikute teisendamine, jms), kuid
+eesti keelt sisendina ei toeta, st eestikeelse sisendi puhul sooritatakse pelgalt veebiotsing.
+Sisendi saab anda otse kõne abil, kuid sel juhul oskab _Google Now_ kasutada ainult
+Google'i kõnetuvastajat. Õnneks on sisend võimalik ka klaviatuurilt ning kasutada võib ükskõik
+millist klaviatuuri, sh ka Kõnele kõneklaviatuuri.
+Järgmised pildid näitavad valuuta konverteerimist, kus sisend
+("kaksteist tuhat kolmsada nelikümmend viis norra krooni eurodes") jooksvalt _Google Now_-le
+arusaadavale kujule ("convert 12345 NOK to EUR") teisendatakse.
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-58-14.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-59-04.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-59-19.png">
+
+Selleks, et see nii töötaks peab kõneklaviatuuril olema sisse lülitatud "eesti keel/grammatikatoega".
+Samuti, peab _Google Now_ rakendusele ("com.google.android.googlequicksearchbox")
+omistama _Action_-grammatika. (Seda omistust kasutab ainult grammatikatoega teenus,
+muude teenuste puhul seda ignoreeritakse.)
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-22-04-05.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-22-04-18.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-49-06.png">
+
+Olemasolevate grammatikate kohta on võimalik lugeda aadressil <http://kaljurand.github.io/Grammars/>
 ning nende registreerimine ja kasutamine grammatikatoega serveris on kirjeldatud lehel
 <http://bark.phon.ioc.ee/speech-api/v1>.
 Vt ka rakendust [Arvutaja](http://kaljurand.github.io/Arvutaja/), mis kasutab Kõnelet grammatikatoega kõnetuvastajana.
@@ -248,29 +278,4 @@ Nendes olukordades väljastab Kõnele vastava veateate.
 Muud sorti vead palun raporteerida aadressil <http://github.com/Kaljurand/K6nele/issues>
 või kirjutades <mailto:kaljurand+k6nele@gmail.com>.
 
-<!--
-## Kasutusnäited
-
-TODO: Google Maps, Google Translate, Google Keep, WolframAlpha
-
-### Speech recognition using the Direction-grammar
-
-Some notes on how to use Kõnele to input Estonian destinations in the Google Maps Navigation app
-Grammar-based speech recognition is more accurate and guarantees that the result in an Estonian place name.
-
-The Direction-grammar (<http://kaljurand.github.io/Grammars/>) covers all Estonian town/village names but currently the street names of only Tallinn and Tartu.
-
-To use the Direction-grammar apply <http://kaljurand.github.com/Grammars/grammars/pgf/Direction.pgf> to the Google Maps app (in the Kõnele settings).
-Now, in the Google Maps' navigation mode you can say e.g. "akadeemia tee kakskümmend üks tallinn" and this is interpreted to be a Tallinn address.
-
-Note that if the device locale is not set to Estonian then you have to uncheck "Support device language" in the Kõnele settings. Otherwise the server will try to use the Direction-grammar in your device's language but will fail because this grammar is only available in Estonian.
-
-## Speech recognition without grammar
-
-Speech recognition without grammar uses a general large Estonian dictionary. As such, it contains some place names not in the Direction-grammar (e.g. those street names of Viljandi that are general Estonian words, e.g. "Lossi"), but might lack the names of smaller places. Also, the speech recognition accuracy is lower.
-
-Also, the output is not tagged with "Tallinn" or "Estonia". In order not to confuse Google, add an explicit "tallinn" or "eesti" to the input e.g.:
-
-  * räpina eesti
-  * pariisi eesti
--->
+Tagasiside sellele juhendile palun jätta allolevasse kasti.
