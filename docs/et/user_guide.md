@@ -157,7 +157,7 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Google Keyboard_ klaviatuuril
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-34-17.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
 
 Kõneklaviatuur kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
 lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
