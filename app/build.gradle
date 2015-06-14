@@ -19,12 +19,13 @@ android {
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
     // API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService
+    // API level 14: @android:style/Theme.DeviceDefault
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 22
-        versionCode 1201
-        versionName '1.2.01'
+        versionCode 1202
+        versionName '1.2.02'
     }
 
 
