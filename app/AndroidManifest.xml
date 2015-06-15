@@ -201,7 +201,7 @@
 
         <service
             android:name="VoiceImeService"
-            android:label="@string/labelApp"
+            android:label="@string/labelIme"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />

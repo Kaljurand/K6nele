@@ -262,5 +262,6 @@
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
     <string name="summaryImeCombo">Uuendan…</string>
     <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
+    <string name="labelIme">Kõnele kõneklaviatuur</string>
 
 </resources>

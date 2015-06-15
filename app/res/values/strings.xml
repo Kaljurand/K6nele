@@ -42,6 +42,7 @@
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
 
+    <string name="labelIme">Kõnele speech keyboard</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
     <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammar support). Cannot be changed in this Kõnele version.</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
