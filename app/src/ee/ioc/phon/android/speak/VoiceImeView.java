@@ -173,7 +173,7 @@ public class VoiceImeView extends LinearLayout {
     public void start() {
         if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
             // TODO: fix this
-            //mRecognizer.startListening(mIntent);
+            mRecognizer.startListening(mSlc.getIntent());
         }
     }
 
@@ -334,7 +334,8 @@ public class VoiceImeView extends LinearLayout {
             // Do not clear a possible error message
             //setText(mTvMessage, "");
         } else {
-            setText(mTvMessage, message);
+            String m = "[ " + getResources().getString(message) + " ]";
+            setText(mTvMessage, m);
         }
         setVisibility(mBImeKeyboard, View.VISIBLE);
         setVisibility(mBImeGo, View.VISIBLE);

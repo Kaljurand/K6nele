@@ -72,7 +72,7 @@
     <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>
-    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server</string>
+    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server.</string>
     <string name="titleScreenDemos">Demos</string>
     <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
     <string name="titleAutoStart">Auto start</string>
@@ -166,15 +166,15 @@ More grammars are available at
     <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
 
     // SpeechRecognizer error messages (9) shown in the IME
-    <string name="errorImeResultAudioError">ERROR: audio recording failed</string>
-    <string name="errorImeResultNetworkError">ERROR: no network connection</string>
-    <string name="errorImeResultNetworkTimeoutError">ERROR: network connection timeout</string>
-    <string name="errorImeResultRecognizerBusy">ERROR: no recognizer slots available</string>
-    <string name="errorImeResultSpeechTimeout">ERROR: no speech input detected</string>
-    <string name="errorImeResultNoMatch">ERROR: no transcription found</string>
-    <string name="errorImeResultInsufficientPermissions">ERROR: insufficient permissions</string>
-    <string name="errorImeResultClientError">ERROR: general app error</string>
-    <string name="errorImeResultServerError">ERROR: recognizer server error</string>
+    <string name="errorImeResultAudioError">audio recording failed</string>
+    <string name="errorImeResultNetworkError">no network connection</string>
+    <string name="errorImeResultNetworkTimeoutError">network connection timeout</string>
+    <string name="errorImeResultRecognizerBusy">no recognizer slots available</string>
+    <string name="errorImeResultSpeechTimeout">no speech input detected</string>
+    <string name="errorImeResultNoMatch">no transcription found</string>
+    <string name="errorImeResultInsufficientPermissions">insufficient permissions</string>
+    <string name="errorImeResultClientError">general app error</string>
+    <string name="errorImeResultServerError">recognizer server error</string>
 
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
