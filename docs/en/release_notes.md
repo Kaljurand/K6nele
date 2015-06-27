@@ -5,26 +5,31 @@ title: Release notes
 
 (For more detailed notes see <https://github.com/Kaljurand/K6nele/commits/master>)
 
-There are currently 3 branches:
+Kõnele versions and their required Android versions:
 
-  * v0.7.xx (not maintained):
-    * requires Android 1.6+
-    * launcher icon opens the settings
-  * v0.8.xx (not maintained):
-    * requires Android 2.2+
-    * can do everything that v0.7.xx can, but additionally implements the RecognitionService-interface
-    * settings are part of the global settings
-    * launcher submits the transcription to the standard websearch
-    * starting with v0.8.50 implements the IME interface
-  * v1.1.xx - v1.2.xx
-    * requires Android 4.1+
-    * Android 4.1+ style UI
+  - v1.1.xx - v1.2.xx
+    - requires Android 4.0+
+    - extension of v0.8.xx, but with Android 4.0+ style UI
+  - v0.8.xx (not maintained)
+    - requires Android 2.2+
+    - extension of v0.7.xx, but additionally implements the RecognitionService-interface
+    - settings are part of the global settings
+    - launcher submits the transcription to the standard websearch
+    - starting with v0.8.50 implements the IME interface
+  - v0.7.xx (not maintained)
+    - requires Android 1.6+
+    - launcher icon opens the settings
 
 ----
 
 (Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>)
 
 ## v1.1 - v1.2
+
+### v1.2.04 (2015-06-27) (released on Google Play: 2015-06-18)
+
+- slightly smaller/nicer microphone button on the IME
+- required API level lowered from 16 to 14 (ICS)
 
 ### v1.2.00 (2015-06-03) (released on Google Play: 2015-06-03)
 
