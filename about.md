@@ -58,12 +58,14 @@ See more in the [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.h
 
 ## Availability
 
-Kõnele is open-source software. Visit the [Kõnele GitHub page][k6nele-github] for the source code,
-bug reporting, etc.
+Kõnele is free and open source software.
+Visit the [Kõnele GitHub page][k6nele-github] for the source code, bug reporting, etc.
 The release information and downloadable APK-packages are on the [Releases page][k6nele-releases].
 
 The latest stable version is available in the [Google Play Store][k6nele-play].
 The latest beta version is available in the Google Play Store after joining [this Google+ community][k6nele-beta] and clicking on "Signup for Kõnele".
+
+Kõnele is also listed on [F-Droid][k6nele-fdroid].
 
 ![](http://www.android.com/images/brand/android_app_on_play_logo_small.png)
 
@@ -81,3 +83,4 @@ See more [here](http://plus.google.com/+KaarelKaljurand/posts/QMArF5Yvegs).
 [k6nele-github]:        http://github.com/Kaljurand/K6nele
 [k6nele-releases]:      http://github.com/Kaljurand/K6nele/releases
 [k6nele-releases-old]:  http://code.google.com/p/recognizer-intent/downloads/list
+[k6nele-fdroid]:        https://f-droid.org/repository/browse/?fdid=ee.ioc.phon.android.speak
