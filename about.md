@@ -25,10 +25,10 @@ currently available on Android.
 <table>
 <tr>
 <td class="logo">
-<img class="logo" title="Screenshot: address search using Kõnele" src="{{ site.baseurl }}/images/en/Screenshot_2014-12-23-12-34-27_framed.png">
+<img class="logo" title="Screenshot: address search using Kõnele" src="{{ site.baseurl }}/images/en/screenshot_portrait_framed_20150712_resize20.png">
 </td>
 <td class="logo">
-<img class="logo" title="Screenshot: composing an email with Kõnele" src="{{ site.baseurl }}/images/en/Screenshot_2014-12-23-12-30-19_framed.png">
+<img class="logo" title="Screenshot: composing an email with Kõnele" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20150712_resize20.png">
 </td>
 </tr>
 </table>
