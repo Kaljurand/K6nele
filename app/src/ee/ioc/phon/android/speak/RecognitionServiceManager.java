@@ -109,7 +109,6 @@ public class RecognitionServiceManager {
                 for (CharSequence lang : allLangs) {
                     String combo = service + ";" + lang;
                     if (!mCombosExcluded.contains(combo)) {
-                        String langPp = Utils.makeLangLabel(lang.toString());
                         Log.i(combos.size() + ") " + combo);
                         combos.add(combo);
                         if (mInitiallySelectedCombos.contains(combo)) {
