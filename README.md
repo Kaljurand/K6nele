@@ -2,10 +2,10 @@ Kõnele
 ======
 
 Kõnele is an Android app that offers speech-to-text services to other apps.
-It contains the following main components:
+Its main components are:
 
   - RecognizerIntent activity
-  - Voice keyboard that implements the input method editor (IME) API
+  - speech keyboard that implements the input method editor (IME) API
   - SpeechRecognizer implementation that uses <https://github.com/alumae/kaldi-gstreamer-server>
   - SpeechRecognizer implementation that uses <https://github.com/alumae/ruby-pocketsphinx-server>
 
@@ -15,38 +15,41 @@ Android platform, as well as grammar-based speech recognition for voice command 
 For more information see <http://kaljurand.github.io/K6nele/>.
 
 
-Compilation
------------
+Compiling
+---------
 
 Point to the SDK directory by setting the environment variable
 `ANDROID_HOME`, e.g.
 
-	ANDROID_HOME=${HOME}/myapps/android-sdk/
+    ANDROID_HOME=${HOME}/myapps/android-sdk/
 
 Then run
 
-    gradle makeIcons
-    gradle build
-    gradle lint
     gradle assembleRelease
 
 For the listing of more Gradle tasks, run:
 
-	gradle tasks
+    gradle tasks
 
 
-If you have access to the release keystore then
+If you have access to a release keystore then
 
   - point to its location by setting the environment variable `KEYSTORE`
   - set `KEY_ALIAS` to the key alias
   - create the file `gradle.properties` containing the lines:
 
-		storePassword=<password1>
-		keyPassword=<password2>
+        storePassword=<password1>
+        keyPassword=<password2>
 
 
-Tags
-----
+Developing
+----------
+
+Generating PNG launcher icons and diagrams:
+
+    gradle -b other.gradle makeIcons
+    gradle -b other.gradle makeDiagrams
+
 
 Version tags are set by e.g.
 
