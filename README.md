@@ -20,23 +20,26 @@ For more information see <http://kaljurand.github.io/K6nele/>.
 Compiling
 ---------
 
-Point to the SDK directory by setting the environment variable
+Clone the source code including the net-speech-api submodule:
+
+    git clone --recursive git@github.com:Kaljurand/K6nele.git
+
+
+Point to the Android SDK directory by setting the environment variable
 `ANDROID_HOME`, e.g.
 
     ANDROID_HOME=${HOME}/myapps/android-sdk/
 
-Then run
 
-    # Building the net-speech-api jar (requires Maven)
+Build the net-speech-api jar (requires Maven)
+
     gradle -b other.gradle makeNetSpeechApi
     # alternatively: cd net-speech-api; mvn package -DskipTests; cd ..
 
-    # Building the Kõnele app
+
+Build the Kõnele app
+
     gradle assembleRelease
-
-For the listing of more Gradle tasks, run:
-
-    gradle tasks
 
 
 If you have access to a release keystore then
@@ -47,6 +50,9 @@ If you have access to a release keystore then
 
         storePassword=<password1>
         keyPassword=<password2>
+
+
+The (signed and unsigned) APKs will be generated into `app/build/outputs/apk/`.
 
 
 Developing
