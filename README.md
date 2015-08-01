@@ -12,6 +12,8 @@ Its main components are:
 The main goals of this project is to offer support for Estonian speech recognition on the
 Android platform, as well as grammar-based speech recognition for voice command applications.
 
+How to add support for other languages than Estonian is detailed in https://github.com/Kaljurand/K6nele/issues/38
+
 For more information see <http://kaljurand.github.io/K6nele/>.
 
 
