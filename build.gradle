@@ -9,6 +9,9 @@ buildscript {
 
 allprojects {
     repositories {
+        flatDir {
+            dirs "$rootProject.projectDir/net-speech-api/target/"
+        }
         mavenCentral()
     }
 }

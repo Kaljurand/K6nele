@@ -27,6 +27,11 @@ Point to the SDK directory by setting the environment variable
 
 Then run
 
+    # Building the net-speech-api jar (requires Maven)
+    gradle -b other.gradle makeNetSpeechApi
+    # alternatively: cd net-speech-api; mvn package -DskipTests; cd ..
+
+    # Building the Kõnele app
     gradle assembleRelease
 
 For the listing of more Gradle tasks, run:
