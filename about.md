@@ -62,12 +62,14 @@ Kõnele is free and open source software.
 Visit the [Kõnele GitHub page][k6nele-github] for the source code, bug reporting, etc.
 The release information and downloadable APK-packages are on the [Releases page][k6nele-releases].
 
-The latest stable version is available in the [Google Play Store][k6nele-play].
-The latest beta version is available in the Google Play Store after joining [this Google+ community][k6nele-beta] and clicking on "Signup for Kõnele".
+The latest stable version is available in the [Google Play Store][k6nele-play]
+and on [F-Droid][k6nele-fdroid].
+The latest beta version is available in the Google Play Store after joining
+[the beta program][k6nele-beta-link]. (Alternatively, you can also join
+[this Google+ community][k6nele-beta] and click on "Signup for Kõnele".)
 
-Kõnele is also listed on [F-Droid][k6nele-fdroid].
-
-![](http://www.android.com/images/brand/android_app_on_play_logo_small.png)
+![](https://developer.android.com/images/brand/en_app_rgb_wo_60.png)
+![]({{ site.baseurl }}/images/en/available-on-fdroid.png)
 
 ## Other
 
@@ -80,6 +82,7 @@ See more [here](http://plus.google.com/+KaarelKaljurand/posts/QMArF5Yvegs).
 
 [k6nele-play]:          http://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak
 [k6nele-beta]:          http://plus.google.com/communities/116163027457318257829
+[k6nele-beta-link]:     https://play.google.com/apps/testing/ee.ioc.phon.android.speak
 [k6nele-github]:        http://github.com/Kaljurand/K6nele
 [k6nele-releases]:      http://github.com/Kaljurand/K6nele/releases
 [k6nele-releases-old]:  http://code.google.com/p/recognizer-intent/downloads/list
