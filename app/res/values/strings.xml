@@ -49,6 +49,7 @@
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
+    <string name="labelActivitySpeechAction">Kõnele speech action</string>
     <string name="labelActivityAbout">About Kõnele</string>
     <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>

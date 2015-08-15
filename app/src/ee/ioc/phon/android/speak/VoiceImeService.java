@@ -15,6 +15,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,13 +124,13 @@ public class VoiceImeService extends InputMethodService {
             TextUpdater mTextUpdater = new TextUpdater();
 
             @Override
-            public void onPartialResult(String text) {
-                mTextUpdater.commitPartialResult(getCurrentInputConnection(), text);
+            public void onPartialResult(ArrayList<String> results) {
+                mTextUpdater.commitPartialResult(getCurrentInputConnection(), selectFirstResult(results));
             }
 
             @Override
-            public void onFinalResult(String text) {
-                mTextUpdater.commitFinalResult(getCurrentInputConnection(), text);
+            public void onFinalResult(ArrayList<String> results) {
+                mTextUpdater.commitFinalResult(getCurrentInputConnection(), selectFirstResult(results));
             }
 
             @Override
@@ -388,5 +389,12 @@ public class VoiceImeService extends InputMethodService {
             }
         }
         return a.substring(0, minLength);
+    }
+
+    private static String selectFirstResult(ArrayList<String> results) {
+        if (results == null || results.size() < 1) {
+            return "";
+        }
+        return results.get(0);
     }
 }

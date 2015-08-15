@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:orientation="vertical"
+    android:paddingBottom="0dip"
+    android:paddingLeft="0dip"
+    android:paddingRight="0dip"
+    android:paddingTop="0dip"
+    android:scaleType="fitXY">
+
+    <ImageButton
+        android:id="@+id/bSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/button_go"
+        android:contentDescription="@string/cdSettings"
+        android:src="@drawable/ic_menu_preferences" />
+
+    <ee.ioc.phon.android.speak.VoiceImeView
+        android:id="@+id/vVoiceImeView"
+        android:layout_width="250dip"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:keepScreenOn="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/layoutMargin4dp"
+            android:ellipsize="start"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/testComboLabel"
+            android:textColor="@color/grey300"
+            android:textSize="@dimen/textSize2" />
+
+        <ee.ioc.phon.android.speak.MicButton
+            android:id="@+id/bImeStartStop"
+            android:layout_width="@dimen/layoutHeightButtonMicrophone"
+            android:layout_height="@dimen/layoutHeightButtonMicrophone"
+            android:layout_gravity="center"
+            android:background="@drawable/button_mic"
+            android:contentDescription="@string/cdMicrophone"
+            android:gravity="center"
+            android:src="@drawable/ic_voice_search_api_holo_light" />
+
+        <TextView
+            android:id="@+id/tvInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/layoutMargin4dp"
+            android:gravity="center"
+            android:text="@string/buttonImeSpeak"
+            android:textColor="@color/grey200"
+            android:textSize="@dimen/textSize3" />
+
+        <Button
+            android:id="@+id/tvComboSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/layoutMargin1"
+            android:background="@drawable/button_combo"
+            android:clickable="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:minHeight="@dimen/layoutMargin3"
+            android:minWidth="@dimen/layoutMargin3"
+            android:singleLine="true"
+            android:text="@string/testComboLabel"
+            android:textColor="@color/grey200"
+            android:textSize="@dimen/textSize10sp" />
+
+    </ee.ioc.phon.android.speak.VoiceImeView>
+
+</LinearLayout>

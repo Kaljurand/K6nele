@@ -22,10 +22,10 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class VoiceImeView extends LinearLayout {
 
-    interface VoiceImeViewListener {
-        void onPartialResult(String text);
+    public interface VoiceImeViewListener {
+        void onPartialResult(ArrayList<String> text);
 
-        void onFinalResult(String text);
+        void onFinalResult(ArrayList<String> text);
 
         void onSwitchIme(boolean isAskUser);
 
@@ -110,13 +110,6 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
-        mBImeGo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onGo();
-            }
-        });
-
         mBComboSelector.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,20 +129,29 @@ public class VoiceImeView extends LinearLayout {
             }
         });
 
-        mBImeKeyboard.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onSwitchIme(false);
-            }
-        });
+        if (mBImeKeyboard != null && mBImeGo != null) {
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onSwitchIme(false);
+                }
+            });
 
-        mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mListener.onSwitchIme(true);
-                return true;
-            }
-        });
+            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onSwitchIme(true);
+                    return true;
+                }
+            });
+
+            mBImeGo.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onGo();
+                }
+            });
+        }
 
 
         setOnTouchListener(new OnSwipeTouchListener(getContext()) {
@@ -193,9 +195,11 @@ public class VoiceImeView extends LinearLayout {
                 setGuiState(Constants.State.LISTENING);
                 setText(mTvInstruction, R.string.buttonImeStop);
                 setText(mTvMessage, "");
-                setVisibility(mBImeKeyboard, View.INVISIBLE);
-                setVisibility(mBImeGo, View.INVISIBLE);
                 setVisibility(mBComboSelector, View.INVISIBLE);
+                if (mBImeKeyboard != null && mBImeGo != null) {
+                    setVisibility(mBImeKeyboard, View.INVISIBLE);
+                    setVisibility(mBImeGo, View.INVISIBLE);
+                }
             }
 
             @Override
@@ -266,7 +270,7 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onPartialResults(final Bundle bundle) {
                 Log.i("onPartialResults: state = " + mState);
-                String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+                ArrayList<String> text = selectResults(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
                 if (text == null) {
                     // This shouldn't really happen
                 } else {
@@ -289,11 +293,12 @@ public class VoiceImeView extends LinearLayout {
             @Override
             public void onResults(final Bundle bundle) {
                 Log.i("onResults: state = " + mState);
-                String text = selectSingleResult(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+                ArrayList<String> text = selectResults(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
                 if (text == null) {
                     // If we got empty results then assume that the session ended,
                     // e.g. cancel was called.
-                    mListener.onFinalResult("");
+                    // TODO: return null?
+                    mListener.onFinalResult(new ArrayList<String>());
                 } else {
                     mListener.onFinalResult(text);
                     setText(mTvMessage, lastChars(text, true));
@@ -314,7 +319,14 @@ public class VoiceImeView extends LinearLayout {
         };
     }
 
-    private static String selectSingleResult(ArrayList<String> results) {
+    private static ArrayList<String> selectResults(ArrayList<String> results) {
+        if (results == null || results.size() < 1) {
+            return null;
+        }
+        return results;
+    }
+
+    private static String selectFirstResult(ArrayList<String> results) {
         if (results == null || results.size() < 1) {
             return null;
         }
@@ -337,12 +349,16 @@ public class VoiceImeView extends LinearLayout {
             String m = "[ " + getResources().getString(message) + " ]";
             setText(mTvMessage, m);
         }
-        setVisibility(mBImeKeyboard, View.VISIBLE);
-        setVisibility(mBImeGo, View.VISIBLE);
         setVisibility(mBComboSelector, View.VISIBLE);
+
+        if (mBImeKeyboard != null && mBImeGo != null) {
+            setVisibility(mBImeKeyboard, View.VISIBLE);
+            setVisibility(mBImeGo, View.VISIBLE);
+        }
     }
 
-    private static String lastChars(String str, boolean isFinal) {
+    private static String lastChars(ArrayList<String> results, boolean isFinal) {
+        String str = selectFirstResult(results);
         if (str == null) {
             str = "";
         } else {

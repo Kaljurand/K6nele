@@ -30,9 +30,36 @@
         <!-- This activity is exported, i.e. any app can launch K6nele. -->
         <!-- TODO: launching worked also with exported=true, although didn't try explicit packagename-based launching. -->
         <activity
-            android:name=".RecognizerIntentActivity"
+            android:name=".activity.RecognizerIntentActivity"
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
+            android:launchMode="standard"
+            android:theme="@style/Theme.K6nele.Dialog">
+            <intent-filter>
+                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.speech.action.WEB_SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.speech.DETAILS"
+                android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
+        </activity>
+
+        <activity
+            android:name=".activity.SpeechActionActivity"
+            android:exported="true"
+            android:label="@string/labelActivitySpeechAction"
             android:launchMode="standard"
             android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
