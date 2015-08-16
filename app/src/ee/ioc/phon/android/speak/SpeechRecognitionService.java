@@ -47,6 +47,8 @@ import android.speech.SpeechRecognizer;
 import android.speech.RecognitionService;
 
 /**
+ * Implements RecognitionService, connects to the server via HTTP.
+ *
  * TODO: send correct waveform data
  *
  * @author Kaarel Kaljurand
@@ -340,7 +342,7 @@ public class SpeechRecognitionService extends RecognitionService {
 	 * @param counts number of linearizations for each hyphothesis (needed to interpret {@code everything})
 	 * @param matches recognition results (just linearizations)
 	 * @param listener listener that receives the matches
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
 	private void returnOrForwardMatches(ArrayList<String> everything, ArrayList<Integer> counts, ArrayList<String> matches, Callback listener) throws RemoteException {
 		PendingIntent pendingIntent = Utils.getPendingIntent(mExtras);

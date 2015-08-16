@@ -3,6 +3,7 @@ package ee.ioc.phon.android.speak;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
@@ -56,7 +57,7 @@ public class VoiceImeView extends LinearLayout {
     }
 
 
-    public void setListener(EditorInfo attribute, final VoiceImeViewListener listener) {
+    public void setListener(EditorInfo attribute, int keys, String packageName, final VoiceImeViewListener listener) {
         mListener = listener;
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
@@ -68,7 +69,7 @@ public class VoiceImeView extends LinearLayout {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
-        mSlc = new ServiceLanguageChooser(getContext(), prefs, attribute);
+        mSlc = new ServiceLanguageChooser(getContext(), prefs, attribute, keys, packageName);
         if (mSlc.size() > 1) {
             mBComboSelector.setVisibility(View.VISIBLE);
         } else {
@@ -79,9 +80,16 @@ public class VoiceImeView extends LinearLayout {
         setText(mTvMessage, "");
         setGuiInitState(0);
 
-        mBImeStartStop.setAudioCuesEnabled(PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues));
+        TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
+        int keyAudioCues = keysAsTypedArray.getResourceId(6, 0);
+        int defaultAudioCues = keysAsTypedArray.getResourceId(7, 0);
+        int keyHelpText = keysAsTypedArray.getResourceId(8, 0);
+        int defaultHelpText = keysAsTypedArray.getResourceId(9, 0);
+        keysAsTypedArray.recycle();
 
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeHelpText, R.bool.defaultImeHelpText)) {
+        mBImeStartStop.setAudioCuesEnabled(PreferenceUtils.getPrefBoolean(prefs, getResources(), keyAudioCues, defaultAudioCues));
+
+        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), keyHelpText, defaultHelpText)) {
             mTvInstruction.setVisibility(View.VISIBLE);
         } else {
             mTvInstruction.setVisibility(View.GONE);

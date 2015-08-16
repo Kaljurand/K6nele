@@ -453,7 +453,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         // includes: bytes, chronometer, chunks
         mLlProgress.setVisibility(View.INVISIBLE);
         mTvChunks.setText("");
-        setTvPrompt();
+        setTvPrompt(mTvPrompt);
         if (mStartRecording) {
             mBStartStop.setVisibility(View.GONE);
             mIvVolume.setVisibility(View.VISIBLE);
@@ -481,7 +481,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         mIvWaveform.setVisibility(View.GONE);
         // includes: bytes, chronometer, chunks
         mLlProgress.setVisibility(View.GONE);
-        setTvPrompt();
+        setTvPrompt(mTvPrompt);
         mBStartStop.setText(getString(R.string.buttonSpeak));
         mBStartStop.setVisibility(View.VISIBLE);
         mLlError.setVisibility(View.VISIBLE);
@@ -493,7 +493,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         mChronometer.setBase(mService.getStartTime());
         startChronometer();
         startAllTasks();
-        setTvPrompt();
+        setTvPrompt(mTvPrompt);
         mLlProgress.setVisibility(View.VISIBLE);
         mLlError.setVisibility(View.GONE);
         setRecorderStyle(mRes.getColor(R.color.red));
@@ -531,25 +531,6 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         int waveformHeight = (int) (waveformWidth / 2.5);
         mIvWaveform.setVisibility(View.VISIBLE);
         mIvWaveform.setImageBitmap(Utils.drawWaveform(bytes, waveformWidth, waveformHeight, 0, bytes.length));
-    }
-
-
-    private void setTvPrompt() {
-        String prompt = getPrompt();
-        if (prompt == null || prompt.length() == 0) {
-            mTvPrompt.setVisibility(View.INVISIBLE);
-        } else {
-            mTvPrompt.setText(prompt);
-            mTvPrompt.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private String getPrompt() {
-        String prompt = getExtras().getString(RecognizerIntent.EXTRA_PROMPT);
-        if (prompt == null && getExtraResultsPendingIntent() == null && getCallingActivity() == null) {
-            return getString(R.string.promptSearch);
-        }
-        return prompt;
     }
 
 

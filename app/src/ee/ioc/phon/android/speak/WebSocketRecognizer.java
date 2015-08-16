@@ -16,24 +16,24 @@ import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speak.utils.QueryUtils;
 
+/**
+ * Implements RecognitionService, connects to the server via WebSocket.
+ */
 public class WebSocketRecognizer extends RecognitionService {
 
     private static final String PROTOCOL = "";
 
     private static final String WS_ARGS =
-            "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
+            "speech?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     private static final int MSG_RESULT = 1;
     private static final int MSG_ERROR = 2;
@@ -76,7 +76,10 @@ public class WebSocketRecognizer extends RecognitionService {
             onReadyForSpeech(new Bundle());
             startRecord();
             onBeginningOfSpeech();
-            startSocket(getWsServiceUrl(recognizerIntent) + "speech" + WS_ARGS + getQueryParams(recognizerIntent));
+            ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
+            startSocket(getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder));
+        } catch (MalformedURLException e) {
+            onError(SpeechRecognizer.ERROR_CLIENT);
         } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_AUDIO);
         }
@@ -336,71 +339,12 @@ public class WebSocketRecognizer extends RecognitionService {
         return url;
     }
 
-    /**
-     * Extracts the editor info, and uses
-     * ChunkedWebRecSessionBuilder to extract some additional extras.
-     * TODO: unify this better
-     */
-    private String getQueryParams(Intent intent) {
-        List<BasicNameValuePair> list = new ArrayList<>();
-        flattenBundle("editorInfo_", list, intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO));
-
-        try {
-            ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, intent.getExtras(), null);
-            if (Log.DEBUG) Log.i(builder.toStringArrayList());
-            // TODO: review these parameter names
-            listAdd(list, "lang", builder.getLang());
-            listAdd(list, "lm", toString(builder.getGrammarUrl()));
-            listAdd(list, "output-lang", builder.getGrammarTargetLang());
-            listAdd(list, "user-agent", builder.getUserAgentComment());
-            listAdd(list, "calling-package", builder.getCaller());
-            listAdd(list, "user-id", builder.getDeviceId());
-            listAdd(list, "partial", "" + builder.isPartialResults());
-        } catch (MalformedURLException e) {
-        }
-
-        if (list.size() == 0) {
-            return "";
-        }
-        return "&" + URLEncodedUtils.format(list, "utf-8");
-    }
-
-
-    private static boolean listAdd(List<BasicNameValuePair> list, String key, String value) {
-        if (value == null || value.length() == 0) {
-            return false;
-        }
-        return list.add(new BasicNameValuePair(key, value));
-    }
-
-    private static void flattenBundle(String prefix, List<BasicNameValuePair> list, Bundle bundle) {
-        if (bundle != null) {
-            for (String key : bundle.keySet()) {
-                Object value = bundle.get(key);
-                if (value != null) {
-                    if (value instanceof Bundle) {
-                        flattenBundle(prefix + key + "_", list, (Bundle) value);
-                    } else {
-                        list.add(new BasicNameValuePair(prefix + key, toString(value)));
-                    }
-                }
-            }
-        }
-    }
 
     private static Bundle toBundle(ArrayList<String> hypotheses, boolean isFinal) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
         bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
         return bundle;
-    }
-
-    // TODO: replace by a built-in
-    private static String toString(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return obj.toString();
     }
 
 

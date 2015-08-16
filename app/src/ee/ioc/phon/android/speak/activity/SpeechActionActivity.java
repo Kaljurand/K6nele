@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         super.onCreate(savedInstanceState);
         setUpActivity(R.layout.activity_recognizer);
         setUpExtras();
+        setTvPrompt((TextView) findViewById(R.id.tvPrompt));
     }
 
     @Override
@@ -42,7 +44,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
         VoiceImeView view = (VoiceImeView) findViewById(R.id.vVoiceImeView);
         EditorInfo ei = new EditorInfo();
-        view.setListener(ei, getVoiceImeViewListener());
+        view.setListener(ei, R.array.keysActivity, getCallingPackage(), getVoiceImeViewListener());
 
         // Launch recognition immediately (if set so)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

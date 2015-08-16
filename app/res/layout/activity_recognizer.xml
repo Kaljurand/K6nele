@@ -10,14 +10,39 @@
     android:paddingTop="0dip"
     android:scaleType="fitXY">
 
-    <ImageButton
-        android:id="@+id/bSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/button_go"
-        android:contentDescription="@string/cdSettings"
-        android:src="@drawable/ic_menu_preferences" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/layoutMargin4dp"
+            android:layout_toLeftOf="@+id/bSettings"
+            android:layout_toStartOf="@+id/bSettings"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="2"
+            android:text="@string/testComboLabel"
+            android:textColor="@color/grey200"
+            android:textSize="@dimen/textSize2" />
+
+        <ImageButton
+            android:id="@+id/bSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_go"
+            android:contentDescription="@string/cdSettings"
+            android:src="@drawable/ic_menu_preferences" />
+    </RelativeLayout>
 
     <ee.ioc.phon.android.speak.VoiceImeView
         android:id="@+id/vVoiceImeView"

@@ -186,59 +186,6 @@ public class Utils {
 	}
 
 
-	private static Bitmap bytesToBitmap(byte[] byteBuffer, int w, int h, int startPosition, int endPosition) {
-		final ShortBuffer waveBuffer = ByteBuffer.wrap(byteBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
-		final Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-		final Canvas c = new Canvas(b);
-		final Paint paint = new Paint();
-		paint.setColor(0xFFFFFFFF); // 0xAARRGGBB
-		paint.setAntiAlias(true);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setAlpha(80);
-
-		final PathEffect effect = new CornerPathEffect(3);
-		paint.setPathEffect(effect);
-
-		final int numSamples = waveBuffer.remaining();
-		int endIndex;
-		if (endPosition == 0) {
-			endIndex = numSamples;
-		} else {
-			endIndex = Math.min(endPosition, numSamples);
-		}
-
-		int startIndex = startPosition - 2000; // include 250ms before speech
-		if (startIndex < 0) {
-			startIndex = 0;
-		}
-		final int numSamplePerWave = 200;  // 8KHz 25ms = 200 samples
-		final float scale = 10.0f / 65536.0f;
-
-		final int count = (endIndex - startIndex) / numSamplePerWave;
-		final float deltaX = 1.0f * w / count;
-		int yMax = h / 2;
-		Path path = new Path();
-		c.translate(0, yMax);
-		float x = 0;
-		path.moveTo(x, 0);
-		for (int i = 0; i < count; i++) {
-			final int avabs = getAverageAbs(waveBuffer, startIndex, i, numSamplePerWave);
-			int sign = ((i & 01) == 0) ? -1 : 1;
-			final float y = Math.min(yMax, avabs * h * scale) * sign;
-			path.lineTo(x, y);
-			x += deltaX;
-			path.lineTo(x, y);
-		}
-		if (deltaX > 4) {
-			paint.setStrokeWidth(2);
-		} else {
-			paint.setStrokeWidth(Math.max(0, (int) (deltaX - .05)));
-		}
-		c.drawPath(path, paint);
-		return b;
-	}
-
-
 	/**
 	 * @return an average abs of the specified buffer.
 	 */

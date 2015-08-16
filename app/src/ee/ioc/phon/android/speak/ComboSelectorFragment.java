@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak;
 
 import android.app.ListFragment;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
@@ -18,8 +19,19 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class ComboSelectorFragment extends ListFragment {
 
+    int mKey = R.string.keyImeCombo;
+    int mDefaultCombos = R.array.defaultImeCombos;
+    int mDefaultCombosExcluded = R.array.defaultImeCombosExcluded;
+
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        // TODO: we currently only check if the arguments are non-empty
+        Bundle args = getArguments();
+        if (args != null && !args.isEmpty()) {
+            mKey = R.string.keyCombo;
+            mDefaultCombos = R.array.defaultCombos;
+            mDefaultCombosExcluded = R.array.defaultCombosExcluded;
+        }
         initModel();
     }
 
@@ -33,13 +45,19 @@ public class ComboSelectorFragment extends ListFragment {
                 selected.add(combo.getId());
             }
         }
-        PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), R.string.keyImeCombo, selected);
+        PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), mKey, selected);
     }
 
     private void initModel() {
+        Resources res = getResources();
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Set<String> combos = PreferenceUtils.getPrefStringSet(mPrefs, getResources(), R.string.keyImeCombo);
-        RecognitionServiceManager mngr = new RecognitionServiceManager(getActivity(), combos);
+        Set<String> combos = PreferenceUtils.getPrefStringSet(mPrefs, res, mKey);
+        if (combos == null) {
+            combos = PreferenceUtils.getStringSetFromStringArray(res, mDefaultCombos);
+        }
+        RecognitionServiceManager mngr = new RecognitionServiceManager();
+        mngr.setInitiallySelectedCombos(combos);
+        mngr.setCombosExcluded(PreferenceUtils.getStringSetFromStringArray(res, mDefaultCombosExcluded));
         mngr.populateCombos(getActivity(), new RecognitionServiceManager.Listener() {
 
             @Override

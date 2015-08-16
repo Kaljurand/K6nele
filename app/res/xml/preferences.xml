@@ -46,7 +46,7 @@
         </Preference>
     </PreferenceCategory>
 
-    // Voice search activity (TODO: unify terminology: dialog, panel, UI)
+    // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)
     <PreferenceCategory android:title="@string/titleCategoryUi">
         <CheckBoxPreference
             android:defaultValue="@bool/defaultAutoStart"
@@ -58,14 +58,24 @@
             android:key="@string/keyAudioCues"
             android:summary="@string/summaryAudioCues"
             android:title="@string/titleAudioCues" />
-        // TODO: make the service of the main panel also user selectable
-        <ListPreference
-            android:enabled="false"
-            android:entries="@array/empty"
-            android:entryValues="@array/empty"
-            android:key="@string/keyActivityCombo"
-            android:summary="@string/labelRecognitionServiceHttpWithComment"
-            android:title="@string/titleCombo" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultHelpText"
+            android:key="@string/keyHelpText"
+            android:summary="@string/summaryHelpText"
+            android:title="@string/titleHelpText" />
+        <Preference
+            android:key="@string/keyCombo"
+            android:summary="@string/summaryImeCombo"
+            android:title="@string/titleCombo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak">
+                <!-- TODO: is there a better way to pass the key to the fragment? -->
+                <extra
+                    android:name="key"
+                    android:value="@string/keyCombo" />
+            </intent>
+        </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryApps">

@@ -12,7 +12,7 @@
     <string name="labelActivityAppList">Rakendused</string>
     <string name="labelActivityGrammarList">Grammatikad</string>
     <string name="labelActivityAbout">Info</string>
-    <string name="labelActivityPreferences">Kõnele seaded</string> <!-- references @string/labelApp -->
+    <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
@@ -21,8 +21,8 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleCategoryUi">Otsingupaneel (punase nupuga)</string>
-    <string name="titleCategoryIme">Kõneklaviatuur (kollase nupuga)</string>
+    <string name="titleCategoryUi">Otsingupaneel</string>
+    <string name="titleCategoryIme">Kõneklaviatuur</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
@@ -254,15 +254,17 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleDefaultServiceWs">WebSocket-aadress</string>
-    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammatikatoega). Ainuvõimalik valik Kõnele praeguses versioonis.</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
+    <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
+    <string name="titleHelpText">Abitekst</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
     <string name="summaryImeCombo">Uuendan…</string>
-    <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
+    <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
+    <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (grammatikatoega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
     <string name="labelIme">Kõnele kõneklaviatuur</string>
 
 </resources>

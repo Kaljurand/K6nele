@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -139,6 +140,24 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             // The user has managed to store a malformed URL in the configuration.
             handleResultError(RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
         }
+    }
+
+    public void setTvPrompt(TextView tv) {
+        String prompt = getPrompt();
+        if (prompt == null || prompt.length() == 0) {
+            tv.setVisibility(View.INVISIBLE);
+        } else {
+            tv.setText(prompt);
+            tv.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private String getPrompt() {
+        String prompt = getExtras().getString(RecognizerIntent.EXTRA_PROMPT);
+        if (prompt == null && getExtraResultsPendingIntent() == null && getCallingActivity() == null) {
+            return getString(R.string.promptSearch);
+        }
+        return prompt;
     }
 
     /**

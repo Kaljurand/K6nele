@@ -86,8 +86,8 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             category.addPreference(pref);
         }
 
-        Preference pref = mSettingsFragment.findPreference(getString(R.string.keyImeCombo));
-        pref.setSummary(makeSummary(PreferenceUtils.getPrefStringSet(mPrefs, getResources(), R.string.keyImeCombo)));
+        updateSummary(R.string.keyImeCombo, R.string.emptylistImeCombos);
+        updateSummary(R.string.keyCombo, R.string.emptylistCombos);
     }
 
 
@@ -111,13 +111,20 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         return false;
     }
 
-    private String makeSummary(Collection<String> values) {
+    private void updateSummary(int key, int keyEmpty) {
+        mSettingsFragment
+                .findPreference(getString(key))
+                .setSummary(makeSummary(key, keyEmpty));
+    }
+
+    private String makeSummary(int key, int keyEmpty) {
+        Collection<String> values = PreferenceUtils.getPrefStringSet(mPrefs, getResources(), key);
         List<Combo> combos = new ArrayList<>();
         for (String value : values) {
             combos.add(new Combo(this, value));
         }
         if (combos.size() == 0) {
-            return getString(R.string.emptylistCombos);
+            return getString(keyEmpty);
         }
         Collections.sort(combos, Combo.SORT_BY_LANGUAGE);
         return TextUtils.join("\n", combos);

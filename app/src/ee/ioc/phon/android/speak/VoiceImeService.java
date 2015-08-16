@@ -119,7 +119,7 @@ public class VoiceImeService extends InputMethodService {
             return;
         }
 
-        mInputView.setListener(attribute, new VoiceImeView.VoiceImeViewListener() {
+        mInputView.setListener(attribute, R.array.keysIme, getPackageName(), new VoiceImeView.VoiceImeViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 

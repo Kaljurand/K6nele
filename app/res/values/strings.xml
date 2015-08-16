@@ -3,7 +3,6 @@
 
     <string name="labelApp" translatable="false">Kõnele</string>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="keyCurrentCombo" translatable="false">keyCurrentCombo</string>
     <string name="keyServerHttp" translatable="false">keyServerHttp</string>
     <string name="keyServerWs" translatable="false">keyServerWs</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
@@ -12,11 +11,14 @@
     <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>
+    <string name="keyHelpText" translatable="false">keyHelpText</string>
+    <string name="keyCombo" translatable="false">keyCombo</string>
+    <string name="keyCurrentCombo" translatable="false">keyCurrentCombo</string>
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
-    <string name="keyActivityCombo" translatable="false">keyActivityCombo</string>
+    <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
     <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
@@ -36,7 +38,6 @@
         <item>20</item>
         <item>30</item>
     </string-array>
-    <string-array name="empty" translatable="false"></string-array>
 
     <string name="labelComboListItem" translatable="false">• %2$s @ %1$s</string>
 
@@ -44,14 +45,13 @@
 
     <string name="labelIme">Kõnele speech keyboard</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
-    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammar support). Cannot be changed in this Kõnele version.</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivitySpeechAction">Kõnele speech action</string>
     <string name="labelActivityAbout">About Kõnele</string>
-    <string name="labelActivityPreferences">Kõnele settings</string> <!-- references @string/labelApp -->
+    <string name="labelActivityPreferences">Kõnele settings</string>
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
@@ -66,9 +66,9 @@
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleDefaultServiceWs">WebSocket URL</string>
-    <string name="titleCategoryUi">Voice search panel (red button)</string>
+    <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
-    <string name="titleCategoryIme">Speech keyboard (yellow button)</string>
+    <string name="titleCategoryIme">Speech keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
@@ -89,6 +89,8 @@
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
+    <string name="titleHelpText">Help text</string>
+    <string name="summaryHelpText">Show help text by the microphone button (makes the search panel larger)</string>
     <string name="titleImeHelpText">Help text</string>
     <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
     <string name="summaryImeCombo">Updating…</string>
@@ -150,7 +152,8 @@ More grammars are available at
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
-    <string name="emptylistCombos">Currently using Estonian and Kõnele (fast recognition). Tap here to add or change languages and services.</string>
+    <string name="emptylistImeCombos">Currently using Estonian and Kõnele (fast recognition). Tap here to add or change languages and services.</string>
+    <string name="emptylistCombos">Currently using Estonian and Kõnele (grammar support). Tap here to add or change languages and services.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
@@ -263,6 +266,10 @@ More grammars are available at
         <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;et-EE</item>
     </string-array>
 
+    <string-array name="defaultCombos" translatable="false">
+        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService;et-EE</item>
+    </string-array>
+
     <!--
     Set of recognizer service/language combos that we do not want to show for technical reasons.
     This list can also contain service names to exclude the whole service with all its languages.
@@ -275,6 +282,36 @@ More grammars are available at
         -->
     </string-array>
 
+    <string-array name="defaultCombosExcluded" translatable="false">
+        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;en-US</item>
+    </string-array>
+
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) @ Kõnele (grammar support)</string>
+
+    <array name="keysActivity" translatable="false">
+        <item>@string/keyCombo</item>
+        <item>@string/keyCurrentCombo</item>
+        <item>@array/defaultCombos</item>
+        <item>@array/defaultCombosExcluded</item>
+        <item>@string/keyAutoStart</item>
+        <item>@bool/defaultAutoStart</item>
+        <item>@string/keyAudioCues</item>
+        <item>@bool/defaultAudioCues</item>
+        <item>@string/keyHelpText</item>
+        <item>@bool/defaultHelpText</item>
+    </array>
+
+    <array name="keysIme" translatable="false">
+        <item>@string/keyImeCombo</item>
+        <item>@string/keyImeCurrentCombo</item>
+        <item>@array/defaultImeCombos</item>
+        <item>@array/defaultImeCombosExcluded</item>
+        <item>@string/keyImeAutoStart</item>
+        <item>@bool/defaultImeAutoStart</item>
+        <item>@string/keyImeAudioCues</item>
+        <item>@bool/defaultImeAudioCues</item>
+        <item>@string/keyImeHelpText</item>
+        <item>@bool/defaultImeHelpText</item>
+    </array>
 </resources>
