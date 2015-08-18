@@ -239,6 +239,7 @@ public class WebSocketRecognizer extends RecognitionService {
                         if (buffer.length > 0 && recorderState == RawAudioRecorder.State.RECORDING) {
                             Log.i("Sending bytes: " + buffer.length);
                             webSocket.send(buffer);
+                            onBufferReceived(buffer);
                             boolean success = mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_IME_SEND);
                             if (!success) {
                                 Log.i("mSendHandler.postDelayed returned false");
@@ -323,6 +324,18 @@ public class WebSocketRecognizer extends RecognitionService {
     private void onEndOfSpeech() {
         try {
             mListener.endOfSpeech();
+        } catch (RemoteException e) {
+        }
+    }
+
+    /**
+     * TODO: Expects 16-bit BE?
+     *
+     * @param buffer
+     */
+    private void onBufferReceived(byte[] buffer) {
+        try {
+            mListener.bufferReceived(buffer);
         } catch (RemoteException e) {
         }
     }

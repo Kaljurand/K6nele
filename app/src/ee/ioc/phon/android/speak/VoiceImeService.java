@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class VoiceImeService extends InputMethodService {
@@ -119,7 +121,11 @@ public class VoiceImeService extends InputMethodService {
             return;
         }
 
-        mInputView.setListener(attribute, R.array.keysIme, getPackageName(), new VoiceImeView.VoiceImeViewListener() {
+        Bundle extras = new Bundle();
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, true);
+        CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
+
+        mInputView.setListener(R.array.keysIme, callerInfo, new VoiceImeView.VoiceImeViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 
@@ -157,6 +163,11 @@ public class VoiceImeService extends InputMethodService {
             @Override
             public void onAddSpace() {
                 mTextUpdater.addSpace(getCurrentInputConnection());
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+                // TODO: store buffer
             }
         });
 

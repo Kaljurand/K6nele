@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
-import android.view.inputmethod.EditorInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
@@ -23,21 +24,19 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 public class ServiceLanguageChooser {
 
     private final Context mContext;
-    private final String mPackageName;
     private final SharedPreferences mPrefs;
     private final List<String> mCombosAsList;
-    private final EditorInfo mAttribute;
+    private final CallerInfo mCallerInfo;
     private final int mKeyImeCurrentCombo;
     private int mIndex;
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mIntent;
 
-    public ServiceLanguageChooser(Context context, SharedPreferences prefs, EditorInfo attribute, int keys, String packageName) {
+    public ServiceLanguageChooser(Context context, SharedPreferences prefs, int keys, CallerInfo callerInfo) {
 
         mContext = context;
-        mPackageName = packageName;
         mPrefs = prefs;
-        mAttribute = attribute;
+        mCallerInfo = callerInfo;
 
         Resources res = context.getResources();
 
@@ -98,7 +97,8 @@ public class ServiceLanguageChooser {
             mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext, recognizerComponentName);
         }
 
-        mIntent = IntentUtils.getRecognizerIntent(mPackageName, mAttribute, language);
+        // TODO: support other actions
+        mIntent = IntentUtils.getRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH, mCallerInfo, language);
     }
 
 

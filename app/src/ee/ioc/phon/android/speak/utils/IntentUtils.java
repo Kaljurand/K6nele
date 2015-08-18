@@ -7,17 +7,19 @@ import android.text.SpannableString;
 import android.view.inputmethod.EditorInfo;
 
 import ee.ioc.phon.android.speak.Extras;
+import ee.ioc.phon.android.speak.model.CallerInfo;
 
 public class IntentUtils {
 
-    public static Intent getRecognizerIntent(String packageName, EditorInfo attribute, String language) {
-        // TODO: try with another action, or without an action
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    public static Intent getRecognizerIntent(String action, CallerInfo callerInfo, String language) {
+        Intent intent = new Intent(action);
+        intent.putExtras(callerInfo.getExtras());
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, packageName);
-        intent.putExtra(Extras.EXTRA_UNLIMITED_DURATION, true);
-        intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(attribute));
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, callerInfo.getPackageName());
+        if (callerInfo.getEditorInfo() != null) {
+            intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(callerInfo.getEditorInfo()));
+        }
         // Declaring that in the IME we would like to allow longer pauses (2 sec).
         // The service might not implement these (e.g. Kõnele currently does not)
         // TODO: what is the difference of these two constants?

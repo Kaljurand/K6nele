@@ -11,7 +11,6 @@ import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class VoiceImeView extends LinearLayout {
@@ -37,6 +37,8 @@ public class VoiceImeView extends LinearLayout {
         void onAddNewline();
 
         void onAddSpace();
+
+        void onBufferReceived(byte[] buffer);
     }
 
     private MicButton mBImeStartStop;
@@ -57,7 +59,7 @@ public class VoiceImeView extends LinearLayout {
     }
 
 
-    public void setListener(EditorInfo attribute, int keys, String packageName, final VoiceImeViewListener listener) {
+    public void setListener(int keys, CallerInfo callerInfo, final VoiceImeViewListener listener) {
         mListener = listener;
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
@@ -69,7 +71,7 @@ public class VoiceImeView extends LinearLayout {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
-        mSlc = new ServiceLanguageChooser(getContext(), prefs, attribute, keys, packageName);
+        mSlc = new ServiceLanguageChooser(getContext(), prefs, keys, callerInfo);
         if (mSlc.size() > 1) {
             mBComboSelector.setVisibility(View.VISIBLE);
         } else {
@@ -81,6 +83,7 @@ public class VoiceImeView extends LinearLayout {
         setGuiInitState(0);
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
+        final int key = keysAsTypedArray.getResourceId(0, 0);
         int keyAudioCues = keysAsTypedArray.getResourceId(6, 0);
         int defaultAudioCues = keysAsTypedArray.getResourceId(7, 0);
         int keyHelpText = keysAsTypedArray.getResourceId(8, 0);
@@ -132,6 +135,7 @@ public class VoiceImeView extends LinearLayout {
                 Context context = getContext();
                 Intent intent = new Intent(context, ComboSelectorActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("key", getContext().getString(key));
                 Utils.startActivityIfAvailable(context, intent);
                 return true;
             }
@@ -322,7 +326,8 @@ public class VoiceImeView extends LinearLayout {
 
             @Override
             public void onBufferReceived(byte[] buffer) {
-                // TODO: future work
+                Log.i("View: onBufferReceived: " + buffer.length);
+                mListener.onBufferReceived(buffer);
             }
         };
     }
@@ -437,7 +442,7 @@ public class VoiceImeView extends LinearLayout {
         // Cancel a possibly running service
         closeSession();
         Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
-        mBComboSelector.setText(pair.second + " @ " + pair.first);
+        mBComboSelector.setText(pair.second + " · " + pair.first);
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(getRecognizerListener());
     }

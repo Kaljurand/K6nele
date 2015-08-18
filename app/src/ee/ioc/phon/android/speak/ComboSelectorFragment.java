@@ -25,9 +25,8 @@ public class ComboSelectorFragment extends ListFragment {
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        // TODO: we currently only check if the arguments are non-empty
         Bundle args = getArguments();
-        if (args != null && !args.isEmpty()) {
+        if (args != null && getString(R.string.keyCombo).equals(args.getString("key"))) {
             mKey = R.string.keyCombo;
             mDefaultCombos = R.array.defaultCombos;
             mDefaultCombosExcluded = R.array.defaultCombosExcluded;

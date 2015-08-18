@@ -43,10 +43,12 @@ import android.widget.TextView;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.AudioCue;
+import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -120,6 +122,8 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
     private static final String DOTS = "............";
 
     private SharedPreferences mPrefs;
+
+    private ChunkedWebRecSessionBuilder mRecSessionBuilder;
 
     private TextView mTvPrompt;
     private Button mBStartStop;
@@ -215,11 +219,53 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         setGuiError();
     }
 
+
+    /**
+     * <p>Only for developers, i.e. we are not going to localize these strings.</p>
+     */
+    String[] getDetails() {
+        String callingActivityClassName = null;
+        String callingActivityPackageName = null;
+        String pendingIntentTargetPackage = null;
+        ComponentName callingActivity = getCallingActivity();
+        if (callingActivity != null) {
+            callingActivityClassName = callingActivity.getClassName();
+            callingActivityPackageName = callingActivity.getPackageName();
+        }
+        if (getExtraResultsPendingIntent() != null) {
+            pendingIntentTargetPackage = getExtraResultsPendingIntent().getTargetPackage();
+        }
+        List<String> info = new ArrayList<>();
+        info.add("ID: " + PreferenceUtils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
+        info.add("User-Agent comment: " + getRecSessionBuilder().getUserAgentComment());
+        info.add("Calling activity class name: " + callingActivityClassName);
+        info.add("Calling activity package name: " + callingActivityPackageName);
+        info.add("Pending intent target package: " + pendingIntentTargetPackage);
+        info.add("Selected grammar: " + getRecSessionBuilder().getGrammarUrl());
+        info.add("Selected target lang: " + getRecSessionBuilder().getGrammarTargetLang());
+        info.add("Selected server: " + getRecSessionBuilder().getServerUrl());
+        info.add("Intent action: " + getIntent().getAction());
+        info.addAll(Utils.ppBundle(getExtras()));
+        return info.toArray(new String[info.size()]);
+    }
+
+    // TODO: remove
+    protected ChunkedWebRecSessionBuilder getRecSessionBuilder() {
+        return mRecSessionBuilder;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpActivity(R.layout.recognizer);
         setUpExtras();
+
+        try {
+            mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, getExtras(), getCallingActivity());
+        } catch (MalformedURLException e) {
+            // The user has managed to store a malformed URL in the configuration.
+            handleResultError(RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
+        }
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         // For the change in the autostart-setting to take effect,

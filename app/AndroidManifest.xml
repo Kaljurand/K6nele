@@ -3,7 +3,6 @@
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
 
-
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 
@@ -24,7 +23,7 @@
 
         <!--
         TODO: singleTask seems a more appropriate launchMode,
-        but it does not work, and with singleInstance we fail to
+        but it does not work (test again with API > 14), and with singleInstance we fail to
         deliver the results to the caller. So we have to use standard.
         -->
         <!-- This activity is exported, i.e. any app can launch K6nele. -->
@@ -33,7 +32,7 @@
             android:name=".activity.RecognizerIntentActivity"
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
@@ -45,11 +44,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.speech.DETAILS"
@@ -60,7 +54,7 @@
             android:name=".activity.SpeechActionActivity"
             android:exported="true"
             android:label="@string/labelActivitySpeechAction"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />

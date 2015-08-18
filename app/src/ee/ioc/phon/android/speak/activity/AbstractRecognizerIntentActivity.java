@@ -19,13 +19,11 @@ package ee.ioc.phon.android.speak.activity;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.util.SparseArray;
 import android.view.View;
@@ -36,11 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.List;
 
-import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.DetailsActivity;
 import ee.ioc.phon.android.speak.Extras;
@@ -48,15 +43,12 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.Utils;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     private static final String MSG = "MSG";
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
-
-    private ChunkedWebRecSessionBuilder mRecSessionBuilder;
 
     private PendingIntent mExtraResultsPendingIntent;
 
@@ -70,6 +62,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     abstract void showError();
 
+    abstract String[] getDetails();
 
     protected Bundle getExtras() {
         return mExtras;
@@ -77,10 +70,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     protected PendingIntent getExtraResultsPendingIntent() {
         return mExtraResultsPendingIntent;
-    }
-
-    protected ChunkedWebRecSessionBuilder getRecSessionBuilder() {
-        return mRecSessionBuilder;
     }
 
     protected SparseArray<String> getErrorMessages() {
@@ -126,20 +115,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
         mMessageHandler = new SimpleMessageHandler(this);
         mErrorMessages = createErrorMessages();
-
-        try {
-            mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, getCallingActivity());
-        } catch (MalformedURLException e) {
-            // The user has managed to store a malformed URL in the configuration.
-            handleResultError(RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
-        }
-
-        try {
-            mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, getCallingActivity());
-        } catch (MalformedURLException e) {
-            // The user has managed to store a malformed URL in the configuration.
-            handleResultError(RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
-        }
     }
 
     public void setTvPrompt(TextView tv) {
@@ -161,38 +136,9 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     /**
-     * <p>Only for developers, i.e. we are not going to localize these strings.</p>
-     */
-    private String[] getDetails() {
-        String callingActivityClassName = null;
-        String callingActivityPackageName = null;
-        String pendingIntentTargetPackage = null;
-        ComponentName callingActivity = getCallingActivity();
-        if (callingActivity != null) {
-            callingActivityClassName = callingActivity.getClassName();
-            callingActivityPackageName = callingActivity.getPackageName();
-        }
-        if (getExtraResultsPendingIntent() != null) {
-            pendingIntentTargetPackage = getExtraResultsPendingIntent().getTargetPackage();
-        }
-        List<String> info = new ArrayList<>();
-        info.add("ID: " + PreferenceUtils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
-        info.add("User-Agent comment: " + getRecSessionBuilder().getUserAgentComment());
-        info.add("Calling activity class name: " + callingActivityClassName);
-        info.add("Calling activity package name: " + callingActivityPackageName);
-        info.add("Pending intent target package: " + pendingIntentTargetPackage);
-        info.add("Selected grammar: " + getRecSessionBuilder().getGrammarUrl());
-        info.add("Selected target lang: " + getRecSessionBuilder().getGrammarTargetLang());
-        info.add("Selected server: " + getRecSessionBuilder().getServerUrl());
-        info.add("Intent action: " + getIntent().getAction());
-        info.addAll(Utils.ppBundle(getExtras()));
-        return info.toArray(new String[info.size()]);
-    }
-
-    /**
      * Sets the RESULT_OK intent. Adds the recorded audio data if the caller has requested it
      * and the requested format is supported or unset.
-     *
+     * <p/>
      * TODO: handle audioFormat inside getAudioUri(), which would return "null"
      * if format is not supported
      */
@@ -309,7 +255,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             intent.putExtras(bundle);
             // This is for Google Maps, YouTube, ...
             intent.putExtra(SearchManager.QUERY, match);
-            // This is for SwiftKey X, ...
+            // This is for SwiftKey X (from year 2011), ...
             intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
             String message;
             if (matches.size() == 1) {
@@ -341,17 +287,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // TODO: fetch also confidence scores and treat a very confident hypothesis
     // as a single hypothesis.
     private void handleResultsByWebSearch(final ArrayList<String> results) {
-        // Some tweaking to cleanup the UI that would show under the
-        // dialog window that we are about to open.
-        // TODO: temporarily commented out
-        /*
-        runOnUiThread(new Runnable() {
-            public void run() {
-                mLlTranscribing.setVisibility(View.GONE);
-            }
-        });
-        */
-
         Intent searchIntent;
         if (results.size() == 1) {
             // We construct a list of search intents.

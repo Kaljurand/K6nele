@@ -99,11 +99,7 @@ public class SpeechRecognitionService extends RecognitionService {
 		}
 		 */
 
-		int sampleRate = Integer.parseInt(
-				mPrefs.getString(
-						getString(R.string.keyRecordingRate),
-						getString(R.string.defaultRecordingRate)));
-
+		int sampleRate = PreferenceUtils.getPrefInt(mPrefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
 
 		mRecSessionBuilder.setContentType(sampleRate);
 		if (Log.DEBUG) Log.i(mRecSessionBuilder.toStringArrayList());
@@ -422,8 +418,7 @@ public class SpeechRecognitionService extends RecognitionService {
 						byte[] buffer = mRecorder.consumeRecording();
 						try {
 							sendChunk(buffer, false);
-							Log.i("Callback: bufferReceived: length = " + buffer.length);
-							// TODO: Expects 16-bit BE
+							// TODO: Expects 16-bit BE?
 							listener.bufferReceived(buffer);
 							mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
 						} catch (IOException e) {

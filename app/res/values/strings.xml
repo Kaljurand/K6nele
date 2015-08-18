@@ -39,7 +39,7 @@
         <item>30</item>
     </string-array>
 
-    <string name="labelComboListItem" translatable="false">• %2$s @ %1$s</string>
+    <string name="labelComboListItem" translatable="false">• %2$s · %1$s</string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
 
@@ -70,6 +70,7 @@
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
     <string name="titleCategoryIme">Speech keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
+    <string name="titleCategoryDevel">For developers</string>
     <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>

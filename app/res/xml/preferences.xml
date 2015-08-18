@@ -19,6 +19,18 @@
             android:title="@string/titleEnableIme">
             <intent android:action="android.settings.INPUT_METHOD_SETTINGS" />
         </Preference>
+        <Preference
+            android:key="@string/keyImeCombo"
+            android:summary="@string/summaryImeCombo"
+            android:title="@string/titleCombo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak">
+                <extra
+                    android:name="key"
+                    android:value="@string/keyImeCombo" />
+            </intent>
+        </Preference>
         <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeAutoStart"
@@ -36,18 +48,23 @@
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
             android:title="@string/titleImeHelpText" />
-        <Preference
-            android:key="@string/keyImeCombo"
-            android:summary="@string/summaryImeCombo"
-            android:title="@string/titleCombo">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
-                android:targetPackage="ee.ioc.phon.android.speak" />
-        </Preference>
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)
     <PreferenceCategory android:title="@string/titleCategoryUi">
+        <Preference
+            android:key="@string/keyCombo"
+            android:summary="@string/summaryImeCombo"
+            android:title="@string/titleCombo">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak">
+                <!-- TODO: is there a better way to pass the key to the fragment? -->
+                <extra
+                    android:name="key"
+                    android:value="@string/keyCombo" />
+            </intent>
+        </Preference>
         <CheckBoxPreference
             android:defaultValue="@bool/defaultAutoStart"
             android:key="@string/keyAutoStart"
@@ -63,19 +80,6 @@
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
             android:title="@string/titleHelpText" />
-        <Preference
-            android:key="@string/keyCombo"
-            android:summary="@string/summaryImeCombo"
-            android:title="@string/titleCombo">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
-                android:targetPackage="ee.ioc.phon.android.speak">
-                <!-- TODO: is there a better way to pass the key to the fragment? -->
-                <extra
-                    android:name="key"
-                    android:value="@string/keyCombo" />
-            </intent>
-        </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryApps">
@@ -110,6 +114,42 @@
                 android:targetClass="ee.ioc.phon.android.speak.PreferencesRecognitionServiceWs"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/titleCategoryDevel">
+        <PreferenceScreen
+            android:summary="@string/summaryScreenDemos"
+            android:title="@string/titleScreenDemos">
+            <Preference
+                android:summary="@string/summarySimpleDemo"
+                android:title="@string/labelActivitySimpleDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.SimpleDemo"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            <Preference
+                android:summary="@string/summaryExtrasDemo"
+                android:title="@string/labelActivityExtrasDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.ExtrasDemo"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            <Preference
+                android:summary="@string/summaryRepeaterDemo"
+                android:title="@string/labelActivityRepeaterDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.RepeaterDemo"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            <Preference
+                android:summary="@string/summaryVoiceSearchDemo"
+                android:title="@string/labelActivityVoiceSearchDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.VoiceSearchDemo"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+
+        </PreferenceScreen>
     </PreferenceCategory>
 
 </PreferenceScreen>

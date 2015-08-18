@@ -66,7 +66,7 @@ public class DetailsActivity extends ListActivity {
 
 			String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
 			if (stringArray != null) {
-				setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item_detail, stringArray));
+				setListAdapter(new ArrayAdapter<>(this, R.layout.list_item_detail, stringArray));
 
 				getListView().setOnItemClickListener(new OnItemClickListener() {
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
