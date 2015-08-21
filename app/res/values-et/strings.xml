@@ -65,12 +65,6 @@
     <string name="buttonCancel">Loobu</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
     <string name="statusImeTranscribing">Oodake…</string>
-    <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s
-		&lt;br/>
-		v%3$s, autor:
-		&lt;a
-		href="https://plus.google.com/+KaarelKaljurand">Kaarel
-		Kaljurand&lt;/a> </string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
 		et
@@ -160,6 +154,7 @@
     <string name="menuGrammarsAdd">Lisa</string>
     <string name="menuServersAdd">Lisa</string>
     <string name="menuDemoGrammarAssign">Omista grammatika</string>
+    <string name="menuAbout">Info</string>
     <string name="cmAppAssignGrammar">Omista grammatika</string>
     <string name="cmAppRemoveGrammar">Eemalda grammatika</string>
     <string name="cmAppAssignServer">Omista server</string>

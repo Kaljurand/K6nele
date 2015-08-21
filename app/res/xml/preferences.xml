@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference android:title="@string/labelActivityAbout">
-        <intent
-            android:targetClass="ee.ioc.phon.android.speak.AboutActivity"
-            android:targetPackage="ee.ioc.phon.android.speak" />
-    </Preference>
-
     // Speech keyboard settings
     <PreferenceCategory
         android:key="@string/keyCategoryIme"
@@ -38,6 +32,11 @@
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
             -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeAutoStopAfterPause"
+            android:key="@string/keyImeAutoStopAfterPause"
+            android:summary="@string/summaryAutoStopAfterPause"
+            android:title="@string/titleAutoStopAfterPause" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeAudioCues"
             android:key="@string/keyImeAudioCues"

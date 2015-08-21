@@ -120,9 +120,10 @@ public class VoiceImeService extends InputMethodService {
         if (restarting) {
             return;
         }
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Bundle extras = new Bundle();
-        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, true);
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION,
+                !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
         mInputView.setListener(R.array.keysIme, callerInfo, new VoiceImeView.VoiceImeViewListener() {
@@ -172,7 +173,6 @@ public class VoiceImeService extends InputMethodService {
         });
 
         // Launch recognition immediately (if set so)
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();

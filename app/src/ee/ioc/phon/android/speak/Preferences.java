@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -26,6 +27,9 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
@@ -55,6 +59,27 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         mSettingsFragment = new SettingsFragment();
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction().replace(android.R.id.content, mSettingsFragment).commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.preferences_header, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuAbout:
+                Intent searchIntent = new Intent(this, AboutActivity.class);
+                startActivity(searchIntent);
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 

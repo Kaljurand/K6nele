@@ -267,7 +267,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
             handleResultError(RecognizerIntent.RESULT_CLIENT_ERROR, "", e);
         }
 
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         // For the change in the autostart-setting to take effect,
         // the user must restart the app. This seems more natural.
         mStartRecording = PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);

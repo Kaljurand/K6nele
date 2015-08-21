@@ -113,7 +113,7 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
                     long id = Long.parseLong(serverUri.getPathSegments().get(1));
                     String url = Utils.idToValue(this, Server.Columns.CONTENT_URI, Server.Columns._ID, Server.Columns.URL, id);
                     if (url != null) {
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(getString(R.string.keyServerHttp), url);
                         editor.apply();

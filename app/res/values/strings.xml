@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="labelApp" translatable="false">Kõnele</string>
-    <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="keyServerHttp" translatable="false">keyServerHttp</string>
-    <string name="keyServerWs" translatable="false">keyServerWs</string>
-    <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
-    <string name="keyAutoStart" translatable="false">keyAutoStart</string>
-    <string name="keyAutoStopAfterPause" translatable="false">keyAutoStopAfterPause</string>
-    <string name="keyAutoStopAfterTime" translatable="false">keyAutoStopAfterTime</string>
-    <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
-    <string name="keyAudioCues" translatable="false">keyAudioCues</string>
-    <string name="keyHelpText" translatable="false">keyHelpText</string>
-    <string name="keyCombo" translatable="false">keyCombo</string>
-    <string name="keyCurrentCombo" translatable="false">keyCurrentCombo</string>
-    <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
-    <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
-    <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
-    <string name="keyImeCombo" translatable="false">keyImeCombo</string>
-    <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
-    <string name="defaultServerHttp" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
-    // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
-    <string name="keyEnableIme" translatable="false">keyEnableIme</string>
-    <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
@@ -118,9 +96,6 @@
     <string name="statusTranscribing">Transcribing…</string>
     <string name="statusImeTranscribing">Still transcribing…</string>
 
-    <!-- @string/descriptionApp -->
-    <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s&lt;br />
-		v%3$s by &lt;a href="https://plus.google.com/+KaarelKaljurand">Kaarel Kaljurand&lt;/a></string>
     <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
         Many apps contain a text area or a text field (e.g. a search bar) that can be edited using the keyboard.
         %1$s provides a &lt;b>speech keyboard&lt;/b>, a one-button keyboard, which allows speech to be converted to text.
@@ -216,6 +191,7 @@ More grammars are available at
     <string name="menuAppsSortByGrammar">by grammar URL</string>
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
+    <string name="menuAbout">About</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
     <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
@@ -289,30 +265,4 @@ More grammars are available at
 
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) @ Kõnele (grammar support)</string>
-
-    <array name="keysActivity" translatable="false">
-        <item>@string/keyCombo</item>
-        <item>@string/keyCurrentCombo</item>
-        <item>@array/defaultCombos</item>
-        <item>@array/defaultCombosExcluded</item>
-        <item>@string/keyAutoStart</item>
-        <item>@bool/defaultAutoStart</item>
-        <item>@string/keyAudioCues</item>
-        <item>@bool/defaultAudioCues</item>
-        <item>@string/keyHelpText</item>
-        <item>@bool/defaultHelpText</item>
-    </array>
-
-    <array name="keysIme" translatable="false">
-        <item>@string/keyImeCombo</item>
-        <item>@string/keyImeCurrentCombo</item>
-        <item>@array/defaultImeCombos</item>
-        <item>@array/defaultImeCombosExcluded</item>
-        <item>@string/keyImeAutoStart</item>
-        <item>@bool/defaultImeAutoStart</item>
-        <item>@string/keyImeAudioCues</item>
-        <item>@bool/defaultImeAudioCues</item>
-        <item>@string/keyImeHelpText</item>
-        <item>@bool/defaultImeHelpText</item>
-    </array>
 </resources>

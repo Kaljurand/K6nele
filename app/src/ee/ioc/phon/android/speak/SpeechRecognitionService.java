@@ -379,7 +379,7 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 	private void init(Intent recognizerIntent, final Callback listener) throws RemoteException {
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 		mExtras = recognizerIntent.getExtras();
 		if (mExtras == null) {

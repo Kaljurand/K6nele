@@ -9,35 +9,11 @@
         android:gravity="fill"
         android:padding="6dp">
 
-        <ImageView
-            android:id="@+id/itemAppIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="@dimen/layoutMargin1"
-            android:layout_marginRight="@dimen/layoutMargin1"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/cdAppIcon"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_launcher" />
-
-        <TextView
-            android:id="@+id/tvAboutHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/itemAppIcon"
-            android:layout_toRightOf="@+id/itemAppIcon"
-            android:bufferType="spannable"
-            android:textSize="16sp" />
-
         <TextView
             android:id="@+id/tvAbout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvAboutHeader"
-            android:layout_marginTop="10dp"
             android:bufferType="spannable"
             android:textSize="16sp" />
     </RelativeLayout>
-
 </ScrollView>

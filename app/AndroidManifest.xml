@@ -14,26 +14,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K6nele">
 
+        <!-- RecognizerIntentActivity does not have any intent-filters and is thus not findable
+        by the OS, but it can still be called directly by the class name. -->
         <!--
-			android:clearTaskOnLaunch="true"
-			android:finishOnTaskLaunch="true"
-			android:allowTaskReparenting="false"
-        -->
-
-
-        <!--
-        TODO: singleTask seems a more appropriate launchMode,
-        but it does not work (test again with API > 14), and with singleInstance we fail to
-        deliver the results to the caller. So we have to use standard.
-        -->
+TODO: singleTask seems a more appropriate launchMode but returns the results to the caller
+only on Android v5, So we have to use standard on older versions. See also:
+http://stackoverflow.com/questions/8960072/onactivityresult-with-launchmode-singletask
+Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION
+-->
         <!-- This activity is exported, i.e. any app can launch K6nele. -->
         <!-- TODO: launching worked also with exported=true, although didn't try explicit packagename-based launching. -->
         <activity
             android:name=".activity.RecognizerIntentActivity"
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:theme="@style/Theme.K6nele.Dialog">
+            <!--
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
 
@@ -44,17 +41,24 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
+            -->
             <meta-data
                 android:name="android.speech.DETAILS"
                 android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
         </activity>
 
+        <!-- Voice search panel. -->
+
+        <!--
+			android:finishOnTaskLaunch="true"
+			android:allowTaskReparenting="false"
+        -->
         <activity
             android:name=".activity.SpeechActionActivity"
+            android:clearTaskOnLaunch="true"
             android:exported="true"
             android:label="@string/labelActivitySpeechAction"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
@@ -130,7 +134,7 @@
             android:name=".AboutActivity"
             android:label="@string/labelActivityAbout"
             android:parentActivityName=".Preferences"
-            android:theme="@style/Theme.K6nele.NoActionBar"></activity>
+            android:theme="@style/Theme.K6nele"></activity>
 
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
