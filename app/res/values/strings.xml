@@ -2,21 +2,6 @@
 <resources>
     <string name="labelApp" translatable="false">Kõnele</string>
 
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
-    <string name="defaultServerWs" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/</string>
-
-    <string name="defaultAutoStopAfterTime" translatable="false">20</string>
-
-    <!-- TODO: convert to integer-array -->
-    <string-array name="valuesAutoStopAfterTime" translatable="false">
-        <item>2</item>
-        <item>5</item>
-        <item>10</item>
-        <item>20</item>
-        <item>30</item>
-    </string-array>
-
     <string name="labelComboListItem" translatable="false">• %2$s · %1$s</string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
@@ -240,11 +225,11 @@ More grammars are available at
     </string-array>
 
     <string-array name="defaultImeCombos" translatable="false">
-        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;et-EE</item>
+        <item>ee.ioc.phon.android.speak/.service.WebSocketRecognizer;et-EE</item>
     </string-array>
 
     <string-array name="defaultCombos" translatable="false">
-        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService;et-EE</item>
+        <item>ee.ioc.phon.android.speak/.service.SpeechRecognitionService;et-EE</item>
     </string-array>
 
     <!--
@@ -252,15 +237,15 @@ More grammars are available at
     This list can also contain service names to exclude the whole service with all its languages.
     -->
     <string-array name="defaultImeCombosExcluded" translatable="false">
-        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;en-US</item>
+        <item>ee.ioc.phon.android.speak/.service.WebSocketRecognizer;en-US</item>
         <!--
         <item>com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService</item>
-        <item>ee.ioc.phon.android.speak/.SpeechRecognitionService</item>
+        <item>ee.ioc.phon.android.speak/.service.SpeechRecognitionService</item>
         -->
     </string-array>
 
     <string-array name="defaultCombosExcluded" translatable="false">
-        <item>ee.ioc.phon.android.speak/.WebSocketRecognizer;en-US</item>
+        <item>ee.ioc.phon.android.speak/.service.WebSocketRecognizer;en-US</item>
     </string-array>
 
     <!-- Just for testing, won't appear in the product. -->

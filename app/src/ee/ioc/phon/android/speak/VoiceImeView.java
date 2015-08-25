@@ -90,8 +90,6 @@ public class VoiceImeView extends LinearLayout {
         int defaultHelpText = keysAsTypedArray.getResourceId(9, 0);
         keysAsTypedArray.recycle();
 
-        mBImeStartStop.setAudioCuesEnabled(PreferenceUtils.getPrefBoolean(prefs, getResources(), keyAudioCues, defaultAudioCues));
-
         if (PreferenceUtils.getPrefBoolean(prefs, getResources(), keyHelpText, defaultHelpText)) {
             mTvInstruction.setVisibility(View.VISIBLE);
         } else {

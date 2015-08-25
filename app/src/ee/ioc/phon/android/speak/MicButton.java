@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MicButton extends ImageButton {
-
-    private AudioCue mAudioCue;
-
     private Drawable mDrawableMic;
     private Drawable mDrawableMicTranscribing;
 
@@ -27,7 +24,6 @@ public class MicButton extends ImageButton {
 
     private int mVolumeLevel = 0;
     private int mMaxLevel;
-    private AudioPauser mAudioPauser;
 
     public MicButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -47,26 +43,19 @@ public class MicButton extends ImageButton {
     public void setState(Constants.State state) {
         switch (state) {
             case INIT:
-                mAudioPauser.resume();
                 clearAnimation();
                 setBackgroundDrawable(mDrawableMic);
                 break;
             case RECORDING:
                 break;
             case LISTENING:
-                if (mAudioCue != null) mAudioCue.playStartSoundAndSleep();
-                mAudioPauser.pause();
                 setBackgroundDrawable(mVolumeLevels.get(0));
                 break;
             case TRANSCRIBING:
-                if (mAudioCue != null) mAudioCue.playStopSound();
-                mAudioPauser.resume();
                 setBackgroundDrawable(mDrawableMicTranscribing);
                 startAnimation(mAnimFadeInOutInf);
                 break;
             case ERROR:
-                if (mAudioCue != null) mAudioCue.playErrorSound();
-                mAudioPauser.resume();
                 clearAnimation();
                 setBackgroundDrawable(mDrawableMic);
                 break;
@@ -82,14 +71,6 @@ public class MicButton extends ImageButton {
         if (level != mVolumeLevel) {
             mVolumeLevel = level;
             setBackgroundDrawable(mVolumeLevels.get(level));
-        }
-    }
-
-    public void setAudioCuesEnabled(boolean enabled) {
-        if (enabled) {
-            mAudioCue = new AudioCue(getContext());
-        } else {
-            mAudioCue = null;
         }
     }
 
@@ -109,7 +90,6 @@ public class MicButton extends ImageButton {
     }
 
     private void init(Context context) {
-        mAudioPauser = new AudioPauser(context);
         initAnimations(context);
 
         // Vibrate when the microphone key is pressed down

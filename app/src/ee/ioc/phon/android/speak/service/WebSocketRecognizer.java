@@ -1,12 +1,13 @@
-package ee.ioc.phon.android.speak;
+package ee.ioc.phon.android.speak.service;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
@@ -16,105 +17,45 @@ import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
+import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
+import ee.ioc.phon.android.speak.Constants;
+import ee.ioc.phon.android.speak.Extras;
+import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.RawAudioRecorder;
+import ee.ioc.phon.android.speak.WebSocketResponse;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
  */
-public class WebSocketRecognizer extends RecognitionService {
+public class WebSocketRecognizer extends AbstractRecognitionService {
 
     private static final String PROTOCOL = "";
 
     private static final String WS_ARGS =
-            "speech?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
+            "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     private static final int MSG_RESULT = 1;
     private static final int MSG_ERROR = 2;
 
-    private RawAudioRecorder mRecorder;
-    private RecognitionService.Callback mListener;
+    private volatile Looper mSendLooper;
+    private volatile Handler mSendHandler;
 
     private MyHandler mMyHandler;
 
-    private volatile Looper mSendLooper;
-    private volatile Handler mSendHandler;
-    private Handler mVolumeHandler = new Handler();
-
     private Runnable mSendTask;
-    private Runnable mShowVolumeTask;
 
     private WebSocket mWebSocket;
 
-    public void onDestroy() {
-        super.onDestroy();
-        onCancel0();
-    }
-
-
-    /**
-     * Opens the socket and starts recording and sending the recorded packages.
-     */
     @Override
-    protected void onStartListening(final Intent recognizerIntent, RecognitionService.Callback listener) {
-        Log.i("onStartListening");
-        mListener = listener;
-
-        mMyHandler = new MyHandler(this,
-                listener,
-                recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
-                recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
-        );
-
-        try {
-            onReadyForSpeech(new Bundle());
-            startRecord();
-            onBeginningOfSpeech();
-            ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
-            startSocket(getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder));
-        } catch (MalformedURLException e) {
-            onError(SpeechRecognizer.ERROR_CLIENT);
-        } catch (IOException e) {
-            onError(SpeechRecognizer.ERROR_AUDIO);
-        }
-    }
-
-    /**
-     * Stops the recording and closes the socket.
-     */
-    @Override
-    protected void onCancel(RecognitionService.Callback listener) {
-        onCancel0();
-        // Send empty results if recognition is cancelled
-        // TEST: if it works with Google Translate and Slide IT
-        onResults(new Bundle());
-    }
-
-    /**
-     * Stops the recording and informs the socket that no more packages are coming.
-     */
-    @Override
-    protected void onStopListening(RecognitionService.Callback listener) {
-        stopRecording0();
-        onEndOfSpeech();
-    }
-
-
-    private void stopRecording0() {
-        if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
-
-        if (mRecorder != null) {
-            mRecorder.release();
-        }
-    }
-
-    private void onCancel0() {
+    void onCancel0() {
         stopRecording0();
 
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
@@ -128,42 +69,48 @@ public class WebSocketRecognizer extends RecognitionService {
         }
     }
 
-
-    /**
-     * Starts recording.
-     *
-     * @throws IOException if there was an error, e.g. another app is currently recording
-     */
-    private void startRecord() throws IOException {
-        mRecorder = new RawAudioRecorder();
-        if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
-            throw new IOException();
-        }
-
-        if (mRecorder.getState() != RawAudioRecorder.State.READY) {
-            throw new IOException();
-        }
-
-        mRecorder.start();
-
-        if (mRecorder.getState() != RawAudioRecorder.State.RECORDING) {
-            throw new IOException();
-        }
-
-
-        // Monitor the volume level
-        mShowVolumeTask = new Runnable() {
-            public void run() {
-                if (mRecorder != null) {
-                    onRmsChanged(mRecorder.getRmsdb());
-                    mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
-                }
-            }
-        };
-
-        mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
+    @Override
+    void connectToTheServer(Intent recognizerIntent) throws MalformedURLException {
+        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
+        startSocket(getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder));
     }
 
+    @Override
+    void setUpHandler(Intent recognizerIntent, RecognitionService.Callback listener) {
+        mMyHandler = new MyHandler(this,
+                listener,
+                recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
+                recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
+        );
+    }
+
+    @Override
+    boolean queryPrefAudioCues(SharedPreferences prefs, Resources resources) {
+        return PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues);
+    }
+
+    @Override
+    int getSampleRate() {
+        return 16000;
+    }
+
+    @Override
+    void afterRecording(RawAudioRecorder recorder) {
+    }
+
+    private void handleResult(String text) {
+        Message msg = new Message();
+        msg.what = MSG_RESULT;
+        msg.obj = text;
+        mMyHandler.sendMessage(msg);
+    }
+
+    private void handleException(Exception error) {
+        Message msg = new Message();
+        msg.what = MSG_ERROR;
+        msg.obj = error;
+        mMyHandler.sendMessage(msg);
+    }
 
     /**
      * Opens the socket and starts recording/sending.
@@ -229,11 +176,12 @@ public class WebSocketRecognizer extends RecognitionService {
         // Send chunks to the server
         mSendTask = new Runnable() {
             public void run() {
-                if (mRecorder != null) {
+                RawAudioRecorder recorder = getRecorder();
+                if (recorder != null) {
                     if (webSocket != null && webSocket.isOpen()) {
-                        RawAudioRecorder.State recorderState = mRecorder.getState();
+                        RawAudioRecorder.State recorderState = recorder.getState();
                         Log.i("Recorder state = " + recorderState);
-                        byte[] buffer = mRecorder.consumeRecordingAndTruncate();
+                        byte[] buffer = recorder.consumeRecordingAndTruncate();
                         // We assume that if only 0 bytes have been recorded then the recording
                         // has finished and we can notify the server with "EOF".
                         if (buffer.length > 0 && recorderState == RawAudioRecorder.State.RECORDING) {
@@ -257,97 +205,14 @@ public class WebSocketRecognizer extends RecognitionService {
         mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_IME_SEND);
     }
 
-    private void handleResult(String text) {
-        Message msg = new Message();
-        msg.what = MSG_RESULT;
-        msg.obj = text;
-        mMyHandler.sendMessage(msg);
-    }
-
-    private void handleException(Exception error) {
-        Message msg = new Message();
-        msg.what = MSG_ERROR;
-        msg.obj = error;
-        mMyHandler.sendMessage(msg);
-    }
-
-    // TODO: call onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT); if server initiates close
-    // without having received EOS
-    private void handleFinish() {
-        onCancel(mListener);
-    }
-
-    private void onReadyForSpeech(Bundle bundle) {
-        try {
-            mListener.readyForSpeech(bundle);
-        } catch (RemoteException e) {
-        }
-    }
-
-    private void onRmsChanged(float rms) {
-        try {
-            mListener.rmsChanged(rms);
-        } catch (RemoteException e) {
-        }
-    }
-
-    private void onError(int errorCode) {
-        // As soon as there is an error we shut down the socket and the recorder
-        onCancel0();
-        try {
-            mListener.error(errorCode);
-        } catch (RemoteException e) {
-        }
-    }
-
-    private void onResults(Bundle bundle) {
-        try {
-            mListener.results(bundle);
-        } catch (RemoteException e) {
-        }
-    }
-
-    private void onPartialResults(Bundle bundle) {
-        try {
-            mListener.partialResults(bundle);
-        } catch (RemoteException e) {
-        }
-    }
-
-    private void onBeginningOfSpeech() {
-        try {
-            mListener.beginningOfSpeech();
-        } catch (RemoteException e) {
-        }
-    }
-
-    private void onEndOfSpeech() {
-        try {
-            mListener.endOfSpeech();
-        } catch (RemoteException e) {
-        }
-    }
-
-    /**
-     * TODO: Expects 16-bit BE?
-     *
-     * @param buffer
-     */
-    private void onBufferReceived(byte[] buffer) {
-        try {
-            mListener.bufferReceived(buffer);
-        } catch (RemoteException e) {
-        }
-    }
-
     private String getWsServiceUrl(Intent intent) {
         String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
         if (url == null) {
             return PreferenceUtils.getPrefString(
                     PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()),
                     getResources(),
-                    R.string.keyServerWs,
-                    R.string.defaultServerWs);
+                    R.string.keyWsServer,
+                    R.string.defaultWsServer);
         }
         return url;
     }
@@ -376,7 +241,7 @@ public class WebSocketRecognizer extends RecognitionService {
 
         @Override
         public void handleMessage(Message msg) {
-            WebSocketRecognizer outerClass = mRef.get();
+            AbstractRecognitionService outerClass = mRef.get();
             if (outerClass != null) {
                 if (msg.what == MSG_ERROR) {
                     Exception e = (Exception) msg.obj;

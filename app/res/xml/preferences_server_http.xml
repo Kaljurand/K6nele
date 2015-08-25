@@ -3,8 +3,8 @@
     // Settings that apply to the HTTP-based server (also denoted as "grammar supporting")
     // These cannot be configured using standard extras
     <Preference
-        android:key="@string/keyServerHttp"
-        android:summary="@string/defaultServerHttp"
+        android:key="@string/keyHttpServer"
+        android:summary="@string/defaultHttpServer"
         android:title="@string/titleDefaultServiceHttp">
         <intent
             android:targetClass="ee.ioc.phon.android.speak.ServerListActivity"

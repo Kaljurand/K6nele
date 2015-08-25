@@ -68,8 +68,8 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-        Preference service = (Preference) findPreference(getString(R.string.keyServerHttp));
-        service.setSummary(sp.getString(getString(R.string.keyServerHttp), getString(R.string.defaultServerHttp)));
+        Preference service = (Preference) findPreference(getString(R.string.keyHttpServer));
+        service.setSummary(sp.getString(getString(R.string.keyHttpServer), getString(R.string.defaultHttpServer)));
 
         service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -115,7 +115,7 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
                     if (url != null) {
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString(getString(R.string.keyServerHttp), url);
+                        editor.putString(getString(R.string.keyHttpServer), url);
                         editor.apply();
                     }
                 }
