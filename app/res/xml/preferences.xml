@@ -2,6 +2,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     // Speech keyboard settings
+    // These settings are specific to the UI
+    // Settings which cannot be configured using standard extras (audio cues, autostop) are in
+    // the service menus because the UI cannot influence them.
     <PreferenceCategory
         android:key="@string/keyCategoryIme"
         android:title="@string/titleCategoryIme">
@@ -33,16 +36,6 @@
             android:title="@string/titleAutoStart" />
             -->
         <CheckBoxPreference
-            android:defaultValue="@bool/defaultImeAutoStopAfterPause"
-            android:key="@string/keyImeAutoStopAfterPause"
-            android:summary="@string/summaryAutoStopAfterPause"
-            android:title="@string/titleAutoStopAfterPause" />
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultImeAudioCues"
-            android:key="@string/keyImeAudioCues"
-            android:summary="@string/summaryAudioCues"
-            android:title="@string/titleAudioCues" />
-        <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
@@ -50,6 +43,7 @@
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)
+    // These settings are specific to the UI
     <PreferenceCategory android:title="@string/titleCategoryUi">
         <Preference
             android:key="@string/keyCombo"
@@ -69,11 +63,6 @@
             android:key="@string/keyAutoStart"
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultAudioCues"
-            android:key="@string/keyAudioCues"
-            android:summary="@string/summaryAudioCues"
-            android:title="@string/titleAudioCues" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultHelpText"
             android:key="@string/keyHelpText"

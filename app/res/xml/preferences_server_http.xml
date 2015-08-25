@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     // Settings that apply to the HTTP-based server (also denoted as "grammar supporting")
+    // These cannot be configured using standard extras
     <Preference
         android:key="@string/keyServerHttp"
         android:summary="@string/defaultServerHttp"
@@ -28,7 +29,11 @@
         android:key="@string/keyRecordingRate"
         android:summary="@string/summaryRecordingRate"
         android:title="@string/titleRecordingRate" />
-
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultAudioCues"
+        android:key="@string/keyAudioCues"
+        android:summary="@string/summaryAudioCues"
+        android:title="@string/titleAudioCues" />
     <CheckBoxPreference
         android:defaultValue="@bool/defaultRespectLocale"
         android:key="@string/keyRespectLocale"

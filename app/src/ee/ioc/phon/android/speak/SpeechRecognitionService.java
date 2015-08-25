@@ -379,13 +379,23 @@ public class SpeechRecognitionService extends RecognitionService {
 
 
 	private void init(Intent recognizerIntent, final Callback listener) throws RemoteException {
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		mExtras = recognizerIntent.getExtras();
 		if (mExtras == null) {
 			// For some reason getExtras() can return null, we map it
 			// to an empty Bundle if this occurs.
 			mExtras = new Bundle();
+		}
+
+		final boolean isAutoStopAfterPause;
+
+		// If the caller does not specify this extra, then we set it based on the settings.
+		// TODO: in general, we could have 3-valued settings: true, false, use caller
+		if (mExtras.containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
+			isAutoStopAfterPause = ! mExtras.getBoolean(Extras.EXTRA_UNLIMITED_DURATION);
+		} else {
+			isAutoStopAfterPause = PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause);
 		}
 
 		try {
@@ -453,10 +463,7 @@ public class SpeechRecognitionService extends RecognitionService {
 		mStopTask = new Runnable() {
 			public void run() {
 				if (mRecorder != null) {
-					if (
-							mTimeToFinish < SystemClock.uptimeMillis() ||
-                            PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause) && mRecorder.isPausing()
-							) {
+					if (mTimeToFinish < SystemClock.uptimeMillis() || isAutoStopAfterPause && mRecorder.isPausing()) {
 						stopRecording(listener);
 					} else {
 						mStopHandler.postDelayed(this, Constants.TASK_INTERVAL_STOP);
