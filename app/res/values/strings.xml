@@ -12,7 +12,6 @@
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
-    <string name="labelActivitySpeechAction">Kõnele speech action</string>
     <string name="labelActivityAbout">About Kõnele</string>
     <string name="labelActivityPreferences">Kõnele settings</string>
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
@@ -204,7 +203,6 @@ More grammars are available at
     </string-array>
 
     <string-array name="entriesRecordingRate" translatable="false">
-
         <!-- <item>8 kHz</item> -->
         <item>11 kHz</item>
         <item>16 kHz</item>
@@ -249,5 +247,5 @@ More grammars are available at
     </string-array>
 
     <!-- Just for testing, won't appear in the product. -->
-    <string name="testComboLabel" translatable="false">English (United States) @ Kõnele (grammar support)</string>
+    <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>
 </resources>

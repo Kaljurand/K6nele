@@ -62,6 +62,8 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 
 /**
+ * @deprecated
+ *
  * <p>This activity responds to the following intent types:</p>
  * <ul>
  * <li>android.speech.action.RECOGNIZE_SPEECH</li>

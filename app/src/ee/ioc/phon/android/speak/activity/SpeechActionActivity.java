@@ -24,6 +24,46 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
+/**
+ * <p>This activity responds to the following intent types:</p>
+ * <ul>
+ * <li>android.speech.action.RECOGNIZE_SPEECH</li>
+ * <li>android.speech.action.WEB_SEARCH</li>
+ * </ul>
+ * <p>We have tried to implement the complete interface of RecognizerIntent as of API level 7 (v2.1).</p>
+ * <p/>
+ * <p>It records audio, transcribes it using a speech-to-text server
+ * and returns the result as a non-empty list of Strings.
+ * In case of <code>android.intent.action.MAIN</code>,
+ * it submits the recorded/transcribed audio to a web search.
+ * It never returns an error code,
+ * all the errors are processed within this activity.</p>
+ * <p/>
+ * <p>This activity rewrites the error codes which originally come from the
+ * speech recognizer service
+ * to the RecognizerIntent result error codes. The RecognizerIntent error codes are the
+ * following (with my interpretation after the colon):</p>
+ * <p/>
+ * <ul>
+ * <li>RESULT_AUDIO_ERROR: recording of the audio fails</li>
+ * <li>RESULT_NO_MATCH: everything worked great just no transcription was produced</li>
+ * <li>RESULT_NETWORK_ERROR: cannot reach the recognizer server
+ * <ul>
+ * <li>Network is switched off on the device</li>
+ * <li>The recognizer webservice URL does not exist in the internet</li>
+ * </ul>
+ * </li>
+ * <li>RESULT_SERVER_ERROR: server was reached but it denied service for some reason,
+ * or produced results in a wrong format (i.e. maybe it provides a different service)</li>
+ * <li>RESULT_CLIENT_ERROR: generic client error
+ * <ul>
+ * <li>The URLs of the recognizer webservice and/or the grammar were malformed</li>
+ * </ul>
+ * </li>
+ * </ul>
+ *
+ * @author Kaarel Kaljurand
+ */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
     private boolean mAutoStart;

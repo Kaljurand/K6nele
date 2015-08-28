@@ -8,7 +8,6 @@
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
-    <string name="labelActivitySpeechAction">Kõnele</string>
     <string name="labelActivityAppList">Rakendused</string>
     <string name="labelActivityGrammarList">Grammatikad</string>
     <string name="labelActivityAbout">Info</string>
