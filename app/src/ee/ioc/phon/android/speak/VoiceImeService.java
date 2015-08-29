@@ -170,6 +170,23 @@ public class VoiceImeService extends InputMethodService {
             public void onBufferReceived(byte[] buffer) {
                 // TODO: store buffer
             }
+
+            @Override
+            public void onSelectAll() {
+                // TODO: show ContextMenu
+                getCurrentInputConnection().performContextMenuAction(android.R.id.selectAll);
+            }
+
+            @Override
+            public void onReset() {
+                // TODO: hide ContextMenu (if visible)
+                InputConnection ic = getCurrentInputConnection();
+                CharSequence cs = ic.getSelectedText(0);
+                if (cs != null) {
+                    int len = cs.length();
+                    ic.setSelection(len, len);
+                }
+            }
         });
 
         // Launch recognition immediately (if set so)

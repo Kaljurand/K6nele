@@ -38,6 +38,10 @@ public class VoiceImeView extends LinearLayout {
 
         void onAddSpace();
 
+        void onSelectAll();
+
+        void onReset();
+
         void onBufferReceived(byte[] buffer);
     }
 
@@ -176,8 +180,18 @@ public class VoiceImeView extends LinearLayout {
             }
 
             @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
+
+            @Override
             public void onDoubleTapMotion() {
                 mListener.onAddSpace();
+            }
+
+            @Override
+            public void onLongPressMotion() {
+                mListener.onSelectAll();
             }
         });
     }

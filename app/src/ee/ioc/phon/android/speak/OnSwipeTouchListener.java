@@ -8,10 +8,10 @@ import android.view.View;
 // Copied from http://stackoverflow.com/a/19506010/12547
 public class OnSwipeTouchListener implements View.OnTouchListener {
 
-    private final GestureDetector gestureDetector;
+    private final GestureDetector mGestureDetector;
 
     public OnSwipeTouchListener(Context context) {
-        gestureDetector = new GestureDetector(context, new GestureListener());
+        mGestureDetector = new GestureDetector(context, new GestureListener());
     }
 
     public void onSwipeLeft() {
@@ -20,12 +20,18 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
     public void onSwipeRight() {
     }
 
+    public void onSingleTapMotion() {
+    }
+
     public void onDoubleTapMotion() {
+    }
+
+    public void onLongPressMotion() {
     }
 
 
     public boolean onTouch(View v, MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
+        return mGestureDetector.onTouchEvent(event);
     }
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -54,9 +60,20 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
         }
 
         @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            onSingleTapMotion();
+            return true;
+        }
+
+        @Override
         public boolean onDoubleTap(MotionEvent e) {
             onDoubleTapMotion();
             return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            onLongPressMotion();
         }
     }
 }

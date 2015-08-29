@@ -224,6 +224,16 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             }
 
             @Override
+            public void onSelectAll() {
+                // Not applicable
+            }
+
+            @Override
+            public void onReset() {
+                // Not applicable
+            }
+
+            @Override
             public void onBufferReceived(byte[] buffer) {
                 Log.i("Activity: onBufferReceived: " + buffer.length);
                 mBufferList.add(buffer);
