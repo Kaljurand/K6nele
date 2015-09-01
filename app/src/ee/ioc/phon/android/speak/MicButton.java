@@ -79,7 +79,7 @@ public class MicButton extends ImageButton {
         mDrawableMic = res.getDrawable(R.drawable.button_mic);
         mDrawableMicTranscribing = res.getDrawable(R.drawable.button_mic_transcribing);
 
-        mVolumeLevels = new ArrayList<Drawable>();
+        mVolumeLevels = new ArrayList<>();
         mVolumeLevels.add(res.getDrawable(R.drawable.button_mic_recording_0));
         mVolumeLevels.add(res.getDrawable(R.drawable.button_mic_recording_1));
         mVolumeLevels.add(res.getDrawable(R.drawable.button_mic_recording_2));

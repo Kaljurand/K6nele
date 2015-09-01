@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionService;
 import android.speech.SpeechRecognizer;
@@ -19,6 +20,10 @@ import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
 
+/**
+ * About RemoteException see
+ * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
+ */
 public abstract class AbstractRecognitionService extends RecognitionService {
 
     private AudioCue mAudioCue;
@@ -30,15 +35,42 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     private Handler mVolumeHandler = new Handler();
     private Runnable mShowVolumeTask;
 
-    abstract void onCancel0();
+    private Handler mStopHandler = new Handler();
+    private Runnable mStopTask;
 
-    abstract void connectToTheServer(Intent recognizerIntent) throws MalformedURLException;
+    /**
+     * Stop sending audio to the server.
+     */
+    abstract void disconnectFromServer();
 
-    abstract void setUpHandler(Intent recognizerIntent, RecognitionService.Callback listener);
+    /**
+     * Start sending audio to the server.
+     */
+    abstract void connectToServer(Intent recognizerIntent) throws MalformedURLException;
 
+    /**
+     * Configures the service based on the given intent extras.
+     */
+    abstract void configureService(Intent recognizerIntent);
+
+    /**
+     * Queries the preferences to find out if audio cues are switched on.
+     * Different services can have different preferences.
+     */
     abstract boolean queryPrefAudioCues(SharedPreferences prefs, Resources resources);
 
+    /**
+     * Gets the sample rate used in the recorder.
+     * Different services can use a different sample rate.
+     */
     abstract int getSampleRate();
+
+    /**
+     * Gets the max number of milliseconds to record.
+     */
+    abstract int getAutoStopAfterTime();
+
+    abstract boolean isAutoStopAfterPause();
 
     abstract void afterRecording(RawAudioRecorder recorder);
 
@@ -46,10 +78,10 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         return mRecorder;
     }
 
-
     public void onDestroy() {
         super.onDestroy();
-        onCancel0();
+        stopRecording0();
+        disconnectFromServer();
         if (mAudioPauser != null) mAudioPauser.resume();
     }
 
@@ -71,15 +103,15 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
         setAudioCuesEnabled(queryPrefAudioCues(prefs, getResources()));
 
-        setListener(listener);
+        mListener = listener;
 
-        setUpHandler(recognizerIntent, listener);
+        configureService(recognizerIntent);
 
         try {
             onReadyForSpeech(new Bundle());
             startRecord(getSampleRate());
             onBeginningOfSpeech();
-            connectToTheServer(recognizerIntent);
+            connectToServer(recognizerIntent);
         } catch (MalformedURLException e) {
             onError(SpeechRecognizer.ERROR_CLIENT);
         } catch (IOException e) {
@@ -87,41 +119,24 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         }
     }
 
+    /**
+     * Stops the recording and informs the socket that no more packages are coming.
+     */
+    @Override
+    protected void onStopListening(RecognitionService.Callback listener) {
+        onEndOfSpeech();
+    }
 
     /**
      * Stops the recording and closes the socket.
      */
     @Override
     protected void onCancel(RecognitionService.Callback listener) {
-        onCancel0();
+        stopRecording0();
+        disconnectFromServer();
         // Send empty results if recognition is cancelled
         // TEST: if it works with Google Translate and Slide IT
         onResults(new Bundle());
-    }
-
-    /**
-     * Stops the recording and informs the socket that no more packages are coming.
-     */
-    @Override
-    protected void onStopListening(RecognitionService.Callback listener) {
-        stopRecording0();
-        onEndOfSpeech();
-    }
-
-    public void setListener(RecognitionService.Callback listener) {
-        mListener = listener;
-    }
-
-    public RecognitionService.Callback getListener() {
-        return mListener;
-    }
-
-    public void setAudioCuesEnabled(boolean enabled) {
-        if (enabled) {
-            mAudioCue = new AudioCue(this);
-        } else {
-            mAudioCue = null;
-        }
     }
 
     // TODO: call onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT); if server initiates close
@@ -147,7 +162,8 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     public void onError(int errorCode) {
         // As soon as there is an error we shut down the socket and the recorder
-        onCancel0();
+        stopRecording0();
+        disconnectFromServer();
         if (mAudioCue != null) mAudioCue.playErrorSound();
         if (mAudioPauser != null) mAudioPauser.resume();
         try {
@@ -178,6 +194,8 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     public void onEndOfSpeech() {
+        afterRecording(mRecorder);
+        stopRecording0();
         if (mAudioCue != null) mAudioCue.playStopSound();
         try {
             mListener.endOfSpeech();
@@ -194,13 +212,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         try {
             mListener.bufferReceived(buffer);
         } catch (RemoteException e) {
-        }
-    }
-
-    void releaseRecorder() {
-        if (mRecorder != null) {
-            mRecorder.release();
-            mRecorder = null;
         }
     }
 
@@ -237,13 +248,50 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         };
 
         mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
+
+
+        // Time (in milliseconds since the boot) when the recording is going to be stopped
+        final long timeToFinish = SystemClock.uptimeMillis() + getAutoStopAfterTime();
+        final boolean isAutoStopAfterPause = isAutoStopAfterPause();
+
+        // Check if we should stop recording
+        mStopTask = new Runnable() {
+            public void run() {
+                if (mRecorder != null) {
+                    if (timeToFinish < SystemClock.uptimeMillis() || isAutoStopAfterPause && mRecorder.isPausing()) {
+                        onEndOfSpeech();
+                    } else {
+                        mStopHandler.postDelayed(this, Constants.TASK_INTERVAL_STOP);
+                    }
+                }
+            }
+        };
+
+        mStopHandler.postDelayed(mStopTask, Constants.TASK_DELAY_STOP);
     }
 
-    protected void stopRecording0() {
+
+    private void stopRecording0() {
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
-        afterRecording(mRecorder);
+        if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
         releaseRecorder();
         if (mAudioPauser != null) mAudioPauser.resume();
     }
 
+
+    private void releaseRecorder() {
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
+    }
+
+
+    private void setAudioCuesEnabled(boolean enabled) {
+        if (enabled) {
+            mAudioCue = new AudioCue(this);
+        } else {
+            mAudioCue = null;
+        }
+    }
 }

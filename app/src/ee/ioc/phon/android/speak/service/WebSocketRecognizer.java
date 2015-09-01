@@ -9,7 +9,6 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -55,9 +54,7 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     private WebSocket mWebSocket;
 
     @Override
-    void onCancel0() {
-        stopRecording0();
-
+    void disconnectFromServer() {
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
         if (mSendLooper != null) {
             mSendLooper.quit();
@@ -70,15 +67,14 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     }
 
     @Override
-    void connectToTheServer(Intent recognizerIntent) throws MalformedURLException {
+    void connectToServer(Intent recognizerIntent) throws MalformedURLException {
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
         startSocket(getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder));
     }
 
     @Override
-    void setUpHandler(Intent recognizerIntent, RecognitionService.Callback listener) {
+    void configureService(Intent recognizerIntent) {
         mMyHandler = new MyHandler(this,
-                listener,
                 recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
                 recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
         );
@@ -95,7 +91,19 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     }
 
     @Override
+    int getAutoStopAfterTime() {
+        return 1000 * 10000; // We record as long as the server allows
+    }
+
+    // TODO
+    @Override
+    boolean isAutoStopAfterPause() {
+        return false;
+    }
+
+    @Override
     void afterRecording(RawAudioRecorder recorder) {
+        // Nothing to do, all the audio has already been sent
     }
 
     private void handleResult(String text) {
@@ -228,20 +236,18 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
 
     private static class MyHandler extends Handler {
         private final WeakReference<WebSocketRecognizer> mRef;
-        private final RecognitionService.Callback mCallback;
         private final boolean mIsUnlimitedDuration;
         private final boolean mIsPartialResults;
 
-        public MyHandler(WebSocketRecognizer c, RecognitionService.Callback callback, boolean isUnlimitedDuration, boolean isPartialResults) {
+        public MyHandler(WebSocketRecognizer c, boolean isUnlimitedDuration, boolean isPartialResults) {
             mRef = new WeakReference<>(c);
-            mCallback = callback;
             mIsUnlimitedDuration = isUnlimitedDuration;
             mIsPartialResults = isPartialResults;
         }
 
         @Override
         public void handleMessage(Message msg) {
-            AbstractRecognitionService outerClass = mRef.get();
+            WebSocketRecognizer outerClass = mRef.get();
             if (outerClass != null) {
                 if (msg.what == MSG_ERROR) {
                     Exception e = (Exception) msg.obj;
@@ -267,7 +273,7 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
                                     if (mIsUnlimitedDuration) {
                                         outerClass.onPartialResults(toBundle(hypotheses, true));
                                     } else {
-                                        outerClass.onStopListening(mCallback);
+                                        outerClass.onEndOfSpeech();
                                         outerClass.onResults(toBundle(hypotheses, true));
                                     }
                                 }

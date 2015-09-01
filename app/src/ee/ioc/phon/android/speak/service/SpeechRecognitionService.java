@@ -27,9 +27,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -62,35 +60,28 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
 
     private SharedPreferences mPrefs;
 
-    private Handler mStopHandler = new Handler();
     private volatile Looper mSendLooper;
     private volatile Handler mSendHandler;
 
     private Runnable mSendTask;
-    private Runnable mStopTask;
-
-    // Time (in milliseconds since the boot) when the recording is going to be stopped
-    private long mTimeToFinish;
 
     private ChunkedWebRecSessionBuilder mRecSessionBuilder;
     private ChunkedWebRecSession mRecSession;
 
     private Bundle mExtras;
 
-
     @Override
-    void onCancel0() {
+    void disconnectFromServer() {
         releaseResources();
     }
 
     @Override
-    void connectToTheServer(Intent recognizerIntent) throws MalformedURLException {
+    void connectToServer(Intent recognizerIntent) throws MalformedURLException {
         mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
-        mStopHandler.postDelayed(mStopTask, Constants.TASK_DELAY_STOP);
     }
 
     @Override
-    void setUpHandler(Intent recognizerIntent, RecognitionService.Callback callback) {
+    void configureService(Intent recognizerIntent) {
         boolean success = init(recognizerIntent);
         if (!success) {
             return;
@@ -120,13 +111,30 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
         return PreferenceUtils.getPrefInt(mPrefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
     }
 
+    @Override
+    int getAutoStopAfterTime() {
+        return 1000 * Integer.parseInt(
+                mPrefs.getString(
+                        getString(R.string.keyAutoStopAfterTime),
+                        getString(R.string.defaultAutoStopAfterTime)));
+    }
+
+    @Override
+    boolean isAutoStopAfterPause() {
+        // If the caller does not specify this extra, then we set it based on the settings.
+        // TODO: in general, we could have 3-valued settings: true, false, use caller
+        if (mExtras.containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
+            return !mExtras.getBoolean(Extras.EXTRA_UNLIMITED_DURATION);
+        }
+        return PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause);
+    }
+
     private void releaseResources() {
         stopTasks();
         if (mRecSession != null && !mRecSession.isFinished()) {
             mRecSession.cancel();
         }
 
-        releaseRecorder();
         if (mSendLooper != null) {
             mSendLooper.quit();
             mSendLooper = null;
@@ -134,8 +142,8 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
     }
 
 
-    // TODO: temporary hack
-    protected void afterRecording(RawAudioRecorder recorder) {
+    @Override
+    void afterRecording(RawAudioRecorder recorder) {
         stopTasks();
         transcribeAndFinishInBackground(recorder.consumeRecording());
     }
@@ -154,7 +162,6 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
 
     private void stopTasks() {
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
-        if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
     }
 
 
@@ -301,16 +308,6 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
             mExtras = new Bundle();
         }
 
-        final boolean isAutoStopAfterPause;
-
-        // If the caller does not specify this extra, then we set it based on the settings.
-        // TODO: in general, we could have 3-valued settings: true, false, use caller
-        if (mExtras.containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
-            isAutoStopAfterPause = !mExtras.getBoolean(Extras.EXTRA_UNLIMITED_DURATION);
-        } else {
-            isAutoStopAfterPause = PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause);
-        }
-
         try {
             mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, null);
         } catch (MalformedURLException e) {
@@ -319,11 +316,6 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
             onError(SpeechRecognizer.ERROR_CLIENT);
             return false;
         }
-
-        mTimeToFinish = SystemClock.uptimeMillis() + 1000 * Integer.parseInt(
-                mPrefs.getString(
-                        getString(R.string.keyAutoStopAfterTime),
-                        getString(R.string.defaultAutoStopAfterTime)));
 
         // Starting chunk sending in a separate thread so that slow Internet
         // would not block the UI.
@@ -349,32 +341,6 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
             }
         };
 
-
-        // Check if we should stop recording
-        mStopTask = new Runnable() {
-            public void run() {
-                if (getRecorder() != null) {
-                    if (mTimeToFinish < SystemClock.uptimeMillis() || isAutoStopAfterPause && getRecorder().isPausing()) {
-                        //stopRecording(listener);
-                        stopRecording0();
-                    } else {
-                        mStopHandler.postDelayed(this, Constants.TASK_INTERVAL_STOP);
-                    }
-                }
-            }
-        };
-
         return true;
     }
-
-
-    /**
-     * About RemoteException see
-     * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
-     */
-    /*
-    private static void handleRemoteException(RemoteException e) {
-        Log.e(e.getMessage());
-    }
-    */
 }
