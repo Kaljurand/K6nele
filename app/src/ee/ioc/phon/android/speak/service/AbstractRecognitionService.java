@@ -70,9 +70,16 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      */
     abstract int getAutoStopAfterTime();
 
+    /**
+     * Stop after a pause is detected.
+     * This can be implemented either in the server or in the app.
+     */
     abstract boolean isAutoStopAfterPause();
 
-    abstract void afterRecording(RawAudioRecorder recorder);
+    /**
+     * Tasks done after the recording has finished and the audio has been obtained.
+     */
+    abstract void afterRecording(byte[] recording);
 
     protected RawAudioRecorder getRecorder() {
         return mRecorder;
@@ -124,6 +131,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      */
     @Override
     protected void onStopListening(RecognitionService.Callback listener) {
+        Log.i("onStopListening");
         onEndOfSpeech();
     }
 
@@ -132,6 +140,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      */
     @Override
     protected void onCancel(RecognitionService.Callback listener) {
+        Log.i("onCancel");
         stopRecording0();
         disconnectFromServer();
         // Send empty results if recognition is cancelled
@@ -161,7 +170,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     public void onError(int errorCode) {
-        // As soon as there is an error we shut down the socket and the recorder
+        // As soon as there is an error we shut down the recorder and the socket
         stopRecording0();
         disconnectFromServer();
         if (mAudioCue != null) mAudioCue.playErrorSound();
@@ -194,13 +203,20 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     public void onEndOfSpeech() {
-        afterRecording(mRecorder);
+        byte[] recording = null;
+
+        if (mRecorder != null) {
+            // TODO: make sure this call does not do too much work in the case of the
+            // WebSocket-service which does not use the bytes in the end
+            recording = mRecorder.consumeRecording();
+        }
         stopRecording0();
         if (mAudioCue != null) mAudioCue.playStopSound();
         try {
             mListener.endOfSpeech();
         } catch (RemoteException e) {
         }
+        afterRecording(recording);
     }
 
     /**
@@ -272,9 +288,9 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
 
     private void stopRecording0() {
+        releaseRecorder();
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
         if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
-        releaseRecorder();
         if (mAudioPauser != null) mAudioPauser.resume();
     }
 

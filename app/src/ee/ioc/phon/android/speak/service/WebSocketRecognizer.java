@@ -102,7 +102,7 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     }
 
     @Override
-    void afterRecording(RawAudioRecorder recorder) {
+    void afterRecording(byte[] recording) {
         // Nothing to do, all the audio has already been sent
     }
 
@@ -184,11 +184,13 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
         // Send chunks to the server
         mSendTask = new Runnable() {
             public void run() {
-                RawAudioRecorder recorder = getRecorder();
-                if (recorder != null) {
-                    if (webSocket != null && webSocket.isOpen()) {
+                if (webSocket != null && webSocket.isOpen()) {
+                    RawAudioRecorder recorder = getRecorder();
+                    if (recorder == null) {
+                        Log.i("Sending: EOS (recorder == null)");
+                        webSocket.send("EOS");
+                    } else {
                         RawAudioRecorder.State recorderState = recorder.getState();
-                        Log.i("Recorder state = " + recorderState);
                         byte[] buffer = recorder.consumeRecordingAndTruncate();
                         // We assume that if only 0 bytes have been recorded then the recording
                         // has finished and we can notify the server with "EOF".
@@ -201,7 +203,7 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
                                 Log.i("mSendHandler.postDelayed returned false");
                             }
                         } else {
-                            Log.i("Sending: EOS");
+                            Log.i("Sending: EOS. Buffer length = " + buffer.length + ", recorder state = " + recorderState);
                             webSocket.send("EOS");
                         }
                     }

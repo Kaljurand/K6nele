@@ -41,7 +41,6 @@ import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RawAudioRecorder;
 import ee.ioc.phon.android.speak.Utils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
@@ -143,9 +142,9 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
 
 
     @Override
-    void afterRecording(RawAudioRecorder recorder) {
+    void afterRecording(byte[] recording) {
         stopTasks();
-        transcribeAndFinishInBackground(recorder.consumeRecording());
+        transcribeAndFinishInBackground(recording);
     }
 
     /**
