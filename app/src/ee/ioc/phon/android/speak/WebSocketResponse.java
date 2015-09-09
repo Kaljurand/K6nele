@@ -145,12 +145,12 @@ public class WebSocketResponse {
      * sentence end marker.
      *
      * @param str String to be pretty-printed
-     * @return Pretty-printed string
+     * @return Pretty-printed string (never null)
      */
     private static String pp(String str) {
         boolean isSentenceStart = false;
         boolean isWhitespaceBefore = false;
-        String text = null;
+        String text = "";
         for (String tok : str.split(" ")) {
             if (tok.length() == 0) {
                 continue;
@@ -167,7 +167,7 @@ public class WebSocketResponse {
                 tok = Character.toUpperCase(firstChar) + tok.substring(1);
             }
 
-            if (text == null) {
+            if (text.length() == 0) {
                 text = tok;
             } else {
                 text += glue + tok;
