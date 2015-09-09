@@ -2,7 +2,6 @@ package ee.ioc.phon.android.speak.service;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -13,10 +12,12 @@ import android.speech.SpeechRecognizer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.AudioCue;
 import ee.ioc.phon.android.speak.AudioPauser;
 import ee.ioc.phon.android.speak.Constants;
+import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
 
@@ -38,57 +39,86 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     private Handler mStopHandler = new Handler();
     private Runnable mStopTask;
 
-    /**
-     * Stop sending audio to the server.
-     */
-    abstract void disconnectFromServer();
+    static Bundle toBundle(String hypothesis) {
+        ArrayList<String> hypotheses = new ArrayList<>();
+        hypotheses.add(hypothesis);
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
+        return bundle;
+    }
 
-    /**
-     * Start sending audio to the server.
-     */
-    abstract void connectToServer(Intent recognizerIntent) throws MalformedURLException;
+    static Bundle toBundle(ArrayList<String> hypotheses, boolean isFinal) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
+        bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
+        return bundle;
+    }
 
     /**
      * Configures the service based on the given intent extras.
      */
-    abstract void configureService(Intent recognizerIntent);
+    abstract void configure(Intent recognizerIntent) throws MalformedURLException;
+
+    /**
+     * Start sending audio to the server.
+     */
+    abstract void connect();
+
+    /**
+     * Stop sending audio to the server.
+     */
+    abstract void disconnect();
 
     /**
      * Queries the preferences to find out if audio cues are switched on.
      * Different services can have different preferences.
      */
-    abstract boolean queryPrefAudioCues(SharedPreferences prefs, Resources resources);
+    boolean isAudioCues() {
+        return false;
+    }
 
     /**
      * Gets the sample rate used in the recorder.
      * Different services can use a different sample rate.
      */
-    abstract int getSampleRate();
+    int getSampleRate() {
+        return 16000;
+    }
 
     /**
      * Gets the max number of milliseconds to record.
      */
-    abstract int getAutoStopAfterTime();
+    int getAutoStopAfterMillis() {
+        return 1000 * 10000; // We record as long as the server allows
+    }
 
     /**
      * Stop after a pause is detected.
      * This can be implemented either in the server or in the app.
      */
-    abstract boolean isAutoStopAfterPause();
+    boolean isAutoStopAfterPause() {
+        return false;
+    }
 
     /**
      * Tasks done after the recording has finished and the audio has been obtained.
      */
-    abstract void afterRecording(byte[] recording);
+    void afterRecording(byte[] recording) {
+        // Nothing to do, e.g. if the audio has already been sent to the server during recording
+    }
 
-    protected RawAudioRecorder getRecorder() {
+    RawAudioRecorder getRecorder() {
         return mRecorder;
+    }
+
+    SharedPreferences getSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     public void onDestroy() {
         super.onDestroy();
         stopRecording0();
-        disconnectFromServer();
+        disconnect();
         if (mAudioPauser != null) mAudioPauser.resume();
     }
 
@@ -106,21 +136,22 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         mAudioPauser = new AudioPauser(this);
         mAudioPauser.pause();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        setAudioCuesEnabled(queryPrefAudioCues(prefs, getResources()));
+        setAudioCuesEnabled(isAudioCues());
 
         mListener = listener;
 
-        configureService(recognizerIntent);
+        try {
+            configure(recognizerIntent);
+        } catch (MalformedURLException e) {
+            onError(SpeechRecognizer.ERROR_CLIENT);
+            return;
+        }
 
         try {
             onReadyForSpeech(new Bundle());
             startRecord(getSampleRate());
             onBeginningOfSpeech();
-            connectToServer(recognizerIntent);
-        } catch (MalformedURLException e) {
-            onError(SpeechRecognizer.ERROR_CLIENT);
+            connect();
         } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_AUDIO);
         }
@@ -142,7 +173,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     protected void onCancel(RecognitionService.Callback listener) {
         Log.i("onCancel");
         stopRecording0();
-        disconnectFromServer();
+        disconnect();
         // Send empty results if recognition is cancelled
         // TEST: if it works with Google Translate and Slide IT
         onResults(new Bundle());
@@ -172,7 +203,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     public void onError(int errorCode) {
         // As soon as there is an error we shut down the recorder and the socket
         stopRecording0();
-        disconnectFromServer();
+        disconnect();
         if (mAudioCue != null) mAudioCue.playErrorSound();
         if (mAudioPauser != null) mAudioPauser.resume();
         try {
@@ -182,6 +213,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     public void onResults(Bundle bundle) {
+        disconnect();
         try {
             mListener.results(bundle);
         } catch (RemoteException e) {
@@ -267,7 +299,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
 
         // Time (in milliseconds since the boot) when the recording is going to be stopped
-        final long timeToFinish = SystemClock.uptimeMillis() + getAutoStopAfterTime();
+        final long timeToFinish = SystemClock.uptimeMillis() + getAutoStopAfterMillis();
         final boolean isAutoStopAfterPause = isAutoStopAfterPause();
 
         // Check if we should stop recording

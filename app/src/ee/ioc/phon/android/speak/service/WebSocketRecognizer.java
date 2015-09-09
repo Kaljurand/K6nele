@@ -1,14 +1,10 @@
 package ee.ioc.phon.android.speak.service;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -33,6 +29,8 @@ import ee.ioc.phon.android.speak.utils.QueryUtils;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
+ * <p/>
+ * TODO: rename: WebSocketRecognitionService
  */
 public class WebSocketRecognizer extends AbstractRecognitionService {
 
@@ -53,8 +51,27 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
 
     private WebSocket mWebSocket;
 
+    private String mUrl;
+
     @Override
-    void disconnectFromServer() {
+    void configure(Intent recognizerIntent) throws MalformedURLException {
+        // TODO: why null?
+        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
+        mUrl = getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder);
+
+        mMyHandler = new MyHandler(this,
+                recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
+                recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
+        );
+    }
+
+    @Override
+    void connect() {
+        startSocket(mUrl);
+    }
+
+    @Override
+    void disconnect() {
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
         if (mSendLooper != null) {
             mSendLooper.quit();
@@ -67,43 +84,8 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     }
 
     @Override
-    void connectToServer(Intent recognizerIntent) throws MalformedURLException {
-        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
-        startSocket(getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder));
-    }
-
-    @Override
-    void configureService(Intent recognizerIntent) {
-        mMyHandler = new MyHandler(this,
-                recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
-                recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
-        );
-    }
-
-    @Override
-    boolean queryPrefAudioCues(SharedPreferences prefs, Resources resources) {
-        return PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues);
-    }
-
-    @Override
-    int getSampleRate() {
-        return 16000;
-    }
-
-    @Override
-    int getAutoStopAfterTime() {
-        return 1000 * 10000; // We record as long as the server allows
-    }
-
-    // TODO
-    @Override
-    boolean isAutoStopAfterPause() {
-        return false;
-    }
-
-    @Override
-    void afterRecording(byte[] recording) {
-        // Nothing to do, all the audio has already been sent
+    boolean isAudioCues() {
+        return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues);
     }
 
     private void handleResult(String text) {
@@ -219,22 +201,13 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
         String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
         if (url == null) {
             return PreferenceUtils.getPrefString(
-                    PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()),
+                    getSharedPreferences(),
                     getResources(),
                     R.string.keyWsServer,
                     R.string.defaultWsServer);
         }
         return url;
     }
-
-
-    private static Bundle toBundle(ArrayList<String> hypotheses, boolean isFinal) {
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
-        bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
-        return bundle;
-    }
-
 
     private static class MyHandler extends Handler {
         private final WeakReference<WebSocketRecognizer> mRef;

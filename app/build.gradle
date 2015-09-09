@@ -23,9 +23,9 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 1309
-        versionName '1.3.09'
+        targetSdkVersion 23
+        versionCode 1311
+        versionName '1.3.11'
     }
 
 

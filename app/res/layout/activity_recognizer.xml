@@ -46,7 +46,7 @@
 
     <ee.ioc.phon.android.speak.VoiceImeView
         android:id="@+id/vVoiceImeView"
-        android:layout_width="250dip"
+        android:layout_width="270dip"
         android:layout_height="match_parent"
         android:gravity="center"
         android:keepScreenOn="true"

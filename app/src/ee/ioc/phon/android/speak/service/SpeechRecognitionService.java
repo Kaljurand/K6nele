@@ -21,7 +21,6 @@ import android.app.PendingIntent.CanceledException;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -52,6 +51,7 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 /**
  * Implements RecognitionService, connects to the server via HTTP.
+ * TODO: rename: HttpRecognitionService
  *
  * @author Kaarel Kaljurand
  */
@@ -70,17 +70,7 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
     private Bundle mExtras;
 
     @Override
-    void disconnectFromServer() {
-        releaseResources();
-    }
-
-    @Override
-    void connectToServer(Intent recognizerIntent) throws MalformedURLException {
-        mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
-    }
-
-    @Override
-    void configureService(Intent recognizerIntent) {
+    void configure(Intent recognizerIntent) {
         boolean success = init(recognizerIntent);
         if (!success) {
             return;
@@ -101,8 +91,18 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    boolean queryPrefAudioCues(SharedPreferences prefs, Resources resources) {
-        return PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues);
+    void connect() {
+        mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
+    }
+
+    @Override
+    void disconnect() {
+        releaseResources();
+    }
+
+    @Override
+    boolean isAudioCues() {
+        return PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    int getAutoStopAfterTime() {
+    int getAutoStopAfterMillis() {
         return 1000 * Integer.parseInt(
                 mPrefs.getString(
                         getString(R.string.keyAutoStopAfterTime),

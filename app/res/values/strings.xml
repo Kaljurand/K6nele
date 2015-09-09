@@ -9,6 +9,7 @@
     <string name="labelIme">Kõnele speech keyboard</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
+    <string name="labelRecognitionServiceDemo" translatable="false">Kõnele (DEMO)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>

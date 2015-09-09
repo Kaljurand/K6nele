@@ -225,6 +225,19 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </service>
 
         <service
+            android:name=".service.DemoRecognitionService"
+            android:exported="true"
+            android:label="@string/labelRecognitionServiceDemo"
+            android:permission="android.permission.RECORD_AUDIO">
+            <intent-filter>
+
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name="VoiceImeService"
             android:label="@string/labelIme"
             android:permission="android.permission.BIND_INPUT_METHOD">
