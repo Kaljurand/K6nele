@@ -11,7 +11,6 @@ import android.speech.RecognitionService;
 import android.speech.SpeechRecognizer;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.AudioCue;
@@ -56,8 +55,11 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     /**
      * Configures the service based on the given intent extras.
+     * Can result in an IOException, e.g. if building the server URL fails
+     * (UnsupportedEncodingException, MalformedURLException).
+     * TODO: generalize the exception
      */
-    abstract void configure(Intent recognizerIntent) throws MalformedURLException;
+    abstract void configure(Intent recognizerIntent) throws IOException;
 
     /**
      * Start sending audio to the server.
@@ -142,7 +144,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
         try {
             configure(recognizerIntent);
-        } catch (MalformedURLException e) {
+        } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_CLIENT);
             return;
         }

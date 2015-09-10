@@ -12,8 +12,8 @@ import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
@@ -54,11 +54,10 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     private String mUrl;
 
     @Override
-    void configure(Intent recognizerIntent) throws MalformedURLException {
+    void configure(Intent recognizerIntent) throws IOException {
         // TODO: why null?
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
-        mUrl = getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder);
-
+        mUrl = getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
         mMyHandler = new MyHandler(this,
                 recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
                 recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)

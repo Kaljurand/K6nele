@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import java.net.MalformedURLException;
-
 import ee.ioc.phon.android.speak.Utils;
 
 /**
@@ -19,7 +17,7 @@ public class DemoRecognitionService extends AbstractRecognitionService {
     private String mIntentAsString;
 
     @Override
-    void configure(Intent recognizerIntent) throws MalformedURLException {
+    void configure(Intent recognizerIntent) {
         mIntentAsString = TextUtils.join("\n",
                 Utils.ppBundle(recognizerIntent.getExtras()));
     }

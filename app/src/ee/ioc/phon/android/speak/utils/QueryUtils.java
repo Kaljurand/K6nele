@@ -2,10 +2,10 @@ package ee.ioc.phon.android.speak.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +14,16 @@ import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 
 public class QueryUtils {
+    private static final String PARAMETER_SEPARATOR = "&";
+    private static final String NAME_VALUE_SEPARATOR = "=";
 
     /**
      * Extracts the editor info, and uses
      * ChunkedWebRecSessionBuilder to extract some additional extras.
      * TODO: unify this better
      */
-    public static String getQueryParams(Intent intent, ChunkedWebRecSessionBuilder builder) {
-        List<BasicNameValuePair> list = new ArrayList<>();
+    public static String getQueryParams(Intent intent, ChunkedWebRecSessionBuilder builder, String encoding) throws UnsupportedEncodingException {
+        List<Pair<String, String>> list = new ArrayList<>();
         flattenBundle("editorInfo_", list, intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO));
         if (Log.DEBUG) Log.i(builder.toStringArrayList());
         // TODO: review these parameter names
@@ -35,17 +37,17 @@ public class QueryUtils {
         if (list.size() == 0) {
             return "";
         }
-        return "&" + URLEncodedUtils.format(list, "utf-8");
+        return PARAMETER_SEPARATOR + encodeKeyValuePairs(list, encoding);
     }
 
-    private static boolean listAdd(List<BasicNameValuePair> list, String key, String value) {
+    private static boolean listAdd(List<Pair<String, String>> list, String key, String value) {
         if (value == null || value.length() == 0) {
             return false;
         }
-        return list.add(new BasicNameValuePair(key, value));
+        return list.add(new Pair<>(key, value));
     }
 
-    private static void flattenBundle(String prefix, List<BasicNameValuePair> list, Bundle bundle) {
+    private static void flattenBundle(String prefix, List<Pair<String, String>> list, Bundle bundle) {
         if (bundle != null) {
             for (String key : bundle.keySet()) {
                 Object value = bundle.get(key);
@@ -53,7 +55,7 @@ public class QueryUtils {
                     if (value instanceof Bundle) {
                         flattenBundle(prefix + key + "_", list, (Bundle) value);
                     } else {
-                        list.add(new BasicNameValuePair(prefix + key, toString(value)));
+                        listAdd(list, prefix + key, toString(value));
                     }
                 }
             }
@@ -66,5 +68,31 @@ public class QueryUtils {
             return null;
         }
         return obj.toString();
+    }
+
+    /**
+     * Returns a String that is suitable for use as an <code>application/x-www-form-urlencoded</code>
+     * list of parameters in an HTTP PUT or HTTP POST.
+     * <p/>
+     * Modification of org.apache.http.client.utils.URLEncodedUtils#format
+     *
+     * @param parameters The parameters to include.
+     * @param encoding   The encoding to use.
+     */
+    public static String encodeKeyValuePairs(
+            final List<Pair<String, String>> parameters,
+            final String encoding) throws UnsupportedEncodingException {
+        final StringBuilder result = new StringBuilder();
+        for (final Pair<String, String> parameter : parameters) {
+            final String encodedName = URLEncoder.encode(parameter.first, encoding);
+            final String value = parameter.second;
+            final String encodedValue = value != null ? URLEncoder.encode(value, encoding) : "";
+            if (result.length() > 0)
+                result.append(PARAMETER_SEPARATOR);
+            result.append(encodedName);
+            result.append(NAME_VALUE_SEPARATOR);
+            result.append(encodedValue);
+        }
+        return result.toString();
     }
 }
