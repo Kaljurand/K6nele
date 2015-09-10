@@ -20,13 +20,11 @@ import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
 import android.app.SearchManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
-import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -56,8 +54,6 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
  * @author Kaarel Kaljurand
  */
 public class SpeechRecognitionService extends AbstractRecognitionService {
-
-    private SharedPreferences mPrefs;
 
     private volatile Looper mSendLooper;
     private volatile Handler mSendHandler;
@@ -102,18 +98,18 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
 
     @Override
     boolean isAudioCues() {
-        return PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues);
+        return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues);
     }
 
     @Override
     int getSampleRate() {
-        return PreferenceUtils.getPrefInt(mPrefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
+        return PreferenceUtils.getPrefInt(getSharedPreferences(), getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
     }
 
     @Override
     int getAutoStopAfterMillis() {
         return 1000 * Integer.parseInt(
-                mPrefs.getString(
+                getSharedPreferences().getString(
                         getString(R.string.keyAutoStopAfterTime),
                         getString(R.string.defaultAutoStopAfterTime)));
     }
@@ -125,7 +121,7 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
         if (mExtras.containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
             return !mExtras.getBoolean(Extras.EXTRA_UNLIMITED_DURATION);
         }
-        return PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause);
+        return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause);
     }
 
     private void releaseResources() {
@@ -298,8 +294,6 @@ public class SpeechRecognitionService extends AbstractRecognitionService {
 
 
     private boolean init(Intent recognizerIntent) {
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         mExtras = recognizerIntent.getExtras();
         if (mExtras == null) {
             // For some reason getExtras() can return null, we map it
