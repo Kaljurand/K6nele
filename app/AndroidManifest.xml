@@ -183,7 +183,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->
         <service
-            android:name=".service.WebSocketRecognizer"
+            android:name=".service.WebSocketRecognitionService"
             android:exported="true"
             android:label="@string/labelRecognitionServiceWs"
             android:permission="android.permission.RECORD_AUDIO">
@@ -201,7 +201,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </service>
 
         <service
-            android:name=".service.SpeechRecognitionService"
+            android:name=".service.HttpRecognitionService"
             android:exported="true"
             android:label="@string/labelRecognitionServiceHttp"
             android:permission="android.permission.RECORD_AUDIO">

@@ -29,10 +29,8 @@ import ee.ioc.phon.android.speak.utils.QueryUtils;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
- * <p/>
- * TODO: rename: WebSocketRecognitionService
  */
-public class WebSocketRecognizer extends AbstractRecognitionService {
+public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     private static final String PROTOCOL = "";
 
@@ -209,11 +207,11 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
     }
 
     private static class MyHandler extends Handler {
-        private final WeakReference<WebSocketRecognizer> mRef;
+        private final WeakReference<WebSocketRecognitionService> mRef;
         private final boolean mIsUnlimitedDuration;
         private final boolean mIsPartialResults;
 
-        public MyHandler(WebSocketRecognizer c, boolean isUnlimitedDuration, boolean isPartialResults) {
+        public MyHandler(WebSocketRecognitionService c, boolean isUnlimitedDuration, boolean isPartialResults) {
             mRef = new WeakReference<>(c);
             mIsUnlimitedDuration = isUnlimitedDuration;
             mIsPartialResults = isPartialResults;
@@ -221,7 +219,7 @@ public class WebSocketRecognizer extends AbstractRecognitionService {
 
         @Override
         public void handleMessage(Message msg) {
-            WebSocketRecognizer outerClass = mRef.get();
+            WebSocketRecognitionService outerClass = mRef.get();
             if (outerClass != null) {
                 if (msg.what == MSG_ERROR) {
                     Exception e = (Exception) msg.obj;

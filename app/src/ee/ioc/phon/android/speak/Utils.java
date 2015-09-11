@@ -382,7 +382,7 @@ public class Utils {
 	}
 
 	/**
-	 * @param str string like {@code ee.ioc.phon.android.speak/.WebSocketRecognizer;et-ee}
+	 * @param str string like {@code ee.ioc.phon.android.speak/.HttpRecognitionService;et-ee}
 	 * @return ComponentName in the input string
 	 */
 	public static ComponentName getComponentName(String str) {
@@ -391,8 +391,8 @@ public class Utils {
 	}
 
 	public static Pair<String, String> getLabel(Context context, String comboAsString) {
-		String recognizer = "???";
-		String language = "???";
+		String recognizer = "[?]";
+		String language = "[?]";
 		String[] splits = TextUtils.split(comboAsString, ";");
 		if (splits.length > 0) {
 			PackageManager pm = context.getPackageManager();

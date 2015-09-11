@@ -49,11 +49,10 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 /**
  * Implements RecognitionService, connects to the server via HTTP.
- * TODO: rename: HttpRecognitionService
  *
  * @author Kaarel Kaljurand
  */
-public class SpeechRecognitionService extends AbstractRecognitionService {
+public class HttpRecognitionService extends AbstractRecognitionService {
 
     private volatile Looper mSendLooper;
     private volatile Handler mSendHandler;

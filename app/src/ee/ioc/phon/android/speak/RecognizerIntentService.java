@@ -38,9 +38,6 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 /**
  * @deprecated
- * TODO: remove this class and rewrite the clients to use SpeechRecognitionService
- *
- * @author Kaarel Kaljurand
  */
 public class RecognizerIntentService extends Service {
 
