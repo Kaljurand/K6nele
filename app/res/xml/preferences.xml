@@ -68,6 +68,15 @@
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
             android:title="@string/titleHelpText" />
+        <ListPreference
+            android:defaultValue="@string/defaultMaxResults"
+            android:dialogTitle="@string/titleMaxResults"
+            android:entries="@array/entryValuesMaxResults"
+            android:entryValues="@array/entryValuesMaxResults"
+            android:key="@string/keyMaxResults"
+            android:title="@string/titleMaxResults" >
+        </ListPreference>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryApps">

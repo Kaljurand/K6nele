@@ -18,6 +18,7 @@
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
     <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
+    <string name="keyMaxResults" translatable="false">keyMaxResults</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status

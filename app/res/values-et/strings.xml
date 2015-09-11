@@ -261,5 +261,11 @@
     <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
     <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (grammatikatoega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
     <string name="labelIme">Kõnele kõneklaviatuur</string>
+    <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
+
+    <plurals name="summaryMaxResults">
+        <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
+        <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
+    </plurals>
 
 </resources>

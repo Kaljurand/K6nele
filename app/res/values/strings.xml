@@ -69,6 +69,14 @@
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
 
+    <string name="titleMaxResults">Recognition hypotheses</string>
+
+    <plurals name="summaryMaxResults">
+        <item quantity="one">Output only the most likely recognition hypothesis</item>
+        <item quantity="other">Output at most %d recognition hypotheses</item>
+    </plurals>
+
+
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
     <string name="buttonStop">Speak now!\nTap when finished</string>
@@ -246,6 +254,17 @@ More grammars are available at
     <string-array name="defaultCombosExcluded" translatable="false">
         <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;en-US</item>
     </string-array>
+
+    <string-array name="entryValuesMaxResults" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+        <item>16</item>
+    </string-array>
+
+    <string name="defaultMaxResults" translatable="false">1</string>
+
 
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>

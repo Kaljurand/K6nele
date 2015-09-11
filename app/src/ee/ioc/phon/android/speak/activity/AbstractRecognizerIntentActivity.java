@@ -20,10 +20,12 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.util.SparseArray;
 import android.view.View;
@@ -43,6 +45,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
 
@@ -109,7 +112,17 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             // For some reason getExtras() can return null, we map it
             // to an empty Bundle if this occurs.
             mExtras = new Bundle();
-        } else {
+        }
+
+        // If the caller did not specify the MAX_RESULTS then we take it from our own settings.
+        // Note: the caller overrides the settings.
+        if (!mExtras.containsKey(RecognizerIntent.EXTRA_MAX_RESULTS)) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            mExtras.putInt(RecognizerIntent.EXTRA_MAX_RESULTS,
+                    PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
+        }
+
+        if (!mExtras.isEmpty()) {
             mExtraResultsPendingIntent = Utils.getPendingIntent(mExtras);
         }
 

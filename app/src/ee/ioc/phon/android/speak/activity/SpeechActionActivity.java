@@ -76,9 +76,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         // TODO
     }
 
-    /**
-     * TODO: get the audio
-     */
     Uri getAudioUri() {
         try {
             byte[] wav = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
@@ -130,19 +127,20 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpActivity(R.layout.activity_recognizer);
-        setUpExtras();
-        setTvPrompt((TextView) findViewById(R.id.tvPrompt));
-
-        // Launch recognition immediately (if set so).
-        // Auto-start only occurs is onCreate is called
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        mAutoStart = PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
-        mSampleRate = PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        setUpExtras();
+        setTvPrompt((TextView) findViewById(R.id.tvPrompt));
+
+        // Launch recognition immediately (if set so).
+        // Auto-start only occurs is onCreate is called
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mAutoStart = PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
+        mSampleRate = PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
 
         setUpSettingsButton();
 

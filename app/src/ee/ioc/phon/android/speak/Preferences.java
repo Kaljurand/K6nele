@@ -51,12 +51,16 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
 
     private SettingsFragment mSettingsFragment;
     private SharedPreferences mPrefs;
+    private String mKeyMaxResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mSettingsFragment = new SettingsFragment();
+
+        mKeyMaxResults = getString(R.string.keyMaxResults);
+
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction().replace(android.R.id.content, mSettingsFragment).commit();
     }
@@ -111,6 +115,9 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             category.addPreference(pref);
         }
 
+        String maxResults = mPrefs.getString(mKeyMaxResults, getString(R.string.defaultMaxResults));
+        updateSummaryInt(mSettingsFragment.findPreference(mKeyMaxResults), R.plurals.summaryMaxResults, maxResults);
+
         updateSummary(R.string.keyImeCombo, R.string.emptylistImeCombos);
         updateSummary(R.string.keyCombo, R.string.emptylistCombos);
     }
@@ -120,7 +127,11 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         Preference pref = mSettingsFragment.findPreference(key);
         if (pref instanceof ListPreference) {
             ListPreference lp = (ListPreference) pref;
-            pref.setSummary(lp.getEntry());
+            if (mKeyMaxResults.equals(key)) {
+                updateSummaryInt(lp, R.plurals.summaryMaxResults, lp.getEntry().toString());
+            } else {
+                pref.setSummary(lp.getEntry());
+            }
         }
     }
 
@@ -153,5 +164,10 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         }
         Collections.sort(combos, Combo.SORT_BY_LANGUAGE);
         return TextUtils.join("\n", combos);
+    }
+
+    private void updateSummaryInt(Preference pref, int pluralsResource, String countAsString) {
+        int count = Integer.parseInt(countAsString);
+        pref.setSummary(getResources().getQuantityString(pluralsResource, count, count));
     }
 }
