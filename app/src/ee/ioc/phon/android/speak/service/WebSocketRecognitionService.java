@@ -77,6 +77,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
         if (mWebSocket != null && mWebSocket.isOpen()) {
             mWebSocket.end(); // TODO: or close?
+            mWebSocket = null;
         }
     }
 
@@ -111,13 +112,12 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
             @Override
             public void onCompleted(Exception ex, final WebSocket webSocket) {
+                mWebSocket = webSocket;
+
                 if (ex != null) {
                     handleException(ex);
                     return;
                 }
-
-                mWebSocket = webSocket;
-                startSending(webSocket);
 
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
@@ -149,6 +149,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                         }
                     }
                 });
+
+                startSending(webSocket);
             }
         });
     }
@@ -189,7 +191,6 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                 }
             }
         };
-
 
         mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_IME_SEND);
     }

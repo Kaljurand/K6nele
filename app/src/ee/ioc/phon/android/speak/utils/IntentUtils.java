@@ -1,15 +1,53 @@
 package ee.ioc.phon.android.speak.utils;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.SpannableString;
 import android.view.inputmethod.EditorInfo;
 
+import java.util.List;
+
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 
 public class IntentUtils {
+
+    /**
+     * Constructs a list of search intents.
+     * The first one that can be handled by the device is launched.
+     *
+     * @param context context
+     * @param query   search query
+     */
+    public static void startSearchActivity(Context context, CharSequence query) {
+        // TODO: how to pass the search query to ACTION_ASSIST
+        // TODO: maybe use SearchManager instead
+        //Intent intent0 = new Intent(Intent.ACTION_ASSIST);
+        //intent0.putExtra(Intent.EXTRA_ASSIST_CONTEXT, some_bundle);
+        //intent0.putExtra(SearchManager.QUERY, query);
+        //intent0.putExtra(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, false);
+        //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, getPackageName());
+        Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
+        intent1.putExtra(SearchManager.QUERY, query);
+        Intent intent2 = new Intent(Intent.ACTION_SEARCH);
+        intent2.putExtra(SearchManager.QUERY, query);
+        startActivityIfAvailable(context, intent1, intent2);
+    }
+
+    public static boolean startActivityIfAvailable(Context context, Intent... intents) {
+        for (Intent intent : intents) {
+            if (isActivityAvailable(context, intent)) {
+                context.startActivity(intent);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static Intent getRecognizerIntent(String action, CallerInfo callerInfo, String language) {
         Intent intent = new Intent(action);
@@ -59,5 +97,11 @@ public class IntentUtils {
             return ss.subSequence(0, ss.length()).toString();
         }
         return o.toString();
+    }
+
+    private static boolean isActivityAvailable(Context context, Intent intent) {
+        final PackageManager mgr = context.getPackageManager();
+        List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
     }
 }

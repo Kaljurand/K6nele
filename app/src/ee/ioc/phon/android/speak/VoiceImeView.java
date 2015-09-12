@@ -19,6 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public class VoiceImeView extends LinearLayout {
@@ -88,8 +89,6 @@ public class VoiceImeView extends LinearLayout {
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
         final int key = keysAsTypedArray.getResourceId(0, 0);
-        int keyAudioCues = keysAsTypedArray.getResourceId(6, 0);
-        int defaultAudioCues = keysAsTypedArray.getResourceId(7, 0);
         int keyHelpText = keysAsTypedArray.getResourceId(8, 0);
         int defaultHelpText = keysAsTypedArray.getResourceId(9, 0);
         keysAsTypedArray.recycle();
@@ -138,7 +137,7 @@ public class VoiceImeView extends LinearLayout {
                 Intent intent = new Intent(context, ComboSelectorActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("key", getContext().getString(key));
-                Utils.startActivityIfAvailable(context, intent);
+                IntentUtils.startActivityIfAvailable(context, intent);
                 return true;
             }
         });

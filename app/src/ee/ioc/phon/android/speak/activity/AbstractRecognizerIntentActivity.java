@@ -45,6 +45,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
@@ -300,21 +301,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // TODO: fetch also confidence scores and treat a very confident hypothesis
     // as a single hypothesis.
     private void handleResultsByWebSearch(final ArrayList<String> results) {
-        Intent searchIntent;
         if (results.size() == 1) {
-            // We construct a list of search intents.
-            // The first one that can be handled by the device is launched.
-            CharSequence query = results.get(0);
-            Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
-            intent1.putExtra(SearchManager.QUERY, query);
-            Intent intent2 = new Intent(Intent.ACTION_SEARCH);
-            intent2.putExtra(SearchManager.QUERY, query);
-
-            Utils.startActivityIfAvailable(this, intent1, intent2);
+            IntentUtils.startSearchActivity(this, results.get(0));
         } else {
             // TODO: it would be a bit cleaner to pass ACTION_WEB_SEARCH
             // via a pending intent
-            searchIntent = new Intent(this, DetailsActivity.class);
+            Intent searchIntent = new Intent(this, DetailsActivity.class);
             searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
             searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, results.toArray(new String[results.size()]));
             startActivity(searchIntent);

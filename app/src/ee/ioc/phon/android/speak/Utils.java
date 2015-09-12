@@ -347,24 +347,6 @@ public class Utils {
 	}
 
 
-	private static boolean isActivityAvailable(Context context, Intent intent) {
-		final PackageManager mgr = context.getPackageManager();
-		List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-		return list.size() > 0;
-	}
-
-
-	public static boolean startActivityIfAvailable(Context context, Intent... intents) {
-		for (Intent intent : intents) {
-			if (Utils.isActivityAvailable(context, intent)) {
-				context.startActivity(intent);
-				return true;
-			}
-		}
-		return false;
-	}
-
-
 	/**
 	 * On LOLLIPOP we use a builtin to parse the locale string, and return
 	 * the name of the locale in the language of the current locale. In pre-LOLLIPOP we just return
