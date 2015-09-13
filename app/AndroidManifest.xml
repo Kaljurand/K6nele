@@ -70,6 +70,37 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- input/output: Nothing -->
+            <!-- Samsung Galaxy SII launches VOICE_COMMAND when HOME is double-clicked -->
+            <intent-filter>
+                <action android:name="android.intent.action.VOICE_COMMAND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- Input: EXTRA_ASSIST_PACKAGE, EXTRA_ASSIST_CONTEXT. Output: nothing. -->
+            <!-- API 16 -->
+            <!-- "Search assistant" on CM10.2, which can be mapped to various buttons -->
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- input/output: Nothing -->
+            <!-- API 3 -->
+            <!-- "Voice search" on CM10.2, which can be mapped to various buttons -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- input/output: Nothing -->
+            <intent-filter>
+                <action android:name="android.speech.action.VOICE_SEARCH_HANDS_FREE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

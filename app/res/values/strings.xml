@@ -268,4 +268,5 @@ More grammars are available at
 
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>
+    <string name="testComboLabels" translatable="false">en-US(Kg) · en-X(G) · et-EE(Kf) · et-EE(Kg) · de-DE (G) · +/-</string>
 </resources>

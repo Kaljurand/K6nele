@@ -111,7 +111,7 @@
             android:minHeight="@dimen/layoutMargin3"
             android:minWidth="@dimen/layoutMargin3"
             android:singleLine="true"
-            android:text="@string/testComboLabel"
+            android:text="@string/testComboLabels"
             android:textColor="@color/grey200"
             android:textSize="@dimen/textSize10sp" />
 

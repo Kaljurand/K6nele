@@ -2,10 +2,12 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.widget.TextView;
 
 import java.io.FileNotFoundException;
@@ -65,8 +67,6 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
  * @author Kaarel Kaljurand
  */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
-
-    private boolean mAutoStart;
     private int mSampleRate;
     private byte[] mCompleteRecording;
 
@@ -139,7 +139,10 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         // Launch recognition immediately (if set so).
         // Auto-start only occurs is onCreate is called
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mAutoStart = PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
+        boolean isAutoStart =
+                isAutoStartAction(getIntent().getAction())
+                        || PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
+
         mSampleRate = PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
 
         setUpSettingsButton();
@@ -149,8 +152,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         // TODO: do we need to send the ComponentName of the calling activity instead
         mView.setListener(R.array.keysActivity, callerInfo, getVoiceImeViewListener());
 
-        if (mAutoStart) {
-            mAutoStart = false;
+        if (isAutoStart) {
             Log.i("Auto-starting");
             mView.start();
         }

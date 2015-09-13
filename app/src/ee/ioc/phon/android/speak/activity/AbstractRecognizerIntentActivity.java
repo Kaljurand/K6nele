@@ -131,6 +131,20 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         mErrorMessages = createErrorMessages();
     }
 
+    /**
+     * TODO: review
+     *
+     * @param action intent action used to launch Kõnele
+     * @return true iff the given action requires automatic start
+     */
+    static boolean isAutoStartAction(String action) {
+        return
+                RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE.equals(action)
+                        || Intent.ACTION_SEARCH_LONG_PRESS.equals(action)
+                        || Intent.ACTION_VOICE_COMMAND.equals(action)
+                        || Intent.ACTION_ASSIST.equals(action);
+    }
+
     public void setTvPrompt(TextView tv) {
         String prompt = getPrompt();
         if (prompt == null || prompt.length() == 0) {
@@ -249,9 +263,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             matches.subList(maxResults, matches.size()).clear();
         }
 
+        String action = getIntent().getAction();
         if (getExtraResultsPendingIntent() == null) {
+            // TODO: maybe remove ACTION_WEB_SEARCH (i.e. the results should be returned to the caller)
             if (getCallingActivity() == null
-                    || RecognizerIntent.ACTION_WEB_SEARCH.equals(getIntent().getAction())
+                    || isAutoStartAction(action)
+                    || RecognizerIntent.ACTION_WEB_SEARCH.equals(action)
                     || getExtras().getBoolean(RecognizerIntent.EXTRA_WEB_SEARCH_ONLY)) {
                 handleResultsByWebSearch(matches);
                 return;
