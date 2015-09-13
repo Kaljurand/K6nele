@@ -7,24 +7,52 @@ title: Release notes
 
 Kõnele versions and their required Android versions:
 
-  - v1.1.xx - v1.2.xx
-    - requires Android 4.0+
+  - v1.1.xx - v1.3.xx, requires Android 4.0+
     - extension of v0.8.xx, but with Android 4.0+ style UI
-  - v0.8.xx (not maintained)
-    - requires Android 2.2+
+  - v0.8.xx (not maintained), requires Android 2.2+
     - extension of v0.7.xx, but additionally implements the RecognitionService-interface
     - settings are part of the global settings
     - launcher submits the transcription to the standard websearch
     - starting with v0.8.50 implements the IME interface
-  - v0.7.xx (not maintained)
-    - requires Android 1.6+
+  - v0.7.xx (not maintained), requires Android 1.6+
     - launcher icon opens the settings
 
 ----
 
 (Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>)
 
-## v1.1 - v1.2
+## v1.1 - v1.3
+
+### v1.3.?? (unreleased)
+
+This release is mainly about internal refactoring
+but also resulted in a new voice search panel.
+The new panel reuses the existing speech keyboard UI to offer the
+same features and look-and-feel on both the speech keyboard and the voice search
+panel. Some features offered by the old panel were dropped: support for screen
+rotation during recognition, some UI feedback: byte/time/chunk counter,
+waveform display.
+
+- reorganization of the settings menu (e.g. audio cues are now part of the
+  service configuration)
+- speech keyboard: long press selects all text
+- search panel: number of returned recognition hypothesis is now configurable
+- bugfixes
+
+Name changes and deprecation:
+
+- ``activity.SpeechActionActivity`` (new voice search panel)
+- ``SpeechRecognitionService`` -> ``service.HttpRecognitionService``
+- ``WebSocketRecognizer`` -> ``service.WebSocketRecognitionService``
+- ``VoiceIMEView`` -> ``view.SpeechInputView`` (view component used by the speech keyboard and the new search panel)
+- deprecated: ``RecognizerIntentService`` (old service which did not implement RecognitionService)
+- ``RecognizerIntentActivity`` -> ``activity.RecognizerIntentActivity`` + deprecated (old voice search panel)
+
+### v1.2.06 (2015-08-01) (only released on F-Droid: 2015-08-03)
+
+- the APK is easier to build from source
+- slightly brighter launcher icon
+- shorter/friendlier error messages on the IME
 
 ### v1.2.04 (2015-06-27) (released on Google Play: 2015-06-18)
 
