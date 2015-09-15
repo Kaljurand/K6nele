@@ -79,7 +79,7 @@
             android:minWidth="@dimen/layoutMargin3"
             android:singleLine="true"
             android:text="@string/testComboLabel"
-            android:textColor="@color/grey200"
+            android:textColor="@color/grey100"
             android:textSize="@dimen/textSize10sp" />
 
         <ee.ioc.phon.android.speak.view.MicButton

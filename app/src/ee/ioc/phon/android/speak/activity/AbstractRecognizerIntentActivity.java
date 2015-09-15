@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.DetailsActivity;
@@ -170,7 +171,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      * TODO: handle audioFormat inside getAudioUri(), which would return "null"
      * if format is not supported
      */
-    private void setResultIntent(final Handler handler, ArrayList<String> matches) {
+    private void setResultIntent(final Handler handler, List<String> matches) {
         Intent intent = new Intent();
         if (getExtras().getBoolean(Extras.GET_AUDIO)) {
             String audioFormat = getExtras().getString(Extras.GET_AUDIO_FORMAT);
@@ -190,7 +191,9 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 }
             }
         }
-        intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
+
+
+        intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, getResultsAsArrayList(matches));
         setResult(Activity.RESULT_OK, intent);
     }
 
@@ -254,7 +257,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      *
      * @param matches transcription results (one or more hypotheses)
      */
-    protected void returnOrForwardMatches(ArrayList<String> matches) {
+    protected void returnOrForwardMatches(List<String> matches) {
         Handler handler = mMessageHandler;
 
         // Throw away matches that the user is not interested in
@@ -287,7 +290,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             // This is for Google Maps, YouTube, ...
             intent.putExtra(SearchManager.QUERY, match);
             // This is for SwiftKey X (from year 2011), ...
-            intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
+            intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, getResultsAsArrayList(matches));
             String message;
             if (matches.size() == 1) {
                 message = match;
@@ -317,7 +320,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // In case of multiple hypotheses, ask the user to select from a list dialog.
     // TODO: fetch also confidence scores and treat a very confident hypothesis
     // as a single hypothesis.
-    private void handleResultsByWebSearch(final ArrayList<String> results) {
+    private void handleResultsByWebSearch(final List<String> results) {
         if (results.size() == 1) {
             IntentUtils.startSearchActivity(this, results.get(0));
         } else {
@@ -339,5 +342,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         errorMessages.put(RecognizerIntent.RESULT_SERVER_ERROR, getString(R.string.errorResultServerError));
         errorMessages.put(RecognizerIntent.RESULT_NO_MATCH, getString(R.string.errorResultNoMatch));
         return errorMessages;
+    }
+
+
+    private ArrayList<String> getResultsAsArrayList(List<String> results) {
+        ArrayList<String> resultsAsArrayList = new ArrayList<>();
+        resultsAsArrayList.addAll(results);
+        return resultsAsArrayList;
     }
 }

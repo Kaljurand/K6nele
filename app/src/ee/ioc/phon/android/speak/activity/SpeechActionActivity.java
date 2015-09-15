@@ -173,12 +173,12 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             private List<byte[]> mBufferList = new ArrayList<>();
 
             @Override
-            public void onPartialResult(ArrayList<String> results) {
+            public void onPartialResult(List<String> results) {
                 // Ignore the partial results
             }
 
             @Override
-            public void onFinalResult(ArrayList<String> results) {
+            public void onFinalResult(List<String> results) {
                 if (results != null && results.size() > 0) {
                     int sum = 0;
                     for (byte[] ba : mBufferList) {

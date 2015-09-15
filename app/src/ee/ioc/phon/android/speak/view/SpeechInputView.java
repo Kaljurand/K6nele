@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import ee.ioc.phon.android.speak.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.Constants;
@@ -33,9 +35,9 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 public class SpeechInputView extends LinearLayout {
 
     public interface VoiceImeViewListener {
-        void onPartialResult(ArrayList<String> text);
+        void onPartialResult(List<String> text);
 
-        void onFinalResult(ArrayList<String> text);
+        void onFinalResult(List<String> text);
 
         void onSwitchIme(boolean isAskUser);
 
@@ -226,7 +228,7 @@ public class SpeechInputView extends LinearLayout {
                 setGuiState(Constants.State.LISTENING);
                 setText(mTvInstruction, R.string.buttonImeStop);
                 setText(mTvMessage, "");
-                setVisibility(mBComboSelector, View.INVISIBLE);
+                setEnabled(mBComboSelector, false);
                 if (mBImeKeyboard != null && mBImeGo != null) {
                     setVisibility(mBImeKeyboard, View.INVISIBLE);
                     setVisibility(mBImeGo, View.INVISIBLE);
@@ -329,7 +331,7 @@ public class SpeechInputView extends LinearLayout {
                     // If we got empty results then assume that the session ended,
                     // e.g. cancel was called.
                     // TODO: return null?
-                    mListener.onFinalResult(new ArrayList<String>());
+                    mListener.onFinalResult(Collections.<String>emptyList());
                 } else {
                     mListener.onFinalResult(text);
                     setText(mTvMessage, lastChars(text, true));
@@ -381,7 +383,7 @@ public class SpeechInputView extends LinearLayout {
             String m = "[ " + getResources().getString(message) + " ]";
             setText(mTvMessage, m);
         }
-        setVisibility(mBComboSelector, View.VISIBLE);
+        setEnabled(mBComboSelector, true);
 
         if (mBImeKeyboard != null && mBImeGo != null) {
             setVisibility(mBImeKeyboard, View.VISIBLE);
@@ -452,6 +454,24 @@ public class SpeechInputView extends LinearLayout {
                 @Override
                 public void run() {
                     view.setVisibility(visibility);
+                }
+            });
+        }
+    }
+
+    private static void setEnabled(final View view, final boolean enabled) {
+        if (view != null && view.isEnabled() != enabled) {
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+                    view.setEnabled(enabled);
+                    if (view instanceof TextView) {
+                        if (enabled) {
+                            ((TextView) view).setTextColor(view.getResources().getColor(R.color.grey100));
+                        } else {
+                            ((TextView) view).setTextColor(view.getResources().getColor(R.color.grey400));
+                        }
+                    }
                 }
             });
         }
