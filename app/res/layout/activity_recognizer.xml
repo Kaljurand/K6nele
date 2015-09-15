@@ -43,7 +43,7 @@
             android:src="@drawable/ic_menu_preferences" />
     </RelativeLayout>
 
-    <ee.ioc.phon.android.speak.VoiceImeView
+    <ee.ioc.phon.android.speak.view.SpeechInputView
         android:id="@+id/vVoiceImeView"
         android:layout_width="270dip"
         android:layout_height="match_parent"
@@ -70,7 +70,7 @@
                 android:textColor="@color/grey300"
                 android:textSize="@dimen/textSize2" />
 
-            <ee.ioc.phon.android.speak.MicButton
+            <ee.ioc.phon.android.speak.view.MicButton
                 android:id="@+id/bImeStartStop"
                 android:layout_width="@dimen/layoutHeightButtonMicrophone"
                 android:layout_height="@dimen/layoutHeightButtonMicrophone"
@@ -115,6 +115,6 @@
             android:textColor="@color/grey200"
             android:textSize="@dimen/textSize10sp" />
 
-    </ee.ioc.phon.android.speak.VoiceImeView>
+    </ee.ioc.phon.android.speak.view.SpeechInputView>
 
 </LinearLayout>

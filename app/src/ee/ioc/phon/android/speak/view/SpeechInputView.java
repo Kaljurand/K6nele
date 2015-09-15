@@ -1,4 +1,4 @@
-package ee.ioc.phon.android.speak;
+package ee.ioc.phon.android.speak.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +18,19 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ee.ioc.phon.android.speak.ComboSelectorActivity;
+import ee.ioc.phon.android.speak.Constants;
+import ee.ioc.phon.android.speak.Extras;
+import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speak.OnSwipeTouchListener;
+import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.ServiceLanguageChooser;
+import ee.ioc.phon.android.speak.Utils;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
-public class VoiceImeView extends LinearLayout {
+public class SpeechInputView extends LinearLayout {
 
     public interface VoiceImeViewListener {
         void onPartialResult(ArrayList<String> text);
@@ -59,7 +67,7 @@ public class VoiceImeView extends LinearLayout {
 
     private Constants.State mState;
 
-    public VoiceImeView(Context context, AttributeSet attrs) {
+    public SpeechInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

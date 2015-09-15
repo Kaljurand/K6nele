@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ee.ioc.phon.android.speak.VoiceImeView xmlns:android="http://schemas.android.com/apk/res/android"
+<ee.ioc.phon.android.speak.view.SpeechInputView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -57,7 +57,7 @@
             android:src="@drawable/ic_search_api_holo_dark" />
     </RelativeLayout>
 
-    <ee.ioc.phon.android.speak.MicButton
+    <ee.ioc.phon.android.speak.view.MicButton
         android:id="@+id/bImeStartStop"
         android:layout_width="@dimen/layoutHeightButtonMicrophone"
         android:layout_height="@dimen/layoutHeightButtonMicrophone"
@@ -94,4 +94,4 @@
         android:textColor="@color/grey200"
         android:textSize="@dimen/textSize10sp" />
 
-</ee.ioc.phon.android.speak.VoiceImeView>
+</ee.ioc.phon.android.speak.view.SpeechInputView>

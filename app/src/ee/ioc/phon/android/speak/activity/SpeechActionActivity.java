@@ -2,12 +2,10 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.speech.RecognizerIntent;
 import android.widget.TextView;
 
 import java.io.FileNotFoundException;
@@ -21,7 +19,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
 import ee.ioc.phon.android.speak.Utils;
-import ee.ioc.phon.android.speak.VoiceImeView;
+import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
@@ -70,7 +68,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     private int mSampleRate;
     private byte[] mCompleteRecording;
 
-    private VoiceImeView mView;
+    private SpeechInputView mView;
 
     void showError() {
         // TODO
@@ -147,7 +145,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
         setUpSettingsButton();
 
-        mView = (VoiceImeView) findViewById(R.id.vVoiceImeView);
+        mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
         // TODO: do we need to send the ComponentName of the calling activity instead
         mView.setListener(R.array.keysActivity, callerInfo, getVoiceImeViewListener());
@@ -169,8 +167,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
     }
 
-    private VoiceImeView.VoiceImeViewListener getVoiceImeViewListener() {
-        return new VoiceImeView.VoiceImeViewListener() {
+    private SpeechInputView.VoiceImeViewListener getVoiceImeViewListener() {
+        return new SpeechInputView.VoiceImeViewListener() {
 
             private List<byte[]> mBufferList = new ArrayList<>();
 

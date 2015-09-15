@@ -1,4 +1,4 @@
-package ee.ioc.phon.android.speak;
+package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -20,14 +20,19 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ee.ioc.phon.android.speak.Constants;
+import ee.ioc.phon.android.speak.Extras;
+import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speak.view.SpeechInputView;
 
-public class VoiceImeService extends InputMethodService {
+public class SpeechInputMethodService extends InputMethodService {
 
     private InputMethodManager mInputMethodManager;
 
-    private VoiceImeView mInputView;
+    private SpeechInputView mInputView;
 
     @Override
     public void onCreate() {
@@ -49,7 +54,7 @@ public class VoiceImeService extends InputMethodService {
     @Override
     public View onCreateInputView() {
         Log.i("onCreateInputView");
-        mInputView = (VoiceImeView) getLayoutInflater().inflate(R.layout.voice_ime_view, null);
+        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, null);
         return mInputView;
     }
 
@@ -126,7 +131,7 @@ public class VoiceImeService extends InputMethodService {
                 !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
-        mInputView.setListener(R.array.keysIme, callerInfo, new VoiceImeView.VoiceImeViewListener() {
+        mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.VoiceImeViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 

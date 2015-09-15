@@ -1,4 +1,4 @@
-package ee.ioc.phon.android.speak;
+package ee.ioc.phon.android.speak.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,6 +13,9 @@ import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ee.ioc.phon.android.speak.Constants;
+import ee.ioc.phon.android.speak.R;
 
 public class MicButton extends ImageButton {
     private Drawable mDrawableMic;
