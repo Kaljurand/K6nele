@@ -140,7 +140,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      */
     static boolean isAutoStartAction(String action) {
         return
-                RecognizerIntent.ACTION_VOICE_SEARCH_HANDS_FREE.equals(action)
+                Extras.ACTION_VOICE_SEARCH_HANDS_FREE.equals(action)
                         || Intent.ACTION_SEARCH_LONG_PRESS.equals(action)
                         || Intent.ACTION_VOICE_COMMAND.equals(action)
                         || Intent.ACTION_ASSIST.equals(action);
@@ -322,7 +322,11 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // as a single hypothesis.
     private void handleResultsByWebSearch(final List<String> results) {
         if (results.size() == 1) {
-            IntentUtils.startSearchActivity(this, results.get(0));
+            Bundle extras = getExtras();
+            String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
+            String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
+            String query = prefix + results.get(0) + suffix;
+            IntentUtils.startSearchActivity(this, query);
         } else {
             // TODO: it would be a bit cleaner to pass ACTION_WEB_SEARCH
             // via a pending intent
