@@ -30,17 +30,23 @@ public class MicButton extends ImageButton {
 
     public MicButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        if (!isInEditMode()) {
+            init(context);
+        }
     }
 
     public MicButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        if (!isInEditMode()) {
+            init(context);
+        }
     }
 
     public MicButton(Context context) {
         super(context);
-        init(context);
+        if (!isInEditMode()) {
+            init(context);
+        }
     }
 
     public void setState(Constants.State state) {
