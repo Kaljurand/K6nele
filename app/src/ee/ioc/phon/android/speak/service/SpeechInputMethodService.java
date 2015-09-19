@@ -132,7 +132,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
-        mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.VoiceImeViewListener() {
+        mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 

@@ -167,8 +167,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
     }
 
-    private SpeechInputView.VoiceImeViewListener getVoiceImeViewListener() {
-        return new SpeechInputView.VoiceImeViewListener() {
+    private SpeechInputView.SpeechInputViewListener getVoiceImeViewListener() {
+        return new SpeechInputView.SpeechInputViewListener() {
 
             private List<byte[]> mBufferList = new ArrayList<>();
 
