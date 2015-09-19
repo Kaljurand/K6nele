@@ -152,11 +152,13 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         try {
             onReadyForSpeech(new Bundle());
             startRecord(getSampleRate());
-            onBeginningOfSpeech();
-            connect();
         } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_AUDIO);
+            return;
         }
+
+        onBeginningOfSpeech();
+        connect();
     }
 
     /**
@@ -187,7 +189,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         onCancel(mListener);
     }
 
-    public void onReadyForSpeech(Bundle bundle) {
+    protected void onReadyForSpeech(Bundle bundle) {
         if (mAudioCue != null) mAudioCue.playStartSoundAndSleep();
         try {
             mListener.readyForSpeech(bundle);
@@ -195,14 +197,14 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         }
     }
 
-    public void onRmsChanged(float rms) {
+    protected void onRmsChanged(float rms) {
         try {
             mListener.rmsChanged(rms);
         } catch (RemoteException e) {
         }
     }
 
-    public void onError(int errorCode) {
+    protected void onError(int errorCode) {
         // As soon as there is an error we shut down the recorder and the socket
         stopRecording0();
         disconnect();
@@ -214,7 +216,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         }
     }
 
-    public void onResults(Bundle bundle) {
+    protected void onResults(Bundle bundle) {
         disconnect();
         try {
             mListener.results(bundle);
@@ -222,21 +224,21 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         }
     }
 
-    public void onPartialResults(Bundle bundle) {
+    protected void onPartialResults(Bundle bundle) {
         try {
             mListener.partialResults(bundle);
         } catch (RemoteException e) {
         }
     }
 
-    public void onBeginningOfSpeech() {
+    protected void onBeginningOfSpeech() {
         try {
             mListener.beginningOfSpeech();
         } catch (RemoteException e) {
         }
     }
 
-    public void onEndOfSpeech() {
+    protected void onEndOfSpeech() {
         byte[] recording = null;
 
         if (mRecorder != null) {
@@ -258,7 +260,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      *
      * @param buffer
      */
-    public void onBufferReceived(byte[] buffer) {
+    protected void onBufferReceived(byte[] buffer) {
         try {
             mListener.bufferReceived(buffer);
         } catch (RemoteException e) {

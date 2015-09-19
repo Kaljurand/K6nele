@@ -45,7 +45,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     private MyHandler mMyHandler;
 
-    private Runnable mSendTask;
+    private Runnable mSendRunnable;
 
     private WebSocket mWebSocket;
 
@@ -69,7 +69,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     @Override
     void disconnect() {
-        if (mSendHandler != null) mSendHandler.removeCallbacks(mSendTask);
+        if (mSendHandler != null) mSendHandler.removeCallbacks(mSendRunnable);
         if (mSendLooper != null) {
             mSendLooper.quit();
             mSendLooper = null;
@@ -163,7 +163,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         mSendHandler = new Handler(mSendLooper);
 
         // Send chunks to the server
-        mSendTask = new Runnable() {
+        mSendRunnable = new Runnable() {
             public void run() {
                 if (webSocket != null && webSocket.isOpen()) {
                     RawAudioRecorder recorder = getRecorder();
@@ -192,7 +192,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
             }
         };
 
-        mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_IME_SEND);
+        mSendHandler.postDelayed(mSendRunnable, Constants.TASK_DELAY_IME_SEND);
     }
 
     private String getWsServiceUrl(Intent intent) {
