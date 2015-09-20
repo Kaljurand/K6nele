@@ -29,7 +29,6 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,17 +58,12 @@ public class HttpRecognitionService extends AbstractRecognitionService {
 
     private Runnable mSendTask;
 
-    private ChunkedWebRecSessionBuilder mRecSessionBuilder;
     private ChunkedWebRecSession mRecSession;
 
-    private Bundle mExtras;
-
     @Override
-    void configure(Intent recognizerIntent) {
-        boolean success = init(recognizerIntent);
-        if (!success) {
-            return;
-        }
+    void configure(Intent recognizerIntent) throws IOException {
+        ChunkedWebRecSessionBuilder mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
+
         mRecSessionBuilder.setContentType(getSampleRate());
         if (Log.DEBUG) Log.i(mRecSessionBuilder.toStringArrayList());
         mRecSession = mRecSessionBuilder.build();
@@ -77,16 +71,35 @@ public class HttpRecognitionService extends AbstractRecognitionService {
             mRecSession.create();
         } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_NETWORK);
-            return;
         } catch (NotAvailableException e) {
             // This cannot happen in the current net-speech-api?
             onError(SpeechRecognizer.ERROR_SERVER);
-            return;
         }
     }
 
     @Override
     void connect() {
+        HandlerThread thread = new HandlerThread("HttpSendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
+        thread.start();
+        mSendLooper = thread.getLooper();
+        mSendHandler = new Handler(mSendLooper);
+
+        // Send chunks to the server
+        mSendTask = new Runnable() {
+            public void run() {
+                if (getRecorder() != null) {
+                    // TODO: Currently returns 16-bit LE
+                    byte[] buffer = getRecorder().consumeRecording();
+                    try {
+                        sendChunk(buffer, false);
+                        onBufferReceived(buffer);
+                        mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
+                    } catch (IOException e) {
+                        onError(SpeechRecognizer.ERROR_NETWORK);
+                    }
+                }
+            }
+        };
         mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
     }
 
@@ -117,8 +130,8 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     boolean isAutoStopAfterPause() {
         // If the caller does not specify this extra, then we set it based on the settings.
         // TODO: in general, we could have 3-valued settings: true, false, use caller
-        if (mExtras.containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
-            return !mExtras.getBoolean(Extras.EXTRA_UNLIMITED_DURATION);
+        if (getExtras().containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
+            return !getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION);
         }
         return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyAutoStopAfterPause, R.bool.defaultAutoStopAfterPause);
     }
@@ -159,23 +172,20 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     }
 
 
-    private boolean transcribeAndFinishInBackground(final byte[] bytes) {
+    private void transcribeAndFinishInBackground(final byte[] bytes) {
         Thread t = new Thread() {
             public void run() {
                 try {
-                    try {
-                        sendChunk(bytes, true);
-                        getResult(mRecSession);
-                    } catch (IOException e) {
-                        onError(SpeechRecognizer.ERROR_NETWORK);
-                    }
+                    sendChunk(bytes, true);
+                    getResult(mRecSession);
+                } catch (IOException e) {
+                    onError(SpeechRecognizer.ERROR_NETWORK);
                 } finally {
                     releaseResources();
                 }
             }
         };
         t.start();
-        return true;
     }
 
 
@@ -200,7 +210,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
             return;
         }
 
-        int maxResults = mExtras.getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
+        int maxResults = getExtras().getInt(RecognizerIntent.EXTRA_MAX_RESULTS);
         if (maxResults <= 0) {
             maxResults = hyps.size();
         }
@@ -247,15 +257,15 @@ public class HttpRecognitionService extends AbstractRecognitionService {
 
 
     /**
-     * <p>Returns the transcription results to the caller,
-     * or sends them to the pending intent.</p>
+     * Returns the transcription results to the caller,
+     * or sends them to the pending intent.
      *
      * @param everything recognition results (all the components)
      * @param counts     number of linearizations for each hyphothesis (needed to interpret {@code everything})
      * @param matches    recognition results (just linearizations)
      */
     private void returnOrForwardMatches(ArrayList<String> everything, ArrayList<Integer> counts, ArrayList<String> matches) {
-        PendingIntent pendingIntent = Utils.getPendingIntent(mExtras);
+        PendingIntent pendingIntent = Utils.getPendingIntent(getExtras());
         if (pendingIntent == null) {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches); // TODO: results_recognition
@@ -268,7 +278,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
         } else {
             Log.i("EXTRA_RESULTS_PENDINGINTENT_BUNDLE was used with SpeechRecognizer (this is not tested)");
             // This probably never occurs...
-            Bundle bundle = mExtras.getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
+            Bundle bundle = getExtras().getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
             if (bundle == null) {
                 bundle = new Bundle();
             }
@@ -289,50 +299,5 @@ public class HttpRecognitionService extends AbstractRecognitionService {
                 // TODO
             }
         }
-    }
-
-
-    private boolean init(Intent recognizerIntent) {
-        mExtras = recognizerIntent.getExtras();
-        if (mExtras == null) {
-            // For some reason getExtras() can return null, we map it
-            // to an empty Bundle if this occurs.
-            mExtras = new Bundle();
-        }
-
-        try {
-            mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, mExtras, null);
-        } catch (MalformedURLException e) {
-            // The user has managed to store a malformed URL in the configuration.
-            Log.i("Callback: error: ERROR_CLIENT");
-            onError(SpeechRecognizer.ERROR_CLIENT);
-            return false;
-        }
-
-        // Starting chunk sending in a separate thread so that slow Internet
-        // would not block the UI.
-        HandlerThread thread = new HandlerThread("SendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-        mSendLooper = thread.getLooper();
-        mSendHandler = new Handler(mSendLooper);
-
-        // Send chunks to the server
-        mSendTask = new Runnable() {
-            public void run() {
-                if (getRecorder() != null) {
-                    // TODO: Currently returns 16-bit LE
-                    byte[] buffer = getRecorder().consumeRecording();
-                    try {
-                        sendChunk(buffer, false);
-                        onBufferReceived(buffer);
-                        mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
-                    } catch (IOException e) {
-                        onError(SpeechRecognizer.ERROR_NETWORK);
-                    }
-                }
-            }
-        };
-
-        return true;
     }
 }

@@ -19,6 +19,7 @@ import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
+import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 /**
  * About RemoteException see
@@ -37,6 +38,8 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     private Handler mStopHandler = new Handler();
     private Runnable mStopTask;
+
+    private Bundle mExtras;
 
     static Bundle toBundle(String hypothesis) {
         ArrayList<String> hypotheses = new ArrayList<>();
@@ -140,6 +143,11 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
         setAudioCuesEnabled(isAudioCues());
 
+        mExtras = recognizerIntent.getExtras();
+        if (mExtras == null) {
+            mExtras = new Bundle();
+        }
+
         mListener = listener;
 
         try {
@@ -187,6 +195,10 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     // without having received EOS
     public void handleFinish() {
         onCancel(mListener);
+    }
+
+    Bundle getExtras() {
+        return mExtras;
     }
 
     protected void onReadyForSpeech(Bundle bundle) {
@@ -266,6 +278,27 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         } catch (RemoteException e) {
         }
     }
+
+    /**
+     * Return the server URL specified by the caller, or if this is missing then the URL
+     * stored in the preferences, or if this is missing then the default URL.
+     *
+     * @param key          preference key to the server URL
+     * @param defaultValue default URL to use if no URL is stored at the given key
+     * @return server URL as string
+     */
+    String getServerUrl(int key, int defaultValue) {
+        String url = getExtras().getString(Extras.EXTRA_SERVER_URL);
+        if (url == null) {
+            return PreferenceUtils.getPrefString(
+                    getSharedPreferences(),
+                    getResources(),
+                    key,
+                    defaultValue);
+        }
+        return url;
+    }
+
 
     /**
      * Starts recording.

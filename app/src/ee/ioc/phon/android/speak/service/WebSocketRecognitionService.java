@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Process;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -34,7 +35,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     private static final String PROTOCOL = "";
 
-    private static final String WS_ARGS =
+    private static final String DEFAULT_WS_ARGS =
             "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     private static final int MSG_RESULT = 1;
@@ -54,12 +55,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     @Override
     void configure(Intent recognizerIntent) throws IOException {
         // TODO: why null?
-        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
-        mUrl = getWsServiceUrl(recognizerIntent) + WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
-        mMyHandler = new MyHandler(this,
-                recognizerIntent.getBooleanExtra(Extras.EXTRA_UNLIMITED_DURATION, false),
-                recognizerIntent.getBooleanExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
-        );
+        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
+        mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
+                + DEFAULT_WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
+        configureHandler(getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false),
+                getExtras().getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false));
     }
 
     @Override
@@ -86,6 +86,14 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues);
     }
 
+    String getDefaultWsArgs() {
+        return DEFAULT_WS_ARGS;
+    }
+
+    void configureHandler(boolean isUnlimitedDuration, boolean isPartialResults) {
+        mMyHandler = new MyHandler(this, isUnlimitedDuration, isPartialResults);
+    }
+
     private void handleResult(String text) {
         Message msg = new Message();
         msg.what = MSG_RESULT;
@@ -105,7 +113,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
      *
      * @param url Webservice URL
      */
-    private void startSocket(String url) {
+    void startSocket(String url) {
         Log.i(url);
 
         AsyncHttpClient.getDefaultInstance().websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
@@ -157,7 +165,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
 
     private void startSending(final WebSocket webSocket) {
-        HandlerThread thread = new HandlerThread("SendHandlerThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        HandlerThread thread = new HandlerThread("WsSendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         mSendLooper = thread.getLooper();
         mSendHandler = new Handler(mSendLooper);
@@ -195,17 +203,6 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         mSendHandler.postDelayed(mSendRunnable, Constants.TASK_DELAY_IME_SEND);
     }
 
-    private String getWsServiceUrl(Intent intent) {
-        String url = intent.getStringExtra(Extras.EXTRA_SERVER_URL);
-        if (url == null) {
-            return PreferenceUtils.getPrefString(
-                    getSharedPreferences(),
-                    getResources(),
-                    R.string.keyWsServer,
-                    R.string.defaultWsServer);
-        }
-        return url;
-    }
 
     private static class MyHandler extends Handler {
         private final WeakReference<WebSocketRecognitionService> mRef;

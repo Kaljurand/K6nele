@@ -5,6 +5,7 @@
 
     <string name="labelRecognitionServiceHttp">Kõnele (grammatikatoega)</string>
     <string name="labelRecognitionServiceWs">Kõnele (kiire tuvastusega)</string>
+    <string name="labelRecognitionServiceWs2">Kõnele (kiire tuvastusega 2)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
@@ -89,7 +90,7 @@
         tekstiväljade täitmiseks (väljaarvatud parooliväljad). Kollasele nupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
         Svaip vasakule kustutab kursorile eelneva sõna.
-        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku.&lt;/p>
+        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku. Pikk vajutus valib kogu teksti.&lt;/p>
 
         &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks teenusi,
 		mis ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne

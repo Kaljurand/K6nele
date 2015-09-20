@@ -9,6 +9,7 @@
     <string name="labelIme">Kõnele speech keyboard</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
+    <string name="labelRecognitionServiceWs2">Kõnele (fast recognition 2)</string>
     <string name="labelRecognitionServiceDemo" translatable="false">Kõnele (DEMO)</string>
 
     <!-- Activity labels -->
@@ -91,22 +92,27 @@
 
     <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
         Many apps contain a text area or a text field (e.g. a search bar) that can be edited using the keyboard.
-        %1$s provides a &lt;b>speech keyboard&lt;/b>, a one-button keyboard, which allows speech to be converted to text.
+        %1$s provides a &lt;b>speech keyboard&lt;/b>, which allows speech to be converted to text.
         Many apps (e.g. intelligent assistants, keyboard apps, navigation apps) also contain a microphone button
-        that is linked to the &lt;b>standard Android voice search activity&lt;/b>.
-        %1$s provides an implementation of this activity.&lt;/p>
+        that is either linked to the &lt;b>standard Android speech recognition activity&lt;/b> or the
+        &lt;b>standard Android speech recognition service&lt;/b>.
+        %1$s implements both the activity and the service.&lt;/p>
 
-&lt;p>In the background, %1$s uses two speech recognition servers.
+        &lt;p>How to use the speech keyboard?
+        Tap the big yellow button and start dictating, the words
+        appear immediately in the text area.
+        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space,
+        long-press to select all text (e.g. to dictate over it). Using the voice search activity
+        is similar but the swipe operations are missing because the transcription is immediately
+        returned to the calling app.&lt;/p>
+
+&lt;p>Kõnele contains two transcription services that use two cloud-based speech recognition servers.
         One supports &lt;b>grammar-based speech recognition&lt;/b>, the other supports &lt;b>continuous full-duplex speech recognition&lt;/b>.
         Both servers focus on &lt;b>Estonian speech recognition&lt;/b>, but both are based on a fully open-source stack that makes them easy to deploy
         and customize for other languages.
-        For more information, see &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
-
-        &lt;p>How to use the speech keyboard? Tap the big yellow button and start dictating, the words
-        appear immediately in the text area.
-        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space.
-        Note that any recognition language and service available on the device can be used on the speech
-        keyboard. However, only the two services of %1$s have been tested.&lt;/p>
+        For more information, see &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.
+        In principle any recognition language and service available on the device can be used on
+        %1$s\'s keyboard and voice search panel, however, only %1$s\'s own services have been tested.&lt;/p>
 
 &lt;p>How to use grammar-based speech recognition? Use the \"Apps &amp; Grammars\" settings to assign grammars to individual apps in order to
 improve the recognition quality and map the recognized speech automatically to the expected application format.
