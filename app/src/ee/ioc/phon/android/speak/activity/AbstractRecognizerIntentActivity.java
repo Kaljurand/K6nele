@@ -173,8 +173,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      */
     private void setResultIntent(final Handler handler, List<String> matches) {
         Intent intent = new Intent();
-        if (getExtras().getBoolean(Extras.GET_AUDIO)) {
-            String audioFormat = getExtras().getString(Extras.GET_AUDIO_FORMAT);
+        if (getExtras().getBoolean(Extras.EXTRA_GET_AUDIO)) {
+            String audioFormat = getExtras().getString(Extras.EXTRA_GET_AUDIO_FORMAT);
             if (audioFormat == null) {
                 audioFormat = Constants.DEFAULT_AUDIO_FORMAT;
             }
@@ -191,7 +191,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 }
             }
         }
-
 
         intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, getResultsAsArrayList(matches));
         setResult(Activity.RESULT_OK, intent);
@@ -308,14 +307,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         finish();
     }
 
-
     protected void handleResultError(int resultCode, String type, Exception e) {
         if (e != null) {
             Log.e("Exception: " + type + ": " + e.getMessage());
         }
         mMessageHandler.sendMessage(createMessage(MSG_RESULT_ERROR, getErrorMessages().get(resultCode)));
     }
-
 
     // In case of multiple hypotheses, ask the user to select from a list dialog.
     // TODO: fetch also confidence scores and treat a very confident hypothesis
@@ -337,7 +334,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
     }
 
-
     private SparseArray<String> createErrorMessages() {
         SparseArray<String> errorMessages = new SparseArray<>();
         errorMessages.put(RecognizerIntent.RESULT_AUDIO_ERROR, getString(R.string.errorResultAudioError));
@@ -347,7 +343,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         errorMessages.put(RecognizerIntent.RESULT_NO_MATCH, getString(R.string.errorResultNoMatch));
         return errorMessages;
     }
-
 
     private ArrayList<String> getResultsAsArrayList(List<String> results) {
         ArrayList<String> resultsAsArrayList = new ArrayList<>();

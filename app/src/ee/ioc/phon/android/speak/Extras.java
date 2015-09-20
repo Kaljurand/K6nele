@@ -48,10 +48,10 @@ public class Extras {
     public static final String EXTRA_SEMI_FINAL = "ee.ioc.phon.android.extra.SEMI_FINAL";
 
     // Caller is interested in the recorded audio data (boolean)
-    public static final String GET_AUDIO = "android.speech.extra.GET_AUDIO";
+    public static final String EXTRA_GET_AUDIO = "android.speech.extra.GET_AUDIO";
 
     // Caller wants to have the audio data in a certain format (String)
-    public static final String GET_AUDIO_FORMAT = "android.speech.extra.GET_AUDIO_FORMAT";
+    public static final String EXTRA_GET_AUDIO_FORMAT = "android.speech.extra.GET_AUDIO_FORMAT";
 
     /**
      * <p>Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
@@ -82,5 +82,8 @@ public class Extras {
 
     // API 14
     public static final String ACTION_VOICE_SEARCH_HANDS_FREE = "android.speech.action.VOICE_SEARCH_HANDS_FREE";
+
+    // A non-standard extra
+    public static final String EXTRA_ADDITIONAL_LANGUAGES = "android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES";
 
 }

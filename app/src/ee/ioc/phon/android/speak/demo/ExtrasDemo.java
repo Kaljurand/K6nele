@@ -58,9 +58,9 @@ public class ExtrasDemo extends AbstractRecognizerDemoActivity {
 
 	private static Intent createRecognizerIntent() {
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(Extras.GET_AUDIO, true);
-		intent.putExtra(Extras.GET_AUDIO_FORMAT, (String) null);
-		//intent.putExtra(Extras.GET_AUDIO_FORMAT, Constants.SUPPORTED_AUDIO_FORMATS.iterator().next());
+		intent.putExtra(Extras.EXTRA_GET_AUDIO, true);
+		intent.putExtra(Extras.EXTRA_GET_AUDIO_FORMAT, (String) null);
+		//intent.putExtra(Extras.EXTRA_GET_AUDIO_FORMAT, Constants.SUPPORTED_AUDIO_FORMATS.iterator().next());
 		return intent;
 	}
 }

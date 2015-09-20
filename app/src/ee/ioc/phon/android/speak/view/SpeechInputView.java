@@ -116,16 +116,14 @@ public class SpeechInputView extends LinearLayout {
                 switch (mState) {
                     case INIT:
                     case ERROR:
-                        mRecognizer.startListening(mSlc.getIntent());
+                        startListening(mSlc);
                         break;
                     case RECORDING:
-                        mRecognizer.stopListening();
+                        stopListening();
                         break;
                     case LISTENING:
                     case TRANSCRIBING:
-                        // We enter the INIT-state here, just in case cancel() does not take us there
-                        setGuiInitState(0);
-                        mRecognizer.cancel();
+                        cancelOrDestroy();
                         break;
                     default:
                 }
@@ -213,10 +211,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     public void closeSession() {
-        if (mRecognizer != null) {
-            mRecognizer.cancel();
-            // TODO: maybe set to null
-        }
+        cancelOrDestroy();
     }
 
     private static ArrayList<String> selectResults(ArrayList<String> results) {
@@ -350,6 +345,32 @@ public class SpeechInputView extends LinearLayout {
         mBComboSelector.setText(pair.second + " · " + pair.first);
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());
+    }
+
+    private void startListening(ServiceLanguageChooser slc) {
+        if (mRecognizer == null) {
+            updateServiceLanguage(slc);
+        }
+        mRecognizer.startListening(slc.getIntent());
+    }
+
+    private void stopListening() {
+        if (mRecognizer != null) {
+            mRecognizer.stopListening();
+        }
+    }
+
+    /**
+     * TODO: not sure if its better to call cancel or destroy
+     * Note that SpeechRecognizer#destroy calls cancel first.
+     */
+    private void cancelOrDestroy() {
+        // We enter the INIT-state here, just in case cancel or destroy does not take us there
+        setGuiInitState(0);
+        if (mRecognizer != null) {
+            mRecognizer.destroy();
+            mRecognizer = null;
+        }
     }
 
 

@@ -258,7 +258,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
         PendingIntent pendingIntent = Utils.getPendingIntent(mExtras);
         if (pendingIntent == null) {
             Bundle bundle = new Bundle();
-            bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches);
+            bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches); // TODO: results_recognition
             bundle.putStringArrayList(Extras.RESULTS_RECOGNITION_LINEARIZATIONS, everything);
             bundle.putIntegerArrayList(Extras.RESULTS_RECOGNITION_LINEARIZATION_COUNTS, counts);
             Log.i("Callback: results: RESULTS_RECOGNITION: " + matches);
@@ -279,7 +279,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
             // This is for Google Maps, YouTube, ...
             intent.putExtra(SearchManager.QUERY, match);
             // This is for SwiftKey X, ...
-            intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches);
+            intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, matches); // TODO: android.speech.extra.RESULTS
             intent.putStringArrayListExtra(Extras.RESULTS_RECOGNITION_LINEARIZATIONS, everything);
             intent.putIntegerArrayListExtra(Extras.RESULTS_RECOGNITION_LINEARIZATION_COUNTS, counts);
             try {

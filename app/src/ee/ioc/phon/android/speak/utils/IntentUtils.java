@@ -67,7 +67,7 @@ public class IntentUtils {
         if (language != null) {
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);
             // TODO: make this configurable
-            intent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{});
+            intent.putExtra(Extras.EXTRA_ADDITIONAL_LANGUAGES, new String[]{});
         }
         return intent;
     }
@@ -86,7 +86,6 @@ public class IntentUtils {
         bundle.putString("packageName", asString(attribute.packageName));
         return bundle;
     }
-
 
     private static String asString(Object o) {
         if (o == null) {
