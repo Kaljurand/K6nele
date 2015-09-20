@@ -1,11 +1,13 @@
 package ee.ioc.phon.android.speak.utils;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.text.SpannableString;
 import android.view.inputmethod.EditorInfo;
@@ -70,6 +72,27 @@ public class IntentUtils {
             intent.putExtra(Extras.EXTRA_ADDITIONAL_LANGUAGES, new String[]{});
         }
         return intent;
+    }
+
+    /**
+     * Checks whether a speech recognition service is available on the system. If this method
+     * returns {@code false}, {@link SpeechRecognizer#createSpeechRecognizer(Context, ComponentName)}
+     * will fail.
+     * Similar to {@link SpeechRecognizer#isRecognitionAvailable(Context)} but supports
+     * restricting the intent query by component name.
+     * <p/>
+     * TODO: propose to add this to SpeechRecognizer
+     * TODO: clarify what does "will fail" mean
+     *
+     * @param context       with which {@code SpeechRecognizer} will be created
+     * @param componentName of the recognition service
+     * @return {@code true} if recognition is available, {@code false} otherwise
+     */
+    public static boolean isRecognitionAvailable(final Context context, ComponentName componentName) {
+        Intent intent = new Intent(RecognitionService.SERVICE_INTERFACE);
+        intent.setComponent(componentName);
+        final List<ResolveInfo> list = context.getPackageManager().queryIntentServices(intent, 0);
+        return list != null && list.size() != 0;
     }
 
 

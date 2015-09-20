@@ -18,9 +18,7 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
-/**
- * TODO: cleanup
- */
+
 public class ServiceLanguageChooser {
 
     private final Context mContext;
@@ -82,6 +80,11 @@ public class ServiceLanguageChooser {
         update();
     }
 
+    public String getCombo() {
+        return mCombosAsList.get(mIndex);
+    }
+
+
     private void update() {
         String language = null;
         String[] splits = TextUtils.split(getCombo(), ";");
@@ -91,7 +94,9 @@ public class ServiceLanguageChooser {
             language = splits[1];
         }
 
-        if (recognizerComponentName == null) {
+        // If the stored combo name does not refer to an existing service on the device then we use
+        // the default service. This can happen if services get removed or renamed.
+        if (recognizerComponentName == null || !IntentUtils.isRecognitionAvailable(mContext, recognizerComponentName)) {
             mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext);
         } else {
             mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext, recognizerComponentName);
@@ -99,11 +104,6 @@ public class ServiceLanguageChooser {
 
         // TODO: support other actions
         mIntent = IntentUtils.getRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH, mCallerInfo, language);
-    }
-
-
-    public String getCombo() {
-        return mCombosAsList.get(mIndex);
     }
 
 
