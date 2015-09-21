@@ -1,10 +1,11 @@
-package ee.ioc.phon.android.speak;
+package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -15,16 +16,23 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ee.ioc.phon.android.speak.Constants;
+import ee.ioc.phon.android.speak.Extras;
+import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speak.view.SpeechInputView;
 
-public class VoiceImeService extends InputMethodService {
+public class SpeechInputMethodService extends InputMethodService {
 
     private InputMethodManager mInputMethodManager;
 
-    private VoiceImeView mInputView;
+    private SpeechInputView mInputView;
 
     @Override
     public void onCreate() {
@@ -46,7 +54,7 @@ public class VoiceImeService extends InputMethodService {
     @Override
     public View onCreateInputView() {
         Log.i("onCreateInputView");
-        mInputView = (VoiceImeView) getLayoutInflater().inflate(R.layout.voice_ime_view, null);
+        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, null);
         return mInputView;
     }
 
@@ -117,19 +125,24 @@ public class VoiceImeService extends InputMethodService {
         if (restarting) {
             return;
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Bundle extras = new Bundle();
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION,
+                !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
+        CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
-        mInputView.setListener(attribute, new VoiceImeView.VoiceImeViewListener() {
+        mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 
             @Override
-            public void onPartialResult(String text) {
-                mTextUpdater.commitPartialResult(getCurrentInputConnection(), text);
+            public void onPartialResult(List<String> results) {
+                mTextUpdater.commitPartialResult(getCurrentInputConnection(), selectFirstResult(results));
             }
 
             @Override
-            public void onFinalResult(String text) {
-                mTextUpdater.commitFinalResult(getCurrentInputConnection(), text);
+            public void onFinalResult(List<String> results) {
+                mTextUpdater.commitFinalResult(getCurrentInputConnection(), selectFirstResult(results));
             }
 
             @Override
@@ -157,10 +170,31 @@ public class VoiceImeService extends InputMethodService {
             public void onAddSpace() {
                 mTextUpdater.addSpace(getCurrentInputConnection());
             }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+                // TODO: store buffer
+            }
+
+            @Override
+            public void onSelectAll() {
+                // TODO: show ContextMenu
+                getCurrentInputConnection().performContextMenuAction(android.R.id.selectAll);
+            }
+
+            @Override
+            public void onReset() {
+                // TODO: hide ContextMenu (if visible)
+                InputConnection ic = getCurrentInputConnection();
+                CharSequence cs = ic.getSelectedText(0);
+                if (cs != null) {
+                    int len = cs.length();
+                    ic.setSelection(len, len);
+                }
+            }
         });
 
         // Launch recognition immediately (if set so)
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
@@ -380,7 +414,7 @@ public class VoiceImeService extends InputMethodService {
 
     }
 
-    public static String greatestCommonPrefix(String a, String b) {
+    private static String greatestCommonPrefix(String a, String b) {
         int minLength = Math.min(a.length(), b.length());
         for (int i = 0; i < minLength; i++) {
             if (a.charAt(i) != b.charAt(i)) {
@@ -388,5 +422,12 @@ public class VoiceImeService extends InputMethodService {
             }
         }
         return a.substring(0, minLength);
+    }
+
+    private static String selectFirstResult(List<String> results) {
+        if (results == null || results.size() < 1) {
+            return "";
+        }
+        return results.get(0);
     }
 }

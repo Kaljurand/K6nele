@@ -32,6 +32,10 @@ public class PreferenceUtils {
         return prefs.getBoolean(res.getString(key), res.getBoolean(defaultValue));
     }
 
+    public static int getPrefInt(SharedPreferences prefs, Resources res, int key, int defaultValue) {
+        return Integer.parseInt(getPrefString(prefs, res, key, defaultValue));
+    }
+
     public static String getUniqueId(SharedPreferences settings) {
         String id = settings.getString("id", null);
         if (id == null) {

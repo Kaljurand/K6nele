@@ -47,7 +47,7 @@ public class AppListCursorAdapter extends CursorAdapter {
 	public AppListCursorAdapter(Context context, Cursor c, boolean autoRequery) {
 		super(context, c, autoRequery);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		mDefaultServerUrl = prefs.getString(context.getString(R.string.keyServerHttp), context.getString(R.string.defaultServerHttp));
+		mDefaultServerUrl = prefs.getString(context.getString(R.string.keyHttpServer), context.getString(R.string.defaultHttpServer));
 		mPm = context.getPackageManager();
 	}
 

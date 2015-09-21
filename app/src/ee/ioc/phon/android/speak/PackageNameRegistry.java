@@ -82,43 +82,6 @@ public class PackageNameRegistry {
 		}
 	}
 
-/*
-	public PackageNameRegistry(Activity activity, String packageName) {
-		mContext = activity.getBaseContext();
-
-		if (packageName == null) {
-			mGrammarId = 0;
-			mServerId = 0;
-		} else {
-			Cursor cursor = activity.managedQuery(
-					App.Columns.CONTENT_URI,
-					new String[] { App.Columns._ID, App.Columns.GRAMMAR, App.Columns.SERVER, App.Columns.COUNT },
-					App.Columns.FNAME + "= ?",
-					new String[] { packageName },
-					null);
-
-			if (cursor.moveToFirst()) {
-				mGrammarId = cursor.getLong(cursor.getColumnIndex(App.Columns.GRAMMAR));
-				mServerId = cursor.getLong(cursor.getColumnIndex(App.Columns.SERVER));
-				long id = cursor.getLong(cursor.getColumnIndex(App.Columns._ID));
-				int count = cursor.getInt(cursor.getColumnIndex(App.Columns.COUNT));
-
-				ContentValues values = new ContentValues();
-				values.put(App.Columns.COUNT, ++count);
-				Uri appUri = ContentUris.withAppendedId(App.Columns.CONTENT_URI, id);
-				activity.getContentResolver().update(appUri, values, null, null);			
-			} else {
-				mGrammarId = 0;
-				mServerId = 0;
-				ContentValues values = new ContentValues();
-				values.put(App.Columns.FNAME, packageName);
-				values.put(App.Columns.COUNT, 1);
-				activity.getContentResolver().insert(App.Columns.CONTENT_URI, values);
-			}
-			cursor.close();
-		}
-	}
-*/
 
 	public String getGrammarUrl() {
 		if (mGrammarId == 0) {

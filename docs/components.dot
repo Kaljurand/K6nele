@@ -1,21 +1,23 @@
 /**
  *
  * @author Kaarel Kaljurand
- * @version 2015-05-05
+ * @version 2015-08-29
  */
 
 digraph G {
 
-	node [fillcolor = "white", style = "rounded,filled"];
+    graph [style="dotted", fontsize=10 fontname="Helvetica"];
+    node [shape="box", fontsize=10 fontname="Helvetica"];
+    edge [arrowhead="normal", arrowsize="0.6"];
 
-    "Kõnele Dialog" [fillcolor = "yellow"];
+    "Kõnele View" [label="Kõnele mic+swipe editor\n(view component)", shape="component", style="filled", fillcolor="yellow"];
 
     subgraph cluster_0 {
         label = "Cloud speech servers";
-        style=filled;
-        "kaldi" [label = "kaldi-gstreamer-server"];
-        "pocketsphinx" [label = "ruby-pocketsphinx-server"];
+        style = "filled";
         color = "lightblue";
+        "kaldi" [label="kaldi-gstreamer-server"];
+        "pocketsphinx" [label="ruby-pocketsphinx-server"];
     }
 
     // Services record audio, send it to the server, and make the transcription
@@ -23,57 +25,60 @@ digraph G {
     // One can configure the server addresses and audio recording parameters
     // (e.g. sample rate, duration, silence detection).
     subgraph cluster_1 {
-        label = "Kõnele speech services";
-        "Kõnele fast" [label = "Kõnele service\n(fast recognition)", fillcolor = "yellow"];
-        "Kõnele grammar" [label = "Kõnele service\n(grammar support)", fillcolor = "yellow"];
-        "Kõnele old" [label = "Kõnele service\n(grammar support, OLD)", fillcolor = "yellow"];
+        label = "Android speech services";
+        "other_service" [label="some other service:\nGoogle, Inimesed (future work), ..."];
+        "Kõnele fast" [label="Kõnele (fast recognition)", style="filled", fillcolor="yellow"];
+        "Kõnele grammar" [label="Kõnele (grammar support)", style="filled", fillcolor="yellow"];
     }
 
+    // Android speech and text input APIs
+    "Android SpeechRecognizer" [label="Android SpeechRecognizer API", shape="egg", style="filled", fillcolor="lightgreen"];
+    "Android RecognizerIntent" [label="Android RecognizerIntent API", shape="egg", style="filled", fillcolor="lightgreen"];
+    "IME" [label="Input Method Editor API", shape="egg", style="filled", fillcolor="lightgreen"];
+
     subgraph cluster_2 {
-        label = "Android speech APIs";
-        style=filled;
-        "Android SpeechRecognizer" ;
-        "Android RecognizerIntent" ;
-        color = "lightgreen";
+        label = "Android RecognizerIntent activities";
+        "other_activity" [label="some other activity:\nGoogle, ..."];
+        "panel" [label="Kõnele voice search panel", style="filled", fillcolor="yellow"];
     }
 
     subgraph cluster_3 {
-        label = "Android IMEs";
-        style=filled;
-        "Kõnele IME" [fillcolor = "yellow"];
-        "Google Keyboard" [label = "Google Keyboard, ..."];
-        color = "lightgreen";
+        label = "Android keyboard apps";
+        "Kõnele IME" [label="Kõnele speech keyboard", style="filled", fillcolor="yellow"];
+        "Google Keyboard" [label="Google Keyboard"];
+        "other_ime" [label="some other keyboard"];
     }
 
     subgraph cluster_4 {
         label = "Android apps";
-        style=filled;
+        style = "filled";
+        color = "lightgrey";
         "Google Keep";
         "Google Translate";
         "Arvutaja";
-        color=lightgrey;
     }
 
-    "kaldi" -> "Kõnele fast" [label = "WebSockets"];
-	"pocketsphinx" -> "Kõnele grammar" [label = "net-speech-api (HTTP)"];
-	"pocketsphinx" -> "Kõnele old" [label = "net-speech-api (HTTP)"];
+    "kaldi" -> "Kõnele fast" [label="WebSockets", fontsize=9, fontname="monospace"];
+    "pocketsphinx" -> "Kõnele grammar" [label="net-speech-api (HTTP)", fontsize=9, fontname="monospace"];
 
-    // Both services implement Android SpeechRecognizer
+    // Services that implement Android SpeechRecognizer
     "Kõnele fast" -> "Android SpeechRecognizer" ;
     "Kõnele grammar" -> "Android SpeechRecognizer" ;
+    "other_service" -> "Android SpeechRecognizer" ;
 
-    //"Google Search" -> "Android RecognizerIntent" ;
-    //"Google Search" -> "Android SpeechRecognizer" ;
+    "panel" -> "Android RecognizerIntent" ;
+    "other_activity" -> "Android RecognizerIntent" ;
 
-    "Kõnele old" -> "Kõnele Dialog" ;
-    "Kõnele Dialog" -> "Android RecognizerIntent" ;
-
-    "Android SpeechRecognizer" -> "Kõnele IME" ;
+    "Android SpeechRecognizer" -> "Kõnele View" ;
+    "Kõnele View" -> "Kõnele IME" ;
+    "Kõnele View" -> "panel" ;
     "Android SpeechRecognizer" -> "Arvutaja" ;
+    "Android SpeechRecognizer" -> "other_ime" [label="(maybe)", style="dashed", fontsize=9, fontname="Verdana"];
     "Android RecognizerIntent" -> "Google Keep" ;
-    "Google Keyboard" -> "Google Keep";
-    "Kõnele IME" -> "Google Keep";
     "Android SpeechRecognizer" -> "Google Translate" ;
-    "Google Keyboard" -> "Google Translate";
-    "Kõnele IME" -> "Google Translate";
+    "Google Keyboard" -> "IME";
+    "Kõnele IME" -> "IME";
+    "other_ime" -> "IME";
+    "IME" ->"Google Keep";
+    "IME" -> "Google Translate";
 }

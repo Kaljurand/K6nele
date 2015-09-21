@@ -30,6 +30,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ee.ioc.phon.android.speak.utils.IntentUtils;
+
 /**
  * <p>Simple activity that displays the String-array attached to the intent and plays the
  * audio data contained in the intent data.
@@ -66,19 +68,11 @@ public class DetailsActivity extends ListActivity {
 
 			String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
 			if (stringArray != null) {
-				setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item_detail, stringArray));
+				setListAdapter(new ArrayAdapter<>(this, R.layout.list_item_detail, stringArray));
 
 				getListView().setOnItemClickListener(new OnItemClickListener() {
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // We construct a list of search intents.
-                        // The first one that can be handled by the device is launched.
-                        CharSequence query = ((TextView) view).getText();
-                        Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
-                        intent1.putExtra(SearchManager.QUERY, query);
-                        Intent intent2 = new Intent(Intent.ACTION_SEARCH);
-                        intent2.putExtra(SearchManager.QUERY, query);
-
-                        Utils.startActivityIfAvailable(DetailsActivity.this, intent1, intent2);
+						IntentUtils.startSearchActivity(DetailsActivity.this, ((TextView) view).getText());
                         // TODO: can we finish the parent as well? or maybe return the selection to parent?
                         finish();
                     }

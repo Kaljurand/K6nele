@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
@@ -18,11 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
-
 public class RecognitionServiceManager {
-
-    private final PackageManager mPm;
     private List<String> mServices = new ArrayList<>();
     private Set<String> mInitiallySelectedCombos = new HashSet<>();
     private Set<String> mCombosExcluded = new HashSet<>();
@@ -31,25 +26,22 @@ public class RecognitionServiceManager {
         void onComplete(List<String> combos, Set<String> selectedCombos);
     }
 
-    RecognitionServiceManager(Context context, Set<String> selectedCombos) {
-        mPm = context.getPackageManager();
+    public RecognitionServiceManager() {
+    }
 
-        Resources res = context.getResources();
+    public void setCombosExcluded(Set<String> set) {
+        mCombosExcluded = set;
+    }
 
-        mCombosExcluded = PreferenceUtils.getStringSetFromStringArray(res, R.array.defaultImeCombosExcluded);
-
-        if (selectedCombos == null) {
-            mInitiallySelectedCombos = PreferenceUtils.getStringSetFromStringArray(res, R.array.defaultImeCombos);
-        } else {
-            mInitiallySelectedCombos = selectedCombos;
-        }
-        populateServices();
+    public void setInitiallySelectedCombos(Set<String> set) {
+        mInitiallySelectedCombos = set;
     }
 
     /**
      * Collect together the languages supported by the given services and call back once done.
      */
     public void populateCombos(Activity activity, final Listener listener) {
+        populateServices(activity.getPackageManager());
         populateCombos(activity, 0, listener, new ArrayList<String>(), new HashSet<String>());
     }
 
@@ -122,11 +114,10 @@ public class RecognitionServiceManager {
         }, null, Activity.RESULT_OK, null, null);
     }
 
-
-    private void populateServices() {
+    private void populateServices(PackageManager pm) {
         int flags = 0;
         //int flags = PackageManager.GET_META_DATA;
-        List<ResolveInfo> services = mPm.queryIntentServices(
+        List<ResolveInfo> services = pm.queryIntentServices(
                 new Intent(RecognitionService.SERVICE_INTERFACE), flags);
 
         int index = 0;

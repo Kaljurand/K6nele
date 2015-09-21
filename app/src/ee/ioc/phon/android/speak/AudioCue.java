@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.SystemClock;
 
+// TODO: add a method that calls back when audio is finished
 public class AudioCue {
 
     private static final int DELAY_AFTER_START_BEEP = 200;

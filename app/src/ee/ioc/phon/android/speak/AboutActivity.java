@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package ee.ioc.phon.android.speak;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 /**
  * <p>Simple activity that shows the info page (help page).
@@ -28,35 +28,26 @@ import android.text.method.LinkMovementMethod;
  * in the resource XML files. The content is interpreted here
  * as an HTML string, i.e. one can use simple HTML-formatting
  * and linking.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class AboutActivity extends Activity {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.about);
 
-		TextView tvAboutHeader = (TextView) findViewById(R.id.tvAboutHeader);
-		tvAboutHeader.setMovementMethod(LinkMovementMethod.getInstance());
+        getActionBar().setTitle(R.string.labelApp);
+        getActionBar().setSubtitle("v" + Utils.getVersionName(this));
 
-		// Header
-		String aboutHeader = String.format(
-				getString(R.string.tvAboutHeader),
-				getString(R.string.labelApp),
-				getString(R.string.descriptionApp),
-				Utils.getVersionName(this)
-		);
-		tvAboutHeader.setText(Html.fromHtml(aboutHeader));
-
-		// Content
-		TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
-		tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
-		String about = String.format(
-				getString(R.string.tvAbout),
-				getString(R.string.labelApp)
-		);
-		tvAbout.setText(Html.fromHtml(about));
-	}
+        // Content
+        TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
+        tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
+        String about = String.format(
+                getString(R.string.tvAbout),
+                getString(R.string.labelApp)
+        );
+        tvAbout.setText(Html.fromHtml(about));
+    }
 }

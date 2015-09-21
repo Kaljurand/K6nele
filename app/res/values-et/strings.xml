@@ -5,13 +5,14 @@
 
     <string name="labelRecognitionServiceHttp">Kõnele (grammatikatoega)</string>
     <string name="labelRecognitionServiceWs">Kõnele (kiire tuvastusega)</string>
+    <string name="labelRecognitionServiceWs2">Kõnele (kiire tuvastusega 2)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
     <string name="labelActivityAppList">Rakendused</string>
     <string name="labelActivityGrammarList">Grammatikad</string>
     <string name="labelActivityAbout">Info</string>
-    <string name="labelActivityPreferences">Kõnele seaded</string> <!-- references @string/labelApp -->
+    <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
@@ -20,9 +21,10 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
-    <string name="titleCategoryUi">Otsingupaneel (punase nupuga)</string>
-    <string name="titleCategoryIme">Kõneklaviatuur (kollase nupuga)</string>
+    <string name="titleCategoryUi">Otsingupaneel</string>
+    <string name="titleCategoryIme">Kõneklaviatuur</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
+    <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
 		kõnesisendi kasutamiseks</string>
@@ -63,12 +65,6 @@
     <string name="buttonCancel">Loobu</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
     <string name="statusImeTranscribing">Oodake…</string>
-    <string name="tvAboutHeader">&lt;b>%1$s&lt;/b>: %2$s
-		&lt;br/>
-		v%3$s, autor:
-		&lt;a
-		href="https://plus.google.com/+KaarelKaljurand">Kaarel
-		Kaljurand&lt;/a> </string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
 		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
 		et
@@ -94,7 +90,7 @@
         tekstiväljade täitmiseks (väljaarvatud parooliväljad). Kollasele nupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
         Svaip vasakule kustutab kursorile eelneva sõna.
-        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku.&lt;/p>
+        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku. Pikk vajutus valib kogu teksti.&lt;/p>
 
         &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks teenusi,
 		mis ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
@@ -158,6 +154,7 @@
     <string name="menuGrammarsAdd">Lisa</string>
     <string name="menuServersAdd">Lisa</string>
     <string name="menuDemoGrammarAssign">Omista grammatika</string>
+    <string name="menuAbout">Info</string>
     <string name="cmAppAssignGrammar">Omista grammatika</string>
     <string name="cmAppRemoveGrammar">Eemalda grammatika</string>
     <string name="cmAppAssignServer">Omista server</string>
@@ -253,15 +250,23 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleDefaultServiceWs">WebSocket-aadress</string>
-    <string name="labelRecognitionServiceHttpWithComment">Kõnele (grammatikatoega). Ainuvõimalik valik Kõnele praeguses versioonis.</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
+    <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
+    <string name="titleHelpText">Abitekst</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
     <string name="summaryImeCombo">Uuendan…</string>
-    <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
+    <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
+    <string name="emptylistCombos">Praegu kasutatakse eesti keelt ja Kõnele (grammatikatoega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
     <string name="labelIme">Kõnele kõneklaviatuur</string>
+    <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
+
+    <plurals name="summaryMaxResults">
+        <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
+        <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
+    </plurals>
 
 </resources>

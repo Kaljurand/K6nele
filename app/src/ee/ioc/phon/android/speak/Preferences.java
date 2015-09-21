@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -26,6 +27,9 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
@@ -47,14 +51,39 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
 
     private SettingsFragment mSettingsFragment;
     private SharedPreferences mPrefs;
+    private String mKeyMaxResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mSettingsFragment = new SettingsFragment();
+
+        mKeyMaxResults = getString(R.string.keyMaxResults);
+
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction().replace(android.R.id.content, mSettingsFragment).commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.preferences_header, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuAbout:
+                Intent searchIntent = new Intent(this, AboutActivity.class);
+                startActivity(searchIntent);
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 
@@ -86,8 +115,11 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
             category.addPreference(pref);
         }
 
-        Preference pref = mSettingsFragment.findPreference(getString(R.string.keyImeCombo));
-        pref.setSummary(makeSummary(PreferenceUtils.getPrefStringSet(mPrefs, getResources(), R.string.keyImeCombo)));
+        String maxResults = mPrefs.getString(mKeyMaxResults, getString(R.string.defaultMaxResults));
+        updateSummaryInt(mSettingsFragment.findPreference(mKeyMaxResults), R.plurals.summaryMaxResults, maxResults);
+
+        updateSummary(R.string.keyImeCombo, R.string.emptylistImeCombos);
+        updateSummary(R.string.keyCombo, R.string.emptylistCombos);
     }
 
 
@@ -95,7 +127,11 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         Preference pref = mSettingsFragment.findPreference(key);
         if (pref instanceof ListPreference) {
             ListPreference lp = (ListPreference) pref;
-            pref.setSummary(lp.getEntry());
+            if (mKeyMaxResults.equals(key)) {
+                updateSummaryInt(lp, R.plurals.summaryMaxResults, lp.getEntry().toString());
+            } else {
+                pref.setSummary(lp.getEntry());
+            }
         }
     }
 
@@ -111,15 +147,27 @@ public class Preferences extends Activity implements OnSharedPreferenceChangeLis
         return false;
     }
 
-    private String makeSummary(Collection<String> values) {
+    private void updateSummary(int key, int keyEmpty) {
+        mSettingsFragment
+                .findPreference(getString(key))
+                .setSummary(makeSummary(key, keyEmpty));
+    }
+
+    private String makeSummary(int key, int keyEmpty) {
+        Collection<String> values = PreferenceUtils.getPrefStringSet(mPrefs, getResources(), key);
         List<Combo> combos = new ArrayList<>();
         for (String value : values) {
             combos.add(new Combo(this, value));
         }
         if (combos.size() == 0) {
-            return getString(R.string.emptylistCombos);
+            return getString(keyEmpty);
         }
         Collections.sort(combos, Combo.SORT_BY_LANGUAGE);
         return TextUtils.join("\n", combos);
+    }
+
+    private void updateSummaryInt(Preference pref, int pluralsResource, String countAsString) {
+        int count = Integer.parseInt(countAsString);
+        pref.setSummary(getResources().getQuantityString(pluralsResource, count, count));
     }
 }

@@ -3,7 +3,6 @@
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
 
-
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 
@@ -15,22 +14,48 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K6nele">
 
+        <!-- RecognizerIntentActivity does not have any intent-filters and is thus not findable
+        by the OS, but it can still be called directly by the class name. -->
         <!--
-			android:clearTaskOnLaunch="true"
-			android:finishOnTaskLaunch="true"
-			android:allowTaskReparenting="false"
-        -->
-
-
-        <!--
-        TODO: singleTask seems a more appropriate launchMode,
-        but it does not work, and with singleInstance we fail to
-        deliver the results to the caller. So we have to use standard.
-        -->
+TODO: singleTask seems a more appropriate launchMode but returns the results to the caller
+only on Android v5, So we have to use standard on older versions. See also:
+http://stackoverflow.com/questions/8960072/onactivityresult-with-launchmode-singletask
+Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION
+-->
         <!-- This activity is exported, i.e. any app can launch K6nele. -->
         <!-- TODO: launching worked also with exported=true, although didn't try explicit packagename-based launching. -->
         <activity
-            android:name=".RecognizerIntentActivity"
+            android:name=".activity.RecognizerIntentActivity"
+            android:exported="true"
+            android:label="@string/labelActivityRecognizerIntent"
+            android:launchMode="standard"
+            android:theme="@style/Theme.K6nele.Dialog">
+            <!--
+            <intent-filter>
+                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.speech.action.WEB_SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            -->
+            <meta-data
+                android:name="android.speech.DETAILS"
+                android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
+        </activity>
+
+        <!-- Voice search panel. -->
+
+        <!--
+			android:finishOnTaskLaunch="true"
+			android:allowTaskReparenting="false"
+        -->
+        <activity
+            android:name=".activity.SpeechActionActivity"
+            android:clearTaskOnLaunch="true"
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
@@ -42,6 +67,37 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.speech.action.WEB_SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- input/output: Nothing -->
+            <!-- Samsung Galaxy SII launches VOICE_COMMAND when HOME is double-clicked -->
+            <intent-filter>
+                <action android:name="android.intent.action.VOICE_COMMAND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- Input: EXTRA_ASSIST_PACKAGE, EXTRA_ASSIST_CONTEXT. Output: nothing. -->
+            <!-- API 16 -->
+            <!-- "Search assistant" on CM10.2, which can be mapped to various buttons -->
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- input/output: Nothing -->
+            <!-- API 3 -->
+            <!-- "Voice search" on CM10.2, which can be mapped to various buttons -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- input/output: Nothing -->
+            <intent-filter>
+                <action android:name="android.speech.action.VOICE_SEARCH_HANDS_FREE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -109,7 +165,7 @@
             android:name=".AboutActivity"
             android:label="@string/labelActivityAbout"
             android:parentActivityName=".Preferences"
-            android:theme="@style/Theme.K6nele.NoActionBar"></activity>
+            android:theme="@style/Theme.K6nele"></activity>
 
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
@@ -158,7 +214,7 @@
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->
         <service
-            android:name="WebSocketRecognizer"
+            android:name=".service.WebSocketRecognitionService"
             android:exported="true"
             android:label="@string/labelRecognitionServiceWs"
             android:permission="android.permission.RECORD_AUDIO">
@@ -176,7 +232,7 @@
         </service>
 
         <service
-            android:name="SpeechRecognitionService"
+            android:name=".service.HttpRecognitionService"
             android:exported="true"
             android:label="@string/labelRecognitionServiceHttp"
             android:permission="android.permission.RECORD_AUDIO">
@@ -200,7 +256,36 @@
         </service>
 
         <service
-            android:name="VoiceImeService"
+            android:name=".service.DemoRecognitionService"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/labelRecognitionServiceDemo"
+            android:permission="android.permission.RECORD_AUDIO">
+            <intent-filter>
+
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.WebSocketRecognitionService2"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/labelRecognitionServiceWs2"
+            android:permission="android.permission.RECORD_AUDIO">
+            <intent-filter>
+
+                <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.SpeechInputMethodService"
             android:label="@string/labelIme"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>

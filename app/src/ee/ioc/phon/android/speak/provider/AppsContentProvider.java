@@ -105,7 +105,7 @@ public class AppsContentProvider extends ContentProvider {
 			db.execSQL("INSERT INTO " + SERVERS_TABLE_NAME + " VALUES (" +
 					"'1', " +
 					"'" +
-					mContext.getString(R.string.defaultServerHttp) +
+					mContext.getString(R.string.defaultHttpServer) +
 					"'" + ");");
 
 			/*

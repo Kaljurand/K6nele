@@ -207,11 +207,15 @@ public class RawAudioRecorder {
 	 * @return bytes that have been recorded since the beginning, with wav-header
 	 */
 	public byte[] getCompleteRecordingAsWav() {
-		byte[] pcm = getCompleteRecording();
+		return getRecordingAsWav(getCompleteRecording(), mSampleRate);
+	}
+
+
+	public static byte[] getRecordingAsWav(byte[] pcm, int sampleRate) {
 		int headerLen = 44;
-		int totalDataLen = pcm.length + headerLen;
-		int byteRate = mSampleRate * RESOLUTION_IN_BYTES; // mSampleRate*(16/8)*1 ???
+		int byteRate = sampleRate * RESOLUTION_IN_BYTES; // mSampleRate*(16/8)*1 ???
 		int totalAudioLen = pcm.length;
+		int totalDataLen = totalAudioLen + headerLen;
 
 		byte[] header = new byte[headerLen];
 
@@ -239,10 +243,10 @@ public class RawAudioRecorder {
 		header[21] = 0;
 		header[22] = (byte) CHANNELS;
 		header[23] = 0;
-		header[24] = (byte) (mSampleRate & 0xff);
-		header[25] = (byte) ((mSampleRate >> 8) & 0xff);
-		header[26] = (byte) ((mSampleRate >> 16) & 0xff);
-		header[27] = (byte) ((mSampleRate >> 24) & 0xff);
+		header[24] = (byte) (sampleRate & 0xff);
+		header[25] = (byte) ((sampleRate >> 8) & 0xff);
+		header[26] = (byte) ((sampleRate >> 16) & 0xff);
+		header[27] = (byte) ((sampleRate >> 24) & 0xff);
 		header[28] = (byte) (byteRate & 0xff);
 		header[29] = (byte) ((byteRate >> 8) & 0xff);
 		header[30] = (byte) ((byteRate >> 16) & 0xff);
@@ -265,7 +269,6 @@ public class RawAudioRecorder {
 		System.arraycopy(pcm, 0, wav, header.length, pcm.length);
 		return wav;
 	}
-
 
 	/**
 	 * @return bytes that have been recorded since this method was last called
