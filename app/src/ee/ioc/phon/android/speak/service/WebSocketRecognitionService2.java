@@ -13,7 +13,6 @@ public class WebSocketRecognitionService2 extends WebSocketRecognitionService {
 
     @Override
     void configure(Intent recognizerIntent) throws IOException {
-        // TODO: why null?
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
         mUrl = "ws://localhost:82/duplex-speech-api/ws/speech"
                 + getDefaultWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");

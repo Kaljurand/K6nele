@@ -18,7 +18,7 @@ import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
-import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;

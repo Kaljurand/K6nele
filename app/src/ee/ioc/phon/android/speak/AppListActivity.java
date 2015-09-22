@@ -17,6 +17,9 @@
 package ee.ioc.phon.android.speak;
 
 import ee.ioc.phon.android.speak.provider.App;
+import ee.ioc.phon.android.speak.utils.IntentUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
+
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -80,7 +83,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Cursor cursor = (Cursor) parent.getItemAtPosition(position); 
 				String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
-				Intent intent = Utils.getAppIntent(getApplicationContext(), fname);
+				Intent intent = IntentUtils.getAppIntent(getApplicationContext(), fname);
 				if (intent != null) {
 					startActivity(intent);
 				} else {

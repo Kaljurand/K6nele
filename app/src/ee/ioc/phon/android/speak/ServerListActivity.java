@@ -19,6 +19,7 @@ package ee.ioc.phon.android.speak;
 import java.net.MalformedURLException;
 
 import ee.ioc.phon.android.speak.provider.Server;
+import ee.ioc.phon.android.speak.utils.Utils;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -109,7 +110,7 @@ public class ServerListActivity extends RecognizerIntentListActivity {
 							}
 						}
 					}
-					).show();
+			).show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);

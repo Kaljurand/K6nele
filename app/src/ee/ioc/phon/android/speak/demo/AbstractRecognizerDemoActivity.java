@@ -21,7 +21,7 @@ import java.util.List;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.GrammarListActivity;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.provider.Grammar;
 
 import android.app.Activity;

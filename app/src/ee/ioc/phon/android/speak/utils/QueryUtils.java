@@ -23,10 +23,9 @@ public class QueryUtils {
      * TODO: unify this better
      */
     public static String getQueryParams(Intent intent, ChunkedWebRecSessionBuilder builder, String encoding) throws UnsupportedEncodingException {
+        if (Log.DEBUG) Log.i(builder.toStringArrayList());
         List<Pair<String, String>> list = new ArrayList<>();
         flattenBundle("editorInfo_", list, intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO));
-        if (Log.DEBUG) Log.i(builder.toStringArrayList());
-        // TODO: review these parameter names
         listAdd(list, "lang", builder.getLang());
         listAdd(list, "lm", toString(builder.getGrammarUrl()));
         listAdd(list, "output-lang", builder.getGrammarTargetLang());

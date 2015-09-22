@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.Utils;
 
 /**
  * Sends a growing number every few milliseconds for 3 seconds, finally sends

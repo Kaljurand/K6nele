@@ -22,6 +22,8 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import ee.ioc.phon.android.speak.utils.Utils;
+
 /**
  * <p>Simple activity that shows the info page (help page).
  * The content and style of this activity are defined entirely

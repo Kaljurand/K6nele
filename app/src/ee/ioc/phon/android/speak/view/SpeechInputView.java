@@ -27,7 +27,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
-import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;

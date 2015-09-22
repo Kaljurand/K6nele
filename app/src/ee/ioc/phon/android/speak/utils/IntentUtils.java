@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.utils;
 
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.text.SpannableString;
@@ -18,6 +20,24 @@ import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 
 public class IntentUtils {
+
+    public static PendingIntent getPendingIntent(Bundle extras) {
+        Parcelable extraResultsPendingIntentAsParceable = extras.getParcelable(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT);
+        if (extraResultsPendingIntentAsParceable != null) {
+            //PendingIntent.readPendingIntentOrNullFromParcel(mExtraResultsPendingIntent);
+            if (extraResultsPendingIntentAsParceable instanceof PendingIntent) {
+                return (PendingIntent) extraResultsPendingIntentAsParceable;
+            }
+        }
+        return null;
+    }
+
+
+    public static Intent getAppIntent(Context c, String packageName) {
+        PackageManager pm = c.getPackageManager();
+        return pm.getLaunchIntentForPackage(packageName);
+    }
+
 
     /**
      * Constructs a list of search intents.

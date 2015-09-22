@@ -20,6 +20,8 @@ import android.app.PendingIntent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
+import ee.ioc.phon.android.speak.utils.Utils;
+
 /**
  * <p>Description of the caller that receives the transcription.
  * If the extras specify a pending intent (I've never encountered such an app though),

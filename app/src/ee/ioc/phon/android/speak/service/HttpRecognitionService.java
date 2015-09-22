@@ -37,7 +37,7 @@ import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.Utils;
+import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.Hypothesis;
@@ -265,7 +265,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
      * @param matches    recognition results (just linearizations)
      */
     private void returnOrForwardMatches(ArrayList<String> everything, ArrayList<Integer> counts, ArrayList<String> matches) {
-        PendingIntent pendingIntent = Utils.getPendingIntent(getExtras());
+        PendingIntent pendingIntent = IntentUtils.getPendingIntent(getExtras());
         if (pendingIntent == null) {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, matches); // TODO: results_recognition

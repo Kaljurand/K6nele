@@ -37,8 +37,6 @@ import java.util.ArrayList;
  */
 public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 
-    private final ArrayList<String> mSupportedLanguages = new ArrayList<>();
-
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("received: " + intent.getAction());
@@ -54,12 +52,14 @@ public class GetLanguageDetailsReceiver extends BroadcastReceiver {
 
         // TODO: send different results depending on the service (Ws and Http)
         // in general support different languages). Not sure that the framework supports this.
-        mSupportedLanguages.add("et-EE");
-        mSupportedLanguages.add("en-US");
+
+        ArrayList<String> langs = new ArrayList<>();
+        langs.add("et-EE");
+        langs.add("en-US");
 
         Bundle extras = new Bundle();
         extras.putString(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "et-EE");
-        extras.putStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, mSupportedLanguages);
+        extras.putStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, langs);
         setResultExtras(extras);
     }
 }

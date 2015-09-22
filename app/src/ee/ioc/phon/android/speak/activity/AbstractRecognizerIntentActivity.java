@@ -45,7 +45,6 @@ import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.Utils;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
@@ -125,7 +124,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
 
         if (!mExtras.isEmpty()) {
-            mExtraResultsPendingIntent = Utils.getPendingIntent(mExtras);
+            mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
         }
 
         mMessageHandler = new SimpleMessageHandler(this);

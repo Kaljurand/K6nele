@@ -54,7 +54,6 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     @Override
     void configure(Intent recognizerIntent) throws IOException {
-        // TODO: why null?
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
         mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
                 + DEFAULT_WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");

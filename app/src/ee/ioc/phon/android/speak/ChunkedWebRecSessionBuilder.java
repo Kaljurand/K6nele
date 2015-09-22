@@ -30,7 +30,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 
+import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**
@@ -89,7 +91,7 @@ public class ChunkedWebRecSessionBuilder {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mDeviceId = PreferenceUtils.getUniqueId(prefs);
 
-		PendingIntent pendingIntent = Utils.getPendingIntent(extras);
+		PendingIntent pendingIntent = IntentUtils.getPendingIntent(extras);
 
 		if (callingActivity == null) {
 			Caller caller1 = new Caller(pendingIntent, extras);
@@ -236,7 +238,7 @@ public class ChunkedWebRecSessionBuilder {
 	 * <p>Returns the package name of the app that receives the transcription,
 	 * or <code>null</code> if the package name could not be resolved.</p>
 	 */
-	private String getCaller(ComponentName callingActivity, PendingIntent pendingIntent) {
+	private static String getCaller(ComponentName callingActivity, PendingIntent pendingIntent) {
 		if (pendingIntent == null) {
 			if (callingActivity != null) {
 				return callingActivity.getPackageName();

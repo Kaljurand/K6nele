@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import ee.ioc.phon.android.speak.provider.Server;
+import ee.ioc.phon.android.speak.utils.Utils;
 
 public class PreferencesRecognitionServiceHttp extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
