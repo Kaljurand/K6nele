@@ -6,14 +6,15 @@ title: Developer's Guide
 
 ## Introduction
 
-Kõnele is an app that helps another app to communicate with two online speech recognition servers,
+Kõnele is an app that helps other apps to communicate with two online speech recognition servers,
 running the following software:
 
 - continuous full-duplex server, <https://github.com/alumae/kaldi-gstreamer-server>,
 - grammar-supporting server, <https://github.com/alumae/ruby-pocketsphinx-server>.
 
 You can benefit from Kõnele either by implementing a new app and using
-an existing running server, or deploying a new server and reconfiguring Kõnele to use it.
+an existing running server, or deploying a new server and using it from an
+existing app.
 
 ## Calling Kõnele as an activity
 
@@ -22,9 +23,9 @@ and supports its EXTRAs up to Android API level 3.
 
 In addition to the standard EXTRAs, Kõnele adds the following EXTRAs:
 
-| `SERVER_URL`          | URL                           | Web address of the speech recognizer server
+| `SERVER_URL`          | URL                           | Web address of the speech recognition server
 | `GRAMMAR_URL`         | URL                           | Web address of a speech recognition grammar file
-| `GRAMMAR_TARGET_LANG` | Comma-separated langugae codes| One or more identifiers of languages into which the recognizer-server should translate the raw speech recognition output
+| `GRAMMAR_TARGET_LANG` | Comma-separated langugae codes| One or more identifiers of languages into which the recognition server should translate the raw speech recognition output
 | `PHRASE`              | String                        | Desired transcription (could be used for adaptation)
 | `GET_AUDIO`           | Boolean                       | Return audio iff true
 | `GET_AUDIO_FORMAT`    | Mime type (only "audio/wav")  | Audio format
@@ -36,19 +37,19 @@ Note that the end-user _can_ override the server and grammar EXTRAs via a the K�
 
 If you know that Kõnele is available on the device and is the only one with the required features
 then you can call it directly, i.e. without any intermediate user-selection.
-To do this, build a Recognizer-intent that can only be serviced by Kõnele's `RecognizerIntentActivity`.
+To do this, build a Recognizer-intent that can only be serviced by Kõnele's `SpeechActionActivity`.
 
 {% highlight java %}
 ...
 mIntent.setComponent(
     new ComponentName(
         "ee.ioc.phon.android.speak",
-        "ee.ioc.phon.android.speak.RecognizerIntentActivity"));
+        "ee.ioc.phon.android.speak.activity.SpeechActionActivity"));
 {% endhighlight %}
 
 ## Calling Kõnele as a service
 
-On Android API level 8+ you can also call Kõnele via [android.speech.SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html).
+You can also call Kõnele via [android.speech.SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html).
 In this case, please use `EXTRA_CALLING_PACKAGE` to identify your app for Kõnele.
 
 To obtain a Kõnele-specific SpeechRecognizer-object, use the two-argument call to `createSpeechRecognizer`:
@@ -57,14 +58,13 @@ To obtain a Kõnele-specific SpeechRecognizer-object, use the two-argument call 
 SpeechRecognizer.createSpeechRecognizer(this,
     new ComponentName(
         "ee.ioc.phon.android.speak",
-        "ee.ioc.phon.android.speak.SpeechRecognitionService");
-    );
+        "ee.ioc.phon.android.speak.service.HttpRecognitionService"));
 {% endhighlight %}
 
 The available services are:
 
-  - `ee.ioc.phon.android.speak.SpeechRecognitionService` (continuous full-duplex server)
-  - `ee.ioc.phon.android.speak.WebSocketRecognizer` (grammar-supporting server)
+  - `ee.ioc.phon.android.speak.service.HttpRecognitionService` (uses the grammar-supporting server)
+  - `ee.ioc.phon.android.speak.service.WebSocketRecognitionService` (uses the continuous full-duplex server)
 
 The above-listed EXTRAs are also supported when calling Kõnele as a service, with the
 exception of the `GET_AUDIO` EXTRAs.
@@ -80,7 +80,7 @@ The following two `adb shell` commands
 {% highlight sh %}
 adb shell am force-stop ee.ioc.phon.android.speak; \
 adb shell am start \
--n ee.ioc.phon.android.speak/.RecognizerIntentActivity \
+-n ee.ioc.phon.android.speak/.service.HttpRecognitionService \
 -a android.speech.action.RECOGNIZE_SPEECH \
 -e android.speech.extra.LANGUAGE_MODEL "free_form" \
 -e android.speech.extra.LANGUAGE "en-US" \
@@ -95,3 +95,6 @@ List of open-source apps that use Kõnele:
 
   - <http://github.com/Kaljurand/Arvutaja>
   - <http://github.com/v3rm0n/haalda>
+
+Furthermore, Kõnele itself (e.g. in `view.SpeechInputView`) calls its own services via the standard interfaces.
+Also, classes which contain "Demo" in their names contain demo code.

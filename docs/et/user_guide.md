@@ -35,6 +35,8 @@ Järgnev video näitab
 (4) Kõnele konfigureerimist Androidi vaikimisi kõnetuvastajaks, ja selle kasutamist _Google Translate_ rakenduses;
 (5) tõlkegrammatika omistamist _Wolfram Alpha_ rakendusele, ja selles mõõtühikuteisendamist;
 (6) _Arvutaja_ rakenduse kasutamist (vahelduseks inglise keeles) äratuskella seadmiseks.
+(Video on tehtud Kõnele versiooniga 0.8.56, uuemates versioonides on kasutajaliides natuke
+muutunud.)
 
 <iframe id="ytplayer" type="text/html" width="480" height="360"
 src="http://www.youtube.com/embed/gKFIWSA2GWc?origin=http://kaljurand.github.io"
@@ -44,39 +46,25 @@ Allpool tuleb kõikidest nendest kasutusolukordadest lähemalt juttu.
 
 ## Kõnepõhine veebiotsing
 
-Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb punase nupuga paneel.
+Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb mikrofoninupuga paneel.
 Nupule vajutades teisendab Kõnele sisendkõne tekstiks ning edastab selle
 edasi seadme veebibrauserile.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-35-34.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-36-33.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-37-22.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-22-08-11.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-37-56.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-38-07.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-50.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-59.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-10.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
-Pärast Lindista-nupule vajutamist (seadetes saab ka määrata,
-et lindistamine algab automaatselt, ilma nupule vajutamata),
-tuleb oma jutt selge ja kõlava häälega mikrofoni rääkida.
-Lindistamine lõpeb pärast pikemat pausi või nupule vajutamist (sõltuvalt
-seadetest). Kui midagi läheb sassi, siis saab _Back_-nupule vajutades lindistamise
-katkestada.
-Lindistamise käigus näitab Kõnele mitu sekundit on lindistamine
-juba kestnud ning mitu baiti on salvestus juba ruumi võtnud. Vastav kogus saadetakse
-serverisse transkribeerimiseks.
-Pärast lindistamise lõppu kuvatakse pilt lindistuse valjuse muutumisest
-läbi lindistuse kestuse.
-Selle pildi põhjal on võimalik otsustada, kas lindistus tehniliselt õnnestus või mitte.
-Samal ajal toimub serveris kõne teisendamine tekstiks.
-Tüüpiliselt tagastab server mitu tuvastushüpoteesi. Neist ühele vajutades käivitub
-veebiotsing.
 
 ## Kõnele seadistamine
 
-Sama punase nupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
+Sama mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
 Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
 
 - milliseid tuvastusteenusi ja -keeli kasutatakse;
+- kui palju tuvastushüpoteese serverilt paluda;
 - kas lindistamine algab automaatselt või peale nupule vajutamist;
 - kas lindistamine lõpeb kui sisendkõnesse tekib paus, või alles siis, kui nupule on vajutatud;
 - kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga.
@@ -84,14 +72,14 @@ Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määr
 Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest ning
 seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-23-47-50.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-23-48-00.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-23.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-53.png">
 
 Samuti on võimalik vaadata, läbi milliste rakenduste on kõnetuvastust kasutatud ning
 omistada erinevatele rakendustele erinevaid grammatikaid (vt allpool).
 
 Kõnele sisaldab kahte erinevat kõnetuvastusteenust, mis kasutavad vastavalt kahte erinevat
-kõnetuvastusserverit:
+kõnetuvastusserverit (mille aadressid on samuti konfigureeritavad):
 
   - "grammatikatoega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/ruby-pocketsphinx-server>)
     lubab sisendkõnele omistada tõlkegrammatikaid, kuid on aeglasem ja sisendkõne pikkus ei tohi ületada
@@ -99,7 +87,16 @@ kõnetuvastusserverit:
   - "kiire tuvastusega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/kaldi-gstreamer-server>)
     tagastab tuvastustulemuse juba rääkimise ajal, ega sea sisendkõne pikkusele mingit piirangut.
 
-Mõlema teenuse poolt kasutatava serveri aadressi on võimalik seadetes muuta.
+Otsingupaneel kasutab vaikimisi "grammatikatoega" kõnetuvastusteenust, kuid
+lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
+keeli (nt Kõnele "kiire tuvastusega" teenus ja Google'i teenus),
+muutes vastavat seadet.
+Kui valitud on mitu teenust/keelt, siis on paneelil lisaks veel teenuse/keele vahetamise nupp:
+
+- lühike vajus lülitab järgmisele teenusele/keelele,
+- pikk vajutus kuvab kõik võimalikud teenused/keeled, võimaldades valikut muuta.
+
+(Vt näidet peatükis "Grammatika-põhine kõnetuvastus".)
 
 Lisaks Kõnele oma seadetele, on Kõnelet võimalik konfigureerida kolmes Androidi süsteemses
 menüüs:
@@ -137,6 +134,7 @@ klaviatuur järgmisi operatsioone:
 - svaip vasakule kustutab kursorist vasakul asuva sõna,
 - svaip paremale lisab reavahetuse,
 - topeltvajutus lisab tühiku,
+- pikk vajutus valib kogu teksti (mugav viis kogu transkriptsiooni üledikteerimiseks),
 - vajutus klaviatuuriikoonile vahetab klaviatuuri,
 - pikk vajutus klaviatuuriikoonile avab klaviatuurivahetusmenüü,
 - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal).
@@ -159,24 +157,13 @@ kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
 
-Kõneklaviatuur kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
-lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
-keeli (nt Kõnele grammatika-teadlik teenus ja Google'i teenus),
-muutes kõneklaviatuuri vastavat seadet Kõnele seadetes.
-Kui valitud on mitu teenust/keelt, siis on klaviatuuril lisaks veel teenuse/keele vahetamise nupp:
-
-- lühike vajus lülitab järgmisele teenusele/keelele,
-- pikk vajutus kuvab kõik võimalikud teenused/keeled, võimaldades valikut muuta.
-
-(Vt näidet peatükis "Grammatika-põhine kõnetuvastus".)
-
 
 ## Kõnele kutsumine teistest rakendustest (koos kasutajaliidesega)
 
 Mõnes rakenduses (nt _Google Keep_) on mikrofoninupp, millele vajutades kutsutakse välja kõnetuvastusteenust
 pakkuv rakendus, koos oma kasutajaliidesega (nn _RecognizerIntent_).
 Kõnele puhul on selleks ülal kirjeldatud
-punase nupuga paneel. Teisest rakendusest välja kutsutuna
+mikrofoninupuga paneel. Teisest rakendusest välja kutsutuna
 ei edastata Kõnele tuvastustulemust veebibrauserile, vaid tagastab kutsuvale
 rakendusele (nt _Google Keep_), mis siis sellega edasi toimetab.
 
@@ -248,16 +235,16 @@ Järgmised pildid näitavad valuuta konverteerimist, kus sisend
 ("kaksteist tuhat kolmsada nelikümmend viis norra krooni eurodes") jooksvalt _Google Now_-le
 arusaadavale kujule ("convert 12345 NOK to EUR") teisendatakse.
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-58-14.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-59-04.png">
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-59-19.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-02.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-32.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-59.png">
 
 Selleks, et see nii töötaks peab kõneklaviatuuril olema sisse lülitatud "eesti keel/grammatikatoega".
 Samuti, peab _Google Now_ rakendusele ("com.google.android.googlequicksearchbox")
 omistama _Action_-grammatika. (Seda omistust kasutab ainult grammatikatoega teenus,
 muude teenuste puhul seda ignoreeritakse.)
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-22-04-05.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-49-21.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-22-04-18.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-49-06.png">
 

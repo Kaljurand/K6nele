@@ -6,9 +6,11 @@ permalink: /about/
 
 Kõnele is an Android app that offers speech-to-text services to other apps.
 Many apps contain a text area or a text field (e.g. a search bar) that can be edited using
-the keyboard. Kõnele provides a __speech keyboard__, a one-button keyboard, which allows speech to be converted to text.
+the keyboard. Kõnele provides a __speech keyboard__, which allows speech to be converted to text.
 Many apps (e.g. intelligent assistants, keyboard apps, navigation apps) also contain a microphone button that
-is linked to the __standard Android speech recognition interface__. Kõnele provides two implementations of this interface.
+is linked to either the __standard Android speech recognition activity__
+or the __standard Android speech recognition service__.
+Kõnele implements both the activity and the service.
 
 In the background, Kõnele uses two speech recognition servers.
 One supports __grammar-based speech recognition__,
@@ -25,10 +27,10 @@ currently available on Android.
 <table>
 <tr>
 <td class="logo">
-<img class="logo" title="Screenshot: address search using Kõnele" src="{{ site.baseurl }}/images/en/screenshot_portrait_framed_20150712_resize20.png">
+<img class="logo" title="Screenshot: address search with the Kõnele speech keyboard" src="{{ site.baseurl }}/images/en/screenshot_portrait_framed_20150712_resize20.png">
 </td>
 <td class="logo">
-<img class="logo" title="Screenshot: composing an email with Kõnele" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20150712_resize20.png">
+<img class="logo" title="Screenshot: composing an email with the Kõnele speech keyboard" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20150712_resize20.png">
 </td>
 </tr>
 </table>
