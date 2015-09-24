@@ -37,9 +37,10 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.DetailsActivity;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
@@ -49,6 +50,11 @@ import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
+
+    public static final String AUDIO_FILENAME = "audio.wav";
+
+    public static final String DEFAULT_AUDIO_FORMAT = "audio/wav";
+    public static final Set<String> SUPPORTED_AUDIO_FORMATS = Collections.singleton(DEFAULT_AUDIO_FORMAT);
 
     private static final String MSG = "MSG";
     private static final int MSG_TOAST = 1;
@@ -175,9 +181,9 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         if (getExtras().getBoolean(Extras.EXTRA_GET_AUDIO)) {
             String audioFormat = getExtras().getString(Extras.EXTRA_GET_AUDIO_FORMAT);
             if (audioFormat == null) {
-                audioFormat = Constants.DEFAULT_AUDIO_FORMAT;
+                audioFormat = DEFAULT_AUDIO_FORMAT;
             }
-            if (Constants.SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
+            if (SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
                 Uri uri = getAudioUri();
                 if (uri != null) {
                     // TODO: not sure about the type (or if it's needed)

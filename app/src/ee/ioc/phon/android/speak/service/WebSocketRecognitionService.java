@@ -19,12 +19,10 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
-import ee.ioc.phon.android.speak.WebSocketResponse;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
 
@@ -136,10 +134,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        Log.e("ClosedCallback: ", ex);
                         if (ex == null) {
+                            Log.e("ClosedCallback");
                             handleFinish();
                         } else {
+                            Log.e("ClosedCallback: ", ex);
                             handleException(ex);
                         }
                     }
@@ -148,10 +147,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                 webSocket.setEndCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        Log.e("EndCallback: ", ex);
                         if (ex == null) {
+                            Log.e("EndCallback");
                             handleFinish();
                         } else {
+                            Log.e("EndCallback: ", ex);
                             handleException(ex);
                         }
                     }
@@ -186,7 +186,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                             Log.i("Sending bytes: " + buffer.length);
                             webSocket.send(buffer);
                             onBufferReceived(buffer);
-                            boolean success = mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_IME_SEND);
+                            boolean success = mSendHandler.postDelayed(this, TASK_INTERVAL_IME_SEND);
                             if (!success) {
                                 Log.i("mSendHandler.postDelayed returned false");
                             }
@@ -199,7 +199,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
             }
         };
 
-        mSendHandler.postDelayed(mSendRunnable, Constants.TASK_DELAY_IME_SEND);
+        mSendHandler.postDelayed(mSendRunnable, TASK_DELAY_IME_SEND);
     }
 
 

@@ -1,4 +1,4 @@
-package ee.ioc.phon.android.speak;
+package ee.ioc.phon.android.speak.service;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -138,7 +138,7 @@ public class WebSocketResponse {
     }
 
     /**
-     * Pretty-prints the string returned by the server to be ortographically correct (Estonian),
+     * Pretty-prints the string returned by the server to be orthographically correct (Estonian),
      * assuming that the string represents a sequence of tokens separated by a single space character.
      * Note that a text editor (which has additional information about the context of the cursor)
      * will need to do additional pretty-printing, e.g. capitalization if the cursor follows a

@@ -21,16 +21,15 @@ import java.util.Collections;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.ComboSelectorActivity;
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
-import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
 
 public class SpeechInputView extends LinearLayout {
 
@@ -67,7 +66,7 @@ public class SpeechInputView extends LinearLayout {
     private SpeechRecognizer mRecognizer;
     private ServiceLanguageChooser mSlc;
 
-    private Constants.State mState;
+    private MicButton.State mState;
 
     public SpeechInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -204,7 +203,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     public void start() {
-        if (mState == Constants.State.INIT || mState == Constants.State.ERROR) {
+        if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
             mRecognizer.startListening(mSlc.getIntent());
         }
@@ -228,28 +227,27 @@ public class SpeechInputView extends LinearLayout {
         return results.get(0);
     }
 
-    private void setGuiState(Constants.State state) {
+    private void setGuiState(MicButton.State state) {
         mState = state;
         setMicButtonState(mBImeStartStop, mState);
     }
 
     private void setGuiInitState(int message) {
-        mState = Constants.State.INIT;
-        setMicButtonState(mBImeStartStop, mState);
-        setText(mTvInstruction, R.string.buttonImeSpeak);
         if (message == 0) {
             // Do not clear a possible error message
             //setText(mTvMessage, "");
+            setGuiState(MicButton.State.INIT);
         } else {
+            setGuiState(MicButton.State.ERROR);
             String m = "[ " + getResources().getString(message) + " ]";
             setText(mTvMessage, m);
         }
         setEnabled(mBComboSelector, true);
-
         if (mBImeKeyboard != null && mBImeGo != null) {
             setVisibility(mBImeKeyboard, View.VISIBLE);
             setVisibility(mBImeGo, View.VISIBLE);
         }
+        setText(mTvInstruction, R.string.buttonImeSpeak);
     }
 
     private static String lastChars(ArrayList<String> results, boolean isFinal) {
@@ -298,7 +296,7 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
-    private static void setMicButtonState(final MicButton button, final Constants.State state) {
+    private static void setMicButtonState(final MicButton button, final MicButton.State state) {
         if (button != null) {
             button.post(new Runnable() {
                 @Override
@@ -348,6 +346,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private void startListening(ServiceLanguageChooser slc) {
+        setGuiState(MicButton.State.WAITING);
         if (mRecognizer == null) {
             updateServiceLanguage(slc);
         }
@@ -379,7 +378,7 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onReadyForSpeech(Bundle params) {
             Log.i("onReadyForSpeech: state = " + mState);
-            setGuiState(Constants.State.LISTENING);
+            setGuiState(MicButton.State.LISTENING);
             setText(mTvInstruction, R.string.buttonImeStop);
             setText(mTvMessage, "");
             setEnabled(mBComboSelector, false);
@@ -392,7 +391,7 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onBeginningOfSpeech() {
             Log.i("onBeginningOfSpeech: state = " + mState);
-            setGuiState(Constants.State.RECORDING);
+            setGuiState(MicButton.State.RECORDING);
         }
 
         @Override
@@ -401,8 +400,8 @@ public class SpeechInputView extends LinearLayout {
             // We go into the TRANSCRIBING-state only if we were in the RECORDING-state,
             // otherwise we ignore this event. This improves compatibility with
             // Google Voice Search, which calls EndOfSpeech after onResults.
-            if (mState == Constants.State.RECORDING) {
-                setGuiState(Constants.State.TRANSCRIBING);
+            if (mState == MicButton.State.RECORDING) {
+                setGuiState(MicButton.State.TRANSCRIBING);
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }
         }
@@ -418,7 +417,6 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onError(final int errorCode) {
             Log.i("onError: " + errorCode);
-            setGuiState(Constants.State.ERROR);
 
             switch (errorCode) {
                 case SpeechRecognizer.ERROR_AUDIO:
@@ -485,7 +483,6 @@ public class SpeechInputView extends LinearLayout {
             if (text == null) {
                 // If we got empty results then assume that the session ended,
                 // e.g. cancel was called.
-                // TODO: return null?
                 mListener.onFinalResult(Collections.<String>emptyList());
             } else {
                 mListener.onFinalResult(text);

@@ -44,5 +44,6 @@
     <color name="buttonRecordingNormal2">#cc0000</color>
     <color name="buttonTranscribingNormal1">#c58be2</color>
     <color name="buttonTranscribingNormal2">#9933cc</color>
+    <color name="buttonWaiting">#424242</color>
 
 </resources>

@@ -49,7 +49,6 @@ import java.util.List;
 
 import ee.ioc.phon.android.speak.AudioCue;
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RecognizerIntentService;
@@ -104,6 +103,9 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
  * @author Kaarel Kaljurand
  */
 public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
+
+    private static final float DB_MIN = 15.0f;
+    private static final float DB_MAX = 30.0f;
 
     private static final int TASK_CHUNKS_INTERVAL = 1500;
     private static final int TASK_CHUNKS_DELAY = 100;
@@ -202,11 +204,11 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
 
     Uri getAudioUri() {
         try {
-            FileOutputStream fos = openFileOutput(Constants.AUDIO_FILENAME, Context.MODE_PRIVATE);
+            FileOutputStream fos = openFileOutput(AUDIO_FILENAME, Context.MODE_PRIVATE);
             fos.write(mService.getCompleteRecordingAsWav());
             fos.close();
 
-            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + Constants.AUDIO_FILENAME);
+            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + AUDIO_FILENAME);
         } catch (FileNotFoundException e) {
             Log.e("FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
@@ -353,7 +355,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
                     float db = mService.getRmsdb();
                     final int maxLevel = mVolumeLevels.size() - 1;
 
-                    int index = (int) ((db - Constants.DB_MIN) / (Constants.DB_MAX - Constants.DB_MIN) * maxLevel);
+                    int index = (int) ((db - DB_MIN) / (DB_MAX - DB_MIN) * maxLevel);
                     final int level = Math.min(Math.max(0, index), maxLevel);
 
                     if (level != mLevel) {

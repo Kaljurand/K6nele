@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -93,14 +92,14 @@ public class HttpRecognitionService extends AbstractRecognitionService {
                     try {
                         sendChunk(buffer, false);
                         onBufferReceived(buffer);
-                        mSendHandler.postDelayed(this, Constants.TASK_INTERVAL_SEND);
+                        mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
                     } catch (IOException e) {
                         onError(SpeechRecognizer.ERROR_NETWORK);
                     }
                 }
             }
         };
-        mSendHandler.postDelayed(mSendTask, Constants.TASK_DELAY_SEND);
+        mSendHandler.postDelayed(mSendTask, TASK_DELAY_SEND);
     }
 
     @Override

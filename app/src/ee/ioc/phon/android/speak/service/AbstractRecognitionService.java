@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.AudioCue;
 import ee.ioc.phon.android.speak.AudioPauser;
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
@@ -26,6 +25,22 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
  * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
  */
 public abstract class AbstractRecognitionService extends RecognitionService {
+
+    // When does the chunk sending start and what is its interval
+    static final int TASK_INTERVAL_SEND = 300;
+    static final int TASK_DELAY_SEND = 100;
+
+    // We send more frequently in the IME
+    static final int TASK_INTERVAL_IME_SEND = 200;
+    static final int TASK_DELAY_IME_SEND = 100;
+
+    // Check the volume 10 times a second
+    static final int TASK_INTERVAL_VOL = 100;
+    // Wait for 1/2 sec before starting to measure the volume
+    static final int TASK_DELAY_VOL = 500;
+
+    static final int TASK_INTERVAL_STOP = 1000;
+    static final int TASK_DELAY_STOP = 1000;
 
     private AudioCue mAudioCue;
     private AudioPauser mAudioPauser;
@@ -129,14 +144,15 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     /**
      * Opens the socket and starts recording and sending the recorded packages.
-     * // TODO: test this
-     * if (checkCallingPermission("android.permission.RECORD_AUDIO") == PackageManager.PERMISSION_DENIED) {
-     * handleError(listener, SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS);
-     * return;
-     * }
      */
     @Override
     protected void onStartListening(final Intent recognizerIntent, RecognitionService.Callback listener) {
+        mListener = listener;
+        // TODO: do we need to check the permissions somewhere?
+        //if (checkCallingPermission("android.permission.RECORD_AUDIO") == PackageManager.PERMISSION_DENIED) {
+        //    onError(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS);
+        //    return;
+        //}
         Log.i("onStartListening");
         mAudioPauser = new AudioPauser(this);
         mAudioPauser.pause();
@@ -147,8 +163,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         if (mExtras == null) {
             mExtras = new Bundle();
         }
-
-        mListener = listener;
 
         try {
             configure(recognizerIntent);
@@ -321,18 +335,17 @@ public abstract class AbstractRecognitionService extends RecognitionService {
             throw new IOException();
         }
 
-
         // Monitor the volume level
         mShowVolumeTask = new Runnable() {
             public void run() {
                 if (mRecorder != null) {
                     onRmsChanged(mRecorder.getRmsdb());
-                    mVolumeHandler.postDelayed(this, Constants.TASK_INTERVAL_VOL);
+                    mVolumeHandler.postDelayed(this, TASK_INTERVAL_VOL);
                 }
             }
         };
 
-        mVolumeHandler.postDelayed(mShowVolumeTask, Constants.TASK_DELAY_VOL);
+        mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
 
 
         // Time (in milliseconds since the boot) when the recording is going to be stopped
@@ -346,13 +359,13 @@ public abstract class AbstractRecognitionService extends RecognitionService {
                     if (timeToFinish < SystemClock.uptimeMillis() || isAutoStopAfterPause && mRecorder.isPausing()) {
                         onEndOfSpeech();
                     } else {
-                        mStopHandler.postDelayed(this, Constants.TASK_INTERVAL_STOP);
+                        mStopHandler.postDelayed(this, TASK_INTERVAL_STOP);
                     }
                 }
             }
         };
 
-        mStopHandler.postDelayed(mStopTask, Constants.TASK_DELAY_STOP);
+        mStopHandler.postDelayed(mStopTask, TASK_DELAY_STOP);
     }
 
 

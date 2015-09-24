@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
@@ -77,11 +76,11 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     Uri getAudioUri() {
         try {
             byte[] wav = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
-            FileOutputStream fos = openFileOutput(Constants.AUDIO_FILENAME, Context.MODE_PRIVATE);
+            FileOutputStream fos = openFileOutput(AUDIO_FILENAME, Context.MODE_PRIVATE);
             fos.write(wav);
             fos.close();
 
-            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + Constants.AUDIO_FILENAME);
+            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + AUDIO_FILENAME);
         } catch (FileNotFoundException e) {
             Log.e("FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {

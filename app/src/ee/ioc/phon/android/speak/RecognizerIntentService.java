@@ -41,6 +41,10 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
  */
 public class RecognizerIntentService extends Service {
 
+	// When does the chunk sending start and what is its interval
+	private static final int TASK_INTERVAL_SEND = 300;
+	private static final int TASK_DELAY_SEND = 100;
+
 	private static final String LOG_TAG = RecognizerIntentService.class.getName();
 
 	private final IBinder mBinder = new RecognizerBinder();
@@ -259,7 +263,7 @@ public class RecognizerIntentService extends Service {
 		try {
 			startRecording(sampleRate);
 			mStartTime = SystemClock.elapsedRealtime();
-			startChunkSending(Constants.TASK_INTERVAL_SEND, Constants.TASK_DELAY_SEND, false);
+			startChunkSending(TASK_INTERVAL_SEND, TASK_DELAY_SEND, false);
 			setState(State.RECORDING);
 			return true;
 		} catch (IOException e) {

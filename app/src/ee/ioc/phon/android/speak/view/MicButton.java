@@ -14,12 +14,19 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Constants;
 import ee.ioc.phon.android.speak.R;
 
 public class MicButton extends ImageButton {
+
+    public enum State {INIT, WAITING, RECORDING, LISTENING, TRANSCRIBING, ERROR}
+
+    // TODO: take these from some device specific configuration
+    private static final float DB_MIN = 15.0f;
+    private static final float DB_MAX = 30.0f;
+
     private Drawable mDrawableMic;
     private Drawable mDrawableMicTranscribing;
+    private Drawable mDrawableMicWaiting;
 
     private List<Drawable> mVolumeLevels;
 
@@ -49,24 +56,28 @@ public class MicButton extends ImageButton {
         }
     }
 
-    public void setState(Constants.State state) {
+    public void setState(State state) {
         switch (state) {
             case INIT:
+            case ERROR:
+                setEnabled(true);
                 clearAnimation();
                 setBackgroundDrawable(mDrawableMic);
                 break;
+            case WAITING:
+                setEnabled(false);
+                setBackgroundDrawable(mDrawableMicWaiting);
             case RECORDING:
+                setEnabled(true);
                 break;
             case LISTENING:
+                setEnabled(true);
                 setBackgroundDrawable(mVolumeLevels.get(0));
                 break;
             case TRANSCRIBING:
+                setEnabled(true);
                 setBackgroundDrawable(mDrawableMicTranscribing);
                 startAnimation(mAnimFadeInOutInf);
-                break;
-            case ERROR:
-                clearAnimation();
-                setBackgroundDrawable(mDrawableMic);
                 break;
             default:
                 break;
@@ -75,7 +86,7 @@ public class MicButton extends ImageButton {
 
 
     public void setVolumeLevel(float rmsdB) {
-        int index = (int) ((rmsdB - Constants.DB_MIN) / (Constants.DB_MAX - Constants.DB_MIN) * mMaxLevel);
+        int index = (int) ((rmsdB - DB_MIN) / (DB_MAX - DB_MIN) * mMaxLevel);
         int level = Math.min(Math.max(0, index), mMaxLevel);
         if (level != mVolumeLevel) {
             mVolumeLevel = level;
@@ -87,6 +98,7 @@ public class MicButton extends ImageButton {
         Resources res = getResources();
         mDrawableMic = res.getDrawable(R.drawable.button_mic);
         mDrawableMicTranscribing = res.getDrawable(R.drawable.button_mic_transcribing);
+        mDrawableMicWaiting = res.getDrawable(R.drawable.button_mic_waiting);
 
         mVolumeLevels = new ArrayList<>();
         mVolumeLevels.add(res.getDrawable(R.drawable.button_mic_recording_0));
@@ -113,5 +125,4 @@ public class MicButton extends ImageButton {
             }
         });
     }
-
 }
