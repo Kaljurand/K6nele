@@ -31,6 +31,8 @@ import ee.ioc.phon.android.speak.utils.QueryUtils;
  */
 public class WebSocketRecognitionService extends AbstractRecognitionService {
 
+    private static final String EOS = "EOS";
+
     private static final String PROTOCOL = "";
 
     private static final String DEFAULT_WS_ARGS =
@@ -49,6 +51,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     private WebSocket mWebSocket;
 
     private String mUrl;
+
+    private boolean mIsEosSent;
 
     @Override
     void configure(Intent recognizerIntent) throws IOException {
@@ -111,6 +115,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
      * @param url Webservice URL
      */
     void startSocket(String url) {
+        mIsEosSent = false;
         Log.i(url);
 
         AsyncHttpClient.getDefaultInstance().websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
@@ -136,7 +141,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                     public void onCompleted(Exception ex) {
                         if (ex == null) {
                             Log.e("ClosedCallback");
-                            handleFinish();
+                            handleFinish(mIsEosSent);
                         } else {
                             Log.e("ClosedCallback: ", ex);
                             handleException(ex);
@@ -149,7 +154,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                     public void onCompleted(Exception ex) {
                         if (ex == null) {
                             Log.e("EndCallback");
-                            handleFinish();
+                            handleFinish(mIsEosSent);
                         } else {
                             Log.e("EndCallback: ", ex);
                             handleException(ex);
@@ -176,7 +181,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                     RawAudioRecorder recorder = getRecorder();
                     if (recorder == null) {
                         Log.i("Sending: EOS (recorder == null)");
-                        webSocket.send("EOS");
+                        webSocket.send(EOS);
+                        mIsEosSent = true;
                     } else {
                         RawAudioRecorder.State recorderState = recorder.getState();
                         byte[] buffer = recorder.consumeRecordingAndTruncate();
@@ -192,7 +198,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                             }
                         } else {
                             Log.i("Sending: EOS. Buffer length = " + buffer.length + ", recorder state = " + recorderState);
-                            webSocket.send("EOS");
+                            webSocket.send(EOS);
+                            mIsEosSent = true;
                         }
                     }
                 }
@@ -242,6 +249,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                                     if (mIsUnlimitedDuration) {
                                         outerClass.onPartialResults(toBundle(hypotheses, true));
                                     } else {
+                                        outerClass.mIsEosSent = true;
                                         outerClass.onEndOfSpeech();
                                         outerClass.onResults(toBundle(hypotheses, true));
                                     }

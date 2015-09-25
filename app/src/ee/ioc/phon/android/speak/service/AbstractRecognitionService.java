@@ -139,11 +139,10 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         super.onDestroy();
         stopRecording0();
         disconnect();
-        if (mAudioPauser != null) mAudioPauser.resume();
     }
 
     /**
-     * Opens the socket and starts recording and sending the recorded packages.
+     * Starts recording and opens the connection to the server to start sending the recorded packages.
      */
     @Override
     protected void onStartListening(final Intent recognizerIntent, RecognitionService.Callback listener) {
@@ -154,8 +153,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         //    return;
         //}
         Log.i("onStartListening");
-        mAudioPauser = new AudioPauser(this);
-        mAudioPauser.pause();
 
         setAudioCuesEnabled(isAudioCues());
 
@@ -171,6 +168,9 @@ public abstract class AbstractRecognitionService extends RecognitionService {
             return;
         }
 
+        mAudioPauser = new AudioPauser(this);
+        mAudioPauser.pause();
+
         try {
             onReadyForSpeech(new Bundle());
             startRecord(getSampleRate());
@@ -184,7 +184,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     /**
-     * Stops the recording and informs the socket that no more packages are coming.
+     * Stops the recording and informs the server that no more packages are coming.
      */
     @Override
     protected void onStopListening(RecognitionService.Callback listener) {
@@ -193,7 +193,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     /**
-     * Stops the recording and closes the socket.
+     * Stops the recording and closes the connection to the server.
      */
     @Override
     protected void onCancel(RecognitionService.Callback listener) {
@@ -205,10 +205,19 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         onResults(new Bundle());
     }
 
-    // TODO: call onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT); if server initiates close
-    // without having received EOS
-    public void handleFinish() {
-        onCancel(mListener);
+
+    /**
+     * Calls onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT) if server initiates close
+     * without having received EOS. Otherwise simply shuts down the recorder and recognizer service.
+     *
+     * @param isEosSent true iff EOS was sent
+     */
+    public void handleFinish(boolean isEosSent) {
+        if (isEosSent) {
+            onCancel(mListener);
+        } else {
+            onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
+        }
     }
 
     Bundle getExtras() {
@@ -231,11 +240,9 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     protected void onError(int errorCode) {
-        // As soon as there is an error we shut down the recorder and the socket
         stopRecording0();
         disconnect();
         if (mAudioCue != null) mAudioCue.playErrorSound();
-        if (mAudioPauser != null) mAudioPauser.resume();
         try {
             mListener.error(errorCode);
         } catch (RemoteException e) {
@@ -243,6 +250,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     protected void onResults(Bundle bundle) {
+        stopRecording0();
         disconnect();
         try {
             mListener.results(bundle);
