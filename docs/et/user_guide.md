@@ -6,15 +6,31 @@ title: Kasutusjuhend
 
 ## Sissejuhatus
 
-__Kõnele__ on kõnetuvastusteenus Androidi rakendustele, mis võimaldab
-saata e-kirju, sooritada infootsingut, kirjutada märkmeid, anda käske jne kõne abil.
+__Kõnele__ on kõnetuvastusteenus Androidi rakendustele, mis võimaldab kõne abil
+sooritada infootsingut,
+kirjutada e-kirju ja märkmeid,
+anda käske jne.
+
+- Paljudes Androidi rakendustes on tekstikastid, millele vajutades avaneb klaviatuurirakendus.
+Kõnele sisaldab endas klaviatuurirakendust, mis võimaldab kõnesisendit.
+
+- Paljudes Androidi rakendustes on väike mikrofoninupp, millele vajutades eeldab
+rakendus kasutajalt mõnesekundilist kõnejuppi, mis automaatselt tekstiks teisendatakse.
+See mikrofoninupp on tihti seotud Androidi avatud kõnetuvastusliidesega,
+läbi mille on võimalik kasutada ka Kõnele poolt pakutud tuvastust.
+
+- Kui käivitada Kõnele otse, st mitte läbi teise rakenduse,
+siis suunatakse tuvastatud tekst edasi veebiotsingumootorile.
 
 Kõnele kasutab kõne tekstiks teisendamiseks (ehk transkribeerimiseks) TTÜ Küberneetika Instituudi
 foneetika ja kõnetehnoloogia laboris (vt <http://phon.ioc.ee>) välja töötatud
 serveripõhist kõnetuvastustarkvara, mis on maailmas hetkel ainus, mis
 sisendina eesti keelt toetab.
+Samuti toetab see grammatikapõhist kõnetuvastust,
+lubades kasutajal täpselt defineerida,
+milliseid sõnu ja lauseid ta erinevates rakendustes kasutab.
 
-Kõnele kasutamiseks peab olema nutiseadmes internetiühendus sisse lülitatud.
+Kuna Kõnele kasutab tööks veebiserverit, peab olema nutiseadmes internetiühendus sisse lülitatud.
 Sõltuvalt mobiilioperaatori teenusepaketist võib interneti kasutamise hind
 sõltuda andmemahtudest. Seega tasub teada, et pooleminutise kõne
 transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
@@ -167,20 +183,22 @@ mikrofoninupuga paneel. Teisest rakendusest välja kutsutuna
 ei edastata Kõnele tuvastustulemust veebibrauserile, vaid tagastab kutsuvale
 rakendusele (nt _Google Keep_), mis siis sellega edasi toimetab.
 
-Kui seadmes on mitu erinevat kõnetuvastusteenust (üheks on tavaliselt _Google'i otsing_),
+Kui seadmes on mitu erinevat kõnetuvastusteenust (üheks on tavaliselt _Google'i rakendus_),
 siis palub Android kõigepealt valida, millist neist kasutada. Valitud teenuse võib
-määrata ka vaikimisi valikuks ("alati").
+määrata ka vaikimisi valikuks (`ALATI`).
 
-<img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-45-10.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-17.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-32.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-45.png">
 
 Juhul kui valikuvõimalust ei tekkinud, st valikudialoogiakent ei kuvatud
-ning kohe käivitus nt _Google'i otsing_, siis järelikult oli see
+ning kohe käivitus nt _Google'i rakendus_, siis järelikult oli see
 määratud vaikimisi tuvastajaks. Sellise vaikeväärtuse saab eemaldad nõnda:
 
   - Minge `Seaded -> Rakendused`
-  - Valige tab "Kõik"
-  - Otsige nimekirjast üles "Google'i otsing"
-  - Vajutage nupule "Kustuta vaikeväärtused"
+  - Valige tab `Kõik`
+  - Otsige nimekirjast üles "Google'i rakendus"
+  - Vajutage nupule `Kustuta vaikeväärtused`
 
 ## Kõnele kutsumine teistest rakendustest (taustateenusena)
 
@@ -220,7 +238,9 @@ Sellised grammatikad ei kata loomulikku keelt (nt eesti keelt) tervikuna, vaid a
 mingit piiratud alamosa. Nt lauseid mõõtühikute või valuutade teisendamise kohta,
 aritmeetika avaldiste keelt, aadressipäringute keelt jne.
 
-Iga grammatika on esitatud HTTP-veebiaadressina, mis tuleb eelnevalt serveris registreerida.
+Iga grammatika on esitatud HTTP-veebiaadressina (nt
+`http://kaljurand.github.com/Grammars/grammars/pgf/Action.pgf`),
+mis tuleb eelnevalt serveris registreerida.
 Kõnele seadetes, menüüs "Grammatikad" on loend juba registreeritud grammatikatest.
 Grammatika omistamiseks rakendusele tuleb sellele "Rakendused" loendis pikalt vajutada (_long tap_).
 
