@@ -151,8 +151,9 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onGo() {
+                closeSession();
                 performGo();
-                handleClose();
+                requestHideSelf(0);
             }
 
             @Override
@@ -217,11 +218,6 @@ public class SpeechInputMethodService extends InputMethodService {
         if (mInputView != null) {
             mInputView.closeSession();
         }
-    }
-
-    private void handleClose() {
-        requestHideSelf(0);
-        closeSession();
     }
 
     private IBinder getToken() {

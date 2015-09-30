@@ -168,6 +168,7 @@ public class SpeechInputView extends LinearLayout {
             mBImeGo.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    cancelOrDestroy();
                     mListener.onGo();
                 }
             });
@@ -243,9 +244,8 @@ public class SpeechInputView extends LinearLayout {
             setText(mTvMessage, m);
         }
         setEnabled(mBComboSelector, true);
-        if (mBImeKeyboard != null && mBImeGo != null) {
+        if (mBImeKeyboard != null) {
             setVisibility(mBImeKeyboard, View.VISIBLE);
-            setVisibility(mBImeGo, View.VISIBLE);
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -338,7 +338,7 @@ public class SpeechInputView extends LinearLayout {
 
     private void updateServiceLanguage(ServiceLanguageChooser slc) {
         // Cancel a possibly running service
-        closeSession();
+        cancelOrDestroy();
         Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
         mBComboSelector.setText(pair.second + " · " + pair.first);
         mRecognizer = slc.getSpeechRecognizer();
@@ -382,9 +382,8 @@ public class SpeechInputView extends LinearLayout {
             setText(mTvInstruction, R.string.buttonImeStop);
             setText(mTvMessage, "");
             setEnabled(mBComboSelector, false);
-            if (mBImeKeyboard != null && mBImeGo != null) {
+            if (mBImeKeyboard != null) {
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
-                setVisibility(mBImeGo, View.INVISIBLE);
             }
         }
 
