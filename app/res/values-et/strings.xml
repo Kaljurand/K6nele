@@ -65,10 +65,8 @@
     <string name="buttonCancel">Loobu</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
     <string name="statusImeTranscribing">Oodake…</string>
-    <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> võimaldab kõnesisendit
-		toetavates Androidi rakendustes kasutada sisendina eestikeelset kõne,
-		et
-		saata lühisõnumeid, sooritada infootsingut, kirjutada märkmeid, jne.&lt;/p>
+    <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> on kõnetuvastusteenus Androidi rakendustele,
+        mis võimaldab kõne abil sooritada infootsingut, kirjutada e-kirju ja märkmeid, anda käske jne.&lt;/p>
 
 		&lt;p>Paljudes Androidi rakendustes on väike mikrofonikujuline nupp,
 		millele vajutades eeldab rakendus kasutajalt mõnesekundilist
@@ -87,7 +85,7 @@
 		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, GMail, Google Drive, YouTube).
 
         &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur, mida saab kasutada kõikide
-        tekstiväljade täitmiseks (väljaarvatud parooliväljad). Kollasele nupule vajutamine
+        tekstiväljade täitmiseks (väljaarvatud parooliväljad). Mikrofoninupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
         Svaip vasakule kustutab kursorile eelneva sõna.
         Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku. Pikk vajutus valib kogu teksti.&lt;/p>
@@ -116,7 +114,7 @@
 
         &lt;p>Kõnele sisselülitamiseks on vaja muuta Androidi seadeid menüüs \"Keeled ja sisestamine\" kahes kohas:
         \"Klaviatuur ja sisestusmeetodid\" ning \"Kõne\". Samuti võib olla vaja kustutada rakenduse
-        \"Google\'i otsing\" vaikeväärtused.&lt;/p>
+        \"Google\'i rakendus\" vaikeväärtused.&lt;/p>
 
 		&lt;p>Kuna &lt;b>%1$s&lt;/b>
 		kasutab kõne transkribeerimiseks veebiteenusi, siis peab olema
@@ -129,16 +127,13 @@
 		transkribeerimiseks
 		laaditakse
 		serverisse umbes 1MB jagu
-		andmeid.
-		(Eeldusel, et kõne on salvestatud 16kHz sämplimissagedusega.)&lt;/p>
+		andmeid (eeldusel, et kõne on salvestatud 16kHz sämplimissagedusega).&lt;/p>
 
 		&lt;p>Põhjalikum
-		dokumentatsioon on saadaval
+		dokumentatsioon on
 		&lt;a
 		href="http://kaljurand.github.io/K6nele/">%1$s veebilehel&lt;/a>.
-		Samuti on seal võimalik tutvuda rakenduse lähtekoodiga ning teavitada
-		autorit rakenduse
-		puudustest.&lt;/p></string>
+		Samuti on seal võimalik tutvuda rakenduse lähtekoodiga ning anda tagasisidet.&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">Siia ilmub automaatselt nimekiri rakendustest, kus
