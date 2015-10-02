@@ -23,7 +23,7 @@ Kõnele versions and their required Android versions:
 
 ## v1.1 - v1.3
 
-### v1.3.?? (unreleased)
+### v1.3.20 (2015-10-02)
 
 This release is mainly about internal refactoring
 but also resulted in a new voice search panel.
@@ -33,10 +33,12 @@ panel. Some features offered by the old panel were dropped: support for screen
 rotation during recognition, some UI feedback: byte/time/chunk counter,
 waveform display.
 
-- reorganization of the settings menu (e.g. audio cues are now part of the
-  service configuration)
-- speech keyboard: long press selects all text
-- search panel: number of returned recognition hypothesis is now configurable
+New in this release:
+
+- reorganization of the settings menu (e.g. audio cues are now part of the service configuration)
+- speech keyboard: long press selects all text (which makes it easy to dictate over a completely failed transcription)
+- search panel: the number of returned recognition hypothesis is now configurable
+- the search panel can be launched by actions like "long press on the headset button" etc. (varies by device)
 - bugfixes
 
 Name changes and deprecation:
