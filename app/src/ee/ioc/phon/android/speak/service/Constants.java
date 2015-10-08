@@ -14,6 +14,7 @@ public class Constants {
             new HashSet<>(Arrays.asList(new Character[]{',', ':', ';', '.', '!', '?'}));
 
     // Symbols after which the next word should be capitalized.
+    // We include ) because ;-) often finishes a sentence.
     public static final Set<Character> CHARACTERS_EOS =
-            new HashSet<>(Arrays.asList(new Character[]{'.', '!', '?'}));
+            new HashSet<>(Arrays.asList(new Character[]{'.', '!', '?', ')'}));
 }
