@@ -274,14 +274,14 @@ public class SpeechInputMethodService extends InputMethodService {
 
 
     private static class TextUpdater {
-
         // Maximum number of characters that left-swipe is willing to delete
         private static final int MAX_DELETABLE_CONTEXT = 100;
-        private static final Pattern WHITESPACE = Pattern.compile("\\s{1,}");
+        // Token optionally preceded by whitespace
+        private static final Pattern WHITESPACE_AND_TOKEN = Pattern.compile("\\s*\\w+");
 
         private String mPrevText = "";
 
-        public TextUpdater() {
+        private TextUpdater() {
         }
 
 
@@ -318,21 +318,21 @@ public class SpeechInputMethodService extends InputMethodService {
          * If something is selected then delete the selection.
          * TODO: maybe expensive?
          */
-        @TargetApi(Build.VERSION_CODES.GINGERBREAD)
         public void deleteWord(InputConnection ic) {
             if (ic != null) {
                 // If something is selected then delete the selection and return
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
-                        && ic.getSelectedText(0) != null) {
+                if (ic.getSelectedText(0) != null) {
                     ic.commitText("", 0);
                 } else {
                     CharSequence beforeCursor = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
                     if (beforeCursor != null) {
                         int beforeCursorLength = beforeCursor.length();
-                        Matcher m = WHITESPACE.matcher(beforeCursor);
+                        Matcher m = WHITESPACE_AND_TOKEN.matcher(beforeCursor);
                         int lastIndex = 0;
                         while (m.find()) {
-                            lastIndex = m.start();
+                            // If the cursor is immediately left from WHITESPACE_AND_TOKEN, then
+                            // delete the WHITESPACE_AND_TOKEN, otherwise delete whatever is in between.
+                            lastIndex = beforeCursorLength == m.end() ? m.start() : m.end();
                         }
                         if (lastIndex > 0) {
                             ic.deleteSurroundingText(beforeCursorLength - lastIndex, 0);
