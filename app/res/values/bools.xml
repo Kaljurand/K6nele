@@ -25,4 +25,7 @@ locale but assume Estonian even if the app does not specify it (e.g. Arvutaja v4
     <bool name="defaultAutoStopAfterPause">true</bool>
 
     <!-- Defaults. WebSocket-based service. -->
+
+    <!-- Rewrite incoming transcription with regular expressions. -->
+    <bool name="defaultRewrite">false</bool>
 </resources>

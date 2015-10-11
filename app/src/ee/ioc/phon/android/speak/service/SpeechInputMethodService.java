@@ -130,18 +130,23 @@ public class SpeechInputMethodService extends InputMethodService {
                 !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
+        final UtteranceRewriter mUtteranceRewriter =
+                new UtteranceRewriter(PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite));
+
         mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
 
             TextUpdater mTextUpdater = new TextUpdater();
 
             @Override
             public void onPartialResult(List<String> results) {
-                mTextUpdater.commitPartialResult(getCurrentInputConnection(), selectFirstResult(results));
+                String rewrittenResult = mUtteranceRewriter.rewrite(results);
+                mTextUpdater.commitPartialResult(getCurrentInputConnection(), rewrittenResult);
             }
 
             @Override
             public void onFinalResult(List<String> results) {
-                mTextUpdater.commitFinalResult(getCurrentInputConnection(), selectFirstResult(results));
+                String rewrittenResult = mUtteranceRewriter.rewrite(results);
+                mTextUpdater.commitFinalResult(getCurrentInputConnection(), rewrittenResult);
             }
 
             @Override
@@ -272,7 +277,6 @@ public class SpeechInputMethodService extends InputMethodService {
         getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_SEARCH);
     }
 
-
     private static class TextUpdater {
         // Maximum number of characters that left-swipe is willing to delete
         private static final int MAX_DELETABLE_CONTEXT = 100;
@@ -283,7 +287,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
         private TextUpdater() {
         }
-
 
         /**
          * Writes the text into the text field and forgets the previous entry.
@@ -419,10 +422,4 @@ public class SpeechInputMethodService extends InputMethodService {
         return a.substring(0, minLength);
     }
 
-    private static String selectFirstResult(List<String> results) {
-        if (results == null || results.size() < 1) {
-            return "";
-        }
-        return results.get(0);
-    }
 }

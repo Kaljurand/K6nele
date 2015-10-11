@@ -114,6 +114,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryDevel">
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultRewrite"
+            android:key="@string/keyRewrite"
+            android:summary="@string/summaryRewrite"
+            android:title="@string/titleRewrite" />
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">

@@ -259,6 +259,9 @@
     <string name="labelIme">Kõnele kõneklaviatuur</string>
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
 
+    <string name="titleRewrite">Teisenda</string>
+    <string name="summaryRewrite">Teisenda transkriptsioon regulaaravaldiste abil</string>
+
     <plurals name="summaryMaxResults">
         <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
