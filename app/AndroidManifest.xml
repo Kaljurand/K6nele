@@ -9,6 +9,7 @@
     <application
         android:allowBackup="true"
         android:description="@string/descriptionApp"
+        android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/labelApp"
         android:supportsRtl="true"

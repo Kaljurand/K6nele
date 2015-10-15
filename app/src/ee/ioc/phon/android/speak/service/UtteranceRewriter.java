@@ -20,15 +20,21 @@ public class UtteranceRewriter {
 
     static {
         Map<Pattern, String> rewrites = new HashMap<>();
-        rewrites.put(Pattern.compile("[Nn]aerunägu"), ":-)");
-        rewrites.put(Pattern.compile("[Nn]utunägu"), ":-(");
+        rewrites.put(Pattern.compile("[Nn]aeru ?nägu"), ":-)");
+        rewrites.put(Pattern.compile("[Nn]utu ?nägu"), ":-(");
         rewrites.put(Pattern.compile("[Ss]ulud algavad"), "(");
         rewrites.put(Pattern.compile("[Ss]ulud lõpevad"), ")");
         // TODO: provide the preferred position of the cursor
         rewrites.put(Pattern.compile("[Ee]-?kirja muster (1|üks)"), "Tere,\n\nKaarel");
         rewrites.put(Pattern.compile("[Ee]-?kirja muster (2|kaks)"), "Tere,\n\nParimat,\nKaarel");
         rewrites.put(Pattern.compile("Silla"), "Csilla");
-        rewrites.put(Pattern.compile(" (siis|et)"), ", $1");
+        // Poor man's autopunctuation.
+        // We optimize for precision by checking that the inserted comma is preceded by a word character,
+        // thus it only works within the utterance.
+        rewrites.put(Pattern.compile("(\\w) (aga|et|kuid|sest|siis|vaid)( |$)"), "$1, $2$3");
+        // Relative clause pronouns
+        rewrites.put(Pattern.compile("(\\w) (mi|ke)(s|da|lle)( |$)"), "$1, $2$3$4");
+        rewrites.put(Pattern.compile("(\\w) (mille|kelle)(l|le|lt|s|sse|st|ni|na|ks|ga|ta)( |$)"), "$1, $2$3$4");
         REWRITES = Collections.unmodifiableMap(rewrites);
     }
 
