@@ -37,7 +37,7 @@ transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
 on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
-Android v5 (Lollipop) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
+Android v5 (Lollipop) ja Android v6 (Marshmallow) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
 teistsugune, kuid mitte oluliselt.
 
 (Selle juhendi eelmine versioon on [siin](https://code.google.com/p/recognizer-intent/wiki/UserGuide?wl=et).)
@@ -208,6 +208,7 @@ mis hoolitsevad ise kogu kasutajaliidese eest (mikrofoninupp, helisignaalid, VU-
 Selliselt kutsutavad teenused on kirjas menüüs `Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend`,
 kus üks neist on alati seatud vaikimisi teenuseks.
 
+
 <img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
 
 Ühe Kõnele teenustest võib seada vaikimisi teenuseks. See ei garanteeri küll kahjuks, et kõik rakendused
@@ -223,6 +224,8 @@ Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab 
 üldiselt Google'i tuvastajat, kuid keelte jaoks, mida see ei toeta (nt eesti keel)
 kasutab vaikimisi määratud kõnetuvastusteenust. Seega saab Kõnele ja Google'i tõlkerakendusega
 teha kõnest-kõnesse tõlget eesti keelest paljudesse teistesse keeltesse.
+
+Android v6 on teinud kahjuks ümberkorralduse. Seadistamine toimub nüüd menüüs `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`. Kui abirakenduseks on valitud _Google'i rakendus_, siis valikut `Häälsisend` ei kuvata, ning Kõnele rakendust vaikimisi teenuseks seada ei saa. Üheks kahetsusväärseks tagajärjeks on see, et nüüd puudub võimalus korraga kasutada funktsionaalsust "Google Now on Tap" ja eestikeelset kõnesisendit rakenduses _Google Translate_.
 
 ## Grammatika-põhine kõnetuvastus
 
