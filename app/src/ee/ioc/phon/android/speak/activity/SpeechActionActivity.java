@@ -17,11 +17,11 @@ import java.util.List;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.RawAudioRecorder;
-import ee.ioc.phon.android.speak.utils.Utils;
-import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speak.view.SpeechInputView;
 
 /**
  * <p>This activity responds to the following intent types:</p>
@@ -64,6 +64,7 @@ import ee.ioc.phon.android.speak.utils.PreferenceUtils;
  * @author Kaarel Kaljurand
  */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
+
     private int mSampleRate;
     private byte[] mCompleteRecording;
 
