@@ -57,24 +57,10 @@ If you have access to a release keystore then
 The (signed and unsigned) APKs will be generated into `app/build/outputs/apk/`.
 
 
-Developing
-----------
-
-Generating PNG launcher icons and diagrams:
-
-    gradle -b other.gradle makeIcons
-    gradle -b other.gradle makeDiagrams
-
-
-Version tags are set by e.g.
-
-    git tag -a v1.1.02 -m 'version 1.1.02'
-
-The last number should be even.
-
-
 Contributions
 -------------
 
 The client for <https://github.com/alumae/kaldi-gstreamer-server>
 was originally based on <https://github.com/truongdq54/kaldi-gstreamer-android-client>.
+
+Please read through the [Contributing Guide](CONTRIBUTING.md) before making a pull request.
