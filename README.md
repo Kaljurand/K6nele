@@ -1,6 +1,8 @@
 Kõnele
 ======
 
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/b15968aa0a524d2986ba5deac6801196)](https://www.codacy.com/app/kaljurand/K6nele)
+
 Kõnele is an Android app that offers speech-to-text services to other apps.
 Its main components are:
 

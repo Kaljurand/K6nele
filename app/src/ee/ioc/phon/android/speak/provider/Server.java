@@ -20,15 +20,16 @@ import android.net.Uri;
 
 public class Server {
 
-	public Server() {
-	}
+    private Server() {
+    }
 
-	public static final class Columns extends BaseColumnsImpl {
-		private Columns() {
-		}
+    public static final class Columns extends BaseColumnsImpl {
 
-		public static final Uri CONTENT_URI = makeContentUri(AppsContentProvider.SERVERS_TABLE_NAME);
+        public static final Uri CONTENT_URI = makeContentUri(AppsContentProvider.SERVERS_TABLE_NAME);
 
-		public static final String URL = "URL";
-	}
+        public static final String URL = "URL";
+
+        private Columns() {
+        }
+    }
 }

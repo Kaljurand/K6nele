@@ -20,10 +20,15 @@ public class UtteranceRewriter {
 
     static {
         Map<Pattern, String> rewrites = new HashMap<>();
-        rewrites.put(Pattern.compile("[Nn]aeru ?nägu"), ":-)");
-        rewrites.put(Pattern.compile("[Nn]utu ?nägu"), ":-(");
+        rewrites.put(Pattern.compile("[Nn]aeru ?näo ?sümbol"), ":-)");
+        rewrites.put(Pattern.compile("[Rr]õõmsa ?näo ?sümbol"), ":-)");
+        rewrites.put(Pattern.compile("[Nn]utu ?näo ?sümbol"), ":-(");
+        rewrites.put(Pattern.compile("[Kk]urva ?näo ?sümbol"), ":-(");
+        rewrites.put(Pattern.compile("[Vv]äga ?kurva ?näo ?sümbol"), ":'(");
         rewrites.put(Pattern.compile("[Ss]ulud algavad"), "(");
         rewrites.put(Pattern.compile("[Ss]ulud lõpevad"), ")");
+        rewrites.put(Pattern.compile("[Ss]idekriips"), "-");
+        rewrites.put(Pattern.compile("[Mm]õttekriips"), " - ");
         // TODO: provide the preferred position of the cursor
         rewrites.put(Pattern.compile("[Ee]-?kirja muster (1|üks)"), "Tere,\n\nKaarel");
         rewrites.put(Pattern.compile("[Ee]-?kirja muster (2|kaks)"), "Tere,\n\nParimat,\nKaarel");
@@ -39,9 +44,9 @@ public class UtteranceRewriter {
     }
 
     static class Triple {
-        Pattern mCommand;
-        String mIn;
-        String mOut;
+        private Pattern mCommand;
+        private String mIn;
+        private String mOut;
 
         Triple(String command, String in, String out) {
             mCommand = Pattern.compile(command);

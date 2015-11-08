@@ -20,18 +20,19 @@ import android.net.Uri;
 
 public class App {
 
-	public App() {
-	}
+    private App() {
+    }
 
-	public static final class Columns extends BaseColumnsImpl {
-		private Columns() {
-		}
+    public static final class Columns extends BaseColumnsImpl {
 
-		public static final Uri CONTENT_URI = makeContentUri(AppsContentProvider.APPS_TABLE_NAME);
+        public static final Uri CONTENT_URI = makeContentUri(AppsContentProvider.APPS_TABLE_NAME);
 
-		public static final String FNAME = "FNAME";
-		public static final String COUNT = "COUNT";
-		public static final String GRAMMAR = "GRAMMAR";
-		public static final String SERVER = "SERVER";
-	}
+        public static final String FNAME = "FNAME";
+        public static final String COUNT = "COUNT";
+        public static final String GRAMMAR = "GRAMMAR";
+        public static final String SERVER = "SERVER";
+
+        private Columns() {
+        }
+    }
 }

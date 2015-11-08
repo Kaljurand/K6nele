@@ -161,7 +161,7 @@ public class GrammarListActivity extends RecognizerIntentListActivity {
 		switch (item.getItemId()) {
 		case R.id.cmGrammarView:
 			Intent intentView = new Intent();  
-			intentView.setAction(android.content.Intent.ACTION_VIEW);
+			intentView.setAction(Intent.ACTION_VIEW);
 			intentView.setDataAndType(Uri.parse(grammarUrl), "text/plain");  
 			startActivity(intentView);
 			return true;

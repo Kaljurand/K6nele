@@ -60,7 +60,6 @@ public class SpeechInputView extends LinearLayout {
 
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
-    private ImageButton mBImeGo;
     private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
@@ -80,7 +79,6 @@ public class SpeechInputView extends LinearLayout {
         mListener = listener;
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
-        mBImeGo = (ImageButton) findViewById(R.id.bImeGo);
         mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
         mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
         mTvMessage = (TextView) findViewById(R.id.tvMessage);
@@ -152,7 +150,8 @@ public class SpeechInputView extends LinearLayout {
             }
         });
 
-        if (mBImeKeyboard != null && mBImeGo != null) {
+        ImageButton buttonGo = (ImageButton) findViewById(R.id.bImeGo);
+        if (mBImeKeyboard != null && buttonGo != null) {
             mBImeKeyboard.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -168,7 +167,7 @@ public class SpeechInputView extends LinearLayout {
                 }
             });
 
-            mBImeGo.setOnClickListener(new OnClickListener() {
+            buttonGo.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cancelOrDestroy();

@@ -20,18 +20,18 @@ import android.net.Uri;
 
 public class Grammar {
 
-	public Grammar() {
-	}
+    private Grammar() {
+    }
 
-	public static final class Columns extends BaseColumnsImpl {
-		private Columns() {
-		}
+    public static final class Columns extends BaseColumnsImpl {
+        public static final Uri CONTENT_URI = makeContentUri(AppsContentProvider.GRAMMARS_TABLE_NAME);
 
-		public static final Uri CONTENT_URI = makeContentUri(AppsContentProvider.GRAMMARS_TABLE_NAME);
+        public static final String NAME = "NAME";
+        public static final String DESC = "DESC";
+        public static final String LANG = "LANG";
+        public static final String URL = "URL";
 
-		public static final String NAME = "NAME";
-		public static final String DESC = "DESC";
-		public static final String LANG = "LANG";
-		public static final String URL = "URL";
-	}
+        private Columns() {
+        }
+    }
 }

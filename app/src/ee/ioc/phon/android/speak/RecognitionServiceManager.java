@@ -28,8 +28,6 @@ public class RecognitionServiceManager {
         void onComplete(List<String> combos, Set<String> selectedCombos);
     }
 
-    public RecognitionServiceManager() {
-    }
 
     public void setCombosExcluded(Set<String> set) {
         mCombosExcluded = set;

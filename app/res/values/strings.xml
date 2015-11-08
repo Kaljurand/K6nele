@@ -70,7 +70,7 @@
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
 
-    <string name="titleRewrite">Rewrite</string>
+    <string name="titleRewrite">Rewriting</string>
     <string name="summaryRewrite">Apply regular expressions to the transcription</string>
 
     <string name="titleMaxResults">Recognition hypotheses</string>
