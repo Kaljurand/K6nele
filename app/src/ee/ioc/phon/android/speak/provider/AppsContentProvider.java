@@ -62,6 +62,8 @@ public class AppsContentProvider extends ContentProvider {
 	private static HashMap<String, String> grammarsProjectionMap;
 	private static HashMap<String, String> serversProjectionMap;
 
+	private DatabaseHelper dbHelper;
+
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 
 		private final Context mContext;
@@ -107,15 +109,6 @@ public class AppsContentProvider extends ContentProvider {
 					"'" +
 					mContext.getString(R.string.defaultHttpServer) +
 					"'" + ");");
-
-			/*
-			// Note: This server does not work with raw
-			db.execSQL("INSERT INTO " + SERVERS_TABLE_NAME + " VALUES (" +
-					"'2', " +
-					"'" +
-					"http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=en-US" +
-					"'" + ");");
-			 */
 
 			// Predefined grammar URLs
 			db.execSQL("INSERT INTO " + GRAMMARS_TABLE_NAME + " VALUES (" +
@@ -234,8 +227,6 @@ public class AppsContentProvider extends ContentProvider {
 			onCreate(db);
 		}
 	}
-
-	private DatabaseHelper dbHelper;
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
@@ -449,21 +440,21 @@ public class AppsContentProvider extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, SERVERS_TABLE_NAME, SERVERS);
 		sUriMatcher.addURI(AUTHORITY, SERVERS_TABLE_NAME + "/#", SERVER_ID);
 
-		appsProjectionMap = new HashMap<String, String>();
+		appsProjectionMap = new HashMap<>();
 		appsProjectionMap.put(App.Columns._ID, App.Columns._ID);
 		appsProjectionMap.put(App.Columns.FNAME, App.Columns.FNAME);
 		appsProjectionMap.put(App.Columns.GRAMMAR, App.Columns.GRAMMAR);
 		appsProjectionMap.put(App.Columns.SERVER, App.Columns.SERVER);
 		appsProjectionMap.put(App.Columns.COUNT, App.Columns.COUNT);
 
-		grammarsProjectionMap = new HashMap<String, String>();
+		grammarsProjectionMap = new HashMap<>();
 		grammarsProjectionMap.put(Grammar.Columns._ID, Grammar.Columns._ID);
 		grammarsProjectionMap.put(Grammar.Columns.NAME, Grammar.Columns.NAME);
 		grammarsProjectionMap.put(Grammar.Columns.LANG, Grammar.Columns.LANG);
 		grammarsProjectionMap.put(Grammar.Columns.DESC, Grammar.Columns.DESC);
 		grammarsProjectionMap.put(Grammar.Columns.URL, Grammar.Columns.URL);
 
-		serversProjectionMap = new HashMap<String, String>();
+		serversProjectionMap = new HashMap<>();
 		serversProjectionMap.put(Server.Columns._ID, Server.Columns._ID);
 		serversProjectionMap.put(Server.Columns.URL, Server.Columns.URL);
 

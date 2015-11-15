@@ -15,20 +15,24 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
     }
 
     public void onSwipeLeft() {
+        // intentionally empty
     }
 
     public void onSwipeRight() {
+        // intentionally empty
     }
 
     public void onSingleTapMotion() {
+        // intentionally empty
     }
 
     public void onDoubleTapMotion() {
+        // intentionally empty
     }
 
     public void onLongPressMotion() {
+        // intentionally empty
     }
-
 
     public boolean onTouch(View v, MotionEvent event) {
         return mGestureDetector.onTouchEvent(event);

@@ -121,6 +121,8 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
                     }
                 }
                 break;
+            default:
+                break;
         }
     }
 

@@ -234,6 +234,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     case MSG_RESULT_ERROR:
                         outerClass.showError();
                         break;
+                    default:
+                        break;
                 }
             }
         }

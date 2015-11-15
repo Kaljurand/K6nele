@@ -67,6 +67,7 @@ public class MicButton extends ImageButton {
             case WAITING:
                 setEnabled(false);
                 setBackgroundDrawable(mDrawableMicWaiting);
+                break;
             case RECORDING:
                 setEnabled(true);
                 break;

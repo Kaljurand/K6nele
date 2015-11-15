@@ -16,10 +16,6 @@
 
 package ee.ioc.phon.android.speak;
 
-import ee.ioc.phon.android.speak.provider.App;
-import ee.ioc.phon.android.speak.utils.IntentUtils;
-import ee.ioc.phon.android.speak.utils.Utils;
-
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -30,265 +26,248 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
+import ee.ioc.phon.android.speak.provider.App;
+import ee.ioc.phon.android.speak.utils.IntentUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
 
 /**
  * <p>This activity shows the list of apps where the user
  * has used speech input before. The list content is pulled from
  * the database via AppListCursorAdapter. The user can interact with the
  * list items in various ways:</p>
- * 
+ * <p/>
  * <ul>
  * <li>tapping on a list entry launches the corresponding app;</li>
  * <li>long-tapping on the entry opens the context menu which
  * allows the user to assign dedicated grammars and servers to individual apps;</li>
  * <li>the global menu allows the user to sort the list in various ways.</li>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class AppListActivity extends RecognizerIntentListActivity {
 
-	private static final int ACTIVITY_SELECT_GRAMMAR_URL = 1;
-	private static final int ACTIVITY_SELECT_SERVER_URL = 2;
+    private static final int ACTIVITY_SELECT_GRAMMAR_URL = 1;
+    private static final int ACTIVITY_SELECT_SERVER_URL = 2;
 
-	private static final Uri CONTENT_URI = App.Columns.CONTENT_URI;
+    private static final Uri CONTENT_URI = App.Columns.CONTENT_URI;
 
-	private static String mCurrentSortOrder;
+    private String mCurrentSortOrder;
 
-	private long mCurrentAppId;
+    private long mCurrentAppId;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		mCurrentSortOrder = prefs.getString(getString(R.string.prefCurrentSortOrder), App.Columns.COUNT + " DESC");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mCurrentSortOrder = prefs.getString(getString(R.string.prefCurrentSortOrder), App.Columns.COUNT + " DESC");
 
-		ListView lv = getListView();
-		setEmptyView(getString(R.string.emptylistApps));
-		AppListCursorAdapter mAdapter = getAdapter(mCurrentSortOrder);
-		lv.setAdapter(mAdapter);
+        ListView lv = getListView();
+        setEmptyView(getString(R.string.emptylistApps));
+        AppListCursorAdapter mAdapter = getAdapter(mCurrentSortOrder);
+        lv.setAdapter(mAdapter);
 
-		registerForContextMenu(lv);
+        registerForContextMenu(lv);
 
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Cursor cursor = (Cursor) parent.getItemAtPosition(position); 
-				String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
-				Intent intent = IntentUtils.getAppIntent(getApplicationContext(), fname);
-				if (intent != null) {
-					startActivity(intent);
-				} else {
-					toast(String.format(getString(R.string.errorFailedLaunchApp), fname));
-				}
-			}
-		});
-	}
-
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(getString(R.string.prefCurrentSortOrder), mCurrentSortOrder);
-		editor.apply();
-	}
+        lv.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
+                Intent intent = IntentUtils.getAppIntent(getApplicationContext(), fname);
+                if (intent != null) {
+                    startActivity(intent);
+                } else {
+                    toast(String.format(getString(R.string.errorFailedLaunchApp), fname));
+                }
+            }
+        });
+    }
 
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.apps, menu);
-		return true;
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(getString(R.string.prefCurrentSortOrder), mCurrentSortOrder);
+        editor.apply();
+    }
 
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		/*
-		case R.id.menuAppsAdd:
-			Utils.getTextEntryDialog(
-					this,
-					getString(R.string.dialogTitleNewApp),
-					"",
-					new ExecutableString() {
-						public void execute(String str) {
-							addNewApp(str);
-						}
-					}
-			).show();
-			return true;
-		 */
-		case R.id.menuAppsSortByName:
-			setSortOrder(App.Columns.FNAME + " ASC");
-			return true;
-		case R.id.menuAppsSortByCount:
-			setSortOrder(App.Columns.COUNT + " DESC");
-			return true;
-		case R.id.menuAppsSortByGrammar:
-			setSortOrder(App.Columns.GRAMMAR + " DESC");
-			return true;
-
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.apps, menu);
+        return true;
+    }
 
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.cm_app, menu);
-
-		// Disable some menu items if they do not make sense in this context.
-		// We could also remove them but this might be confusing for the user.
-		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-		Cursor c = (Cursor) getListView().getItemAtPosition(info.position);
-		long grammarId = c.getLong(c.getColumnIndex(App.Columns.GRAMMAR));
-		long serverId = c.getLong(c.getColumnIndex(App.Columns.SERVER));
-		if (grammarId == 0) {
-			menu.findItem(R.id.cmAppRemoveGrammar).setEnabled(false);
-		}
-		if (serverId == 0) {
-			menu.findItem(R.id.cmAppRemoveServer).setEnabled(false);
-		}
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuAppsSortByName:
+                setSortOrder(App.Columns.FNAME + " ASC");
+                return true;
+            case R.id.menuAppsSortByCount:
+                setSortOrder(App.Columns.COUNT + " DESC");
+                return true;
+            case R.id.menuAppsSortByGrammar:
+                setSortOrder(App.Columns.GRAMMAR + " DESC");
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		Cursor cursor = (Cursor) getListView().getItemAtPosition(info.position);
-		final long key = cursor.getLong(cursor.getColumnIndex(App.Columns._ID));
-		String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
-		mCurrentAppId = key;
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.cm_app, menu);
 
-		switch (item.getItemId()) {
-		/*
-		case R.id.cmAppLaunch:
-			Intent intent = Utils.getAppIntent(this, fname);
-			if (intent != null) {
-				startActivity(intent);
-			}
-			return true;
-		 */
-		case R.id.cmAppAssignGrammar:
-			Intent pickSpeakerIntent = new Intent(AppListActivity.this, GrammarListActivity.class);
-			startActivityForResult(pickSpeakerIntent, ACTIVITY_SELECT_GRAMMAR_URL);
-			return true;
-		case R.id.cmAppRemoveGrammar:
-			Utils.getYesNoDialog(
-					this,
-					getString(R.string.confirmRemoveGrammar),
-					new Executable() {
-						public void execute() {
-							removeApp(key, App.Columns.GRAMMAR);
-						}
-					}
-					).show();
-			return true;
-		case R.id.cmAppAssignServer:
-			Intent intentServer = new Intent(AppListActivity.this, ServerListActivity.class);
-			startActivityForResult(intentServer, ACTIVITY_SELECT_SERVER_URL);
-			return true;
-		case R.id.cmAppRemoveServer:
-			Utils.getYesNoDialog(
-					this,
-					getString(R.string.confirmRemoveServer),
-					new Executable() {
-						public void execute() {
-							removeApp(key, App.Columns.SERVER);
-						}
-					}
-					).show();
-			return true;
-		case R.id.cmAppDelete:
-			Utils.getYesNoDialog(
-					this,
-					String.format(getString(R.string.confirmDeleteEntry), fname),
-					new Executable() {
-						public void execute() {
-							delete(CONTENT_URI, key);
-						}
-					}
-					).show();
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
+        // Disable some menu items if they do not make sense in this context.
+        // We could also remove them but this might be confusing for the user.
+        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+        Cursor c = (Cursor) getListView().getItemAtPosition(info.position);
+        long grammarId = c.getLong(c.getColumnIndex(App.Columns.GRAMMAR));
+        long serverId = c.getLong(c.getColumnIndex(App.Columns.SERVER));
+        if (grammarId == 0) {
+            menu.findItem(R.id.cmAppRemoveGrammar).setEnabled(false);
+        }
+        if (serverId == 0) {
+            menu.findItem(R.id.cmAppRemoveServer).setEnabled(false);
+        }
+    }
 
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != Activity.RESULT_OK) {
-			return;
-		}
-		switch (requestCode) {
-		case ACTIVITY_SELECT_GRAMMAR_URL:
-			Uri grammarUri = data.getData();
-			if (grammarUri == null) {
-				toast(getString(R.string.errorFailedGetGrammarUrl));
-			} else {
-				updateApp(mCurrentAppId, App.Columns.GRAMMAR, grammarUri);
-			}
-			break;
-		case ACTIVITY_SELECT_SERVER_URL:
-			Uri serverUri = data.getData();
-			if (serverUri == null) {
-				toast(getString(R.string.errorFailedGetServerUrl));
-			} else {
-				updateApp(mCurrentAppId, App.Columns.SERVER, serverUri);
-			}
-			break;
-		}
-	}
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Cursor cursor = (Cursor) getListView().getItemAtPosition(info.position);
+        final long key = cursor.getLong(cursor.getColumnIndex(App.Columns._ID));
+        String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
+        mCurrentAppId = key;
+
+        switch (item.getItemId()) {
+            case R.id.cmAppAssignGrammar:
+                Intent pickSpeakerIntent = new Intent(AppListActivity.this, GrammarListActivity.class);
+                startActivityForResult(pickSpeakerIntent, ACTIVITY_SELECT_GRAMMAR_URL);
+                return true;
+            case R.id.cmAppRemoveGrammar:
+                Utils.getYesNoDialog(
+                        this,
+                        getString(R.string.confirmRemoveGrammar),
+                        new Executable() {
+                            public void execute() {
+                                removeApp(key, App.Columns.GRAMMAR);
+                            }
+                        }
+                ).show();
+                return true;
+            case R.id.cmAppAssignServer:
+                Intent intentServer = new Intent(AppListActivity.this, ServerListActivity.class);
+                startActivityForResult(intentServer, ACTIVITY_SELECT_SERVER_URL);
+                return true;
+            case R.id.cmAppRemoveServer:
+                Utils.getYesNoDialog(
+                        this,
+                        getString(R.string.confirmRemoveServer),
+                        new Executable() {
+                            public void execute() {
+                                removeApp(key, App.Columns.SERVER);
+                            }
+                        }
+                ).show();
+                return true;
+            case R.id.cmAppDelete:
+                Utils.getYesNoDialog(
+                        this,
+                        String.format(getString(R.string.confirmDeleteEntry), fname),
+                        new Executable() {
+                            public void execute() {
+                                delete(CONTENT_URI, key);
+                            }
+                        }
+                ).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
 
-	private void updateApp(long key, String columnName, Uri uri) {
-		long id = Long.parseLong(uri.getPathSegments().get(1));
-		ContentValues values = new ContentValues();
-		values.put(columnName, id);
-		Uri appUri = ContentUris.withAppendedId(CONTENT_URI, key);
-		getContentResolver().update(appUri, values, null, null);
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+            case ACTIVITY_SELECT_GRAMMAR_URL:
+                Uri grammarUri = data.getData();
+                if (grammarUri == null) {
+                    toast(getString(R.string.errorFailedGetGrammarUrl));
+                } else {
+                    updateApp(mCurrentAppId, App.Columns.GRAMMAR, grammarUri);
+                }
+                break;
+            case ACTIVITY_SELECT_SERVER_URL:
+                Uri serverUri = data.getData();
+                if (serverUri == null) {
+                    toast(getString(R.string.errorFailedGetServerUrl));
+                } else {
+                    updateApp(mCurrentAppId, App.Columns.SERVER, serverUri);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
 
-	// TODO: not sure which one to use: putNull vs remove
-	private void removeApp(long key, String columnName) {
-		ContentValues values = new ContentValues();
-		values.putNull(columnName);
-		//values.remove(columnName);
-		Uri appUri = ContentUris.withAppendedId(CONTENT_URI, key);
-		getContentResolver().update(appUri, values, null, null);
-	}
+    private void updateApp(long key, String columnName, Uri uri) {
+        long id = Long.parseLong(uri.getPathSegments().get(1));
+        ContentValues values = new ContentValues();
+        values.put(columnName, id);
+        Uri appUri = ContentUris.withAppendedId(CONTENT_URI, key);
+        getContentResolver().update(appUri, values, null, null);
+    }
 
 
-	private AppListCursorAdapter getAdapter(String sortOrder) {
-		String[] columns = new String[] {
-				App.Columns._ID,
-				App.Columns.FNAME,
-				App.Columns.GRAMMAR,
-				App.Columns.SERVER,
-				App.Columns.COUNT
-		};
+    // TODO: not sure which one to use: putNull vs remove
+    private void removeApp(long key, String columnName) {
+        ContentValues values = new ContentValues();
+        values.putNull(columnName);
+        //values.remove(columnName);
+        Uri appUri = ContentUris.withAppendedId(CONTENT_URI, key);
+        getContentResolver().update(appUri, values, null, null);
+    }
 
-		// TODO: replaced the deprecated managedQuery with CursorLoader
-		// managedQuery(                  Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
-		// CursorLoader (Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
-		/*
-		CursorLoader cursorLoader = new CursorLoader(
+
+    private AppListCursorAdapter getAdapter(String sortOrder) {
+        String[] columns = new String[]{
+                App.Columns._ID,
+                App.Columns.FNAME,
+                App.Columns.GRAMMAR,
+                App.Columns.SERVER,
+                App.Columns.COUNT
+        };
+
+        // TODO: replace the deprecated managedQuery with CursorLoader
+        // managedQuery(                  Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+        // CursorLoader (Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+        /*
+        CursorLoader cursorLoader = new CursorLoader(
 				this,
 				CONTENT_URI,
 				columns,
@@ -298,20 +277,20 @@ public class AppListActivity extends RecognizerIntentListActivity {
 		);
 		*/
 
-		Cursor managedCursor = managedQuery(
-				CONTENT_URI,
-				columns, 
-				null,
-				null,
-				sortOrder
-				);
+        Cursor managedCursor = managedQuery(
+                CONTENT_URI,
+                columns,
+                null,
+                null,
+                sortOrder
+        );
 
-		return new AppListCursorAdapter(this, managedCursor, true);
-	}
+        return new AppListCursorAdapter(this, managedCursor, true);
+    }
 
 
-	private void setSortOrder(String sortOrder) {
-		mCurrentSortOrder = sortOrder;
-		getListView().setAdapter(getAdapter(sortOrder));
-	}
+    private void setSortOrder(String sortOrder) {
+        mCurrentSortOrder = sortOrder;
+        getListView().setAdapter(getAdapter(sortOrder));
+    }
 }

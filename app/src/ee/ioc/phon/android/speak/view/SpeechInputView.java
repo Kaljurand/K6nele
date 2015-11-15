@@ -36,6 +36,18 @@ import ee.ioc.phon.android.speak.utils.Utils;
 
 public class SpeechInputView extends LinearLayout {
 
+    private MicButton mBImeStartStop;
+    private ImageButton mBImeKeyboard;
+    private Button mBComboSelector;
+    private TextView mTvInstruction;
+    private TextView mTvMessage;
+
+    private SpeechInputViewListener mListener;
+    private SpeechRecognizer mRecognizer;
+    private ServiceLanguageChooser mSlc;
+
+    private MicButton.State mState;
+
     public interface SpeechInputViewListener {
         void onPartialResult(List<String> text);
 
@@ -57,18 +69,6 @@ public class SpeechInputView extends LinearLayout {
 
         void onBufferReceived(byte[] buffer);
     }
-
-    private MicButton mBImeStartStop;
-    private ImageButton mBImeKeyboard;
-    private Button mBComboSelector;
-    private TextView mTvInstruction;
-    private TextView mTvMessage;
-
-    private SpeechInputViewListener mListener;
-    private SpeechRecognizer mRecognizer;
-    private ServiceLanguageChooser mSlc;
-
-    private MicButton.State mState;
 
     public SpeechInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -460,6 +460,7 @@ public class SpeechInputView extends LinearLayout {
                 default:
                     Log.e("This might happen in future Android versions: code " + errorCode);
                     setGuiInitState(R.string.errorImeResultClientError);
+                    break;
             }
         }
 
@@ -467,9 +468,7 @@ public class SpeechInputView extends LinearLayout {
         public void onPartialResults(final Bundle bundle) {
             Log.i("onPartialResults: state = " + mState);
             ArrayList<String> text = selectResults(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-            if (text == null) {
-                // This shouldn't really happen
-            } else {
+            if (text != null) {
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
                 if (isSemiFinal) {

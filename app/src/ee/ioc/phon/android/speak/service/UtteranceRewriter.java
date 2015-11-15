@@ -18,6 +18,9 @@ public class UtteranceRewriter {
     // Rewrites applied the final result
     private static final Map<Pattern, String> REWRITES;
 
+    // TODO: Rewrites applied to the whole text
+    private static final Set<Triple> COMMANDS;
+
     static {
         Map<Pattern, String> rewrites = new HashMap<>();
         rewrites.put(Pattern.compile("[Nn]aeru ?näo ?sümbol"), ":-)");
@@ -59,9 +62,6 @@ public class UtteranceRewriter {
             return pattern.matcher(text).replaceAll(mOut);
         }
     }
-
-    // TODO: Rewrites applied to the whole text
-    private static final Set<Triple> COMMANDS;
 
     static {
         Set<Triple> commands = new HashSet<>();

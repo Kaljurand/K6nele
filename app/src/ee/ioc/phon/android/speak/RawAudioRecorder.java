@@ -120,16 +120,15 @@ public class RawAudioRecorder {
 			setBufferSizeAndFramePeriod();
 			mRecorder = new AudioRecord(audioSource, mSampleRate, AudioFormat.CHANNEL_IN_MONO, RESOLUTION, mBufferSize);
 			if (getAudioRecordState() != AudioRecord.STATE_INITIALIZED) {
-				throw new Exception("AudioRecord initialization failed");
+				throw new IllegalStateException("AudioRecord initialization failed");
 			}
 			mBuffer = new byte[mFramePeriod * RESOLUTION_IN_BYTES * CHANNELS];
 			setState(State.READY);
 		} catch (Exception e) {
-            handleError();
 			if (e.getMessage() == null) {
-				Log.e(LOG_TAG, "Unknown error occured while initializing recording");
+				handleError("Unknown error occurred while initializing recording");
 			} else {
-				Log.e(LOG_TAG, e.getMessage());
+				handleError(e.getMessage());
 			}
 		}
 	}
@@ -380,19 +379,17 @@ public class RawAudioRecorder {
 						while (mRecorder != null && mRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
 							int status = read(mRecorder);
 							if (status < 0) {
-                                handleError();
+                                handleError("status = " + status);
 								break;
 							}
 						}
 					}
 				}.start();
 			} else {
-				Log.e(LOG_TAG, "startRecording() failed");
-                handleError();
+                handleError("startRecording() failed");
 			}
 		} else {
-			Log.e(LOG_TAG, "start() called on illegal state");
-            handleError();
+            handleError("start() called on illegal state");
 		}
 	}
 
@@ -410,12 +407,10 @@ public class RawAudioRecorder {
 				mRecorder.stop();
 				setState(State.STOPPED);
 			} catch (IllegalStateException e) {
-				Log.e(LOG_TAG, "native stop() called in illegal state: " + e.getMessage());
-                handleError();
+                handleError("native stop() called in illegal state: " + e.getMessage());
 			}
 		} else {
-			Log.e(LOG_TAG, "stop() called in illegal state");
-            handleError();
+            handleError("stop() called in illegal state");
 		}
 	}
 
@@ -435,8 +430,7 @@ public class RawAudioRecorder {
 			mRecordedLength += buffer.length;
 		} else {
 			// This also happens on the emulator for some reason
-			Log.e(LOG_TAG, "Recorder buffer overflow: " + mRecordedLength);
-			release();
+			handleError("Recorder buffer overflow: " + mRecordedLength);
 		}
 	}
 
@@ -477,9 +471,10 @@ public class RawAudioRecorder {
 	}
 
 
-    private void handleError() {
-        setState(State.ERROR);
-        release();
+    private void handleError(String msg) {
+		release();
+		setState(State.ERROR);
+		Log.e(LOG_TAG, msg);
     }
 
     private int getAudioRecordState() {
