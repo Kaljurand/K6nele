@@ -22,9 +22,9 @@ import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.RawAudioRecorder;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
+import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.

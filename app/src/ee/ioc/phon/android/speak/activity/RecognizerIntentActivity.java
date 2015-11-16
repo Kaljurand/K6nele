@@ -47,7 +47,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.AudioCue;
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -57,6 +56,7 @@ import ee.ioc.phon.android.speak.RecognizerIntentService.State;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.AudioCue;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 

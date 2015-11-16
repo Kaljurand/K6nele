@@ -27,6 +27,13 @@ Generating PNG launcher icons and diagrams:
     gradle -b other.gradle makeDiagrams
 
 
+Submodules
+----------
+
+    git submodule add git@github.com:Kaljurand/speechutils.git speechutils
+    git submodule add git@github.com:Kaljurand/net-speech-api.git net-speech-api
+
+
 Version tags
 ------------
 

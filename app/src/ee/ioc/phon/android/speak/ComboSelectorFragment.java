@@ -16,6 +16,7 @@ import java.util.Set;
 import ee.ioc.phon.android.speak.adapter.ComboAdapter;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 
 public class ComboSelectorFragment extends ListFragment {
 

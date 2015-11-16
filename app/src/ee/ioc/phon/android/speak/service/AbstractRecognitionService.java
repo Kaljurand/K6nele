@@ -13,12 +13,12 @@ import android.speech.SpeechRecognizer;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import ee.ioc.phon.android.speak.AudioCue;
 import ee.ioc.phon.android.speak.AudioPauser;
 import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
-import ee.ioc.phon.android.speak.RawAudioRecorder;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.AudioCue;
+import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 /**
  * About RemoteException see
