@@ -3,6 +3,7 @@
     <string name="labelApp" translatable="false">Kõnele</string>
 
     <string name="labelComboListItem" translatable="false">• %2$s · %1$s</string>
+    <string name="empty" translatable="false"></string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>
 
@@ -71,7 +72,10 @@
     <string name="dialogTitleCombo">Languages &amp; services</string>
 
     <string name="titleRewrite">Rewriting</string>
-    <string name="summaryRewrite">Apply regular expressions to the transcription</string>
+    <string name="summaryRewrite">Apply rewrite rules to the transcription</string>
+
+    <string name="titleLoadRewrites">Rewrite rules</string>
+    <string name="summaryLoadRewrites">Load rewrite rules from a file</string>
 
     <string name="titleMaxResults">Recognition hypotheses</string>
 

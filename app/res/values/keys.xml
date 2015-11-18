@@ -20,6 +20,7 @@
     <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
     <string name="keyRewrite" translatable="false">keyRewrite</string>
+    <string name="keyRewritesFile" translatable="false">keyRewritesFile</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status

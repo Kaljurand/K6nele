@@ -74,8 +74,7 @@
             android:entries="@array/entryValuesMaxResults"
             android:entryValues="@array/entryValuesMaxResults"
             android:key="@string/keyMaxResults"
-            android:title="@string/titleMaxResults" >
-        </ListPreference>
+            android:title="@string/titleMaxResults"></ListPreference>
 
     </PreferenceCategory>
 
@@ -119,6 +118,13 @@
             android:key="@string/keyRewrite"
             android:summary="@string/summaryRewrite"
             android:title="@string/titleRewrite" />
+        <Preference
+            android:summary="@string/summaryLoadRewrites"
+            android:title="@string/titleLoadRewrites">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.activity.RewriteLoaderActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">

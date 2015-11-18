@@ -190,6 +190,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".ServerListActivity"
             android:label="@string/labelActivityServerList"
             android:parentActivityName=".PreferencesRecognitionServiceHttp"></activity>
+        <activity android:name=".activity.RewriteLoaderActivity"></activity>
         <activity
             android:name=".demo.SimpleDemo"
             android:label="@string/labelActivitySimpleDemo"></activity>

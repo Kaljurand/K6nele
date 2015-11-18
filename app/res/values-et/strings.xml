@@ -260,7 +260,10 @@
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
 
     <string name="titleRewrite">Ümberkirjutamine</string>
-    <string name="summaryRewrite">Rakenda transkriptsioonile jooksvalt regulaaravaldisi</string>
+    <string name="summaryRewrite">Rakenda transkriptsioonile jooksvalt ümberkirjutusreegleid</string>
+
+    <string name="titleLoadRewrites">Ümberkirjutusreeglid</string>
+    <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid failist</string>
 
     <plurals name="summaryMaxResults">
         <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>

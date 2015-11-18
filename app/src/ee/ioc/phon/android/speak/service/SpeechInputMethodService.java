@@ -130,8 +130,10 @@ public class SpeechInputMethodService extends InputMethodService {
                 !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
+        String lines = PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty);
+
         final UtteranceRewriter mUtteranceRewriter =
-                new UtteranceRewriter(PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite));
+                new UtteranceRewriter(lines, PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite));
 
         mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
 

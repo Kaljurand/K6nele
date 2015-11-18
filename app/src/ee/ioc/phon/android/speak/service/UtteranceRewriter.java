@@ -8,43 +8,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-/**
- * TODO: read these from a flat file delivered by a file picker intent
- */
+import ee.ioc.phon.android.speak.Log;
+
 public class UtteranceRewriter {
 
     private final boolean mIsRewrite;
 
     // Rewrites applied the final result
-    private static final Map<Pattern, String> REWRITES;
+    private final Map<Pattern, String> REWRITES;
 
     // TODO: Rewrites applied to the whole text
     private static final Set<Triple> COMMANDS;
-
-    static {
-        Map<Pattern, String> rewrites = new HashMap<>();
-        rewrites.put(Pattern.compile("[Nn]aeru ?näo ?sümbol"), ":-)");
-        rewrites.put(Pattern.compile("[Rr]õõmsa ?näo ?sümbol"), ":-)");
-        rewrites.put(Pattern.compile("[Nn]utu ?näo ?sümbol"), ":-(");
-        rewrites.put(Pattern.compile("[Kk]urva ?näo ?sümbol"), ":-(");
-        rewrites.put(Pattern.compile("[Vv]äga ?kurva ?näo ?sümbol"), ":'(");
-        rewrites.put(Pattern.compile("[Ss]ulud algavad"), "(");
-        rewrites.put(Pattern.compile("[Ss]ulud lõpevad"), ")");
-        rewrites.put(Pattern.compile("[Ss]idekriips"), "-");
-        rewrites.put(Pattern.compile("[Mm]õttekriips"), " - ");
-        // TODO: provide the preferred position of the cursor
-        rewrites.put(Pattern.compile("[Ee]-?kirja muster (1|üks)"), "Tere,\n\nKaarel");
-        rewrites.put(Pattern.compile("[Ee]-?kirja muster (2|kaks)"), "Tere,\n\nParimat,\nKaarel");
-        rewrites.put(Pattern.compile("Silla"), "Csilla");
-        // Poor man's autopunctuation.
-        // We optimize for precision by checking that the inserted comma is preceded by a word character,
-        // thus it only works within the utterance.
-        rewrites.put(Pattern.compile("(\\w) (aga|et|kuid|sest|siis|vaid)( |$)"), "$1, $2$3");
-        // Relative clause pronouns
-        rewrites.put(Pattern.compile("(\\w) (mi|ke)(s|da|lle)( |$)"), "$1, $2$3$4");
-        rewrites.put(Pattern.compile("(\\w) (mille|kelle)(l|le|lt|s|sse|st|ni|na|ks|ga|ta)( |$)"), "$1, $2$3$4");
-        REWRITES = Collections.unmodifiableMap(rewrites);
-    }
 
     static class Triple {
         private Pattern mCommand;
@@ -65,14 +39,20 @@ public class UtteranceRewriter {
 
     static {
         Set<Triple> commands = new HashSet<>();
+        // TODO: read these from a flat file delivered by a file picker intent
         commands.add(new Triple("[Kk]ustuta (.+)", "$1", ""));
         commands.add(new Triple("[Aa]senda (.+) fraasiga (.+)", "$1", "$2"));
         COMMANDS = Collections.unmodifiableSet(commands);
     }
 
-    public UtteranceRewriter(boolean isRewrite) {
+    public UtteranceRewriter(String str, boolean isRewrite) {
         mIsRewrite = isRewrite;
-
+        if (mIsRewrite) {
+            REWRITES = loadRewrites(str);
+            Log.i("Loaded rewrites: " + REWRITES.size());
+        } else {
+            REWRITES = null;
+        }
     }
 
     public CharSequence applyCommand(String commandsAsString, CharSequence text) {
@@ -98,5 +78,18 @@ public class UtteranceRewriter {
             return rewrite(results.get(0));
         }
         return results.get(0);
+    }
+
+    // TODO: do the loading at a higher level, not to unnecessarily repeat it
+    private Map<Pattern, String> loadRewrites(String str) {
+        Map<Pattern, String> rewrites = new HashMap<>();
+        for (String line : str.split("\n")) {
+            String[] splits = line.split("\t");
+            if (splits.length == 2) {
+                rewrites.put(Pattern.compile(splits[0]), splits[1].replace("\\n", "\n"));
+                Log.i("Loading: " + splits[0] + "==>" + splits[1]);
+            }
+        }
+        return Collections.unmodifiableMap(rewrites);
     }
 }
