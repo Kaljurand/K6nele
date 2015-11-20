@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="fill"
-    android:padding="6dp">
+    android:padding="@dimen/layoutMargin1">
 
     <ImageView
         android:id="@+id/itemAppIcon"
@@ -26,7 +26,7 @@
         android:layout_toRightOf="@+id/itemAppIcon"
         android:singleLine="true"
         android:text="Google Maps for Android"
-        android:textSize="18sp" />
+        android:textSize="@dimen/textSize3" />
 
     <TextView
         android:id="@+id/itemAppFname"
@@ -36,7 +36,7 @@
         android:layout_toEndOf="@+id/itemAppIcon"
         android:layout_toRightOf="@+id/itemAppIcon"
         android:text="com.google.android.apps.maps.with.offline.maps.feature"
-        android:textSize="14sp" />
+        android:textSize="@dimen/textSize2" />
 
     <TextView
         android:id="@+id/itemAppId"
@@ -45,8 +45,7 @@
         android:layout_below="@+id/itemAppName"
         android:gravity="end"
         android:singleLine="true"
-        android:text="123"
-        android:textSize="14sp"
+        android:textSize="@dimen/textSize2"
         android:visibility="gone" />
 
     <TextView
@@ -59,7 +58,7 @@
         android:background="@color/semi_transparent"
         android:padding="2dp"
         android:text="6576"
-        android:textSize="14sp" />
+        android:textSize="@dimen/textSize2" />
 
     <TextView
         android:id="@+id/itemAppGrammarTargetLang"
@@ -79,7 +78,7 @@
         android:singleLine="true"
         android:text="http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf"
         android:textColor="@color/orange1"
-        android:textSize="14sp" />
+        android:textSize="@dimen/textSize2" />
 
     <TextView
         android:id="@+id/itemAppServer"
@@ -88,6 +87,6 @@
         android:layout_below="@+id/itemAppGrammar"
         android:text="@string/defaultHttpServer"
         android:textColor="@color/orange"
-        android:textSize="14sp" />
+        android:textSize="@dimen/textSize2" />
 
 </RelativeLayout>

@@ -3,6 +3,7 @@
     <string name="labelApp" translatable="false">Kõnele</string>
 
     <string name="labelComboListItem" translatable="false">• %2$s · %1$s</string>
+    <string name="middot" translatable="false">·</string>
     <string name="empty" translatable="false"></string>
 
     <string name="descriptionApp">speech-to-text services for Android apps</string>

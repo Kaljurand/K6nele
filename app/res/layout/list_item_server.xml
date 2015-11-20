@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="fill"
-    android:padding="8dp">
+    android:padding="@dimen/layoutMargin1">
 
     <TextView
         android:id="@+id/itemServerId"
@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:singleLine="true"
-        android:text="123"
-        android:textSize="14sp"
+        android:textSize="@dimen/textSize2"
         android:visibility="gone" />
 
     <TextView
@@ -20,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemServerId"
         android:text="@string/defaultHttpServer"
-        android:textSize="14sp" />
+        android:textSize="@dimen/textSize2" />
 
     <!-- TODO: This could be used to indicate the default server -->
 
@@ -31,10 +30,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:padding="2dp"
-        android:text="·"
+        android:text="@string/middot"
         android:textColor="@color/green1"
-        android:textSize="18sp"
+        android:textSize="@dimen/textSize3"
         android:visibility="gone" />
 
 </RelativeLayout>
