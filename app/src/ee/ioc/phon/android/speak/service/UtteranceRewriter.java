@@ -1,21 +1,27 @@
 package ee.ioc.phon.android.speak.service;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.util.Pair;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import ee.ioc.phon.android.speak.Log;
 
 public class UtteranceRewriter {
 
-    private final boolean mIsRewrite;
-
     // Rewrites applied the final result
-    private final Map<Pattern, String> REWRITES;
+    private final List<Pair<Pattern, String>> mRewrites;
 
     // TODO: Rewrites applied to the whole text
     private static final Set<Triple> COMMANDS;
@@ -45,15 +51,23 @@ public class UtteranceRewriter {
         COMMANDS = Collections.unmodifiableSet(commands);
     }
 
-    public UtteranceRewriter(String str, boolean isRewrite) {
-        mIsRewrite = isRewrite;
-        if (mIsRewrite) {
-            REWRITES = loadRewrites(str);
-            Log.i("Loaded rewrites: " + REWRITES.size());
-        } else {
-            REWRITES = null;
-        }
+    public UtteranceRewriter() {
+        mRewrites = Collections.emptyList();
     }
+
+    public UtteranceRewriter(List<Pair<Pattern, String>> rewrites) {
+        assert rewrites != null;
+        mRewrites = rewrites;
+    }
+
+    public UtteranceRewriter(String str) {
+        this(loadRewrites(str));
+    }
+
+    public UtteranceRewriter(ContentResolver contentResolver, Uri uri) throws IOException {
+        this(loadRewrites(contentResolver, uri));
+    }
+
 
     public CharSequence applyCommand(String commandsAsString, CharSequence text) {
         for (Triple triple : COMMANDS) {
@@ -62,34 +76,118 @@ public class UtteranceRewriter {
         return text;
     }
 
-    private String rewrite(String str) {
-        for (Map.Entry<Pattern, String> entry : REWRITES.entrySet()) {
-            str = entry.getKey().matcher(str).replaceAll(entry.getValue());
+    /**
+     * @return map of pattern-string rewrite pairs
+     */
+    public List<Pair<Pattern, String>> getRewrites() {
+        return mRewrites;
+    }
+
+    /**
+     * Rewrites and returns the given string.
+     */
+    public String rewrite(String str) {
+        Log.i("Applying: " + str);
+        for (Pair<Pattern, String> entry : mRewrites) {
+            Log.i("Pattern: " + entry.first);
+            Log.i("String: " + entry.second);
+            str = entry.first.matcher(str).replaceAll(entry.second);
+            Log.i("OutTmp: " + str);
         }
+        Log.i("Out: " + str);
         return str;
     }
 
-
+    /**
+     * Rewrites and returns the first item in the given list, ignores all others.
+     */
     public String rewrite(List<String> results) {
         if (results == null || results.size() < 1) {
             return "";
         }
-        if (mIsRewrite) {
-            return rewrite(results.get(0));
-        }
-        return results.get(0);
+        return rewrite(results.get(0));
     }
 
-    // TODO: do the loading at a higher level, not to unnecessarily repeat it
-    private Map<Pattern, String> loadRewrites(String str) {
-        Map<Pattern, String> rewrites = new HashMap<>();
+    /**
+     * Serializes the rewrites as tab-separated-values.
+     */
+    public String toTsv() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Pair<Pattern, String> entry : mRewrites) {
+            stringBuilder.append(escape(entry.first.toString()));
+            stringBuilder.append('\t');
+            stringBuilder.append(escape(entry.second));
+            stringBuilder.append('\n');
+        }
+        return stringBuilder.toString();
+    }
+
+    public String[] toStringArray() {
+        String[] array = new String[mRewrites.size()];
+        int i = 0;
+        for (Pair<Pattern, String> entry : mRewrites) {
+            array[i] = pp(entry.first.toString()) + "\n" + pp(entry.second);
+            i++;
+        }
+        return array;
+    }
+
+
+    /**
+     * Loads the rewrites from tab-separated values.
+     */
+    private static List<Pair<Pattern, String>> loadRewrites(String str) {
+        assert str != null;
+        List<Pair<Pattern, String>> rewrites = new ArrayList<>();
         for (String line : str.split("\n")) {
-            String[] splits = line.split("\t");
-            if (splits.length == 2) {
-                rewrites.put(Pattern.compile(splits[0]), splits[1].replace("\\n", "\n"));
-                Log.i("Loading: " + splits[0] + "==>" + splits[1]);
+            addLine(rewrites, line);
+        }
+        return Collections.unmodifiableList(rewrites);
+    }
+
+
+    /**
+     * Loads the rewrites from an URI using a ContentResolver.
+     */
+    private static List<Pair<Pattern, String>> loadRewrites(ContentResolver contentResolver, Uri uri) throws IOException {
+        InputStream inputStream = contentResolver.openInputStream(uri);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        List<Pair<Pattern, String>> rewrites = new ArrayList<>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            addLine(rewrites, line);
+        }
+        inputStream.close();
+        return Collections.unmodifiableList(rewrites);
+    }
+
+    private static void addLine(List<Pair<Pattern, String>> rewrites, String line) {
+        String[] splits = line.split("\t");
+        if (splits.length == 2) {
+            try {
+                Pair<Pattern, String> pair = new Pair(Pattern.compile(unescape(splits[0])), unescape(splits[1]));
+                rewrites.add(pair);
+            } catch (PatternSyntaxException e) {
+                // TODO: collect and expose buggy entries
             }
         }
-        return Collections.unmodifiableMap(rewrites);
+    }
+
+    /**
+     * Maps newlines and tabs to literals of the form "\n" and "\t".
+     */
+    private static String escape(String str) {
+        return str.replace("\n", "\\n").replace("\t", "\\t");
+    }
+
+    private static String pp(String str) {
+        return escape(str).replace(" ", "·");
+    }
+
+    /**
+     * Maps literals of the form "\n" and "\t" to newlines and tabs.
+     */
+    private static String unescape(String str) {
+        return str.replace("\\n", "\n").replace("\\t", "\t");
     }
 }

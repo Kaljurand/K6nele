@@ -124,16 +124,14 @@ public class SpeechInputMethodService extends InputMethodService {
         if (restarting) {
             return;
         }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
+
         Bundle extras = new Bundle();
         extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION,
                 !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
-
-        String lines = PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty);
-
-        final UtteranceRewriter mUtteranceRewriter =
-                new UtteranceRewriter(lines, PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite));
 
         mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
 
@@ -141,13 +139,13 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onPartialResult(List<String> results) {
-                String rewrittenResult = mUtteranceRewriter.rewrite(results);
+                String rewrittenResult = utteranceRewriter.rewrite(results);
                 mTextUpdater.commitPartialResult(getCurrentInputConnection(), rewrittenResult);
             }
 
             @Override
             public void onFinalResult(List<String> results) {
-                String rewrittenResult = mUtteranceRewriter.rewrite(results);
+                String rewrittenResult = utteranceRewriter.rewrite(results);
                 mTextUpdater.commitFinalResult(getCurrentInputConnection(), rewrittenResult);
             }
 
@@ -265,6 +263,12 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
+    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
+        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
+            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
+        }
+        return new UtteranceRewriter();
+    }
 
     /**
      * Performs the Search-action, e.g. to launch search on a searchbar.
@@ -423,5 +427,4 @@ public class SpeechInputMethodService extends InputMethodService {
         }
         return a.substring(0, minLength);
     }
-
 }

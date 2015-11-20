@@ -306,7 +306,7 @@ public class RecognizerIntentService extends Service {
 		}
 		new Thread(new Runnable() {
 			public void run() {
-				transcribe_aux(bytes);
+				transcribeAux(bytes);
 			}
 		}).start();
 		setState(State.PROCESSING);
@@ -314,7 +314,7 @@ public class RecognizerIntentService extends Service {
 	}
 
 
-	private void transcribe_aux(byte[] bytes) {
+	private void transcribeAux(byte[] bytes) {
 		try {
 			sendChunk(bytes, true);
 			RecSessionResult result = getResult();

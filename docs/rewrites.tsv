@@ -1,8 +1,8 @@
 [Nn]aeru ?näo ?sümbol	:-)
 [Rr]õõmsa ?näo ?sümbol	:-)
 [Nn]utu ?näo ?sümbol	:-(
-[Kk]urva ?näo ?sümbol	:-(
 [Vv]äga ?kurva ?näo ?sümbol	:'(
+[Kk]urva ?näo ?sümbol	:-(
 [Ss]ulud algavad	(
 [Ss]ulud lõpevad	)
 [Ss]idekriips	-
@@ -18,5 +18,5 @@
 (\w) (aga|et|kuid|sest|siis|vaid)( |$)	$1, $2$3
 
 # Relative clause pronouns
-(\w) (mi|ke)(s|da|lle)( |$)	$1, $2$3$4
 (\w) (mille|kelle)(l|le|lt|s|sse|st|ni|na|ks|ga|ta)( |$)	$1, $2$3$4
+(\w) (mi|ke)(s|da|lle)( |$)	$1, $2$3$4

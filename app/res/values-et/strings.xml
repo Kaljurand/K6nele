@@ -14,6 +14,7 @@
     <string name="labelActivityAbout">Info</string>
     <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
+    <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityRepeaterDemo">Kordaja demo</string>
@@ -179,6 +180,11 @@
     <string name="toastRequestedAudioFormatNotSupported">Audioformaat pole toetatud: %1$s</string>
     <string name="toastPlayingAudio">Mängin lindistust: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Lindistuse lõpp</string>
+    <string name="errorLoadRewrites">Ümberkirjutusreeglite laadimine luhtus: %1$s</string>
+    <plurals name="statusLoadRewrites">
+        <item quantity="one">1 reegel</item>
+        <item quantity="other">%d reeglit</item>
+    </plurals>
     <string name="entryGrammarName1">[piiramata sisend]</string>
     <string name="entryGrammarDesc1">Selle grammatika saab omistada rakendustele, kus te
 		soovite igal juhul vabas vormis rääkida, sõltumata sellest, kas

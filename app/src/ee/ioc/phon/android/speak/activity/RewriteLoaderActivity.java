@@ -22,14 +22,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
+import ee.ioc.phon.android.speak.DetailsActivity;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 
 public class RewriteLoaderActivity extends Activity {
 
@@ -39,7 +39,7 @@ public class RewriteLoaderActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/plain");
+        intent.setType("text/tab-separated-values");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         Intent chooser = Intent.createChooser(intent, "");
         startActivityForResult(chooser, GET_CONTENT_REQUEST_CODE);
@@ -47,47 +47,33 @@ public class RewriteLoaderActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null) {
+            Uri uri = resultData.getData();
 
-        Log.i("onActivityResult: " + resultCode + " " + resultData);
-        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            try {
+                UtteranceRewriter utteranceRewriter = new UtteranceRewriter(getContentResolver(), uri);
+                String rewritesAsTsv = utteranceRewriter.toTsv();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(getString(R.string.keyRewritesFile), rewritesAsTsv);
+                editor.apply();
+                Log.i(rewritesAsTsv);
 
-            if (resultData != null) {
-                Uri uri = resultData.getData();
-                Log.i("Uri: " + uri.toString());
+                int count = utteranceRewriter.getRewrites().size();
 
-                try {
-                    String str = readTextFromUri(uri);
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(getString(R.string.keyRewritesFile), str);
-                    editor.apply();
-                    Log.i("Loaded: " + str);
-                } catch (IOException e) {
-                    // TODO
-                }
-                finish();
+                Intent searchIntent = new Intent(this, RewritesActivity.class);
+                searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getResources().getQuantityString(R.plurals.statusLoadRewrites, count, count));
+                searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, utteranceRewriter.toStringArray());
+                startActivity(searchIntent);
+            } catch (IOException e) {
+                String errorMessage = String.format(getString(R.string.errorLoadRewrites), e.getLocalizedMessage());
+                toast(errorMessage);
             }
         }
+        finish();
     }
 
-
-    /**
-     * TODO: filter out comments and lines which do not compile as regex
-     */
-    private String readTextFromUri(Uri uri) throws IOException {
-        InputStream inputStream = getContentResolver().openInputStream(uri);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            Log.i("Loading: " + line);
-            String[] splits = line.split("\t");
-            if (splits.length == 2) {
-                stringBuilder.append(line);
-                stringBuilder.append('\n');
-            }
-        }
-        inputStream.close();
-        return stringBuilder.toString();
+    protected void toast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }

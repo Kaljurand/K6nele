@@ -20,6 +20,7 @@
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
+    <string name="labelActivityRewrites">Rewrite rules</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
     <string name="labelActivityServerList">Recognizer servers</string>
@@ -142,6 +143,12 @@ More grammars are available at
     <string name="toastPlayingAudio">Playing the recorded audio: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Done playing the audio</string>
     <string name="errorRecognizerNotPresent">There is no activity that provides speech recognition service.</string>
+    <string name="errorLoadRewrites">Failed to load rewrite rules: %1$s</string>
+    <plurals name="statusLoadRewrites">
+        <item quantity="zero">No rules</item>
+        <item quantity="one">1 rule</item>
+        <item quantity="other">%d rules</item>
+    </plurals>
 
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
