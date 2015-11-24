@@ -16,8 +16,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import ee.ioc.phon.android.speak.Log;
-
 public class UtteranceRewriter {
 
     // Rewrites applied the final result
@@ -87,14 +85,9 @@ public class UtteranceRewriter {
      * Rewrites and returns the given string.
      */
     public String rewrite(String str) {
-        Log.i("Applying: " + str);
         for (Pair<Pattern, String> entry : mRewrites) {
-            Log.i("Pattern: " + entry.first);
-            Log.i("String: " + entry.second);
             str = entry.first.matcher(str).replaceAll(entry.second);
-            Log.i("OutTmp: " + str);
         }
-        Log.i("Out: " + str);
         return str;
     }
 
@@ -151,13 +144,15 @@ public class UtteranceRewriter {
      */
     private static List<Pair<Pattern, String>> loadRewrites(ContentResolver contentResolver, Uri uri) throws IOException {
         InputStream inputStream = contentResolver.openInputStream(uri);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         List<Pair<Pattern, String>> rewrites = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            addLine(rewrites, line);
+        if (inputStream != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                addLine(rewrites, line);
+            }
+            inputStream.close();
         }
-        inputStream.close();
         return Collections.unmodifiableList(rewrites);
     }
 
@@ -165,7 +160,7 @@ public class UtteranceRewriter {
         String[] splits = line.split("\t");
         if (splits.length == 2) {
             try {
-                Pair<Pattern, String> pair = new Pair(Pattern.compile(unescape(splits[0])), unescape(splits[1]));
+                Pair<Pattern, String> pair = new Pair<>(Pattern.compile(unescape(splits[0])), unescape(splits[1]));
                 rewrites.add(pair);
             } catch (PatternSyntaxException e) {
                 // TODO: collect and expose buggy entries
