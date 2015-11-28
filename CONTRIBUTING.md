@@ -42,3 +42,8 @@ Version tags are set by e.g.
     git tag -a v1.1.02 -m 'version 1.1.02'
 
 The last number should be even.
+
+See also
+--------
+
+- [docs/](docs/)

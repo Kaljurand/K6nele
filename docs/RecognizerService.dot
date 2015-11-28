@@ -3,6 +3,7 @@
  *
  * @author Kaarel Kaljurand
  * @version 2012-02-04
+ * @obsolete
  */
 
 digraph G {
