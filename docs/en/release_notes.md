@@ -7,7 +7,7 @@ title: Release notes
 
 Kõnele versions and their required Android versions:
 
-  - v1.1.xx - v1.3.xx, requires Android 4.0+
+  - v1.1.xx - v1.4.xx, requires Android 4.0+
     - extension of v0.8.xx, but with Android 4.0+ style UI
   - v0.8.xx (not maintained), requires Android 2.2+
     - extension of v0.7.xx, but additionally implements the RecognitionService-interface
@@ -21,7 +21,18 @@ Kõnele versions and their required Android versions:
 
 (Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>)
 
-## v1.1 - v1.3
+## v1.1 - v1.4
+
+### v1.4.06 (2015-11-28)
+
+New in this release:
+
+- Android v6 style permission management
+- the APK is easier to build from source (the dependency `net-speech-api` is now used as an Android library)
+- internal refactoring (some general code moved to the new dependency `speechutils`)
+- developer feature: apply Java regex-based search/replace expressions (loaded from a 2-column tsv-file) to the service output (in IME mode only)
+- speech keyboard: improve left-delete
+- small fixes
 
 ### v1.3.20 (2015-10-02)
 
