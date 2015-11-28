@@ -1,6 +1,6 @@
 [submodule "net-speech-api"]
 	path = net-speech-api
-	url = https://github.com/Kaljurand/net-speech-api
+	url = git@github.com:Kaljurand/net-speech-api.git
 [submodule "speechutils"]
 	path = speechutils
 	url = git@github.com:Kaljurand/speechutils.git

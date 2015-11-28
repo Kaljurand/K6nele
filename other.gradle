@@ -1,13 +1,3 @@
-task makeNetSpeechApi(type:Exec) {
-    workingDir 'net-speech-api'
-    commandLine 'mvn', 'package', '-DskipTests'
-}
-
-task cleanNetSpeechApi(type:Exec) {
-    workingDir 'net-speech-api'
-    commandLine 'mvn', 'clean'
-}
-
 task(makeIcons) << {
     description 'Converts the SVG launcher icon to multiple resolution PNGs'
 
