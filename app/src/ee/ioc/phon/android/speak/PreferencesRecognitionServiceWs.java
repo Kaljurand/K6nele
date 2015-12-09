@@ -1,7 +1,7 @@
 package ee.ioc.phon.android.speak;
 
 /*
- * Copyright 2011-2014, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2015, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,10 @@ package ee.ioc.phon.android.speak;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
-
-public class PreferencesRecognitionServiceWs extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PreferencesRecognitionServiceWs extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +30,11 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity implemen
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-
-    @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference pref = findPreference(key);
-        if (pref instanceof EditTextPreference) {
-            EditTextPreference etp = (EditTextPreference) pref;
-            pref.setSummary(etp.getText());
-        }
+        SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+        Preference service = (Preference) findPreference(getString(R.string.keyWsServer));
+        service.setSummary(sp.getString(getString(R.string.keyWsServer), getString(R.string.defaultWsServer)));
     }
 }

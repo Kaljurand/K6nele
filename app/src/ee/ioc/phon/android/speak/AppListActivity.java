@@ -36,6 +36,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import ee.ioc.phon.android.speak.activity.RecognizerIntentListActivity;
 import ee.ioc.phon.android.speak.provider.App;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.Utils;

@@ -457,6 +457,5 @@ public class AppsContentProvider extends ContentProvider {
 		serversProjectionMap = new HashMap<>();
 		serversProjectionMap.put(Server.Columns._ID, Server.Columns._ID);
 		serversProjectionMap.put(Server.Columns.URL, Server.Columns.URL);
-
 	}
 }

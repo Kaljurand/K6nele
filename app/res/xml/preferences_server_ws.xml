@@ -2,12 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     // Settings that apply to the WebSocket-based server (also denoted as "fast" and "continuous")
     // These cannot be configured using standard extras
-    <EditTextPreference
-        android:defaultValue="@string/defaultWsServer"
-        android:inputType="textUri"
+    <Preference
         android:key="@string/keyWsServer"
         android:summary="@string/defaultWsServer"
-        android:title="@string/titleDefaultServiceWs"></EditTextPreference>
+        android:title="@string/titleDefaultServiceWs">
+        <intent
+            android:targetClass="ee.ioc.phon.android.speak.activity.WsServerListActivity"
+            android:targetPackage="ee.ioc.phon.android.speak" />
+    </Preference>
     <CheckBoxPreference
         android:defaultValue="@bool/defaultImeAutoStopAfterPause"
         android:key="@string/keyImeAutoStopAfterPause"

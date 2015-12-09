@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak;
 
 import java.net.MalformedURLException;
 
+import ee.ioc.phon.android.speak.activity.RecognizerIntentListActivity;
 import ee.ioc.phon.android.speak.provider.Server;
 import ee.ioc.phon.android.speak.utils.Utils;
 
