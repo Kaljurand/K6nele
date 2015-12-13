@@ -53,6 +53,13 @@ public class Extras {
     // Caller wants to have the audio data in a certain format (String)
     public static final String EXTRA_GET_AUDIO_FORMAT = "android.speech.extra.GET_AUDIO_FORMAT";
 
+    // Switch on continuous recognition (boolean)
+    // Same as EXTRA_UNLIMITED_DURATION
+    // Used on Chrome to talk to Google's recognizer?
+    // (http://src.chromium.org/svn/trunk/src/content/public/android/java/src/org/chromium/content/browser/SpeechRecognition.java)
+    // Currently not used, because behaves in an incompatible way.
+    public static final String EXTRA_DICTATION_MODE = "android.speech.extra.DICTATION_MODE";
+
     /**
      * <p>Key used to retrieve an {@code ArrayList<String>} from the {@link Bundle} passed to the
      * {@link RecognitionListener#onResults(Bundle)} and
