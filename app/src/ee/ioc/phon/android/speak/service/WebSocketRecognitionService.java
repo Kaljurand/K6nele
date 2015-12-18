@@ -179,27 +179,20 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
             public void run() {
                 if (webSocket != null && webSocket.isOpen()) {
                     RawAudioRecorder recorder = getRecorder();
-                    if (recorder == null) {
+                    if (recorder == null || recorder.getState() != RawAudioRecorder.State.RECORDING) {
                         Log.i("Sending: EOS (recorder == null)");
                         webSocket.send(EOS);
                         mIsEosSent = true;
                     } else {
-                        RawAudioRecorder.State recorderState = recorder.getState();
                         byte[] buffer = recorder.consumeRecordingAndTruncate();
-                        // We assume that if only 0 bytes have been recorded then the recording
-                        // has finished and we can notify the server with "EOF".
-                        if (buffer.length > 0 && recorderState == RawAudioRecorder.State.RECORDING) {
+                        if (buffer.length > 0) {
                             Log.i("Sending bytes: " + buffer.length);
                             webSocket.send(buffer);
                             onBufferReceived(buffer);
-                            boolean success = mSendHandler.postDelayed(this, TASK_INTERVAL_IME_SEND);
-                            if (!success) {
-                                Log.i("mSendHandler.postDelayed returned false");
-                            }
-                        } else {
-                            Log.i("Sending: EOS. Buffer length = " + buffer.length + ", recorder state = " + recorderState);
-                            webSocket.send(EOS);
-                            mIsEosSent = true;
+                        }
+                        boolean success = mSendHandler.postDelayed(this, TASK_INTERVAL_IME_SEND);
+                        if (!success) {
+                            Log.i("mSendHandler.postDelayed returned false");
                         }
                     }
                 }
