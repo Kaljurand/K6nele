@@ -92,13 +92,20 @@ public class UtteranceRewriter {
     }
 
     /**
-     * Rewrites and returns the first item in the given list, ignores all others.
+     * Rewrites and returns the given results.
      */
-    public String rewrite(List<String> results) {
-        if (results == null || results.size() < 1) {
-            return "";
+    public List<String> rewrite(List<String> results) {
+        if (results == null) {
+            return Collections.emptyList();
         }
-        return rewrite(results.get(0));
+        if (mRewrites == null || mRewrites.size() < 1 || results.size() < 1) {
+            return results;
+        }
+        List<String> rewrittenResults = new ArrayList<>();
+        for (String result : results) {
+            rewrittenResults.add(rewrite(result));
+        }
+        return rewrittenResults;
     }
 
     /**

@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +29,7 @@ import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
@@ -216,14 +216,8 @@ public class SpeechInputView extends LinearLayout {
         cancelOrDestroy();
     }
 
-    private static ArrayList<String> selectResults(ArrayList<String> results) {
-        if (results == null || results.size() < 1) {
-            return null;
-        }
-        return results;
-    }
 
-    private static String selectFirstResult(ArrayList<String> results) {
+    private static String selectFirstResult(List<String> results) {
         if (results == null || results.size() < 1) {
             return null;
         }
@@ -252,7 +246,7 @@ public class SpeechInputView extends LinearLayout {
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
 
-    private static String lastChars(ArrayList<String> results, boolean isFinal) {
+    private static String lastChars(List<String> results, boolean isFinal) {
         String str = selectFirstResult(results);
         if (str == null) {
             str = "";
@@ -375,7 +369,18 @@ public class SpeechInputView extends LinearLayout {
     }
 
 
+    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
+        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
+            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
+        }
+        return new UtteranceRewriter();
+    }
+
+
     private class SpeechInputRecognitionListener implements RecognitionListener {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
 
         @Override
         public void onReadyForSpeech(Bundle params) {
@@ -467,16 +472,16 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onPartialResults(final Bundle bundle) {
             Log.i("onPartialResults: state = " + mState);
-            ArrayList<String> text = selectResults(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-            if (text != null) {
+            List<String> resultsRewritten = utteranceRewriter.rewrite(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+            if (!resultsRewritten.isEmpty()) {
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
+                setText(mTvMessage, lastChars(resultsRewritten, isSemiFinal));
                 if (isSemiFinal) {
-                    mListener.onFinalResult(text);
+                    mListener.onFinalResult(resultsRewritten);
                 } else {
-                    mListener.onPartialResult(text);
+                    mListener.onPartialResult(resultsRewritten);
                 }
-                setText(mTvMessage, lastChars(text, isSemiFinal));
             }
         }
 
@@ -489,14 +494,14 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onResults(final Bundle bundle) {
             Log.i("onResults: state = " + mState);
-            ArrayList<String> text = selectResults(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-            if (text == null) {
+            List<String> resultsRewritten = utteranceRewriter.rewrite(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+            if (resultsRewritten.isEmpty()) {
                 // If we got empty results then assume that the session ended,
                 // e.g. cancel was called.
                 mListener.onFinalResult(Collections.<String>emptyList());
             } else {
-                mListener.onFinalResult(text);
-                setText(mTvMessage, lastChars(text, true));
+                setText(mTvMessage, lastChars(resultsRewritten, true));
+                mListener.onFinalResult(resultsRewritten);
             }
             setGuiInitState(0);
         }

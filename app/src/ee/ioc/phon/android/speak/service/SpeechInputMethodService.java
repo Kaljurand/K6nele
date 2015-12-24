@@ -126,8 +126,6 @@ public class SpeechInputMethodService extends InputMethodService {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
-
         Bundle extras = new Bundle();
         extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION,
                 !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
@@ -139,14 +137,20 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onPartialResult(List<String> results) {
-                String rewrittenResult = utteranceRewriter.rewrite(results);
-                mTextUpdater.commitPartialResult(getCurrentInputConnection(), rewrittenResult);
+                String text = "";
+                if (results.size() > 0) {
+                    text = results.get(0);
+                }
+                mTextUpdater.commitPartialResult(getCurrentInputConnection(), text);
             }
 
             @Override
             public void onFinalResult(List<String> results) {
-                String rewrittenResult = utteranceRewriter.rewrite(results);
-                mTextUpdater.commitFinalResult(getCurrentInputConnection(), rewrittenResult);
+                String text = "";
+                if (results.size() > 0) {
+                    text = results.get(0);
+                }
+                mTextUpdater.commitFinalResult(getCurrentInputConnection(), text);
             }
 
             @Override
@@ -263,12 +267,6 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
-    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
-            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
-        }
-        return new UtteranceRewriter();
-    }
 
     /**
      * Performs the Search-action, e.g. to launch search on a searchbar.
