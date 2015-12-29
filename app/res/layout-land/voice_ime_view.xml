@@ -82,7 +82,7 @@
             android:textColor="@color/grey100"
             android:textSize="@dimen/textSize10sp" />
 
-        <ee.ioc.phon.android.speak.view.MicButton
+        <ee.ioc.phon.android.speechutils.view.MicButton
             android:id="@+id/bImeStartStop"
             android:layout_width="@dimen/layoutHeightButtonMicrophone"
             android:layout_height="@dimen/layoutHeightButtonMicrophone"

@@ -32,8 +32,8 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
-import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
+import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayout {
 

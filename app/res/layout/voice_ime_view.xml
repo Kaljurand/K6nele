@@ -57,7 +57,7 @@
             android:src="@drawable/ic_search_api_holo_dark" />
     </RelativeLayout>
 
-    <ee.ioc.phon.android.speak.view.MicButton
+    <ee.ioc.phon.android.speechutils.view.MicButton
         android:id="@+id/bImeStartStop"
         android:layout_width="@dimen/layoutHeightButtonMicrophone"
         android:layout_height="@dimen/layoutHeightButtonMicrophone"
