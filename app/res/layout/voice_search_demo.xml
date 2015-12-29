@@ -12,6 +12,6 @@
         android:layout_margin="@dimen/layoutMargin3"
         android:contentDescription="@string/cdMicrophone"
         android:gravity="center"
-        android:src="@drawable/ic_voice_search_api_holo_dark" />
+        android:src="@drawable/ic_voice_search_api_material" />
 
 </RelativeLayout>

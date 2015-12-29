@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="descriptionApp">kõnetuvastusteenused Androidi rakendustele</string>
-
     <string name="labelRecognitionServiceHttp">Kõnele (grammatikatoega)</string>
     <string name="labelRecognitionServiceWs">Kõnele (kiire tuvastusega)</string>
     <string name="labelRecognitionServiceWs2">Kõnele (kiire tuvastusega 2)</string>

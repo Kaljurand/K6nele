@@ -65,7 +65,7 @@
         android:background="@drawable/button_mic"
         android:contentDescription="@string/cdMicrophone"
         android:gravity="center"
-        android:src="@drawable/ic_voice_search_api_holo_light" />
+        android:src="@drawable/ic_voice_search_api_material" />
 
     <TextView
         android:id="@+id/tvInstruction"

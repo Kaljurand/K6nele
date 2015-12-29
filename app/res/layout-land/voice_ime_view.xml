@@ -91,7 +91,7 @@
             android:layout_toStartOf="@+id/bImeGo"
             android:background="@drawable/button_mic"
             android:contentDescription="@string/cdMicrophone"
-            android:src="@drawable/ic_voice_search_api_holo_light" />
+            android:src="@drawable/ic_voice_search_api_material" />
 
     </RelativeLayout>
 

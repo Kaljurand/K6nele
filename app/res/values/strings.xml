@@ -6,7 +6,7 @@
     <string name="middot" translatable="false">·</string>
     <string name="empty" translatable="false"></string>
 
-    <string name="descriptionApp">speech-to-text services for Android apps</string>
+    <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
     <string name="labelIme">Kõnele speech keyboard</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
