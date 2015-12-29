@@ -33,6 +33,7 @@ import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 
 public class SpeechInputView extends LinearLayout {
 
@@ -335,7 +336,7 @@ public class SpeechInputView extends LinearLayout {
     private void updateServiceLanguage(ServiceLanguageChooser slc) {
         // Cancel a possibly running service
         cancelOrDestroy();
-        Pair<String, String> pair = Utils.getLabel(getContext(), slc.getCombo());
+        Pair<String, String> pair = RecognitionServiceManager.getLabel(getContext(), slc.getCombo());
         mBComboSelector.setText(pair.second + " · " + pair.first);
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());

@@ -16,15 +16,12 @@
 
 package ee.ioc.phon.android.speak.utils;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ServiceInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -32,8 +29,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -46,7 +41,6 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
@@ -306,53 +300,5 @@ public class Utils {
                 Build.DEVICE + "/" +
                 Build.DISPLAY + "; " +
                 caller;
-    }
-
-
-    /**
-     * On LOLLIPOP we use a builtin to parse the locale string, and return
-     * the name of the locale in the language of the current locale. In pre-LOLLIPOP we just return
-     * the formal name (e.g. "et-ee"), because the Locale-constructor is not able to parse it.
-     *
-     * @param localeAsStr Formal name of the locale, e.g. "et-ee"
-     * @return The name of the locale in the language of the current locale
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static String makeLangLabel(String localeAsStr) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return Locale.forLanguageTag(localeAsStr).getDisplayName();
-        }
-        return localeAsStr;
-    }
-
-    /**
-     * @param str string like {@code ee.ioc.phon.android.speak/.HttpRecognitionService;et-ee}
-     * @return ComponentName in the input string
-     */
-    public static ComponentName getComponentName(String str) {
-        String[] splits = TextUtils.split(str, ";");
-        return ComponentName.unflattenFromString(splits[0]);
-    }
-
-    public static Pair<String, String> getLabel(Context context, String comboAsString) {
-        String recognizer = "[?]";
-        String language = "[?]";
-        String[] splits = TextUtils.split(comboAsString, ";");
-        if (splits.length > 0) {
-            PackageManager pm = context.getPackageManager();
-            ComponentName recognizerComponentName = ComponentName.unflattenFromString(splits[0]);
-            if (recognizerComponentName != null) {
-                try {
-                    ServiceInfo si = pm.getServiceInfo(recognizerComponentName, 0);
-                    recognizer = si.loadLabel(pm).toString();
-                } catch (PackageManager.NameNotFoundException e) {
-                    // ignored
-                }
-            }
-        }
-        if (splits.length > 1) {
-            language = Utils.makeLangLabel(splits[1]);
-        }
-        return new Pair<>(recognizer, language);
     }
 }
