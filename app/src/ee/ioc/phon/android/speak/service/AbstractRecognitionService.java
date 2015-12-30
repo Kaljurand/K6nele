@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ee.ioc.phon.android.speak.AudioPauser;
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.AudioCue;
+import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 /**

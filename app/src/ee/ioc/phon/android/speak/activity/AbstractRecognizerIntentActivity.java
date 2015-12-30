@@ -42,12 +42,12 @@ import java.util.List;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.DetailsActivity;
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.Extras;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
 

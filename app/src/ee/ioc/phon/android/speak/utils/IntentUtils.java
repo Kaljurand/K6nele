@@ -16,8 +16,8 @@ import android.view.inputmethod.EditorInfo;
 
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speechutils.Extras;
 
 public class IntentUtils {
 

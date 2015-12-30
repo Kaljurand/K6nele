@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.ComboSelectorActivity;
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.R;
@@ -32,6 +31,7 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 

@@ -18,11 +18,11 @@ package ee.ioc.phon.android.speak.demo;
 
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.GrammarListActivity;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.provider.Grammar;
+import ee.ioc.phon.android.speechutils.Extras;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -33,6 +33,7 @@ import android.speech.RecognizerIntent;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**

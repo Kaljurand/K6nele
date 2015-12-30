@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
+import ee.ioc.phon.android.speechutils.Extras;
 
 public class SpeechInputMethodService extends InputMethodService {
 

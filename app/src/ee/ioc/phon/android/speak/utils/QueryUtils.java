@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
-import ee.ioc.phon.android.speak.Extras;
 import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speechutils.Extras;
 
 public class QueryUtils {
     private static final String PARAMETER_SEPARATOR = "&";
