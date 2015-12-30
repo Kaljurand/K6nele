@@ -237,8 +237,7 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.INIT);
         } else {
             setGuiState(MicButton.State.ERROR);
-            String m = "[ " + getResources().getString(message) + " ]";
-            setText(mTvMessage, m);
+            setText(mTvMessage, String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
         setEnabled(mBComboSelector, true);
         if (mBImeKeyboard != null) {
@@ -337,7 +336,7 @@ public class SpeechInputView extends LinearLayout {
         // Cancel a possibly running service
         cancelOrDestroy();
         Pair<String, String> pair = RecognitionServiceManager.getLabel(getContext(), slc.getCombo());
-        mBComboSelector.setText(pair.second + " · " + pair.first);
+        mBComboSelector.setText(String.format(getResources().getString(R.string.labelComboItem), pair.first, pair.second));
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());
     }

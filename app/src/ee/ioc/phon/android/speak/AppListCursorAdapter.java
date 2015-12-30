@@ -75,7 +75,7 @@ public class AppListCursorAdapter extends CursorAdapter {
 
 		// App usage count (comes from the DB)
 		TextView itemAppCount = (TextView) view.findViewById(R.id.itemAppCount);
-		itemAppCount.setText("" + c.getInt(c.getColumnIndex(App.Columns.COUNT)));
+		itemAppCount.setText(String.valueOf(c.getInt(c.getColumnIndex(App.Columns.COUNT))));
 
 		// App icon (can be null if the app has been uninstalled)
 		ImageView itemAppIcon = (ImageView) view.findViewById(R.id.itemAppIcon);

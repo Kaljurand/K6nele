@@ -3,6 +3,8 @@
     <string name="labelApp" translatable="false">Kõnele</string>
 
     <string name="labelComboListItem" translatable="false">• %2$s · %1$s</string>
+    <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
+    <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
     <string name="empty" translatable="false"></string>
 
@@ -176,7 +178,6 @@ More grammars are available at
     <string name="errorCantCreateRecorder">ERROR: Failed to create an audio recorder</string>
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
-    <string name="noteMaxRecordingTimeExceeded">Max recording time exceeded</string>
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>

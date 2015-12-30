@@ -6,7 +6,6 @@ import android.util.Pair;
 import java.util.Comparator;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 
 public class Combo {
