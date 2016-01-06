@@ -21,7 +21,9 @@ import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
+import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
+import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 
 /**
  * <p>This activity responds to the following intent types:</p>
@@ -67,6 +69,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
     private int mSampleRate;
     private byte[] mCompleteRecording;
+    private byte[] mEncodedRecording;
 
     private SpeechInputView mView;
 
@@ -74,14 +77,19 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         // TODO
     }
 
-    Uri getAudioUri() {
+    Uri getAudioUri(String filename) {
+        byte[] bytes;
+        if ("audio.wav".equals(filename)) {
+            bytes = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
+        } else {
+            bytes = mEncodedRecording;
+        }
         try {
-            byte[] wav = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
-            FileOutputStream fos = openFileOutput(AUDIO_FILENAME, Context.MODE_PRIVATE);
-            fos.write(wav);
+            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
+            fos.write(bytes);
             fos.close();
 
-            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + AUDIO_FILENAME);
+            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
         } catch (FileNotFoundException e) {
             Log.e("FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
@@ -178,20 +186,13 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             }
 
             @Override
-            public void onFinalResult(List<String> results) {
+            public void onFinalResult(List<String> results, Bundle bundle) {
+                if (bundle != null && bundle.containsKey(Extras.RESULTS_AUDIO_ENCODED)) {
+                    mEncodedRecording = bundle.getByteArray(Extras.RESULTS_AUDIO_ENCODED);
+                }
                 if (results != null && results.size() > 0) {
-                    int sum = 0;
-                    for (byte[] ba : mBufferList) {
-                        sum = sum + ba.length;
-                    }
-                    mCompleteRecording = new byte[sum];
-                    int pos = 0;
-                    for (byte[] ba : mBufferList) {
-                        System.arraycopy(ba, 0, mCompleteRecording, pos, ba.length);
-                        pos = pos + ba.length;
-                    }
+                    mCompleteRecording = AudioUtils.concatenateBuffers(mBufferList);
                     mBufferList = new ArrayList<>();
-
                     returnOrForwardMatches(results);
                 }
             }

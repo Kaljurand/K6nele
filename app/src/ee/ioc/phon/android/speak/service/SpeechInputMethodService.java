@@ -145,7 +145,7 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
-            public void onFinalResult(List<String> results) {
+            public void onFinalResult(List<String> results, Bundle bundle) {
                 String text = "";
                 if (results.size() > 0) {
                     text = results.get(0);

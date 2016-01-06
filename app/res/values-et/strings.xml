@@ -17,6 +17,7 @@
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityRepeaterDemo">Kordaja demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
+    <string name="labelActivityEncoderDemo">Heli pakkimise demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
@@ -52,6 +53,7 @@
 		grammatika.</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
+    <string name="summaryEncoderDemo">Pakib kõne</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>

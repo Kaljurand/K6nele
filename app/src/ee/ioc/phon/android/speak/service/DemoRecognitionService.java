@@ -29,7 +29,7 @@ public class DemoRecognitionService extends AbstractRecognitionService {
             int counter = 0;
 
             public void run() {
-                onPartialResults(toBundle((++counter) + ""));
+                onPartialResults(toResultsBundle((++counter) + ""));
                 mHandler.postDelayed(this, 500);
             }
         };
@@ -44,7 +44,7 @@ public class DemoRecognitionService extends AbstractRecognitionService {
 
     @Override
     void afterRecording(byte[] recording) {
-        onResults(toBundle(mIntentAsString));
+        onResults(toResultsBundle(mIntentAsString));
     }
 
     int getAutoStopAfterMillis() {

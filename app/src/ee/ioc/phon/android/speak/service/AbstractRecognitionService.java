@@ -17,8 +17,9 @@ import ee.ioc.phon.android.speak.AudioPauser;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.AudioCue;
+import ee.ioc.phon.android.speechutils.AudioRecorder;
+import ee.ioc.phon.android.speechutils.AudioRecorderFactory;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 /**
  * About RemoteException see
@@ -46,7 +47,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     private AudioPauser mAudioPauser;
     private RecognitionService.Callback mListener;
 
-    private RawAudioRecorder mRecorder;
+    private AudioRecorder mRecorder;
 
     private Handler mVolumeHandler = new Handler();
     private Runnable mShowVolumeTask;
@@ -56,18 +57,26 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     private Bundle mExtras;
 
-    static Bundle toBundle(String hypothesis) {
+    byte[] mRecordingEncoded = null;
+
+    Bundle toResultsBundle(String hypothesis) {
         ArrayList<String> hypotheses = new ArrayList<>();
         hypotheses.add(hypothesis);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
+        if (mRecordingEncoded != null) {
+            bundle.putByteArray(Extras.RESULTS_AUDIO_ENCODED, mRecordingEncoded);
+        }
         return bundle;
     }
 
-    static Bundle toBundle(ArrayList<String> hypotheses, boolean isFinal) {
+    Bundle toResultsBundle(ArrayList<String> hypotheses, boolean isFinal) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
         bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
+        if (mRecordingEncoded != null) {
+            bundle.putByteArray(Extras.RESULTS_AUDIO_ENCODED, mRecordingEncoded);
+        }
         return bundle;
     }
 
@@ -127,7 +136,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         // Nothing to do, e.g. if the audio has already been sent to the server during recording
     }
 
-    RawAudioRecorder getRecorder() {
+    AudioRecorder getRecorder() {
         return mRecorder;
     }
 
@@ -279,6 +288,8 @@ public abstract class AbstractRecognitionService extends RecognitionService {
             // TODO: make sure this call does not do too much work in the case of the
             // WebSocket-service which does not use the bytes in the end
             recording = mRecorder.consumeRecording();
+
+            mRecordingEncoded = mRecorder.getEncodedRecording();
         }
         stopRecording0();
         if (mAudioCue != null) mAudioCue.playStopSound();
@@ -328,18 +339,18 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      * @throws IOException if there was an error, e.g. another app is currently recording
      */
     private void startRecord(int sampleRate) throws IOException {
-        mRecorder = new RawAudioRecorder(sampleRate);
-        if (mRecorder.getState() == RawAudioRecorder.State.ERROR) {
+        mRecorder = AudioRecorderFactory.getAudioRecorder(sampleRate);
+        if (mRecorder.getState() == AudioRecorder.State.ERROR) {
             throw new IOException();
         }
 
-        if (mRecorder.getState() != RawAudioRecorder.State.READY) {
+        if (mRecorder.getState() != AudioRecorder.State.READY) {
             throw new IOException();
         }
 
         mRecorder.start();
 
-        if (mRecorder.getState() != RawAudioRecorder.State.RECORDING) {
+        if (mRecorder.getState() != AudioRecorder.State.RECORDING) {
             throw new IOException();
         }
 

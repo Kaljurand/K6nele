@@ -23,8 +23,9 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
+import ee.ioc.phon.android.speechutils.AudioRecorder;
+import ee.ioc.phon.android.speechutils.AudioRecorderFactory;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
@@ -34,9 +35,6 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     private static final String EOS = "EOS";
 
     private static final String PROTOCOL = "";
-
-    private static final String DEFAULT_WS_ARGS =
-            "?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)16000,+format=(string)S16LE,+channels=(int)1";
 
     private static final int MSG_RESULT = 1;
     private static final int MSG_ERROR = 2;
@@ -56,9 +54,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     @Override
     void configure(Intent recognizerIntent) throws IOException {
+        // TODO: do not init the recorder twice
+        AudioRecorder audioRecorder = AudioRecorderFactory.getAudioRecorder();
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
         mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
-                + DEFAULT_WS_ARGS + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
+                + audioRecorder.getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
         configureHandler(getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false),
                 getExtras().getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false));
     }
@@ -85,10 +85,6 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     @Override
     boolean isAudioCues() {
         return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues);
-    }
-
-    String getDefaultWsArgs() {
-        return DEFAULT_WS_ARGS;
     }
 
     void configureHandler(boolean isUnlimitedDuration, boolean isPartialResults) {
@@ -178,8 +174,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         mSendRunnable = new Runnable() {
             public void run() {
                 if (webSocket != null && webSocket.isOpen()) {
-                    RawAudioRecorder recorder = getRecorder();
-                    if (recorder == null || recorder.getState() != RawAudioRecorder.State.RECORDING) {
+                    AudioRecorder recorder = getRecorder();
+                    if (recorder == null || recorder.getState() != AudioRecorder.State.RECORDING) {
                         Log.i("Sending: EOS (recorder == null)");
                         webSocket.send(EOS);
                         mIsEosSent = true;
@@ -240,11 +236,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                                     // We stop listening unless the caller explicitly asks us to carry on,
                                     // by setting EXTRA_UNLIMITED_DURATION=true
                                     if (mIsUnlimitedDuration) {
-                                        outerClass.onPartialResults(toBundle(hypotheses, true));
+                                        outerClass.onPartialResults(outerClass.toResultsBundle(hypotheses, true));
                                     } else {
                                         outerClass.mIsEosSent = true;
                                         outerClass.onEndOfSpeech();
-                                        outerClass.onResults(toBundle(hypotheses, true));
+                                        outerClass.onResults(outerClass.toResultsBundle(hypotheses, true));
                                     }
                                 }
                             } else {
@@ -254,7 +250,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                                     if (hypotheses == null || hypotheses.isEmpty()) {
                                         Log.i("Empty non-final result (" + hypotheses + "), ignoring");
                                     } else {
-                                        outerClass.onPartialResults(toBundle(hypotheses, false));
+                                        outerClass.onPartialResults(outerClass.toResultsBundle(hypotheses, false));
                                     }
                                 }
                             }
