@@ -6,10 +6,13 @@ Kõnele
 Kõnele is an Android app that offers speech-to-text services to other apps.
 Its main components are:
 
-  - RecognizerIntent activity
-  - speech keyboard that implements the input method editor (IME) API
-  - SpeechRecognizer implementation that uses <https://github.com/alumae/kaldi-gstreamer-server>
-  - SpeechRecognizer implementation that uses <https://github.com/alumae/ruby-pocketsphinx-server>
+  - [RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) activity
+  - 2 implementations of [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html)
+    - one uses <https://github.com/alumae/kaldi-gstreamer-server>
+    - the other uses <https://github.com/alumae/ruby-pocketsphinx-server>
+  - speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
+
+![Components](https://rawgithub.com/Kaljurand/K6nele/master/docs/components.dot.svg)
 
 The main goals of this project is to offer support for Estonian speech recognition on the
 Android platform, as well as grammar-based speech recognition for voice command applications.
