@@ -24,8 +24,9 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
-import ee.ioc.phon.android.speechutils.AudioRecorderFactory;
 import ee.ioc.phon.android.speechutils.Extras;
+
+//import ee.ioc.phon.android.speak.AudioRecorderFactory;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
@@ -52,13 +53,23 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     private boolean mIsEosSent;
 
+    private AudioRecorder mAudioRecorder;
+
+    @Override
+    AudioRecorder getAudioRecorder() {
+        if (mAudioRecorder == null) {
+            mAudioRecorder = createAudioRecorder(PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
+                    R.string.keyImeAudioEncoder, R.string.defaultAudioEncoder),
+                    getSampleRate());
+        }
+        return mAudioRecorder;
+    }
+
     @Override
     void configure(Intent recognizerIntent) throws IOException {
-        // TODO: do not init the recorder twice
-        AudioRecorder audioRecorder = AudioRecorderFactory.getAudioRecorder();
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
         mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
-                + audioRecorder.getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
+                + getAudioRecorder().getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
         configureHandler(getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false),
                 getExtras().getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false));
     }

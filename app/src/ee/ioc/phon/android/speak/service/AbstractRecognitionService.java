@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.service;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -18,8 +19,9 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.AudioCue;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
-import ee.ioc.phon.android.speechutils.AudioRecorderFactory;
+import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 /**
  * About RemoteException see
@@ -97,6 +99,14 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      * Stop sending audio to the server.
      */
     abstract void disconnect();
+
+
+    /**
+     * @return Audio recorder
+     */
+    AudioRecorder getAudioRecorder() {
+        return null;
+    }
 
     /**
      * Queries the preferences to find out if audio cues are switched on.
@@ -182,7 +192,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
         try {
             onReadyForSpeech(new Bundle());
-            startRecord(getSampleRate());
+            startRecord();
         } catch (IOException e) {
             onError(SpeechRecognizer.ERROR_AUDIO);
             return;
@@ -320,7 +330,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      * @param defaultValue default URL to use if no URL is stored at the given key
      * @return server URL as string
      */
-    String getServerUrl(int key, int defaultValue) {
+    protected String getServerUrl(int key, int defaultValue) {
         String url = getExtras().getString(Extras.EXTRA_SERVER_URL);
         if (url == null) {
             return PreferenceUtils.getPrefString(
@@ -332,14 +342,24 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         return url;
     }
 
+    protected static AudioRecorder createAudioRecorder(String encoderType, int sampleRate) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            // TODO: take from an enum
+            if ("audio/x-flac".equals(encoderType)) {
+                return new EncodedAudioRecorder(sampleRate);
+            }
+        }
+        return new RawAudioRecorder(sampleRate);
+    }
+
 
     /**
      * Starts recording.
      *
      * @throws IOException if there was an error, e.g. another app is currently recording
      */
-    private void startRecord(int sampleRate) throws IOException {
-        mRecorder = AudioRecorderFactory.getAudioRecorder(sampleRate);
+    private void startRecord() throws IOException {
+        mRecorder = getAudioRecorder();
         if (mRecorder.getState() == AudioRecorder.State.ERROR) {
             throw new IOException();
         }

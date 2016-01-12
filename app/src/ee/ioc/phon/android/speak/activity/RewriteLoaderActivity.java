@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-import ee.ioc.phon.android.speak.DetailsActivity;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.service.UtteranceRewriter;

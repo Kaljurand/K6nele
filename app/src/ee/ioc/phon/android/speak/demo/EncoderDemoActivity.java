@@ -1,21 +1,38 @@
 package ee.ioc.phon.android.speak.demo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.DetailsActivity;
+import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.activity.DetailsActivity;
+import ee.ioc.phon.android.speak.provider.FileContentProvider;
+import ee.ioc.phon.android.speechutils.AudioRecorder;
 import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
+import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 
 public class EncoderDemoActivity extends Activity {
+
+    private AudioRecorder mRecorder;
+    private Handler mStopHandler = new Handler();
+    private Runnable mStopTask;
+
+    private byte[] mRecording;
+    private byte[] mRecordingAsFlac;
+    private byte[] mRecordingAsWav;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,17 +44,18 @@ public class EncoderDemoActivity extends Activity {
         bRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toast("Not implemented");
-                // TODO: record for 3 seconds and play back the encoded result
-                // report size reduction
+                toast("Speak & pause");
+                try {
+                    startRecord(16000);
+                } catch (IOException e) {
+                    toast(e.getMessage());
+                }
             }
         });
         bTest1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EncodedAudioRecorder audioRecorder = new EncodedAudioRecorder();
-                //audioRecorder.testFlacEncoder();
-                audioRecorder.testAMRWBEncoder();
+                toast("Not implemented");
             }
         });
         bTest2.setOnClickListener(new View.OnClickListener() {
@@ -55,5 +73,77 @@ public class EncoderDemoActivity extends Activity {
 
     protected void toast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void startRecord(int sampleRate) throws IOException {
+        mRecorder = new EncodedAudioRecorder(sampleRate);
+        if (mRecorder.getState() == AudioRecorder.State.ERROR) {
+            throw new IOException("ERROR");
+        }
+
+        if (mRecorder.getState() != AudioRecorder.State.READY) {
+            throw new IOException("not READY");
+        }
+
+        mRecorder.start();
+
+        if (mRecorder.getState() != AudioRecorder.State.RECORDING) {
+            throw new IOException("not RECORDING");
+        }
+
+        // Check if we should stop recording
+        mStopTask = new Runnable() {
+            public void run() {
+                if (mRecorder != null) {
+                    if (mRecorder.isPausing()) {
+                        onEndOfSpeech();
+                    } else {
+                        mStopHandler.postDelayed(this, 1000);
+                    }
+                }
+            }
+        };
+
+        mStopHandler.postDelayed(mStopTask, 500);
+    }
+
+    protected void onEndOfSpeech() {
+        if (mRecorder != null) {
+            mRecording = mRecorder.consumeRecording();
+            mRecordingAsFlac = mRecorder.getEncodedRecording();
+            toast("FINISHED");
+        }
+        stopRecording0();
+    }
+
+    private void stopRecording0() {
+        releaseRecorder();
+        if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
+        mRecordingAsWav = RawAudioRecorder.getRecordingAsWav(mRecording, 16000);
+
+        try {
+            Uri uriWav = getAudioUri("audio.wav", mRecordingAsWav);
+            //Uri uriEnc = getAudioUri("audio.flac", mRecordingAsFlac);
+            Intent intent = new Intent(this, DetailsActivity.class);
+            intent.setDataAndType(uriWav, null);
+            startActivity(intent);
+        } catch (IOException e) {
+            Log.e(e.getMessage(), e);
+        }
+    }
+
+    private void releaseRecorder() {
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
+    }
+
+    private Uri getAudioUri(String filename, byte[] recording) throws IOException {
+        FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
+        fos.write(recording);
+        fos.close();
+        return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
     }
 }

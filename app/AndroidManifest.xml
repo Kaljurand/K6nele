@@ -171,7 +171,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
         <activity
-            android:name=".DetailsActivity"
+            android:name=".activity.DetailsActivity"
             android:label="@string/labelActivityDetails"
             android:theme="@style/Theme.K6nele.Dialog"></activity>
         <activity

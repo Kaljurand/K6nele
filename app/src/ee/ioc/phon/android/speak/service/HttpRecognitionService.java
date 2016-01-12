@@ -37,6 +37,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.AudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.Hypothesis;
@@ -58,6 +59,18 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     private Runnable mSendTask;
 
     private ChunkedWebRecSession mRecSession;
+
+    private AudioRecorder mAudioRecorder;
+
+    @Override
+    AudioRecorder getAudioRecorder() {
+        if (mAudioRecorder == null) {
+            mAudioRecorder = createAudioRecorder(PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
+                    R.string.keyAudioEncoder, R.string.defaultAudioEncoder),
+                    getSampleRate());
+        }
+        return mAudioRecorder;
+    }
 
     @Override
     void configure(Intent recognizerIntent) throws IOException {

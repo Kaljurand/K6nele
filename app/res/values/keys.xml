@@ -18,6 +18,8 @@
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
     <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
+    <string name="keyImeAudioEncoder" translatable="false">keyImeAudioEncoder</string>
+    <string name="keyAudioEncoder" translatable="false">keyAudioEncoder</string>
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
     <string name="keyRewrite" translatable="false">keyRewrite</string>
     <string name="keyRewritesFile" translatable="false">keyRewritesFile</string>

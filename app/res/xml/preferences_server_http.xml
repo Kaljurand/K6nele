@@ -39,4 +39,11 @@
         android:key="@string/keyRespectLocale"
         android:summary="@string/summaryRespectLocale"
         android:title="@string/titleRespectLocale" />
+    <ListPreference
+        android:defaultValue="@string/defaultAudioEncoder"
+        android:entries="@array/entriesAudioEncoder"
+        android:entryValues="@array/valuesAudioEncoder"
+        android:key="@string/keyAudioEncoder"
+        android:summary="@string/summaryAudioEncoder"
+        android:title="@string/titleAudioEncoder" />
 </PreferenceScreen>
