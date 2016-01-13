@@ -44,12 +44,12 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
         setSummary(
-                (Preference) findPreference(getString(R.string.keyAutoStopAfterTime)),
+                findPreference(getString(R.string.keyAutoStopAfterTime)),
                 getString(R.string.summaryAutoStopAfterTime),
                 sp.getString(getString(R.string.keyAutoStopAfterTime), "?"));
 
         setSummary(
-                (Preference) findPreference(getString(R.string.keyRecordingRate)),
+                findPreference(getString(R.string.keyRecordingRate)),
                 getString(R.string.summaryRecordingRate),
                 sp.getString(getString(R.string.keyRecordingRate), "?"));
 
@@ -69,7 +69,7 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity implem
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-        Preference service = (Preference) findPreference(getString(R.string.keyHttpServer));
+        Preference service = findPreference(getString(R.string.keyHttpServer));
         service.setSummary(sp.getString(getString(R.string.keyHttpServer), getString(R.string.defaultHttpServer)));
 
         service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

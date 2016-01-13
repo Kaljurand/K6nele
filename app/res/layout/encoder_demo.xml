@@ -11,25 +11,15 @@
         android:orientation="vertical"
         android:padding="@dimen/layoutMargin4dp">
 
-        <ImageButton
-            android:id="@+id/buttonMicrophone"
-            android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:contentDescription="@string/cdMicrophone"
-            android:gravity="center"
-            android:src="@drawable/ic_voice_search_api_material" />
-
         <Button
             android:id="@+id/buttonTest1"
             android:layout_width="wrap_content"
             android:layout_height="0dip"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:contentDescription="@string/cdMicrophone"
+            android:contentDescription="@string/buttonDemoRecordAudio"
             android:gravity="center"
-            android:text="Test1" />
+            android:text="@string/buttonDemoRecordAudio" />
 
         <Button
             android:id="@+id/buttonTest2"
@@ -37,9 +27,9 @@
             android:layout_height="0dip"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:contentDescription="@string/cdMicrophone"
+            android:contentDescription="@string/buttonDemoShowEncoders"
             android:gravity="center"
-            android:text="Test2" />
+            android:text="@string/buttonDemoShowEncoders" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -58,8 +58,8 @@
         unless the app sets a different language</string>
     <string name="titleRecordingRate">Sample rate</string>
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
-    <string name="titleAudioEncoder">Audio encoder</string>
-    <string name="summaryAudioEncoder">Compressing the audio by using a non-raw format can improve the speed of the recognition. Note: experimental: requires Android 4.1 (or even 5.0) and might not work on all devices.</string>
+    <string name="titleAudioFormat">Audio format</string>
+    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format can improve recognition speed. Note: requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleHelpText">Help text</string>
@@ -216,6 +216,9 @@ More grammars are available at
     <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
     <string name="phraseDemo">Kuuuurija istus töööös jääääres.</string>
 
+    <string name="buttonDemoRecordAudio">Record raw audio until pause</string>
+    <string name="buttonDemoShowEncoders">Show the list of available encoders</string>
+
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Press this button and speak</string>
     <string name="cdWaveform">Waveform of the spoken input</string>
@@ -229,14 +232,14 @@ More grammars are available at
     <string name="entryGrammarName1">[unrestricted input]</string>
     <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
 
-    <string name="defaultAudioEncoder" translatable="false">audio/x-raw</string>
+    <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 
-    <string-array name="entriesAudioEncoder">
+    <string-array name="entriesAudioFormat" translatable="false">
         <item>raw</item>
         <item>FLAC</item>
     </string-array>
 
-    <string-array name="valuesAudioEncoder">
+    <string-array name="valuesAudioFormat" translatable="false">
         <item>audio/x-raw</item>
         <item>audio/x-flac</item>
     </string-array>

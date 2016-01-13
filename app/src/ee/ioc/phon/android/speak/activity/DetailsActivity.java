@@ -45,22 +45,26 @@ public class DetailsActivity extends ListActivity {
     public static final String EXTRA_STRING_ARRAY = "EXTRA_STRING_ARRAY";
 
     private MediaPlayer mMediaPlayer;
+    private boolean mIsFinishAfterPlayAudio = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras == null) {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mIsFinishAfterPlayAudio = true;
+        }
 
         Uri audioUri = intent.getData();
         if (audioUri != null) {
             playAudio(audioUri, intent.getType());
         }
 
-        Bundle extras = intent.getExtras();
-        if (extras == null) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-        } else {
+        if (extras != null) {
             String title = extras.getString(EXTRA_TITLE);
             if (title == null) {
                 requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -85,9 +89,7 @@ public class DetailsActivity extends ListActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mMediaPlayer != null) {
-            mMediaPlayer.release();
-        }
+        releasePlayer();
     }
 
     /**
@@ -103,7 +105,11 @@ public class DetailsActivity extends ListActivity {
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
+                    releasePlayer();
                     toast(getString(R.string.toastPlayingAudioDone));
+                    if (mIsFinishAfterPlayAudio) {
+                        finish();
+                    }
                 }
             });
             mMediaPlayer.start();
@@ -113,5 +119,12 @@ public class DetailsActivity extends ListActivity {
 
     private void toast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void releasePlayer() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 }

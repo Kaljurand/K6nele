@@ -21,7 +21,6 @@ import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
-import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 
@@ -69,7 +68,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
     private int mSampleRate;
     private byte[] mCompleteRecording;
-    private byte[] mEncodedRecording;
 
     private SpeechInputView mView;
 
@@ -78,12 +76,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     }
 
     Uri getAudioUri(String filename) {
-        byte[] bytes;
-        if ("audio.wav".equals(filename)) {
-            bytes = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
-        } else {
-            bytes = mEncodedRecording;
-        }
+        byte[] bytes = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
+
         try {
             FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
             fos.write(bytes);
@@ -187,10 +181,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                if (bundle != null && bundle.containsKey(Extras.RESULTS_AUDIO_ENCODED)) {
-                    mEncodedRecording = bundle.getByteArray(Extras.RESULTS_AUDIO_ENCODED);
-                }
                 if (results != null && results.size() > 0) {
+                    // TODO: do this only if the user requests the complete recording
                     mCompleteRecording = AudioUtils.concatenateBuffers(mBufferList);
                     mBufferList = new ArrayList<>();
                     returnOrForwardMatches(results);

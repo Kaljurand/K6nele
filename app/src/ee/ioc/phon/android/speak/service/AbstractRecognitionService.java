@@ -59,16 +59,11 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     private Bundle mExtras;
 
-    byte[] mRecordingEncoded = null;
-
     Bundle toResultsBundle(String hypothesis) {
         ArrayList<String> hypotheses = new ArrayList<>();
         hypotheses.add(hypothesis);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
-        if (mRecordingEncoded != null) {
-            bundle.putByteArray(Extras.RESULTS_AUDIO_ENCODED, mRecordingEncoded);
-        }
         return bundle;
     }
 
@@ -76,9 +71,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
         bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
-        if (mRecordingEncoded != null) {
-            bundle.putByteArray(Extras.RESULTS_AUDIO_ENCODED, mRecordingEncoded);
-        }
         return bundle;
     }
 
@@ -100,12 +92,24 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      */
     abstract void disconnect();
 
+    /**
+     * Returns the type of encoder to use. Subclasses must override this method if they want to
+     * record in a non-raw format.
+     *
+     * @return type of encoder as string (e.g. "audio/x-flac")
+     */
+    String getEncoderType() {
+        return null;
+    }
 
     /**
      * @return Audio recorder
      */
-    AudioRecorder getAudioRecorder() {
-        return null;
+    AudioRecorder getAudioRecorder() throws IOException {
+        if (mRecorder == null) {
+            mRecorder = createAudioRecorder(getEncoderType(), getSampleRate());
+        }
+        return mRecorder;
     }
 
     /**
@@ -298,8 +302,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
             // TODO: make sure this call does not do too much work in the case of the
             // WebSocket-service which does not use the bytes in the end
             recording = mRecorder.consumeRecording();
-
-            mRecordingEncoded = mRecorder.getEncodedRecording();
         }
         stopRecording0();
         if (mAudioCue != null) mAudioCue.playStopSound();
@@ -342,12 +344,17 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         return url;
     }
 
-    protected static AudioRecorder createAudioRecorder(String encoderType, int sampleRate) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            // TODO: take from an enum
-            if ("audio/x-flac".equals(encoderType)) {
+    /**
+     * Constructs a recorder based on the encoder type and sample rate. By default returns the raw
+     * audio recorder. If an unsupported encoder is specified then throws an exception.
+     */
+    protected static AudioRecorder createAudioRecorder(String encoderType, int sampleRate) throws IOException {
+        // TODO: take from an enum
+        if ("audio/x-flac".equals(encoderType)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 return new EncodedAudioRecorder(sampleRate);
             }
+            throw new IOException(encoderType + " not supported");
         }
         return new RawAudioRecorder(sampleRate);
     }

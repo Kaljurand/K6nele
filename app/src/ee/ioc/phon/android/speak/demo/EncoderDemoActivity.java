@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.FileOutputStream;
@@ -23,6 +22,7 @@ import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
 import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
+import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 
 public class EncoderDemoActivity extends Activity {
 
@@ -31,31 +31,23 @@ public class EncoderDemoActivity extends Activity {
     private Runnable mStopTask;
 
     private byte[] mRecording;
-    private byte[] mRecordingAsFlac;
     private byte[] mRecordingAsWav;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.encoder_demo);
-        ImageButton bRecord = (ImageButton) findViewById(R.id.buttonMicrophone);
         Button bTest1 = (Button) findViewById(R.id.buttonTest1);
         Button bTest2 = (Button) findViewById(R.id.buttonTest2);
-        bRecord.setOnClickListener(new View.OnClickListener() {
+        bTest1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toast("Speak & pause");
                 try {
-                    startRecord(16000);
+                    recordUntilPause(new RawAudioRecorder(16000));
                 } catch (IOException e) {
                     toast(e.getMessage());
                 }
-            }
-        });
-        bTest1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toast("Not implemented");
             }
         });
         bTest2.setOnClickListener(new View.OnClickListener() {
@@ -76,8 +68,8 @@ public class EncoderDemoActivity extends Activity {
     }
 
 
-    private void startRecord(int sampleRate) throws IOException {
-        mRecorder = new EncodedAudioRecorder(sampleRate);
+    private void recordUntilPause(AudioRecorder audioRecorder) throws IOException {
+        mRecorder = audioRecorder;
         if (mRecorder.getState() == AudioRecorder.State.ERROR) {
             throw new IOException("ERROR");
         }
@@ -111,7 +103,6 @@ public class EncoderDemoActivity extends Activity {
     protected void onEndOfSpeech() {
         if (mRecorder != null) {
             mRecording = mRecorder.consumeRecording();
-            mRecordingAsFlac = mRecorder.getEncodedRecording();
             toast("FINISHED");
         }
         stopRecording0();
@@ -120,11 +111,10 @@ public class EncoderDemoActivity extends Activity {
     private void stopRecording0() {
         releaseRecorder();
         if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
-        mRecordingAsWav = RawAudioRecorder.getRecordingAsWav(mRecording, 16000);
+        mRecordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, (short) 2, (short) 1);
 
         try {
             Uri uriWav = getAudioUri("audio.wav", mRecordingAsWav);
-            //Uri uriEnc = getAudioUri("audio.flac", mRecordingAsFlac);
             Intent intent = new Intent(this, DetailsActivity.class);
             intent.setDataAndType(uriWav, null);
             startActivity(intent);

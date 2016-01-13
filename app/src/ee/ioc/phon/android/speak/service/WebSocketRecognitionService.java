@@ -53,18 +53,6 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     private boolean mIsEosSent;
 
-    private AudioRecorder mAudioRecorder;
-
-    @Override
-    AudioRecorder getAudioRecorder() {
-        if (mAudioRecorder == null) {
-            mAudioRecorder = createAudioRecorder(PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
-                    R.string.keyImeAudioEncoder, R.string.defaultAudioEncoder),
-                    getSampleRate());
-        }
-        return mAudioRecorder;
-    }
-
     @Override
     void configure(Intent recognizerIntent) throws IOException {
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
@@ -91,6 +79,12 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
             mWebSocket.end(); // TODO: or close?
             mWebSocket = null;
         }
+    }
+
+    @Override
+    String getEncoderType() {
+        return PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
+                R.string.keyImeAudioFormat, R.string.defaultAudioFormat);
     }
 
     @Override

@@ -183,12 +183,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 audioFormat = DEFAULT_AUDIO_FORMAT;
             }
             if (SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
-                //Uri uri = getAudioUri("audio.wav");
-                Uri uri = getAudioUri("audio.flac");
+                Uri uri = getAudioUri("audio.wav");
                 if (uri != null) {
                     // TODO: not sure about the type (or if it's needed)
                     intent.setDataAndType(uri, audioFormat);
-                    //intent.setDataAndType(uri, "audio/amr-wb");
                 }
             } else {
                 if (Log.DEBUG) {
