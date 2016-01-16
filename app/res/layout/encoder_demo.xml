@@ -1,35 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/layoutMargin4dp">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/buttonTest1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:padding="@dimen/layoutMargin4dp">
+        android:contentDescription="@string/buttonImeSpeak"
+        android:text="@string/buttonImeSpeak" />
 
-        <Button
-            android:id="@+id/buttonTest1"
-            android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:contentDescription="@string/buttonDemoRecordAudio"
-            android:gravity="center"
-            android:text="@string/buttonDemoRecordAudio" />
-
-        <Button
-            android:id="@+id/buttonTest2"
-            android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:contentDescription="@string/buttonDemoShowEncoders"
-            android:gravity="center"
-            android:text="@string/buttonDemoShowEncoders" />
-    </LinearLayout>
-
-</RelativeLayout>
+    <Button
+        android:id="@+id/buttonTest2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/buttonDemoShowEncoders"
+        android:text="@string/buttonDemoShowEncoders" />
+</LinearLayout>

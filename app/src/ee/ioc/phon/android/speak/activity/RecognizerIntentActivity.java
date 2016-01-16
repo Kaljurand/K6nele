@@ -596,7 +596,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
 
     private void startRecording() {
         int sampleRate = PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyRecordingRate, R.string.defaultRecordingRate);
-        getRecSessionBuilder().setContentType(sampleRate);
+        getRecSessionBuilder().setContentType("audio/x-raw", sampleRate);
         if (mService.init(getRecSessionBuilder().build())) {
             playStartSound();
             mService.start(sampleRate);

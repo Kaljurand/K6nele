@@ -17,7 +17,7 @@
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityRepeaterDemo">Kordaja demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
-    <string name="labelActivityEncoderDemo">Heli pakkimise demo</string>
+    <string name="labelActivityEncoderDemo">Audio demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
 
     <!-- Preferences activity -->
@@ -53,7 +53,7 @@
 		grammatika.</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
-    <string name="summaryEncoderDemo">Pakib kõne</string>
+    <string name="summaryEncoderDemo">Heli lindistamise ja kokkupakkimisega seotud testid ja demod</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
@@ -274,9 +274,9 @@
         <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
     </plurals>
-    <string name="buttonDemoRecordAudio">Lindista kuni pausini (raw formaat)</string>
     <string name="buttonDemoShowEncoders">Näita toetatud formaate</string>
-    <string name="summaryAudioFormat">Lindistan formaadis %1$s.\n(Mitte-raw formaadi kasutamine võib parandada tuvastuskiirust, eriti aeglase võrguühenduse korral. NB: vajalik Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
-    <string name="titleAudioFormat">Heli formaat</string>
+    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine võib parandada tuvastuskiirust, eriti aeglase võrguühenduse korral. Vajalik Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
+    <string name="titleAudioFormat">Audioformaat</string>
+    <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
 
 </resources>

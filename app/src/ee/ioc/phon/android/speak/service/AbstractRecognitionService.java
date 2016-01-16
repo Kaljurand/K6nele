@@ -59,7 +59,9 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     private Bundle mExtras;
 
-    Bundle toResultsBundle(String hypothesis) {
+    private int mNumBytesRecorded;
+
+    protected static Bundle toResultsBundle(String hypothesis) {
         ArrayList<String> hypotheses = new ArrayList<>();
         hypotheses.add(hypothesis);
         Bundle bundle = new Bundle();
@@ -67,7 +69,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         return bundle;
     }
 
-    Bundle toResultsBundle(ArrayList<String> hypotheses, boolean isFinal) {
+    protected static Bundle toResultsBundle(ArrayList<String> hypotheses, boolean isFinal) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION, hypotheses);
         bundle.putBoolean(Extras.EXTRA_SEMI_FINAL, isFinal);
@@ -150,6 +152,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         // Nothing to do, e.g. if the audio has already been sent to the server during recording
     }
 
+    // TODO: remove this, we have already getAudioRecorder
     AudioRecorder getRecorder() {
         return mRecorder;
     }
@@ -301,7 +304,11 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         if (mRecorder != null) {
             // TODO: make sure this call does not do too much work in the case of the
             // WebSocket-service which does not use the bytes in the end
-            recording = mRecorder.consumeRecording();
+            if (mRecorder instanceof EncodedAudioRecorder) {
+                recording = ((EncodedAudioRecorder) mRecorder).consumeRecordingEnc();
+            } else {
+                recording = mRecorder.consumeRecording();
+            }
         }
         stopRecording0();
         if (mAudioCue != null) mAudioCue.playStopSound();
@@ -319,6 +326,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      */
     protected void onBufferReceived(byte[] buffer) {
         try {
+            mNumBytesRecorded += buffer.length;
             mListener.bufferReceived(buffer);
         } catch (RemoteException e) {
         }
@@ -366,6 +374,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      * @throws IOException if there was an error, e.g. another app is currently recording
      */
     private void startRecord() throws IOException {
+        mNumBytesRecorded = 0;
         mRecorder = getAudioRecorder();
         if (mRecorder.getState() == AudioRecorder.State.ERROR) {
             throw new IOException();
@@ -420,6 +429,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
         if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
         if (mAudioPauser != null) mAudioPauser.resume();
+        Log.i("Number of bytes recorded: " + mNumBytesRecorded);
     }
 
 

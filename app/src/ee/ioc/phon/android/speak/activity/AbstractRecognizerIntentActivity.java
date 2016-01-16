@@ -50,7 +50,7 @@ import ee.ioc.phon.android.speechutils.Extras;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
 
-    //public static final String AUDIO_FILENAME = "audio.wav";
+    public static final String AUDIO_FILENAME = "audio.wav";
 
     public static final String DEFAULT_AUDIO_FORMAT = "audio/wav";
     public static final Set<String> SUPPORTED_AUDIO_FORMATS = Collections.singleton(DEFAULT_AUDIO_FORMAT);
@@ -183,7 +183,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 audioFormat = DEFAULT_AUDIO_FORMAT;
             }
             if (SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
-                Uri uri = getAudioUri("audio.wav");
+                Uri uri = getAudioUri(AUDIO_FILENAME);
                 if (uri != null) {
                     // TODO: not sure about the type (or if it's needed)
                     intent.setDataAndType(uri, audioFormat);

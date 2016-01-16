@@ -24,9 +24,8 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
+import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
-
-//import ee.ioc.phon.android.speak.AudioRecorderFactory;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
@@ -52,6 +51,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     private String mUrl;
 
     private boolean mIsEosSent;
+
+    private int mNumBytesSent;
 
     @Override
     void configure(Intent recognizerIntent) throws IOException {
@@ -79,6 +80,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
             mWebSocket.end(); // TODO: or close?
             mWebSocket = null;
         }
+        Log.i("Number of bytes sent: " + mNumBytesSent);
     }
 
     @Override
@@ -170,6 +172,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
 
     private void startSending(final WebSocket webSocket) {
+        mNumBytesSent = 0;
         HandlerThread thread = new HandlerThread("WsSendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         mSendLooper = thread.getLooper();
@@ -186,9 +189,12 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                         mIsEosSent = true;
                     } else {
                         byte[] buffer = recorder.consumeRecordingAndTruncate();
+                        if (recorder instanceof EncodedAudioRecorder) {
+                            send(webSocket, ((EncodedAudioRecorder) recorder).consumeRecordingEncAndTruncate());
+                        } else {
+                            send(webSocket, buffer);
+                        }
                         if (buffer.length > 0) {
-                            Log.i("Sending bytes: " + buffer.length);
-                            webSocket.send(buffer);
                             onBufferReceived(buffer);
                         }
                         boolean success = mSendHandler.postDelayed(this, TASK_INTERVAL_IME_SEND);
@@ -201,6 +207,14 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         };
 
         mSendHandler.postDelayed(mSendRunnable, TASK_DELAY_IME_SEND);
+    }
+
+    void send(WebSocket webSocket, byte[] buffer) {
+        if (buffer != null && buffer.length > 0) {
+            webSocket.send(buffer);
+            mNumBytesSent += buffer.length;
+            Log.i("Sent bytes: " + buffer.length);
+        }
     }
 
 
@@ -241,11 +255,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                                     // We stop listening unless the caller explicitly asks us to carry on,
                                     // by setting EXTRA_UNLIMITED_DURATION=true
                                     if (mIsUnlimitedDuration) {
-                                        outerClass.onPartialResults(outerClass.toResultsBundle(hypotheses, true));
+                                        outerClass.onPartialResults(toResultsBundle(hypotheses, true));
                                     } else {
                                         outerClass.mIsEosSent = true;
                                         outerClass.onEndOfSpeech();
-                                        outerClass.onResults(outerClass.toResultsBundle(hypotheses, true));
+                                        outerClass.onResults(toResultsBundle(hypotheses, true));
                                     }
                                 }
                             } else {
@@ -255,7 +269,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                                     if (hypotheses == null || hypotheses.isEmpty()) {
                                         Log.i("Empty non-final result (" + hypotheses + "), ignoring");
                                     } else {
-                                        outerClass.onPartialResults(outerClass.toResultsBundle(hypotheses, false));
+                                        outerClass.onPartialResults(toResultsBundle(hypotheses, false));
                                     }
                                 }
                             }

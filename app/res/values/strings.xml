@@ -31,7 +31,7 @@
     <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityRepeaterDemo">Repeater demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
-    <string name="labelActivityEncoderDemo">Audio encoder demo</string>
+    <string name="labelActivityEncoderDemo">Audio demo</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
@@ -59,7 +59,7 @@
     <string name="titleRecordingRate">Sample rate</string>
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioFormat">Audio format</string>
-    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format can improve recognition speed. Note: requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format can improve recognition speed, especially if the network is slow. Requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleHelpText">Help text</string>
@@ -75,7 +75,7 @@
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
-    <string name="summaryEncoderDemo">Encodes audio</string>
+    <string name="summaryEncoderDemo">Various demos/tests related to audio recording and encoding</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
 
@@ -98,6 +98,7 @@
     <string name="buttonStop">Speak now!\nTap when finished</string>
     <string name="buttonImeSpeak">Tap &amp; Speak</string>
     <string name="buttonImeStop">Speak now! Tap when finished</string>
+    <string name="buttonImeStopByPause">Speak now! Pause when finished</string>
     <string name="buttonYes">Yes</string>
     <string name="buttonNo">No</string>
     <string name="buttonOk">OK</string>
@@ -215,8 +216,6 @@ More grammars are available at
     <string name="promptSearch">Speak a web search query</string>
     <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
     <string name="phraseDemo">Kuuuurija istus töööös jääääres.</string>
-
-    <string name="buttonDemoRecordAudio">Record raw audio until pause</string>
     <string name="buttonDemoShowEncoders">Show the list of available encoders</string>
 
     <!-- Content description of images and buttons -->

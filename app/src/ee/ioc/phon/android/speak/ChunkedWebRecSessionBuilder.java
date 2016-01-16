@@ -123,8 +123,8 @@ public class ChunkedWebRecSessionBuilder {
 	}
 
 
-	public void setContentType(int sampleRate) {
-		setContentType(makeContentType(sampleRate));
+	public void setContentType(String mime, int sampleRate) {
+		setContentType(makeContentType(mime, sampleRate));
 	}
 
 
@@ -251,9 +251,12 @@ public class ChunkedWebRecSessionBuilder {
 	}
 
 
-	private static String makeContentType(int sampleRate) {
+	private static String makeContentType(String mime, int sampleRate) {
 		// little endian = 1234
 		// big endian = 4321
+		if ("audio/x-flac".equals(mime)) {
+			return "audio/x-flac";
+		}
 		return "audio/x-raw-int,channels=1,signed=true,endianness=1234,depth=16,width=16,rate=" + sampleRate;
 	}
 

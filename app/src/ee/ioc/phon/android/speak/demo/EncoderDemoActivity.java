@@ -20,7 +20,6 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.DetailsActivity;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
-import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 
@@ -33,16 +32,18 @@ public class EncoderDemoActivity extends Activity {
     private byte[] mRecording;
     private byte[] mRecordingAsWav;
 
+    private Button mBTest1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.encoder_demo);
-        Button bTest1 = (Button) findViewById(R.id.buttonTest1);
+        mBTest1 = (Button) findViewById(R.id.buttonTest1);
         Button bTest2 = (Button) findViewById(R.id.buttonTest2);
-        bTest1.setOnClickListener(new View.OnClickListener() {
+        mBTest1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toast("Speak & pause");
+                mBTest1.setText(R.string.buttonImeStopByPause);
                 try {
                     recordUntilPause(new RawAudioRecorder(16000));
                 } catch (IOException e) {
@@ -53,9 +54,9 @@ public class EncoderDemoActivity extends Activity {
         bTest2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EncodedAudioRecorder audioRecorder = new EncodedAudioRecorder();
                 List<String> info = new ArrayList<>();
-                info.addAll(audioRecorder.getAvailableEncoders());
+                info.add("FLAC encoders: " + AudioUtils.getEncoderNamesForType("audio/flac").toString());
+                info.addAll(AudioUtils.getAvailableEncoders(16000));
                 Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
                 details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, info.toArray(new String[info.size()]));
                 startActivity(details);
@@ -103,7 +104,6 @@ public class EncoderDemoActivity extends Activity {
     protected void onEndOfSpeech() {
         if (mRecorder != null) {
             mRecording = mRecorder.consumeRecording();
-            toast("FINISHED");
         }
         stopRecording0();
     }
@@ -112,6 +112,7 @@ public class EncoderDemoActivity extends Activity {
         releaseRecorder();
         if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
         mRecordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, (short) 2, (short) 1);
+        mBTest1.setText(R.string.buttonImeSpeak);
 
         try {
             Uri uriWav = getAudioUri("audio.wav", mRecordingAsWav);
