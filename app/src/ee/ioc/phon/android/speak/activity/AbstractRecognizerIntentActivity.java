@@ -41,7 +41,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import ee.ioc.phon.android.speak.DetailsActivity;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
@@ -68,7 +67,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     private SimpleMessageHandler mMessageHandler;
 
-    abstract Uri getAudioUri();
+    abstract Uri getAudioUri(String filename);
 
     abstract void showError();
 
@@ -184,7 +183,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 audioFormat = DEFAULT_AUDIO_FORMAT;
             }
             if (SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
-                Uri uri = getAudioUri();
+                Uri uri = getAudioUri(AUDIO_FILENAME);
                 if (uri != null) {
                     // TODO: not sure about the type (or if it's needed)
                     intent.setDataAndType(uri, audioFormat);

@@ -8,7 +8,7 @@ import ee.ioc.phon.android.speak.utils.Utils;
 
 /**
  * Sends a growing number every few milliseconds for 3 seconds, finally sends
- * the input intent extras as the final result.
+ * the input intent extras as the final result. Does not record audio.
  */
 public class DemoRecognitionService extends AbstractRecognitionService {
 
@@ -29,7 +29,7 @@ public class DemoRecognitionService extends AbstractRecognitionService {
             int counter = 0;
 
             public void run() {
-                onPartialResults(toBundle((++counter) + ""));
+                onPartialResults(toResultsBundle((++counter) + ""));
                 mHandler.postDelayed(this, 500);
             }
         };
@@ -44,7 +44,7 @@ public class DemoRecognitionService extends AbstractRecognitionService {
 
     @Override
     void afterRecording(byte[] recording) {
-        onResults(toBundle(mIntentAsString));
+        onResults(toResultsBundle(mIntentAsString));
     }
 
     int getAutoStopAfterMillis() {

@@ -22,7 +22,7 @@ import android.speech.RecognizerIntent;
 
 import java.util.List;
 
-import ee.ioc.phon.android.speak.DetailsActivity;
+import ee.ioc.phon.android.speak.activity.DetailsActivity;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;

@@ -18,4 +18,11 @@
         android:key="@string/keyImeAudioCues"
         android:summary="@string/summaryAudioCues"
         android:title="@string/titleAudioCues" />
+    <ListPreference
+        android:defaultValue="@string/defaultAudioFormat"
+        android:entries="@array/entriesAudioFormat"
+        android:entryValues="@array/valuesAudioFormat"
+        android:key="@string/keyImeAudioFormat"
+        android:summary="@string/summaryAudioFormat"
+        android:title="@string/titleAudioFormat" />
 </PreferenceScreen>

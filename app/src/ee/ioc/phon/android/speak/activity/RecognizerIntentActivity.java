@@ -202,13 +202,13 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         }
     };
 
-    Uri getAudioUri() {
+    Uri getAudioUri(String filename) {
         try {
-            FileOutputStream fos = openFileOutput(AUDIO_FILENAME, Context.MODE_PRIVATE);
+            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
             fos.write(mService.getCompleteRecordingAsWav());
             fos.close();
 
-            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + AUDIO_FILENAME);
+            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
         } catch (FileNotFoundException e) {
             Log.e("FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
@@ -596,7 +596,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
 
     private void startRecording() {
         int sampleRate = PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyRecordingRate, R.string.defaultRecordingRate);
-        getRecSessionBuilder().setContentType(sampleRate);
+        getRecSessionBuilder().setContentType("audio/x-raw", sampleRate);
         if (mService.init(getRecSessionBuilder().build())) {
             playStartSound();
             mService.start(sampleRate);

@@ -52,7 +52,7 @@ public class SpeechInputView extends LinearLayout {
     public interface SpeechInputViewListener {
         void onPartialResult(List<String> text);
 
-        void onFinalResult(List<String> text);
+        void onFinalResult(List<String> text, Bundle bundle);
 
         void onSwitchIme(boolean isAskUser);
 
@@ -478,7 +478,7 @@ public class SpeechInputView extends LinearLayout {
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
                 setText(mTvMessage, lastChars(resultsRewritten, isSemiFinal));
                 if (isSemiFinal) {
-                    mListener.onFinalResult(resultsRewritten);
+                    mListener.onFinalResult(resultsRewritten, bundle);
                 } else {
                     mListener.onPartialResult(resultsRewritten);
                 }
@@ -498,10 +498,10 @@ public class SpeechInputView extends LinearLayout {
             if (resultsRewritten.isEmpty()) {
                 // If we got empty results then assume that the session ended,
                 // e.g. cancel was called.
-                mListener.onFinalResult(Collections.<String>emptyList());
+                mListener.onFinalResult(Collections.<String>emptyList(), bundle);
             } else {
                 setText(mTvMessage, lastChars(resultsRewritten, true));
-                mListener.onFinalResult(resultsRewritten);
+                mListener.onFinalResult(resultsRewritten, bundle);
             }
             setGuiInitState(0);
         }

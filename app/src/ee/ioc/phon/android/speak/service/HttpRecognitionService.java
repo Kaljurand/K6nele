@@ -37,6 +37,8 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.AudioRecorder;
+import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.Hypothesis;
@@ -60,10 +62,16 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     private ChunkedWebRecSession mRecSession;
 
     @Override
+    String getEncoderType() {
+        return PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
+                R.string.keyAudioFormat, R.string.defaultAudioFormat);
+    }
+
+    @Override
     void configure(Intent recognizerIntent) throws IOException {
         ChunkedWebRecSessionBuilder mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
 
-        mRecSessionBuilder.setContentType(getSampleRate());
+        mRecSessionBuilder.setContentType(getEncoderType(), getSampleRate());
         if (Log.DEBUG) Log.i(mRecSessionBuilder.toStringArrayList());
         mRecSession = mRecSessionBuilder.build();
         try {
@@ -86,12 +94,16 @@ public class HttpRecognitionService extends AbstractRecognitionService {
         // Send chunks to the server
         mSendTask = new Runnable() {
             public void run() {
-                if (getRecorder() != null) {
-                    // TODO: Currently returns 16-bit LE
-                    byte[] buffer = getRecorder().consumeRecording();
+                AudioRecorder audioRecorder = getRecorder();
+                if (audioRecorder != null) {
+                    byte[] buffer = audioRecorder.consumeRecording();
+                    onBufferReceived(buffer);
                     try {
-                        sendChunk(buffer, false);
-                        onBufferReceived(buffer);
+                        if (audioRecorder instanceof EncodedAudioRecorder) {
+                            sendChunk(((EncodedAudioRecorder) audioRecorder).consumeRecordingEnc(), false);
+                        } else {
+                            sendChunk(buffer, false);
+                        }
                         mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
                     } catch (IOException e) {
                         onError(SpeechRecognizer.ERROR_NETWORK);

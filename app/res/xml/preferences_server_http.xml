@@ -15,6 +15,23 @@
         android:key="@string/keyAutoStopAfterPause"
         android:summary="@string/summaryAutoStopAfterPause"
         android:title="@string/titleAutoStopAfterPause" />
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultAudioCues"
+        android:key="@string/keyAudioCues"
+        android:summary="@string/summaryAudioCues"
+        android:title="@string/titleAudioCues" />
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultRespectLocale"
+        android:key="@string/keyRespectLocale"
+        android:summary="@string/summaryRespectLocale"
+        android:title="@string/titleRespectLocale" />
+    <ListPreference
+        android:defaultValue="@string/defaultAudioFormat"
+        android:entries="@array/entriesAudioFormat"
+        android:entryValues="@array/valuesAudioFormat"
+        android:key="@string/keyAudioFormat"
+        android:summary="@string/summaryAudioFormat"
+        android:title="@string/titleAudioFormat" />
     <ListPreference
         android:defaultValue="@string/defaultAutoStopAfterTime"
         android:entries="@array/entriesAutoStopAfterTime"
@@ -29,14 +46,4 @@
         android:key="@string/keyRecordingRate"
         android:summary="@string/summaryRecordingRate"
         android:title="@string/titleRecordingRate" />
-    <CheckBoxPreference
-        android:defaultValue="@bool/defaultAudioCues"
-        android:key="@string/keyAudioCues"
-        android:summary="@string/summaryAudioCues"
-        android:title="@string/titleAudioCues" />
-    <CheckBoxPreference
-        android:defaultValue="@bool/defaultRespectLocale"
-        android:key="@string/keyRespectLocale"
-        android:summary="@string/summaryRespectLocale"
-        android:title="@string/titleRespectLocale" />
 </PreferenceScreen>
