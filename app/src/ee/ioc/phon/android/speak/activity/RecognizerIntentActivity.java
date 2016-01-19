@@ -55,8 +55,8 @@ import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.android.speak.RecognizerIntentService.State;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.AudioCue;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 

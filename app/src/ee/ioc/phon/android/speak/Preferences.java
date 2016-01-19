@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.model.Combo;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
  * <p>Preferences activity. Updates some preference-summaries automatically,

@@ -16,7 +16,7 @@ import java.util.Set;
 
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
 public class ServiceLanguageChooser {

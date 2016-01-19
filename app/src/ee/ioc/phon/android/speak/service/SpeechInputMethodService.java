@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
 

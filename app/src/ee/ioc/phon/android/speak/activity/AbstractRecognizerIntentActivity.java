@@ -45,8 +45,8 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
 

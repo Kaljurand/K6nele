@@ -21,11 +21,11 @@ import java.util.concurrent.TimeoutException;
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.QueryUtils;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
 import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.

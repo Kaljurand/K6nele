@@ -18,11 +18,11 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
-import ee.ioc.phon.android.speak.utils.PreferenceUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
  * <p>This activity responds to the following intent types:</p>
