@@ -49,6 +49,8 @@ public class SpeechInputView extends LinearLayout {
 
     private MicButton.State mState;
 
+    private boolean mRestart = false;
+
     public interface SpeechInputViewListener {
         void onPartialResult(List<String> text);
 
@@ -93,6 +95,7 @@ public class SpeechInputView extends LinearLayout {
         } else {
             mBComboSelector.setVisibility(View.GONE);
         }
+        updateComboSelector(mSlc);
         updateServiceLanguage(mSlc);
 
         setText(mTvMessage, "");
@@ -134,14 +137,19 @@ public class SpeechInputView extends LinearLayout {
         mBComboSelector.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                mRestart = true;
                 mSlc.next();
-                updateServiceLanguage(mSlc);
+                if (mState == MicButton.State.RECORDING) {
+                    stopListening();
+                }
+                updateComboSelector(mSlc);
             }
         });
 
         mBComboSelector.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                cancelOrDestroy();
                 Context context = getContext();
                 Intent intent = new Intent(context, ComboSelectorActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -207,9 +215,10 @@ public class SpeechInputView extends LinearLayout {
     }
 
     public void start() {
+        mRestart = false;
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
-            mRecognizer.startListening(mSlc.getIntent());
+            startListening(mSlc);
         }
     }
 
@@ -239,7 +248,6 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.ERROR);
             setText(mTvMessage, String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
-        setEnabled(mBComboSelector, true);
         if (mBImeKeyboard != null) {
             setVisibility(mBImeKeyboard, View.VISIBLE);
         }
@@ -332,20 +340,22 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
-    private void updateServiceLanguage(ServiceLanguageChooser slc) {
-        // Cancel a possibly running service
-        cancelOrDestroy();
+    private void updateComboSelector(ServiceLanguageChooser slc) {
         Pair<String, String> pair = RecognitionServiceManager.getLabel(getContext(), slc.getCombo());
         mBComboSelector.setText(String.format(getResources().getString(R.string.labelComboItem), pair.first, pair.second));
+    }
+
+    private void updateServiceLanguage(ServiceLanguageChooser slc) {
+        cancelOrDestroy();
         mRecognizer = slc.getSpeechRecognizer();
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());
     }
 
     private void startListening(ServiceLanguageChooser slc) {
+        Log.i("Start listening in: " + slc.getCombo());
         setGuiState(MicButton.State.WAITING);
-        if (mRecognizer == null) {
-            updateServiceLanguage(slc);
-        }
+        updateComboSelector(slc);
+        updateServiceLanguage(slc);
         mRecognizer.startListening(slc.getIntent());
     }
 
@@ -388,7 +398,6 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.LISTENING);
             setText(mTvInstruction, R.string.buttonImeStop);
             setText(mTvMessage, "");
-            setEnabled(mBComboSelector, false);
             if (mBImeKeyboard != null) {
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
             }
@@ -504,6 +513,9 @@ public class SpeechInputView extends LinearLayout {
                 mListener.onFinalResult(resultsRewritten, bundle);
             }
             setGuiInitState(0);
+            if (mRestart) {
+                start();
+            }
         }
 
         @Override
