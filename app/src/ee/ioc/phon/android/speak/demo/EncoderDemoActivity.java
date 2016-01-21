@@ -20,7 +20,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.DetailsActivity;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
-import ee.ioc.phon.android.speechutils.RawAudioRecorder;
+import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 
 public class EncoderDemoActivity extends Activity {
@@ -45,7 +45,7 @@ public class EncoderDemoActivity extends Activity {
             public void onClick(View view) {
                 mBTest1.setText(R.string.buttonImeStopByPause);
                 try {
-                    recordUntilPause(new RawAudioRecorder(16000));
+                    recordUntilPause(new EncodedAudioRecorder(16000));
                 } catch (IOException e) {
                     toast(e.getMessage());
                 }

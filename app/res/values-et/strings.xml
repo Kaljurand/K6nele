@@ -249,7 +249,7 @@
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
-    <string name="titleDefaultServiceWs">WebSocket-aadress</string>
+    <string name="titleWsServer">WebSocket-aadress</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>

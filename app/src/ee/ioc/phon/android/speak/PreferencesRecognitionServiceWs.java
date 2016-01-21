@@ -1,7 +1,7 @@
 package ee.ioc.phon.android.speak;
 
 /*
- * Copyright 2011-2014, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2016, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,39 +17,64 @@ package ee.ioc.phon.android.speak;
  */
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
-public class PreferencesRecognitionServiceWs extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PreferencesRecognitionServiceWs extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences_server_ws);
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new SettingsFragment())
+                .commit();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences_server_ws);
 
+            SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+            Resources res = getResources();
+            setSummary(sp, res, R.string.keyWsServer, R.string.summaryWsServer);
+        }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
+        @Override
+        public void onPause() {
+            super.onPause();
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference pref = findPreference(key);
-        if (pref instanceof EditTextPreference) {
-            EditTextPreference etp = (EditTextPreference) pref;
-            pref.setSummary(etp.getText());
+        @Override
+        public void onResume() {
+            super.onResume();
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Preference pref = findPreference(key);
+            if (pref instanceof EditTextPreference) {
+                EditTextPreference etp = (EditTextPreference) pref;
+                pref.setSummary(etp.getText());
+            }
+        }
+
+        private void setSummary(SharedPreferences prefs, Resources res, int key, int summaryKey) {
+            Preference pref = findPreference(getString(key));
+            if (pref != null) {
+                pref.setSummary(String.format(getString(summaryKey),
+                        PreferenceUtils.getPrefString(prefs, res, key)));
+            }
         }
     }
 }

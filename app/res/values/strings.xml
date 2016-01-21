@@ -35,7 +35,6 @@
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
-    <string name="titleDefaultServiceWs">WebSocket URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
     <string name="titleCategoryIme">Speech keyboard</string>
@@ -62,6 +61,8 @@
     <string name="summaryAudioFormat">%1$s\n(Using a non-raw format can improve recognition speed, especially if the network is slow. Requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
+    <string name="titleWsServer">WebSocket URL</string>
+    <string name="summaryWsServer" translatable="false">%1$s</string>
     <string name="titleHelpText">Help text</string>
     <string name="summaryHelpText">Show help text by the microphone button (makes the search panel larger)</string>
     <string name="titleImeHelpText">Help text</string>
