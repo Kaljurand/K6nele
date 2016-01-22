@@ -233,6 +233,9 @@
     <string name="cdGo">Käivitage otsing</string>
     <string name="cdSettings">Kõnele seaded</string>
 
+    <string name="promptPermissionRationale">Heli salvestamise õigus on Kõnele jaoks hädavajalik,
+        palun andke see õigus.</string>
+
     <string-array name="entriesAutoStopAfterTime">
         <item>2 sek</item>
         <item>5 sek</item>

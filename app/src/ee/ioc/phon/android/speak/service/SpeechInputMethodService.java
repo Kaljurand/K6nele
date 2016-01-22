@@ -53,7 +53,7 @@ public class SpeechInputMethodService extends InputMethodService {
     @Override
     public View onCreateInputView() {
         Log.i("onCreateInputView");
-        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, null);
+        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, null, false);
         return mInputView;
     }
 
@@ -200,6 +200,11 @@ public class SpeechInputMethodService extends InputMethodService {
                     int len = cs.length();
                     ic.setSelection(len, len);
                 }
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                // TODO: handle the error, e.g. ask permissions
             }
         });
 

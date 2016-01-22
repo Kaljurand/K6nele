@@ -202,6 +202,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         }
     };
 
+    @Override
     Uri getAudioUri(String filename) {
         try {
             FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
@@ -217,16 +218,17 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         return null;
     }
 
-    void showError() {
+    @Override
+    void showError(String msg) {
         playErrorSound();
         stopAllTasks();
         setGuiError();
     }
 
-
     /**
      * <p>Only for developers, i.e. we are not going to localize these strings.</p>
      */
+    @Override
     String[] getDetails() {
         String callingActivityClassName = null;
         String callingActivityPackageName = null;
@@ -277,6 +279,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         mStartRecording = PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
 
         mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
+        registerPrompt(mTvPrompt);
         mBStartStop = (Button) findViewById(R.id.bStartStop);
         mLlTranscribing = (LinearLayout) findViewById(R.id.llTranscribing);
         mLlProgress = (LinearLayout) findViewById(R.id.llProgress);
@@ -503,7 +506,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         // includes: bytes, chronometer, chunks
         mLlProgress.setVisibility(View.INVISIBLE);
         mTvChunks.setText("");
-        setTvPrompt(mTvPrompt);
+        setTvPrompt();
         if (mStartRecording) {
             mBStartStop.setVisibility(View.GONE);
             mIvVolume.setVisibility(View.VISIBLE);
@@ -531,7 +534,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         mIvWaveform.setVisibility(View.GONE);
         // includes: bytes, chronometer, chunks
         mLlProgress.setVisibility(View.GONE);
-        setTvPrompt(mTvPrompt);
+        setTvPrompt();
         mBStartStop.setText(getString(R.string.buttonSpeak));
         mBStartStop.setVisibility(View.VISIBLE);
         mLlError.setVisibility(View.VISIBLE);
@@ -543,7 +546,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         mChronometer.setBase(mService.getStartTime());
         startChronometer();
         startAllTasks();
-        setTvPrompt(mTvPrompt);
+        setTvPrompt();
         mLlProgress.setVisibility(View.VISIBLE);
         mLlError.setVisibility(View.GONE);
         setRecorderStyle(mRes.getColor(R.color.red));

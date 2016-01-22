@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,9 +56,13 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     public static final String DEFAULT_AUDIO_FORMAT = "audio/wav";
     public static final Set<String> SUPPORTED_AUDIO_FORMATS = Collections.singleton(DEFAULT_AUDIO_FORMAT);
 
+    protected static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
+
     private static final String MSG = "MSG";
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
+
+    private TextView mTvPrompt;
 
     private PendingIntent mExtraResultsPendingIntent;
 
@@ -69,7 +74,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     abstract Uri getAudioUri(String filename);
 
-    abstract void showError();
+    abstract void showError(String msg);
 
     abstract String[] getDetails();
 
@@ -136,6 +141,24 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         mErrorMessages = createErrorMessages();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_RECORD_AUDIO: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showError("");
+                    setTvPrompt();
+                } else {
+                    setTvPrompt(getString(R.string.promptPermissionRationale));
+                }
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
     /**
      * TODO: review
      *
@@ -150,13 +173,20 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                         || Intent.ACTION_ASSIST.equals(action);
     }
 
-    public void setTvPrompt(TextView tv) {
-        String prompt = getPrompt();
+    public void registerPrompt(TextView tv) {
+        mTvPrompt = tv;
+    }
+
+    public void setTvPrompt() {
+        setTvPrompt(getPrompt());
+    }
+
+    public void setTvPrompt(String prompt) {
         if (prompt == null || prompt.length() == 0) {
-            tv.setVisibility(View.INVISIBLE);
+            mTvPrompt.setVisibility(View.INVISIBLE);
         } else {
-            tv.setText(prompt);
-            tv.setVisibility(View.VISIBLE);
+            mTvPrompt.setText(prompt);
+            mTvPrompt.setVisibility(View.VISIBLE);
         }
     }
 
@@ -231,7 +261,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                         outerClass.toast(msgAsString);
                         break;
                     case MSG_RESULT_ERROR:
-                        outerClass.showError();
+                        outerClass.showError(msgAsString);
                         break;
                     default:
                         break;

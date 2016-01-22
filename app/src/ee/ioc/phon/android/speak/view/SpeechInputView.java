@@ -1,7 +1,5 @@
 package ee.ioc.phon.android.speak.view;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
-import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -69,6 +66,8 @@ public class SpeechInputView extends LinearLayout {
         void onReset();
 
         void onBufferReceived(byte[] buffer);
+
+        void onError(int errorCode);
     }
 
     public SpeechInputView(Context context, AttributeSet attrs) {
@@ -432,16 +431,7 @@ public class SpeechInputView extends LinearLayout {
                     break;
                 case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                     setGuiInitState(R.string.errorImeResultInsufficientPermissions);
-
-                    Context context = getContext();
-                    if (context instanceof Activity) {
-                        ActivityCompat.requestPermissions((Activity) context,
-                                new String[]{Manifest.permission.RECORD_AUDIO},
-                                0);
-                    } else {
-                        // TODO: Create a notification that asks for the permission
-                        Log.i("context = " + context.getClass());
-                    }
+                    mListener.onError(errorCode);
                     break;
                 case SpeechRecognizer.ERROR_NO_MATCH:
                     setGuiInitState(R.string.errorImeResultNoMatch);

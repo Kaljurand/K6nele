@@ -1,11 +1,14 @@
 package ee.ioc.phon.android.speak.activity;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.SpeechRecognizer;
+import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 
 import java.io.FileNotFoundException;
@@ -69,12 +72,15 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     private int mSampleRate;
     private byte[] mCompleteRecording;
 
+    private TextView mTvPrompt;
     private SpeechInputView mView;
 
-    void showError() {
-        // TODO
+    @Override
+    void showError(String msg) {
+        ((TextView) mView.findViewById(R.id.tvMessage)).setText(msg);
     }
 
+    @Override
     Uri getAudioUri(String filename) {
         byte[] bytes = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
 
@@ -96,6 +102,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
      * <p>Only for developers, i.e. we are not going to localize these strings.</p>
      * TODO: fix
      */
+    @Override
     String[] getDetails() {
         String callingActivityClassName = null;
         String callingActivityPackageName = null;
@@ -127,6 +134,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpActivity(R.layout.activity_recognizer);
+        mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
     }
 
     @Override
@@ -134,7 +142,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         super.onStart();
 
         setUpExtras();
-        setTvPrompt((TextView) findViewById(R.id.tvPrompt));
+        registerPrompt(mTvPrompt);
+        setTvPrompt();
 
         // Launch recognition immediately (if set so).
         // Auto-start only occurs is onCreate is called
@@ -228,6 +237,15 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             public void onBufferReceived(byte[] buffer) {
                 Log.i("Activity: onBufferReceived: " + buffer.length);
                 mBufferList.add(buffer);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+                    ActivityCompat.requestPermissions(SpeechActionActivity.this,
+                            new String[]{Manifest.permission.RECORD_AUDIO},
+                            PERMISSION_REQUEST_RECORD_AUDIO);
+                }
             }
         };
     }

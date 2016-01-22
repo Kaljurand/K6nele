@@ -228,6 +228,9 @@ More grammars are available at
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
 
+    <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,
+        please reconsider granting this permission.</string>
+
     <!-- Entries for the database, both apos and its escape character need escaping. -->
     <string name="entryGrammarName1">[unrestricted input]</string>
     <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
