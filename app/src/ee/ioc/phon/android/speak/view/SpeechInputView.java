@@ -49,8 +49,6 @@ public class SpeechInputView extends LinearLayout {
 
     private MicButton.State mState;
 
-    private boolean mRestart = false;
-
     public interface SpeechInputViewListener {
         void onPartialResult(List<String> text);
 
@@ -137,7 +135,6 @@ public class SpeechInputView extends LinearLayout {
         mBComboSelector.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRestart = true;
                 mSlc.next();
                 if (mState == MicButton.State.RECORDING) {
                     stopListening();
@@ -215,7 +212,6 @@ public class SpeechInputView extends LinearLayout {
     }
 
     public void start() {
-        mRestart = false;
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
             startListening(mSlc);
@@ -317,24 +313,6 @@ public class SpeechInputView extends LinearLayout {
                 @Override
                 public void run() {
                     view.setVisibility(visibility);
-                }
-            });
-        }
-    }
-
-    private static void setEnabled(final View view, final boolean enabled) {
-        if (view != null && view.isEnabled() != enabled) {
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    view.setEnabled(enabled);
-                    if (view instanceof TextView) {
-                        if (enabled) {
-                            ((TextView) view).setTextColor(view.getResources().getColor(R.color.grey100));
-                        } else {
-                            ((TextView) view).setTextColor(view.getResources().getColor(R.color.grey400));
-                        }
-                    }
                 }
             });
         }
@@ -513,9 +491,6 @@ public class SpeechInputView extends LinearLayout {
                 mListener.onFinalResult(resultsRewritten, bundle);
             }
             setGuiInitState(0);
-            if (mRestart) {
-                start();
-            }
         }
 
         @Override
