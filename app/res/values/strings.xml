@@ -215,8 +215,6 @@ More grammars are available at
     <string name="menuAbout">About</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
-    <string name="promptDemo">Say e.g.: Kuuuurija istus töööös jääääres.</string>
-    <string name="phraseDemo">Kuuuurija istus töööös jääääres.</string>
     <string name="buttonDemoShowEncoders">Show the list of available encoders</string>
 
     <!-- Content description of images and buttons -->
@@ -313,4 +311,13 @@ More grammars are available at
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>
     <string name="testComboLabels" translatable="false">en-US(Kg) · en-X(G) · et-EE(Kf) · et-EE(Kg) · de-DE (G) · +/-</string>
+
+    <string name="promptDemo">Say e.g.: %1$s</string>
+    <string-array name="phrasesDemo" translatable="false">
+        <item>Kuuuurija istus töööös jääääres.</item>
+        <item>Aoäia õe uue oaõieaia õueaua ööau.</item>
+        <item>Üheksasada üheksakümmend üheksa tuhat üheksasada üheksakümmend üheksa ööd</item>
+        <item>Lampjalgadega stampvambilgi on rambikramp.</item>
+    </string-array>
+
 </resources>

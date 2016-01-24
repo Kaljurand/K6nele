@@ -221,8 +221,7 @@
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="promptSearch">Öelge veebiotsingu päring</string>
-    <string name="promptDemo">Öelge nt: Üheksasada üheksakümmend üheksa tuhat üheksasada üheksakümmend üheksa ööd</string>
-    <string name="phraseDemo">Lampjalgadega stampvambilgi on rambikramp.</string>
+    <string name="promptDemo">Öelge nt: %1$s</string>
 
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Vajutage sellele nupule ja kõnelege</string>

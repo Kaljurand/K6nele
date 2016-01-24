@@ -17,6 +17,7 @@
 package ee.ioc.phon.android.speak.demo;
 
 import java.util.List;
+import java.util.Random;
 
 import ee.ioc.phon.android.speak.GrammarListActivity;
 import ee.ioc.phon.android.speak.R;
@@ -125,8 +126,10 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 
 	protected void launchRecognizerIntent(Intent intent) {
 		if (mGrammarId == 0) {
-			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.promptDemo));
-			intent.putExtra(Extras.EXTRA_PHRASE, getString(R.string.phraseDemo));
+			String[] phrasesDemo = getResources().getStringArray(R.array.phrasesDemo);
+			String phraseDemo = phrasesDemo[(new Random()).nextInt(phrasesDemo.length)];
+			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, String.format(getString(R.string.promptDemo), phraseDemo));
+			intent.putExtra(Extras.EXTRA_PHRASE, phraseDemo);
 		} else {
 			String grammarTargetLang = getGrammarTargetLang();
 			intent.putExtra(Extras.EXTRA_GRAMMAR_URL, getGrammarUrl());
