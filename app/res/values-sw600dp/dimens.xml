@@ -2,4 +2,5 @@
 <resources>
     <dimen name="textSize10sp">12sp</dimen>
     <dimen name="layoutHeightButtonMicrophone">80dp</dimen>
+    <dimen name="layoutSpeechInputViewWidth">336dp</dimen>
 </resources>

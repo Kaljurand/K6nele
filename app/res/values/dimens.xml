@@ -10,4 +10,5 @@
     <dimen name="layoutMargin1">8dp</dimen>
     <dimen name="layoutMargin2">16dp</dimen>
     <dimen name="layoutMargin3">24dp</dimen>
+    <dimen name="layoutSpeechInputViewWidth">270dp</dimen>
 </resources>

@@ -96,7 +96,6 @@
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
-    <string name="buttonStop">Speak now!\nTap when finished</string>
     <string name="buttonImeSpeak">Tap &amp; Speak</string>
     <string name="buttonImeStop">Speak now! Tap when finished</string>
     <string name="buttonImeStopByPause">Speak now! Pause when finished</string>
@@ -320,4 +319,6 @@ More grammars are available at
         <item>Lampjalgadega stampvambilgi on rambikramp.</item>
     </string-array>
 
+    <!-- Deprecated -->
+    <string name="buttonStop">Speak now!\nTap when finished</string>
 </resources>
