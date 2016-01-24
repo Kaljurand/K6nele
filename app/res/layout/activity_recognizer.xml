@@ -40,7 +40,7 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdSettings"
-            android:src="@drawable/ic_menu_preferences" />
+            android:src="@drawable/ic_settings_24dp" />
     </RelativeLayout>
 
     <ee.ioc.phon.android.speak.view.SpeechInputView
@@ -92,7 +92,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/buttonImeStop"
-                android:textColor="@color/grey200"
+                android:textColor="@color/grey300"
                 android:textSize="@dimen/textSize3" />
         </RelativeLayout>
 

@@ -18,7 +18,7 @@
         android:layout_margin="5dp"
         android:background="@drawable/button_go"
         android:contentDescription="@string/cdSettings"
-        android:src="@drawable/ic_menu_preferences" />
+        android:src="@drawable/ic_settings_24dp" />
 
     <LinearLayout
         android:layout_width="250dip"
