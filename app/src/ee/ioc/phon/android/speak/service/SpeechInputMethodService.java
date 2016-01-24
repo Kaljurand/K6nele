@@ -127,8 +127,10 @@ public class SpeechInputMethodService extends InputMethodService {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Bundle extras = new Bundle();
-        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION,
-                !PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause));
+        boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, getResources(),
+                R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, isUnlimitedDuration);
+        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
         mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {

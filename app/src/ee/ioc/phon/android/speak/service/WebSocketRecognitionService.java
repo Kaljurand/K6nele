@@ -59,7 +59,9 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
         mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
                 + getAudioRecorder().getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
-        configureHandler(getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false),
+        boolean isUnlimitedDuration = getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false)
+                || getExtras().getBoolean(Extras.EXTRA_DICTATION_MODE, false);
+        configureHandler(isUnlimitedDuration,
                 getExtras().getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false));
     }
 
