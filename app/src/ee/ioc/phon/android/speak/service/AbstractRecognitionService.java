@@ -59,8 +59,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     private Bundle mExtras;
 
-    private int mNumBytesRecorded;
-
     protected static Bundle toResultsBundle(String hypothesis) {
         ArrayList<String> hypotheses = new ArrayList<>();
         hypotheses.add(hypothesis);
@@ -173,11 +171,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     @Override
     protected void onStartListening(final Intent recognizerIntent, RecognitionService.Callback listener) {
         mListener = listener;
-        // TODO: do we need to check the permissions somewhere?
-        //if (checkCallingPermission("android.permission.RECORD_AUDIO") == PackageManager.PERMISSION_DENIED) {
-        //    onError(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS);
-        //    return;
-        //}
         Log.i("onStartListening");
 
         setAudioCuesEnabled(isAudioCues());
@@ -298,20 +291,27 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         }
     }
 
+    /**
+     * Fires the endOfSpeech callback, provided that the recorder is currently recording.
+     */
     protected void onEndOfSpeech() {
-        byte[] recording = null;
-
-        if (mRecorder != null) {
-            // TODO: make sure this call does not do too much work in the case of the
-            // WebSocket-service which does not use the bytes in the end
-            if (mRecorder instanceof EncodedAudioRecorder) {
-                recording = ((EncodedAudioRecorder) mRecorder).consumeRecordingEnc();
-            } else {
-                recording = mRecorder.consumeRecording();
-            }
+        if (mRecorder == null || mRecorder.getState() != AudioRecorder.State.RECORDING) {
+            return;
         }
+        byte[] recording;
+
+        // TODO: make sure this call does not do too much work in the case of the
+        // WebSocket-service which does not use the bytes in the end
+        if (mRecorder instanceof EncodedAudioRecorder) {
+            recording = ((EncodedAudioRecorder) mRecorder).consumeRecordingEnc();
+        } else {
+            recording = mRecorder.consumeRecording();
+        }
+
         stopRecording0();
-        if (mAudioCue != null) mAudioCue.playStopSound();
+        if (mAudioCue != null) {
+            mAudioCue.playStopSound();
+        }
         try {
             mListener.endOfSpeech();
         } catch (RemoteException e) {
@@ -319,14 +319,8 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         afterRecording(recording);
     }
 
-    /**
-     * TODO: Expects 16-bit BE?
-     *
-     * @param buffer
-     */
     protected void onBufferReceived(byte[] buffer) {
         try {
-            mNumBytesRecorded += buffer.length;
             mListener.bufferReceived(buffer);
         } catch (RemoteException e) {
         }
@@ -374,7 +368,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
      * @throws IOException if there was an error, e.g. another app is currently recording
      */
     private void startRecord() throws IOException {
-        mNumBytesRecorded = 0;
         mRecorder = getAudioRecorder();
         if (mRecorder.getState() == AudioRecorder.State.ERROR) {
             throw new IOException();
@@ -402,7 +395,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
         mVolumeHandler.postDelayed(mShowVolumeTask, TASK_DELAY_VOL);
 
-
         // Time (in milliseconds since the boot) when the recording is going to be stopped
         final long timeToFinish = SystemClock.uptimeMillis() + getAutoStopAfterMillis();
         final boolean isAutoStopAfterPause = isAutoStopAfterPause();
@@ -429,7 +421,6 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         if (mVolumeHandler != null) mVolumeHandler.removeCallbacks(mShowVolumeTask);
         if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
         if (mAudioPauser != null) mAudioPauser.resume();
-        Log.i("Number of bytes recorded: " + mNumBytesRecorded);
     }
 
 
