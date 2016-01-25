@@ -125,6 +125,13 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.RewriteLoaderActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
+        <Preference
+            android:summary="@string/summaryQuickSettings"
+            android:title="@string/titleQuickSettings">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">

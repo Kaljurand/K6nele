@@ -32,6 +32,7 @@
     <string name="labelActivityRepeaterDemo">Repeater demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
+    <string name="labelActivityQuickSettings">Quick settings</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
@@ -85,6 +86,9 @@
 
     <string name="titleLoadRewrites">Rewrite rules</string>
     <string name="summaryLoadRewrites">Load rewrite rules from a file</string>
+
+    <string name="titleQuickSettings">Quick settings</string>
+    <string name="summaryQuickSettings">Quickly apply some common default settings</string>
 
     <string name="titleMaxResults">Recognition hypotheses</string>
 
@@ -215,6 +219,7 @@ More grammars are available at
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
     <string name="buttonDemoShowEncoders">Show the list of available encoders</string>
+    <string name="buttonApplyDeveloperDefaults">Apply developer defaults</string>
 
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Press this button and speak</string>

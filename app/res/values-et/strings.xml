@@ -19,6 +19,7 @@
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
+    <string name="labelActivityQuickSettings">Kiirseaded</string>
 
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
@@ -271,6 +272,9 @@
     <string name="titleLoadRewrites">Ümberkirjutusreeglid</string>
     <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid failist</string>
 
+    <string name="titleQuickSettings">Kiirseaded</string>
+    <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
+
     <plurals name="summaryMaxResults">
         <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
@@ -279,6 +283,7 @@
     <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine võib parandada tuvastuskiirust, eriti aeglase võrguühenduse korral. Vajalik Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
+    <string name="buttonApplyDeveloperDefaults">Arendaja seaded</string>
 
     <!-- Deprecated -->
     <string name="buttonStop">Lõpeta!</string>
