@@ -83,8 +83,8 @@ public class IntentUtils {
         // Declaring that in the IME we would like to allow longer pauses (2 sec).
         // The service might not implement these (e.g. Kõnele currently does not)
         // TODO: what is the difference of these two constants?
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+        //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+        //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
 
         if (language != null) {
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);

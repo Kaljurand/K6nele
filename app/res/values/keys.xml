@@ -23,6 +23,7 @@
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
     <string name="keyRewrite" translatable="false">keyRewrite</string>
     <string name="keyRewritesFile" translatable="false">keyRewritesFile</string>
+    <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
@@ -32,6 +33,8 @@
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
     <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
+
+    <string name="keyCategoryServices" translatable="false">keyCategoryServices</string>
 
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 

@@ -80,6 +80,8 @@
     <string name="summaryEncoderDemo">Various demos/tests related to audio recording and encoding</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
+    <string name="titleSystemVoiceInputSettings">All recognition services</string>
+    <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
 
     <string name="titleRewrite">Rewriting</string>
     <string name="summaryRewrite">Apply rewrite rules to the transcription</string>

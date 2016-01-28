@@ -16,15 +16,15 @@ public class Combo {
     private final String mId;
     private final String mService;
     private final String mLanguage;
-    private final Context mContext;
+    private final String mAsString;
     private boolean mIsSelected;
 
     public Combo(Context context, String id) {
-        mContext = context;
         mId = id;
         Pair<String, String> comboPair = RecognitionServiceManager.getLabel(context, id);
         mService = comboPair.first;
         mLanguage = comboPair.second;
+        mAsString = String.format(context.getString(R.string.labelComboListItem), mService, mLanguage);
     }
 
     public String getId() {
@@ -40,7 +40,7 @@ public class Combo {
     }
 
     public String toString() {
-        return String.format(mContext.getString(R.string.labelComboListItem), mService, mLanguage);
+        return mAsString;
     }
 
     public boolean isSelected() {

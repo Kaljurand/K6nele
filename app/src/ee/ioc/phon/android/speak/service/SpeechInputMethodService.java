@@ -232,7 +232,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
     private void closeSession() {
         if (mInputView != null) {
-            mInputView.closeSession();
+            mInputView.cancel();
         }
     }
 

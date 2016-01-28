@@ -275,6 +275,9 @@
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
 
+    <string name="titleSystemVoiceInputSettings">Kõik kõnetuvastusteenused</string>
+    <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>
+
     <plurals name="summaryMaxResults">
         <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>

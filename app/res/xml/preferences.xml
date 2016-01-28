@@ -21,7 +21,7 @@
             android:summary="@string/summaryImeCombo"
             android:title="@string/titleCombo">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.ComboSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak">
                 <extra
                     android:name="key"
@@ -50,7 +50,7 @@
             android:summary="@string/summaryImeCombo"
             android:title="@string/titleCombo">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.ComboSelectorActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.ComboSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak">
                 <!-- TODO: is there a better way to pass the key to the fragment? -->
                 <extra
@@ -95,7 +95,9 @@
         </Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/titleCategoryServices">
+    <PreferenceCategory
+        android:key="@string/keyCategoryServices"
+        android:title="@string/titleCategoryServices">
         <Preference
             android:summary="@string/summaryServiceHttp"
             android:title="@string/titleServiceHttp">
@@ -109,6 +111,13 @@
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.PreferencesRecognitionServiceWs"
                 android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
+        <!-- This intent requires API 21+, and can crash on older versions. -->
+        <Preference
+            android:key="@string/keySystemVoiceInputSettings"
+            android:summary="@string/summarySystemVoiceInputSettings"
+            android:title="@string/titleSystemVoiceInputSettings">
+            <intent android:action="android.settings.VOICE_INPUT_SETTINGS" />
         </Preference>
     </PreferenceCategory>
 

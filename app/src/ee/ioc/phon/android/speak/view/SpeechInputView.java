@@ -19,11 +19,11 @@ import android.widget.TextView;
 import java.util.Collections;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
+import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
@@ -217,7 +217,14 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
-    public void closeSession() {
+    // TODO: make public?
+    private void stopListening() {
+        if (mRecognizer != null) {
+            mRecognizer.stopListening();
+        }
+    }
+
+    public void cancel() {
         cancelOrDestroy();
     }
 
@@ -336,23 +343,17 @@ public class SpeechInputView extends LinearLayout {
         mRecognizer.startListening(slc.getIntent());
     }
 
-    private void stopListening() {
-        if (mRecognizer != null) {
-            mRecognizer.stopListening();
-        }
-    }
-
     /**
      * TODO: not sure if its better to call cancel or destroy
      * Note that SpeechRecognizer#destroy calls cancel first.
      */
     private void cancelOrDestroy() {
-        // We enter the INIT-state here, just in case cancel or destroy does not take us there
-        setGuiInitState(0);
         if (mRecognizer != null) {
             mRecognizer.destroy();
             mRecognizer = null;
         }
+        // We enter the INIT-state here, just in case cancel or destroy did not take us there
+        setGuiInitState(0);
     }
 
 

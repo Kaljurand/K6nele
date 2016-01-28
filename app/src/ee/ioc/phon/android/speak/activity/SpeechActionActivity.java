@@ -174,7 +174,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         // i.e. the service is not stopped because of rotation, but is
         // stopped if BACK or HOME is pressed, or the Settings-activity is launched.
         if (!isChangingConfigurations()) {
-            mView.closeSession();
+            mView.cancel();
         }
     }
 

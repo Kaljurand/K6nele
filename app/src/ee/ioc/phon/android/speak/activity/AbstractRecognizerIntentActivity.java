@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
-import ee.ioc.phon.android.speak.Preferences;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;

@@ -128,7 +128,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         into the Preferences.
         -->
         <activity
-            android:name=".Preferences"
+            android:name=".activity.Preferences"
             android:exported="true"
             android:label="@string/labelActivityPreferences">
             <intent-filter>
@@ -142,7 +142,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".PreferencesRecognitionServiceHttp"
             android:exported="false"
             android:label="@string/labelActivityPreferencesRecognitionServiceHttp"
-            android:parentActivityName=".Preferences">
+            android:parentActivityName=".activity.Preferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -154,7 +154,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".PreferencesRecognitionServiceWs"
             android:exported="false"
             android:label="@string/labelActivityPreferencesRecognitionServiceWs"
-            android:parentActivityName=".Preferences">
+            android:parentActivityName=".activity.Preferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -165,7 +165,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".AboutActivity"
             android:label="@string/labelActivityAbout"
-            android:parentActivityName=".Preferences"
+            android:parentActivityName=".activity.Preferences"
             android:theme="@style/Theme.K6nele"></activity>
 
         <!-- This is the only activity that the recognizer can launch. -->
@@ -175,17 +175,17 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityDetails"
             android:theme="@style/Theme.K6nele.Dialog"></activity>
         <activity
-            android:name=".ComboSelectorActivity"
+            android:name=".activity.ComboSelectorActivity"
             android:label="@string/dialogTitleCombo"
-            android:parentActivityName=".Preferences"></activity>
+            android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".AppListActivity"
             android:label="@string/labelActivityAppList"
-            android:parentActivityName=".Preferences"></activity>
+            android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".GrammarListActivity"
             android:label="@string/labelActivityGrammarList"
-            android:parentActivityName=".Preferences"></activity>
+            android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".ServerListActivity"
             android:label="@string/labelActivityServerList"
@@ -196,11 +196,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.RewritesActivity"
             android:label="@string/labelActivityRewrites"
-            android:parentActivityName=".Preferences"></activity>
+            android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".activity.QuickSettingsActivity"
             android:label="@string/labelActivityQuickSettings"
-            android:parentActivityName=".Preferences"></activity>
+            android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".demo.SimpleDemo"
             android:label="@string/labelActivitySimpleDemo"></activity>
