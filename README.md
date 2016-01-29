@@ -6,11 +6,13 @@ Kõnele
 Kõnele is an Android app that offers speech-to-text services to other apps.
 Its main components are:
 
-  - [RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) activity
-  - 2 implementations of [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html)
-    - one uses <https://github.com/alumae/kaldi-gstreamer-server>
-    - the other uses <https://github.com/alumae/ruby-pocketsphinx-server>
-  - speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
+  - a voice search panel (i.e. a [RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) activity)
+  - two implementations of [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html), backed by two open source speech recognition servers
+    - <https://github.com/alumae/kaldi-gstreamer-server>
+    - <https://github.com/alumae/ruby-pocketsphinx-server>
+  - a speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
+
+The diagram below shows Kõnele's main components in yellow, while the standard Android interfaces via which other apps can interact with Kõnele are in green.
 
 ![Components](https://rawgithub.com/Kaljurand/K6nele/master/docs/components.dot.svg)
 
@@ -19,11 +21,11 @@ Android platform, as well as grammar-based speech recognition for voice command 
 
 How to add support for other languages than Estonian is detailed in https://github.com/Kaljurand/K6nele/issues/38
 
-For more information see <http://kaljurand.github.io/K6nele/>.
+For documentation, APKs, app store links, news etc. see <http://kaljurand.github.io/K6nele/>.
 
 
-Compiling
----------
+Building the APK from source
+----------------------------
 
 Clone the source code including the `net-speech-api` and `speechutils` submodules:
 
