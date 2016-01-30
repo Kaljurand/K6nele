@@ -13,9 +13,12 @@ import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speechutils.Extras;
 
-public class QueryUtils {
+public final class QueryUtils {
     private static final String PARAMETER_SEPARATOR = "&";
     private static final String NAME_VALUE_SEPARATOR = "=";
+
+    private QueryUtils() {
+    }
 
     /**
      * Extracts the editor info, and uses

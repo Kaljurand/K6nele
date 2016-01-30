@@ -40,9 +40,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,6 @@ import ee.ioc.phon.android.speak.RecognizerIntentService;
 import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.android.speak.RecognizerIntentService.State;
 import ee.ioc.phon.android.speak.utils.Utils;
-import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speechutils.AudioCue;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
@@ -203,19 +199,8 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
     };
 
     @Override
-    Uri getAudioUri(String filename) {
-        try {
-            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
-            fos.write(mService.getCompleteRecordingAsWav());
-            fos.close();
-
-            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
-        } catch (FileNotFoundException e) {
-            Log.e("FileNotFoundException: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e("IOException: " + e.getMessage());
-        }
-        return null;
+    protected Uri getAudioUri(String filename) {
+        return bytesToUri(filename, mService.getCompleteRecordingAsWav());
     }
 
     @Override
@@ -276,7 +261,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         // For the change in the autostart-setting to take effect,
         // the user must restart the app. This seems more natural.
-        mStartRecording = PreferenceUtils.getPrefBoolean(mPrefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
+        mStartRecording = isAutoStart();
 
         mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
         registerPrompt(mTvPrompt);

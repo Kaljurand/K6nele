@@ -10,6 +10,7 @@
     <string name="keyRespectLocale" translatable="false">keyRespectLocale</string>
     <string name="keyAudioCues" translatable="false">keyAudioCues</string>
     <string name="keyHelpText" translatable="false">keyHelpText</string>
+    <string name="keyReturnErrors" translatable="false">keyReturnErrors</string>
     <string name="keyCombo" translatable="false">keyCombo</string>
     <string name="keyCurrentCombo" translatable="false">keyCurrentCombo</string>
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>

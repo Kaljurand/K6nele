@@ -53,7 +53,7 @@ import ee.ioc.phon.android.speak.R;
  *
  * @author Kaarel Kaljurand
  */
-public class Utils {
+public final class Utils {
 
     private Utils() {
     }

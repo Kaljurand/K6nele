@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Defaults. Voice search panel. -->
-    <bool name="defaultAutoStart">false</bool>
-    <bool name="defaultAudioCues">false</bool>
-    <bool name="defaultHelpText">true</bool>
-
     <!-- Defaults. IME. -->
-    <bool name="defaultImeAutoStart">false</bool>
-    <bool name="defaultImeAutoStopAfterPause">false</bool>
-    <!-- Google always beeps and it cannot be switched off,
-thus, when using Google's service, the user would want to have the beep off anyway. -->
-    <bool name="defaultImeAudioCues">false</bool>
     <bool name="defaultImeHelpText">true</bool>
 
-    <!-- Defaults. HTTP-based service. -->
+    <!-- Defaults. Voice search panel. -->
+    <bool name="defaultAutoStart">false</bool>
+    <bool name="defaultHelpText">true</bool>
+    <bool name="defaultReturnErrors">false</bool>
 
+    <!-- Defaults. HTTP-based service. -->
+    <bool name="defaultAutoStopAfterPause">true</bool>
+    <bool name="defaultAudioCues">false</bool>
     <!--
 For the time being it is safer not to respect the locale (by default) to tell us
 the language of the input speech because K6nele users might use a non-Estonian
 locale but assume Estonian even if the app does not specify it (e.g. Arvutaja v4).
 -->
     <bool name="defaultRespectLocale">false</bool>
-    <bool name="defaultAutoStopAfterPause">true</bool>
 
     <!-- Defaults. WebSocket-based service. -->
+    <bool name="defaultImeAutoStart">false</bool>
+    <bool name="defaultImeAutoStopAfterPause">false</bool>
+    <!-- Google always beeps and it cannot be switched off,
+thus, when using Google's service, the user would want to have the beep off anyway. -->
+    <bool name="defaultImeAudioCues">false</bool>
 
     <!-- Rewrite incoming transcription with regular expressions. -->
     <bool name="defaultRewrite">false</bool>

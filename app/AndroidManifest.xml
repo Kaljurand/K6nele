@@ -209,8 +209,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:exported="true"
             android:label="@string/labelActivityExtrasDemo"></activity>
         <activity
-            android:name=".demo.RepeaterDemo"
-            android:label="@string/labelActivityRepeaterDemo">
+            android:name=".demo.HandsfreeDemoActivity"
+            android:label="@string/labelActivityHandsfreeDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

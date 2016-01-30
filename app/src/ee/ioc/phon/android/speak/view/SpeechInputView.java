@@ -410,6 +410,7 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onError(final int errorCode) {
             Log.i("onError: " + errorCode);
+            mListener.onError(errorCode);
 
             switch (errorCode) {
                 case SpeechRecognizer.ERROR_AUDIO:
@@ -432,7 +433,6 @@ public class SpeechInputView extends LinearLayout {
                     break;
                 case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                     setGuiInitState(R.string.errorImeResultInsufficientPermissions);
-                    mListener.onError(errorCode);
                     break;
                 case SpeechRecognizer.ERROR_NO_MATCH:
                     setGuiInitState(R.string.errorImeResultNoMatch);

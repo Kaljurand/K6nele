@@ -87,14 +87,13 @@ public class WebSocketResponse {
         public Result(JSONObject result) throws JSONException {
             // The "final" field does not have to exist, but if it does
             // then it must be a boolean.
-            mIsFinal = result.has("final") && result.getBoolean("final");
+            mIsFinal = result.optBoolean("final", false);
             JSONArray array = result.getJSONArray("hypotheses");
 
             for (int i = 0; i < array.length(); i++) {
                 String transcript = array.getJSONObject(i).getString("transcript");
                 mHypotheses.add(transcript);
                 mHypothesesPp.add(pp(transcript));
-
             }
         }
 

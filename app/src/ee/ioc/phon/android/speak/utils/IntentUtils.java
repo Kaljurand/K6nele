@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
+import android.util.SparseArray;
 import android.view.inputmethod.EditorInfo;
 
 import java.util.List;
@@ -19,7 +21,27 @@ import java.util.List;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speechutils.Extras;
 
-public class IntentUtils {
+public final class IntentUtils {
+
+    private IntentUtils() {
+    }
+
+    /**
+     * @return table that maps SpeechRecognizer error codes to RecognizerIntent error codes
+     */
+    public static SparseArray<Integer> createErrorCodesServiceToIntent() {
+        SparseArray<Integer> errorCodes = new SparseArray<>();
+        errorCodes.put(SpeechRecognizer.ERROR_AUDIO, RecognizerIntent.RESULT_AUDIO_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_CLIENT, RecognizerIntent.RESULT_CLIENT_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS, RecognizerIntent.RESULT_CLIENT_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_NETWORK, RecognizerIntent.RESULT_NETWORK_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_NETWORK_TIMEOUT, RecognizerIntent.RESULT_NETWORK_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_NO_MATCH, RecognizerIntent.RESULT_NO_MATCH);
+        errorCodes.put(SpeechRecognizer.ERROR_RECOGNIZER_BUSY, RecognizerIntent.RESULT_SERVER_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_SERVER, RecognizerIntent.RESULT_SERVER_ERROR);
+        errorCodes.put(SpeechRecognizer.ERROR_SPEECH_TIMEOUT, RecognizerIntent.RESULT_NO_MATCH);
+        return errorCodes;
+    }
 
     public static PendingIntent getPendingIntent(Bundle extras) {
         Parcelable extraResultsPendingIntentAsParceable = extras.getParcelable(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT);
@@ -32,12 +54,10 @@ public class IntentUtils {
         return null;
     }
 
-
     public static Intent getAppIntent(Context c, String packageName) {
         PackageManager pm = c.getPackageManager();
         return pm.getLaunchIntentForPackage(packageName);
     }
-
 
     /**
      * Constructs a list of search intents.

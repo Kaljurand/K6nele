@@ -19,6 +19,7 @@ package ee.ioc.phon.android.speak.activity;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -36,6 +37,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,8 +48,11 @@ import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.RawAudioRecorder;
+import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
@@ -61,6 +68,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
 
+    private static SparseArray<Integer> mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
+
+    private List<byte[]> mBufferList = new ArrayList<>();
+
     private TextView mTvPrompt;
 
     private PendingIntent mExtraResultsPendingIntent;
@@ -71,11 +82,42 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     private SimpleMessageHandler mMessageHandler;
 
-    abstract Uri getAudioUri(String filename);
+    // Store the complete audio recording
+    private boolean mIsStoreAudio;
+
+    private boolean mIsReturnErrors;
+
+    private boolean mIsAutoStart;
 
     abstract void showError(String msg);
 
     abstract String[] getDetails();
+
+    protected Uri getAudioUri(String filename) {
+        // TODO: ask the sample rate directly from the recorder
+        int sampleRate = PreferenceUtils.getPrefInt(PreferenceManager.getDefaultSharedPreferences(this),
+                getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
+        byte[] mCompleteRecording = AudioUtils.concatenateBuffers(mBufferList);
+        return bytesToUri(filename, RawAudioRecorder.getRecordingAsWav(mCompleteRecording, sampleRate));
+    }
+
+    protected Uri bytesToUri(String filename, byte[] bytes) {
+        try {
+            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
+            fos.write(bytes);
+            fos.close();
+            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
+        } catch (FileNotFoundException e) {
+            Log.e("FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("IOException: " + e.getMessage());
+        }
+        return null;
+    }
+
+    protected boolean isAutoStart() {
+        return mIsAutoStart;
+    }
 
     protected Bundle getExtras() {
         return mExtras;
@@ -123,11 +165,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             // to an empty Bundle if this occurs.
             mExtras = new Bundle();
         }
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // If the caller did not specify the MAX_RESULTS then we take it from our own settings.
         // Note: the caller overrides the settings.
         if (!mExtras.containsKey(RecognizerIntent.EXTRA_MAX_RESULTS)) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             mExtras.putInt(RecognizerIntent.EXTRA_MAX_RESULTS,
                     PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
         }
@@ -135,6 +176,18 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         if (!mExtras.isEmpty()) {
             mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
         }
+
+        mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO);
+
+        mIsReturnErrors = mExtras.getBoolean(Extras.EXTRA_RETURN_ERRORS,
+                PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyReturnErrors, R.bool.defaultReturnErrors));
+
+        // Launch recognition immediately (if set so).
+        // Auto-start only occurs is onCreate is called
+        mIsAutoStart =
+                isAutoStartAction(getIntent().getAction())
+                        || mExtras.getBoolean(Extras.EXTRA_AUTO_START,
+                        PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart));
 
         mMessageHandler = new SimpleMessageHandler(this);
         mErrorMessages = createErrorMessages();
@@ -206,7 +259,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      */
     private void setResultIntent(final Handler handler, List<String> matches) {
         Intent intent = new Intent();
-        if (getExtras().getBoolean(Extras.EXTRA_GET_AUDIO)) {
+        if (mIsStoreAudio) {
             String audioFormat = getExtras().getString(Extras.EXTRA_GET_AUDIO_FORMAT);
             if (audioFormat == null) {
                 audioFormat = DEFAULT_AUDIO_FORMAT;
@@ -302,6 +355,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
         String action = getIntent().getAction();
         if (getExtraResultsPendingIntent() == null) {
+            // TODO: clean this up: "auto start" should not necessarily mean that we should not return the results
+            // to the caller
             // TODO: maybe remove ACTION_WEB_SEARCH (i.e. the results should be returned to the caller)
             if (getCallingActivity() == null
                     || isAutoStartAction(action)
@@ -377,6 +432,33 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         errorMessages.put(RecognizerIntent.RESULT_SERVER_ERROR, getString(R.string.errorResultServerError));
         errorMessages.put(RecognizerIntent.RESULT_NO_MATCH, getString(R.string.errorResultNoMatch));
         return errorMessages;
+    }
+
+    /**
+     * Finish the activity with the given error code. By default the audio/network/etc. errors
+     * are handled by the activity so that the activity only returns with success. However, in certain
+     * situations (e.g. Tasker integration) it is useful to let the caller handle the errors.
+     *
+     * @param errorCode SpeechRecognizer service error code
+     */
+    protected void setResultError(int errorCode) {
+        if (mIsReturnErrors) {
+            Integer errorCodeIntent = mErrorCodesServiceToIntent.get(errorCode);
+            if (errorCodeIntent != null) {
+                setResult(errorCodeIntent);
+                finish();
+            }
+        }
+    }
+
+    protected void clearAudioBuffer() {
+        mBufferList = new ArrayList<>();
+    }
+
+    protected void addToAudioBuffer(byte[] buffer) {
+        if (mIsStoreAudio) {
+            mBufferList.add(buffer);
+        }
     }
 
     private ArrayList<String> getResultsAsArrayList(List<String> results) {

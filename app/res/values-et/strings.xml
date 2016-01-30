@@ -15,7 +15,7 @@
     <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
-    <string name="labelActivityRepeaterDemo">Kordaja demo</string>
+    <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
@@ -49,7 +49,7 @@
 		transkriptsiooni rakenduse-keelde</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
-    <string name="summaryRepeaterDemo">Transkribeerib kõne, näitab parimat tulemust,
+    <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimat tulemust,
 		transkribeerib uuesti, … Kõnele saab menüü abil omistada
 		grammatika.</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
@@ -218,6 +218,7 @@
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
 		uuesti!</string>
+    <string name="errorResultCanceled">Katkestatud</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="promptSearch">Öelge veebiotsingu päring</string>
@@ -256,6 +257,8 @@
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
+    <string name="titleReturnErrors">Tagasta veateated</string>
+    <string name="summaryReturnErrors">Tagasta audio/võrgu/jne vigade teated kutsuvale rakendusele</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>

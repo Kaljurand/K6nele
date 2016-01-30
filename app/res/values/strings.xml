@@ -29,7 +29,7 @@
     <string name="labelActivityServerList">Recognizer servers</string>
     <string name="labelActivitySimpleDemo">Simple demo</string>
     <string name="labelActivityExtrasDemo">Extras demo</string>
-    <string name="labelActivityRepeaterDemo">Repeater demo</string>
+    <string name="labelActivityHandsfreeDemo">Handsfree demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
@@ -66,6 +66,8 @@
     <string name="summaryWsServer" translatable="false">%1$s</string>
     <string name="titleHelpText">Help text</string>
     <string name="summaryHelpText">Show help text by the microphone button (makes the search panel larger)</string>
+    <string name="titleReturnErrors">Return errors</string>
+    <string name="summaryReturnErrors">Return network/audio/etc. errors to the caller (useful if the caller does error handling)</string>
     <string name="titleImeHelpText">Help text</string>
     <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
     <string name="summaryImeCombo">Updating…</string>
@@ -75,7 +77,7 @@
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
-    <string name="summaryRepeaterDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
+    <string name="summaryHandsfreeDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
     <string name="summaryEncoderDemo">Various demos/tests related to audio recording and encoding</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
@@ -186,6 +188,7 @@ More grammars are available at
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
     <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>
+    <string name="errorResultCanceled">Canceled</string>
     <string name="errorCantCreateRecorder">ERROR: Failed to create an audio recorder</string>
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>

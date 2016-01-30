@@ -68,6 +68,11 @@
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
             android:title="@string/titleHelpText" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultReturnErrors"
+            android:key="@string/keyReturnErrors"
+            android:summary="@string/summaryReturnErrors"
+            android:title="@string/titleReturnErrors" />
         <ListPreference
             android:defaultValue="@string/defaultMaxResults"
             android:dialogTitle="@string/titleMaxResults"
@@ -159,10 +164,10 @@
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
             <Preference
-                android:summary="@string/summaryRepeaterDemo"
-                android:title="@string/labelActivityRepeaterDemo">
+                android:summary="@string/summaryHandsfreeDemo"
+                android:title="@string/labelActivityHandsfreeDemo">
                 <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.RepeaterDemo"
+                    android:targetClass="ee.ioc.phon.android.speak.demo.HandsfreeDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
             <Preference

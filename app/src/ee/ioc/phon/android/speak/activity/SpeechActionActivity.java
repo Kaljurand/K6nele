@@ -2,29 +2,20 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.Manifest;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
-import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
-import ee.ioc.phon.android.speechutils.RawAudioRecorder;
-import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -69,33 +60,12 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
-    private int mSampleRate;
-    private byte[] mCompleteRecording;
-
     private TextView mTvPrompt;
     private SpeechInputView mView;
 
     @Override
     void showError(String msg) {
         ((TextView) mView.findViewById(R.id.tvMessage)).setText(msg);
-    }
-
-    @Override
-    Uri getAudioUri(String filename) {
-        byte[] bytes = RawAudioRecorder.getRecordingAsWav(mCompleteRecording, mSampleRate);
-
-        try {
-            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
-            fos.write(bytes);
-            fos.close();
-
-            return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
-        } catch (FileNotFoundException e) {
-            Log.e("FileNotFoundException: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e("IOException: " + e.getMessage());
-        }
-        return null;
     }
 
     /**
@@ -141,18 +111,10 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onStart() {
         super.onStart();
 
+        clearAudioBuffer();
         setUpExtras();
         registerPrompt(mTvPrompt);
         setTvPrompt();
-
-        // Launch recognition immediately (if set so).
-        // Auto-start only occurs is onCreate is called
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isAutoStart =
-                isAutoStartAction(getIntent().getAction())
-                        || PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyAutoStart, R.bool.defaultAutoStart);
-
-        mSampleRate = PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
 
         setUpSettingsButton();
 
@@ -161,7 +123,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         // TODO: do we need to send the ComponentName of the calling activity instead
         mView.setListener(R.array.keysActivity, callerInfo, getVoiceImeViewListener());
 
-        if (isAutoStart) {
+        if (isAutoStart()) {
             Log.i("Auto-starting");
             mView.start();
         }
@@ -181,8 +143,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     private SpeechInputView.SpeechInputViewListener getVoiceImeViewListener() {
         return new SpeechInputView.SpeechInputViewListener() {
 
-            private List<byte[]> mBufferList = new ArrayList<>();
-
             @Override
             public void onPartialResult(List<String> results) {
                 // Ignore the partial results
@@ -191,9 +151,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
                 if (results != null && results.size() > 0) {
-                    // TODO: do this only if the user requests the complete recording
-                    mCompleteRecording = AudioUtils.concatenateBuffers(mBufferList);
-                    mBufferList = new ArrayList<>();
                     returnOrForwardMatches(results);
                 }
             }
@@ -236,7 +193,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             @Override
             public void onBufferReceived(byte[] buffer) {
                 Log.i("Activity: onBufferReceived: " + buffer.length);
-                mBufferList.add(buffer);
+                addToAudioBuffer(buffer);
             }
 
             @Override
@@ -245,6 +202,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
                     ActivityCompat.requestPermissions(SpeechActionActivity.this,
                             new String[]{Manifest.permission.RECORD_AUDIO},
                             PERMISSION_REQUEST_RECORD_AUDIO);
+                } else {
+                    setResultError(errorCode);
                 }
             }
         };
