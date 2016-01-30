@@ -19,9 +19,13 @@ Kõnele versions and their required Android versions:
 
 ----
 
-(Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>)
+(Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>, which is no longer available.)
 
 ## v1.1 - v1.4
+
+### v1.4.08 (2015-12-22)
+
+Bugfix in WebSocketRecognitionService: Do not send EOS if 0 bytes were recorded, prematurely ending the recognition session. This occurred sometimes in some devices (at least in Nexus 9 and OnePlus One).
 
 ### v1.4.06 (2015-11-28)
 
