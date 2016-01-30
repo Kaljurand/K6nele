@@ -64,13 +64,13 @@ Kõnele is free and open source software.
 Visit the [Kõnele GitHub page][k6nele-github] for the source code, bug reporting, etc.
 The information and downloadable APK-packages for all the released versions are on the [Releases page][k6nele-releases].
 
-A recent stable version is available in the [Google Play Store][k6nele-play]
+A recent stable version is available on [Google Play][k6nele-play]
 and on [F-Droid][k6nele-fdroid].
-The latest beta version is available in the Google Play Store after joining
-[the beta program][k6nele-beta-link]. (Alternatively, you can also join
+The latest testing version is available on Google Play after joining
+[the testing program][k6nele-beta-link]. (Alternatively, you can also join
 [this Google+ community][k6nele-beta] and click on "Signup for Kõnele".)
 
-[![](https://developer.android.com/images/brand/en_app_rgb_wo_60.png)][k6nele-play]
+[![]({{ site.baseurl }}/images/en/available-on-google-play.png)][k6nele-play]
 [![]({{ site.baseurl }}/images/en/available-on-fdroid.png)][k6nele-fdroid]
 
 ## Other
