@@ -11,41 +11,34 @@ import ee.ioc.phon.android.speak.R;
 
 public class QuickSettingsActivity extends Activity {
 
-    private Button mB1, mB2, mB3;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quick_settings);
-        mB1 = (Button) findViewById(R.id.buttonApplyDeveloperDefaults);
-        mB1.setOnClickListener(new View.OnClickListener() {
+        final QuickSettingsManager mngr = new QuickSettingsManager(
+                PreferenceManager.getDefaultSharedPreferences(QuickSettingsActivity.this),
+                getResources());
+
+        Button b1 = (Button) findViewById(R.id.buttonApplyDeveloperDefaults);
+        b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                QuickSettingsManager mngr = new QuickSettingsManager(
-                        PreferenceManager.getDefaultSharedPreferences(QuickSettingsActivity.this),
-                        getResources());
                 mngr.setDefaultsDevel();
             }
         });
 
-        mB2 = (Button) findViewById(R.id.buttonApplyWsServerGlobal);
-        mB2.setOnClickListener(new View.OnClickListener() {
+        Button b2 = (Button) findViewById(R.id.buttonApplyWsServerGlobal);
+        b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                QuickSettingsManager mngr = new QuickSettingsManager(
-                        PreferenceManager.getDefaultSharedPreferences(QuickSettingsActivity.this),
-                        getResources());
                 mngr.setWsServerGlobal();
             }
         });
 
-        mB3 = (Button) findViewById(R.id.buttonApplyWsServerLocal);
-        mB3.setOnClickListener(new View.OnClickListener() {
+        Button b3 = (Button) findViewById(R.id.buttonApplyWsServerLocal);
+        b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                QuickSettingsManager mngr = new QuickSettingsManager(
-                        PreferenceManager.getDefaultSharedPreferences(QuickSettingsActivity.this),
-                        getResources());
                 mngr.setWsServerLocal();
             }
         });

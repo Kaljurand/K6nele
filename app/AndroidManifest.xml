@@ -203,11 +203,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".demo.SimpleDemo"
-            android:label="@string/labelActivitySimpleDemo"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name=".demo.ExtrasDemo"
             android:exported="true"
-            android:label="@string/labelActivityExtrasDemo"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name=".demo.HandsfreeDemoActivity"
             android:label="@string/labelActivityHandsfreeDemo">

@@ -92,9 +92,8 @@ public class SpeechInputView extends LinearLayout {
         } else {
             mBComboSelector.setVisibility(View.GONE);
         }
+        updateServiceLanguage(mSlc.getSpeechRecognizer());
         updateComboSelector(mSlc);
-        updateServiceLanguage(mSlc);
-
         setText(mTvMessage, "");
         setGuiInitState(0);
 
@@ -125,6 +124,7 @@ public class SpeechInputView extends LinearLayout {
                     case LISTENING:
                     case TRANSCRIBING:
                         cancelOrDestroy();
+                        setGuiInitState(0);
                         break;
                     default:
                 }
@@ -134,10 +134,10 @@ public class SpeechInputView extends LinearLayout {
         mBComboSelector.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSlc.next();
                 if (mState == MicButton.State.RECORDING) {
                     stopListening();
                 }
+                mSlc.next();
                 updateComboSelector(mSlc);
             }
         });
@@ -226,6 +226,7 @@ public class SpeechInputView extends LinearLayout {
 
     public void cancel() {
         cancelOrDestroy();
+        setGuiInitState(0);
     }
 
 
@@ -329,17 +330,15 @@ public class SpeechInputView extends LinearLayout {
         mBComboSelector.setText(String.format(getResources().getString(R.string.labelComboItem), pair.first, pair.second));
     }
 
-    private void updateServiceLanguage(ServiceLanguageChooser slc) {
+    private void updateServiceLanguage(SpeechRecognizer sr) {
         cancelOrDestroy();
-        mRecognizer = slc.getSpeechRecognizer();
+        mRecognizer = sr;
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());
     }
 
     private void startListening(ServiceLanguageChooser slc) {
-        Log.i("Start listening in: " + slc.getCombo());
         setGuiState(MicButton.State.WAITING);
-        updateComboSelector(slc);
-        updateServiceLanguage(slc);
+        updateServiceLanguage(slc.getSpeechRecognizer());
         mRecognizer.startListening(slc.getIntent());
     }
 
@@ -352,8 +351,6 @@ public class SpeechInputView extends LinearLayout {
             mRecognizer.destroy();
             mRecognizer = null;
         }
-        // We enter the INIT-state here, just in case cancel or destroy did not take us there
-        setGuiInitState(0);
     }
 
 

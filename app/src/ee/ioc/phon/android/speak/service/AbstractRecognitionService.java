@@ -161,8 +161,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
 
     public void onDestroy() {
         super.onDestroy();
-        stopRecording0();
-        disconnect();
+        disconnectAndStopRecording();
     }
 
     /**
@@ -217,8 +216,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     @Override
     protected void onCancel(RecognitionService.Callback listener) {
         Log.i("onCancel");
-        stopRecording0();
-        disconnect();
+        disconnectAndStopRecording();
         // Send empty results if recognition is cancelled
         // TEST: if it works with Google Translate and Slide IT
         onResults(new Bundle());
@@ -259,8 +257,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     protected void onError(int errorCode) {
-        stopRecording0();
-        disconnect();
+        disconnectAndStopRecording();
         if (mAudioCue != null) mAudioCue.playErrorSound();
         try {
             mListener.error(errorCode);
@@ -269,8 +266,7 @@ public abstract class AbstractRecognitionService extends RecognitionService {
     }
 
     protected void onResults(Bundle bundle) {
-        stopRecording0();
-        disconnect();
+        disconnectAndStopRecording();
         try {
             mListener.results(bundle);
         } catch (RemoteException e) {
@@ -438,5 +434,11 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         } else {
             mAudioCue = null;
         }
+    }
+
+
+    private void disconnectAndStopRecording() {
+        disconnect();
+        stopRecording0();
     }
 }

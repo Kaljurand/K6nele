@@ -71,6 +71,11 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
         }
     }
 
+    protected void onCancel() {
+        toast(getString(R.string.errorResultCanceled));
+        finish();
+    }
+
     protected void onError(int errorCode) {
         toast(getErrorMessage(errorCode));
     }
@@ -110,7 +115,7 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 onSuccess(data);
             } else if (resultCode == RESULT_CANCELED) {
-                toast(getString(R.string.errorResultCanceled));
+                onCancel();
             } else {
                 onError(resultCode);
             }

@@ -43,6 +43,10 @@ import ee.ioc.phon.android.speechutils.Extras;
  */
 public class HandsfreeDemoActivity extends AbstractRecognizerDemoActivity {
 
+    // TODO: smaller values (e.g. < 800) cause an error with the local server with a single slot
+    private static final int SLEEP_TIME = 10;
+    private static final int MAX_COUNT = 5;
+
     private final List<String> mMatches = new ArrayList<>();
 
     private final Intent mIntent = createRecognizerIntent();
@@ -66,16 +70,16 @@ public class HandsfreeDemoActivity extends AbstractRecognizerDemoActivity {
     @Override
     protected void onSuccess(Intent intent) {
         ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-        if (matches.isEmpty()) {
-            mMatches.add(0, "No matches");
-        } else {
-            // Here we could do something with the transcription, e.g. switch on lights,
-            // skip to the next track, change the channel, etc.
-            mMatches.add(0, matches.get(0));
-        }
-
+        // Here we could do something with the transcription, e.g. switch on lights,
+        // skip to the next track, change the channel, etc.
+        mMatches.add(0, matches.toString());
         updateListView(mMatches);
         restart();
+    }
+
+    @Override
+    protected void onCancel() {
+        // Overriding the parent in order not to finish()
     }
 
     @Override
@@ -87,21 +91,23 @@ public class HandsfreeDemoActivity extends AbstractRecognizerDemoActivity {
 
 
     /**
-     * Sleep for 0.8 sec and restart the session.
+     * Sleep for some time and restart the session.
      */
     private void restart() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                launchRecognizerIntent(mIntent);
-            }
-        }, 800);
+        if (mMatches.size() < MAX_COUNT) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    launchRecognizerIntent(mIntent);
+                }
+            }, SLEEP_TIME);
+        }
     }
 
     private static Intent createRecognizerIntent() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
         intent.putExtra(Extras.EXTRA_AUTO_START, true);
         intent.putExtra(Extras.EXTRA_RETURN_ERRORS, true);
         return intent;
