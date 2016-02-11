@@ -68,11 +68,13 @@
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
             android:title="@string/titleHelpText" />
+        <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultReturnErrors"
             android:key="@string/keyReturnErrors"
             android:summary="@string/summaryReturnErrors"
             android:title="@string/titleReturnErrors" />
+        -->
         <ListPreference
             android:defaultValue="@string/defaultMaxResults"
             android:dialogTitle="@string/titleMaxResults"
@@ -139,6 +141,7 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.RewriteLoaderActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
+        <!--
         <Preference
             android:summary="@string/summaryQuickSettings"
             android:title="@string/titleQuickSettings">
@@ -146,6 +149,7 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
+        -->
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">
