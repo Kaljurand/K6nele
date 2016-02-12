@@ -23,8 +23,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1508
-        versionName '1.5.08'
+        versionCode 1510
+        versionName '1.5.10'
     }
 
     packagingOptions {
@@ -74,7 +74,7 @@ android {
 
 
 if (project.hasProperty('storePassword') &&
-    project.hasProperty('keyPassword')) {
+        project.hasProperty('keyPassword')) {
     android.signingConfigs.release.storePassword = storePassword
     android.signingConfigs.release.keyPassword = keyPassword
 } else {

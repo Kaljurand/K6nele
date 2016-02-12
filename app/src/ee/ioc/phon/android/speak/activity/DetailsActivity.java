@@ -17,6 +17,7 @@
 package ee.ioc.phon.android.speak.activity;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -30,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.utils.IntentUtils;
 
 /**
  * <p>Simple activity that displays the String-array attached to the intent and plays the
@@ -77,8 +77,9 @@ public class DetailsActivity extends ListActivity {
 
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        IntentUtils.startSearchActivity(DetailsActivity.this, ((TextView) view).getText());
-                        // TODO: can we finish the parent as well? or maybe return the selection to parent?
+                        Intent intent = new Intent();
+                        intent.putExtra(SearchManager.QUERY, ((TextView) view).getText());
+                        setResult(RESULT_OK, intent);
                         finish();
                     }
                 });

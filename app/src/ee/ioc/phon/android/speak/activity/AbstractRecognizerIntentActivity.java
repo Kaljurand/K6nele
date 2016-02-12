@@ -64,6 +64,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     protected static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
 
+    private static final int ACTIVITY_REQUEST_CODE_DETAILS = 1;
+
     private static final String MSG = "MSG";
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
@@ -191,6 +193,16 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
         mMessageHandler = new SimpleMessageHandler(this);
         mErrorMessages = createErrorMessages();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTIVITY_REQUEST_CODE_DETAILS) {
+            if (resultCode == RESULT_OK && data != null) {
+                handleResultByWebSearch(data.getStringExtra(SearchManager.QUERY));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -409,19 +421,21 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // as a single hypothesis.
     private void handleResultsByWebSearch(final List<String> results) {
         if (results.size() == 1) {
-            Bundle extras = getExtras();
-            String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
-            String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
-            String query = prefix + results.get(0) + suffix;
-            IntentUtils.startSearchActivity(this, query);
+            handleResultByWebSearch(results.get(0));
         } else {
-            // TODO: it would be a bit cleaner to pass ACTION_WEB_SEARCH
-            // via a pending intent
             Intent searchIntent = new Intent(this, DetailsActivity.class);
             searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
             searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, results.toArray(new String[results.size()]));
-            startActivity(searchIntent);
+            startActivityForResult(searchIntent, ACTIVITY_REQUEST_CODE_DETAILS);
         }
+    }
+
+    private void handleResultByWebSearch(String result) {
+        Bundle extras = getExtras();
+        String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
+        String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
+        IntentUtils.startSearchActivity(this, prefix + result + suffix);
+        finish();
     }
 
     private SparseArray<String> createErrorMessages() {

@@ -70,10 +70,10 @@ public final class IntentUtils {
         // TODO: how to pass the search query to ACTION_ASSIST
         // TODO: maybe use SearchManager instead
         //Intent intent0 = new Intent(Intent.ACTION_ASSIST);
-        //intent0.putExtra(Intent.EXTRA_ASSIST_CONTEXT, some_bundle);
+        //intent0.putExtra(Intent.EXTRA_ASSIST_CONTEXT, new Bundle());
         //intent0.putExtra(SearchManager.QUERY, query);
         //intent0.putExtra(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, false);
-        //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, getPackageName());
+        //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
         Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
         intent1.putExtra(SearchManager.QUERY, query);
         Intent intent2 = new Intent(Intent.ACTION_SEARCH);
