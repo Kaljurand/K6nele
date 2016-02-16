@@ -54,6 +54,10 @@ import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
  */
 public class HttpRecognitionService extends AbstractRecognitionService {
 
+    // When does the chunk sending start and what is its interval
+    private static final int TASK_DELAY_SEND = 100;
+    private static final int TASK_INTERVAL_SEND = 300;
+
     private volatile Looper mSendLooper;
     private volatile Handler mSendHandler;
 

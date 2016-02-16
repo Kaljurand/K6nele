@@ -32,6 +32,10 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  */
 public class WebSocketRecognitionService extends AbstractRecognitionService {
 
+    // When does the chunk sending start and what is its interval
+    private static final int TASK_DELAY_SEND = 100;
+    private static final int TASK_INTERVAL_SEND = 200;
+
     private static final String EOS = "EOS";
 
     private static final String PROTOCOL = "";
@@ -199,7 +203,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                         if (buffer.length > 0) {
                             onBufferReceived(buffer);
                         }
-                        boolean success = mSendHandler.postDelayed(this, TASK_INTERVAL_IME_SEND);
+                        boolean success = mSendHandler.postDelayed(this, TASK_INTERVAL_SEND);
                         if (!success) {
                             Log.i("mSendHandler.postDelayed returned false");
                         }
@@ -208,7 +212,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
             }
         };
 
-        mSendHandler.postDelayed(mSendRunnable, TASK_DELAY_IME_SEND);
+        mSendHandler.postDelayed(mSendRunnable, TASK_DELAY_SEND);
     }
 
     void send(WebSocket webSocket, byte[] buffer) {

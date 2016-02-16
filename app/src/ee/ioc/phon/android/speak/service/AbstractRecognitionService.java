@@ -29,21 +29,13 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  */
 public abstract class AbstractRecognitionService extends RecognitionService {
 
-    // When does the chunk sending start and what is its interval
-    static final int TASK_INTERVAL_SEND = 300;
-    static final int TASK_DELAY_SEND = 100;
-
-    // We send more frequently in the IME
-    static final int TASK_INTERVAL_IME_SEND = 200;
-    static final int TASK_DELAY_IME_SEND = 100;
-
     // Check the volume 10 times a second
-    static final int TASK_INTERVAL_VOL = 100;
+    private static final int TASK_INTERVAL_VOL = 100;
     // Wait for 1/2 sec before starting to measure the volume
-    static final int TASK_DELAY_VOL = 500;
+    private static final int TASK_DELAY_VOL = 500;
 
-    static final int TASK_INTERVAL_STOP = 1000;
-    static final int TASK_DELAY_STOP = 1000;
+    private static final int TASK_INTERVAL_STOP = 1000;
+    private static final int TASK_DELAY_STOP = 1000;
 
     private AudioCue mAudioCue;
     private AudioPauser mAudioPauser;
