@@ -7,7 +7,7 @@ title: Release notes
 
 Kõnele versions and their required Android versions:
 
-  - v1.1.xx - v1.4.xx, requires Android 4.0+
+  - v1.1.xx - v1.5.xx, requires Android 4.0+
     - extension of v0.8.xx, but with Android 4.0+ style UI
   - v0.8.xx (not maintained), requires Android 2.2+
     - extension of v0.7.xx, but additionally implements the RecognitionService-interface
@@ -19,9 +19,27 @@ Kõnele versions and their required Android versions:
 
 ----
 
-(Old issue numbers refer to <https://code.google.com/p/recognizer-intent/issues/list>, which is no longer available.)
+(Old issue numbers refer to `code.google.com/p/recognizer-intent/issues/list`, which is no longer available.)
 
-## v1.1 - v1.4
+## v1.1 - v1.5
+
+### v1.5.10 (2016-02-17)
+
+New in this release:
+
+- both Kõnele services can now FLAC-encode input audio
+  - reduces outgoing network traffic by 2-3x
+  - does not work on some (older) devices
+  - disabled by default
+- rewriting now also applies in the voice search mode
+- settings: link to system menu "Assist & voice input"
+- move some general functionality to the `speechutils` library
+- improve demo activities
+- various UI improvements
+  - vector drawables
+  - more explanation when requesting permissions
+  - finish() voice search panel if websearch is launched
+  - language/service switching button now enabled also during recognition, tapping it stops the recording
 
 ### v1.4.08 (2015-12-22)
 

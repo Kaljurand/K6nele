@@ -205,8 +205,10 @@ määratud vaikimisi tuvastajaks. Sellise vaikeväärtuse saab eemaldad nõnda:
 Androidi rakendused võivad kõnetuvastusteenuse välja kutsuda ka taustateenusena, st ilma kasutajaliideseta.
 Nõnda toimivad paljud mikrofoninupuga klaviatuurirakendused ning intelligentsed abilised,
 mis hoolitsevad ise kogu kasutajaliidese eest (mikrofoninupp, helisignaalid, VU-meeter, veateadete kuvamine jms).
-Selliselt kutsutavad teenused on kirjas menüüs `Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend`,
+Selliselt kutsutavad teenused on kirjas süsteemses `Häälsisend`-menüüs,
 kus üks neist on alati seatud vaikimisi teenuseks.
+(Android v4-5: `Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend`;
+Android v6: `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`; Kõnele seadetes on ka otsetee `Kõik kõnetuvastusteenused`.)
 
 
 <img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
@@ -225,7 +227,9 @@ Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab 
 kasutab vaikimisi määratud kõnetuvastusteenust. Seega saab Kõnele ja Google'i tõlkerakendusega
 teha kõnest-kõnesse tõlget eesti keelest paljudesse teistesse keeltesse.
 
-Android v6 on teinud kahjuks ümberkorralduse. Seadistamine toimub nüüd menüüs `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`. Kui abirakenduseks on valitud _Google'i rakendus_, siis valikut `Häälsisend` ei kuvata, ning Kõnele rakendust vaikimisi teenuseks seada ei saa. Üheks kahetsusväärseks tagajärjeks on see, et nüüd puudub võimalus korraga kasutada funktsionaalsust "Google Now on Tap" ja eestikeelset kõnesisendit rakenduses _Google Translate_.
+Android v6 on lisanud nn "Abirakenduse" mõiste, kuid kui abirakenduseks on valitud _Google'i rakendus_, siis valikut `Häälsisend` ei kuvata, ning Kõnele rakendust vaikimisi teenuseks seada ei saa. Üheks kahetsusväärseks tagajärjeks on see, et nüüd puudub võimalus korraga kasutada funktsionaalsust "Google Now on Tap" ja eestikeelset kõnesisendit rakenduses _Google Translate_.
+(Vt ka vearaporteid [200494](https://code.google.com/p/android/issues/detail?id=200494)
+ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 ## Grammatika-põhine kõnetuvastus
 
