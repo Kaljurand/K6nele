@@ -5,7 +5,7 @@ permalink: /about/
 ---
 
 Kõnele is an Android app that offers speech-to-text services to other apps.
-Many apps contain a text area or a text field (e.g. a search bar) that can be edited using
+Many apps have a text area or a text field (e.g. a search bar) that can be edited using
 the keyboard. Kõnele provides a __speech keyboard__, which allows speech to be converted to text.
 Many apps (e.g. intelligent assistants, keyboard apps, navigation apps) also contain a microphone button that
 is linked to either the __standard Android speech recognition activity__
