@@ -89,3 +89,33 @@ if (project.hasProperty('storePassword') &&
 } else {
     android.buildTypes.release.signingConfig = null
 }
+
+
+task(deploy) << {
+    description 'Copy the APK and the ProGuard mapping file to the deploy directory'
+
+    def deploy_dir = System.getenv('APK_DEPLOY_DIR')
+
+    def version = android.defaultConfig.versionName
+
+    def outputs = 'build/outputs/'
+    def apk1 = outputs + 'apk/app-release.apk'
+    def apk2 = "${deploy_dir}K6nele-${version}.apk"
+    def mapping1 = outputs + 'mapping/release/mapping.txt'
+    def mapping2 = "${deploy_dir}K6nele-mapping-${version}.txt"
+
+    def output1 = exec {
+        commandLine 'cp', '--verbose', apk1, apk2
+    }
+
+    def output2 = exec {
+        commandLine 'cp', '--verbose', mapping1, mapping2
+    }
+
+    def output3 = exec {
+        commandLine 'ls', '-l', deploy_dir
+    }
+
+    println "adb uninstall ee.ioc.phon.android.speak"
+    println "adb install ${apk2}"
+}
