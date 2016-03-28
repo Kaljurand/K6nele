@@ -49,7 +49,7 @@
 		transkriptsiooni rakenduse-keelde</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
-    <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimat tulemust,
+    <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimaid tulemusi,
 		transkribeerib uuesti, … Kõnele saab menüü abil omistada
 		grammatika.</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
@@ -286,7 +286,7 @@
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
     </plurals>
     <string name="buttonDemoShowEncoders">Näita toetatud formaate</string>
-    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine võib parandada tuvastuskiirust, eriti aeglase võrguühenduse korral. Vajalik Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Vajalik Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
     <string name="buttonApplyDeveloperDefaults">Arendaja seaded</string>

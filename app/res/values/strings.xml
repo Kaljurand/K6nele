@@ -59,7 +59,7 @@
     <string name="titleRecordingRate">Sample rate</string>
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioFormat">Audio format</string>
-    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format can improve recognition speed, especially if the network is slow. Requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format results in 2x less network traffic. Requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleWsServer">WebSocket URL</string>

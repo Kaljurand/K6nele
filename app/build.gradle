@@ -25,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1516
-        versionName '1.5.16'
+        versionCode 1518
+        versionName '1.5.18'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }
