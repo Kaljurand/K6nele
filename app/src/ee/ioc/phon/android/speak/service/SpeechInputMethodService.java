@@ -2,12 +2,14 @@ package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.speech.SpeechRecognizer;
 import android.text.InputType;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +24,7 @@ import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
@@ -206,7 +209,11 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onError(int errorCode) {
-                // TODO: handle the error, e.g. ask permissions
+                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+                    Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    SpeechInputMethodService.this.startActivity(intent);
+                }
             }
         });
 

@@ -16,9 +16,11 @@
 
 package ee.ioc.phon.android.speak.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -159,6 +161,32 @@ public final class Utils {
         }
 
         return b;
+    }
+
+
+    /**
+     * Creates a non-cancelable dialog with two buttons, both finish the activity,
+     * one launches the given intent first.
+     * TODO: note that we explicitly set the dialog style. This is because if the caller activity's style
+     * is Theme.Translucent.NoTitleBar then the dialog is unstyled (maybe an Android bug?)
+     */
+    public static AlertDialog getLaunchIntentDialog(final Activity activity, String msg, final Intent intent) {
+        return new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog)
+                .setPositiveButton(activity.getString(R.string.buttonGoToSettings), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }
+                })
+                .setNegativeButton(activity.getString(R.string.buttonCancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        activity.finish();
+                    }
+                })
+                .setMessage(msg)
+                .setCancelable(false)
+                .create();
     }
 
 

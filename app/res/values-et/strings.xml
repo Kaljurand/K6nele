@@ -63,6 +63,7 @@
     <string name="buttonYes">Jah</string>
     <string name="buttonNo">Ei</string>
     <string name="buttonOk">OK</string>
+    <string name="buttonGoToSettings">Seadista</string>
     <string name="buttonCancel">Loobu</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
     <string name="statusImeTranscribing">Oodake…</string>

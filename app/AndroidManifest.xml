@@ -198,6 +198,9 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityRewrites"
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
+            android:name=".activity.PermissionsRequesterActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <activity
             android:name=".activity.QuickSettingsActivity"
             android:label="@string/labelActivityQuickSettings"
             android:parentActivityName=".activity.Preferences"></activity>

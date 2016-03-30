@@ -110,6 +110,7 @@
     <string name="buttonYes">Yes</string>
     <string name="buttonNo">No</string>
     <string name="buttonOk">OK</string>
+    <string name="buttonGoToSettings">Go to settings</string>
     <string name="buttonCancel">Cancel</string>
     <string name="statusTranscribing">Transcribing…</string>
     <string name="statusImeTranscribing">Still transcribing…</string>
