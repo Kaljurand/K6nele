@@ -199,22 +199,22 @@
 		installeeritud: %1$s</string>
     <string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>
     <string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
-    <string name="errorResultAudioError">Lindistamine luhtus. Võibolla mõni teine rakendus
-		parasjagu lindistab?</string>
-    <string name="errorResultNetworkError">Puudub võrguühendus kõnetuvastusserveriga. Kas
-		võrguühendus on sisse lülitatud?</string>
 
     // SpeechRecognizer error messages (9) shown in the IME
     <string name="errorImeResultAudioError">lindistamine luhtus</string>
-    <string name="errorImeResultNetworkError">netiühendus puudub</string>
+    <string name="errorImeResultNetworkError">serveriga puudub ühendus</string>
     <string name="errorImeResultNetworkTimeoutError">server ei tööta</string>
-    <string name="errorImeResultRecognizerBusy">tuvastajal pole vabu ühendusi</string>
+    <string name="errorImeResultRecognizerBusy">server on ülekoormatud</string>
     <string name="errorImeResultClientError">rakenduse viga</string>
-    <string name="errorImeResultServerError">kõnetuvastusserveri viga</string>
+    <string name="errorImeResultServerError">serveri viga</string>
     <string name="errorImeResultSpeechTimeout">kõnet polnud kuulda</string>
     <string name="errorImeResultNoMatch">transkribeerimine luhtus</string>
     <string name="errorImeResultInsufficientPermissions">vajalikud õigused puuduvad</string>
 
+    <string name="errorResultAudioError">Lindistamine luhtus.
+        Võibolla mõni teine rakendus parasjagu lindistab.</string>
+    <string name="errorResultNetworkError">Puudub ühendus kõnetuvastusserveriga.
+        Võrguühendus on välja lülitatud või server ei tööta.</string>
     <string name="errorResultClientError">Rakenduse viga</string>
     <string name="errorResultServerError">Kõnetuvastusserveri viga</string>
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige

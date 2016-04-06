@@ -167,23 +167,22 @@ More grammars are available at
 
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
-    <string name="errorFailedLaunchApp">This app is not launchable or is not installed (anymore): %1$s</string>
+    <string name="errorFailedLaunchApp">App cannot be launched or is not installed (anymore): %1$s</string>
     <string name="errorFailedPlayAudio">Failed to play the recorded audio: %1$s, %2$s</string>
-    <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording?</string>
-
-    <string name="errorResultNetworkError">Something is wrong with the internet connection. Maybe it is not switched on?</string>
 
     // SpeechRecognizer error messages (9) shown in the IME
     <string name="errorImeResultAudioError">audio recording failed</string>
-    <string name="errorImeResultNetworkError">no network connection</string>
+    <string name="errorImeResultNetworkError">server not reachable</string>
     <string name="errorImeResultNetworkTimeoutError">network connection timeout</string>
-    <string name="errorImeResultRecognizerBusy">no recognizer slots available</string>
+    <string name="errorImeResultRecognizerBusy">server is overloaded</string>
     <string name="errorImeResultSpeechTimeout">no speech input detected</string>
     <string name="errorImeResultNoMatch">no transcription found</string>
     <string name="errorImeResultInsufficientPermissions">insufficient permissions</string>
     <string name="errorImeResultClientError">general app error</string>
     <string name="errorImeResultServerError">recognizer server error</string>
 
+    <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording.</string>
+    <string name="errorResultNetworkError">Server not reachable. The internet connection is broken or the server is down.</string>
     <string name="errorResultClientError">General client error</string>
     <string name="errorResultServerError">Recognizer server error</string>
     <string name="errorResultNoMatch">Transcription was not found for the recorded speech. Please try again!</string>
