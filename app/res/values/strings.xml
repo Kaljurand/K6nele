@@ -152,8 +152,6 @@ More grammars are available at
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
-    <string name="emptylistImeCombos">Currently using Estonian and Kõnele (fast recognition). Tap here to add or change languages and services.</string>
-    <string name="emptylistCombos">Currently using Estonian and Kõnele (grammar support). Tap here to add or change languages and services.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
@@ -283,13 +281,20 @@ More grammars are available at
         <item>44100</item>
     </string-array>
 
+    <!-- When making changes here, you need to change the UI labels as well.
+    Note also that none of the languages and services are
+    initially selected in the UI, independent of what is selected here.
+    We currently use the same language/service for both UIs. -->
     <string-array name="defaultImeCombos" translatable="false">
         <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE</item>
     </string-array>
+    <string name="emptylistImeCombos">Currently using Estonian and Kõnele (fast recognition). Tap here to add or change languages and services.</string>
 
     <string-array name="defaultCombos" translatable="false">
-        <item>ee.ioc.phon.android.speak/.service.HttpRecognitionService;et-EE</item>
+        <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE</item>
+        <!-- <item>ee.ioc.phon.android.speak/.service.HttpRecognitionService;et-EE</item> -->
     </string-array>
+    <string name="emptylistCombos">@string/emptylistImeCombos</string>
 
     <!--
     Set of recognizer service/language combos that we do not want to show for technical reasons.
