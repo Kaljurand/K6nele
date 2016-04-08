@@ -23,6 +23,15 @@ Kõnele versions and their required Android versions:
 
 ## v1.1 - v1.5
 
+### v1.5.20 (2016-04-08)
+
+New in this release:
+
+- change the default service of the search panel to be the "fast recognition" service, giving a better first impression because this service is likely to be faster and more accurate
+- add permission requesting also to the speech keyboard, [issue #43](https://github.com/Kaljurand/K6nele/issues/43)
+- improve error messages, and a few other UI labels
+- fix regression: crash at startup on Android v5
+
 ### v1.5.10 (2016-02-17)
 
 New in this release:

@@ -40,8 +40,6 @@ Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutaj
 Android v5 (Lollipop) ja Android v6 (Marshmallow) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
 teistsugune, kuid mitte oluliselt.
 
-(Selle juhendi eelmine versioon on [siin](https://code.google.com/p/recognizer-intent/wiki/UserGuide?wl=et).)
-
 ## Demo
 
 Järgnev video näitab
