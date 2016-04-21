@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import ee.ioc.phon.android.speechutils.editor.Constants;
+
 
 /**
  * Parses the JSON object delivered by the webservice. It can be in one of the following forms:

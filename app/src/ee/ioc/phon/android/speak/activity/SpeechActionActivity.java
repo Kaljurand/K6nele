@@ -16,6 +16,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
+import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -153,6 +154,11 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
                 if (results != null && results.size() > 0) {
                     returnOrForwardMatches(results);
                 }
+            }
+
+            @Override
+            public void onCommand(Command command) {
+                // Ignore the command
             }
 
             @Override

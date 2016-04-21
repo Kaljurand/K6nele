@@ -28,7 +28,7 @@ import java.io.IOException;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.service.UtteranceRewriter;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 
 public class RewriteLoaderActivity extends Activity {
 
@@ -58,7 +58,7 @@ public class RewriteLoaderActivity extends Activity {
                 editor.apply();
                 Log.i(rewritesAsTsv);
 
-                int count = utteranceRewriter.getRewrites().size();
+                int count = utteranceRewriter.size();
 
                 Intent searchIntent = new Intent(this, RewritesActivity.class);
                 searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getResources().getQuantityString(R.plurals.statusLoadRewrites, count, count));
