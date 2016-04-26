@@ -26,11 +26,9 @@ import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.CommandEditorManager;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
-import ee.ioc.phon.android.speechutils.editor.TextUpdater;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
@@ -38,8 +36,6 @@ public class SpeechInputMethodService extends InputMethodService {
     private InputMethodManager mInputMethodManager;
 
     private SpeechInputView mInputView;
-
-    private TextUpdater mTextUpdater = new TextUpdater();
     private CommandEditor mCommandEditor = new InputConnectionCommandEditor();
     private CommandEditorManager mCommandEditorManager = new CommandEditorManager(mCommandEditor);
 
@@ -131,7 +127,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
         final InputConnection ic = getCurrentInputConnection();
         Log.i("InputConnection: " + ic);
-        mTextUpdater.setInputConnection(ic);
         ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(ic);
 
         closeSession();
@@ -156,7 +151,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (results.size() > 0) {
                     text = results.get(0);
                 }
-                mTextUpdater.commitPartialResult(text);
+                mCommandEditor.commitPartialResult(text);
             }
 
             @Override
@@ -165,12 +160,12 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (results.size() > 0) {
                     text = results.get(0);
                 }
-                mTextUpdater.commitFinalResult(text);
+                mCommandEditor.commitFinalResult(text);
             }
 
             @Override
-            public void onCommand(Command command) {
-                boolean success = mCommandEditorManager.execute(command);
+            public void onCommand(String commandId, String[] args) {
+                boolean success = mCommandEditorManager.execute(commandId, args);
                 if (success) {
                     Log.i("Command successfully executed");
                 }
@@ -190,17 +185,17 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onDeleteLastWord() {
-                mTextUpdater.deleteWord();
+                mCommandEditor.deleteLeftWord();
             }
 
             @Override
             public void onAddNewline() {
-                mTextUpdater.addNewline();
+                mCommandEditor.addNewline();
             }
 
             @Override
             public void onAddSpace() {
-                mTextUpdater.addSpace();
+                mCommandEditor.addSpace();
             }
 
             @Override
@@ -217,12 +212,7 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                InputConnection ic = getCurrentInputConnection();
-                CharSequence cs = ic.getSelectedText(0);
-                if (cs != null) {
-                    int len = cs.length();
-                    ic.setSelection(len, len);
-                }
+                mCommandEditor.reset();
             }
 
             @Override

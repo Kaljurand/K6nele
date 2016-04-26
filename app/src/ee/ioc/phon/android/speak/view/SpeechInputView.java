@@ -29,7 +29,6 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
-import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
@@ -53,7 +52,7 @@ public class SpeechInputView extends LinearLayout {
 
         void onFinalResult(List<String> text, Bundle bundle);
 
-        void onCommand(Command command);
+        void onCommand(String commandId, String[] args);
 
         void onSwitchIme(boolean isAskUser);
 
@@ -459,12 +458,16 @@ public class SpeechInputView extends LinearLayout {
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
                 if (isSemiFinal) {
-                    Pair<Command, List<String>> pair = utteranceRewriter.rewrite(results);
-                    sendResultsAndCommand(pair.second, bundle, pair.first);
+                    Pair<Pair<String, String[]>, List<String>> pair = utteranceRewriter.rewrite(results);
+                    List<String> resultsRewritten = pair.second;
+                    String commandId = pair.first.first;
+                    String[] args = pair.first.second;
+                    Log.i("onResults: results rewritten = " + resultsRewritten);
+                    sendResultsAndCommand(resultsRewritten, bundle, commandId, args);
                 } else {
                     // TODO: use a more optimized rewriting since we know that we are not
                     // going to execute a command
-                    Pair<Command, List<String>> pair = utteranceRewriter.rewrite(results);
+                    Pair<Pair<String, String[]>, List<String>> pair = utteranceRewriter.rewrite(results);
                     mListener.onPartialResult(pair.second);
                 }
             }
@@ -486,10 +489,12 @@ public class SpeechInputView extends LinearLayout {
                 // e.g. cancel was called.
                 mListener.onFinalResult(Collections.<String>emptyList(), bundle);
             } else {
-                Pair<Command, List<String>> pair = utteranceRewriter.rewrite(results);
+                Pair<Pair<String, String[]>, List<String>> pair = utteranceRewriter.rewrite(results);
                 List<String> resultsRewritten = pair.second;
+                String commandId = pair.first.first;
+                String[] args = pair.first.second;
                 Log.i("onResults: results rewritten = " + resultsRewritten);
-                sendResultsAndCommand(resultsRewritten, bundle, pair.first);
+                sendResultsAndCommand(resultsRewritten, bundle, commandId, args);
             }
 
             setGuiInitState(0);
@@ -507,14 +512,14 @@ public class SpeechInputView extends LinearLayout {
             mListener.onBufferReceived(buffer);
         }
 
-        private void sendResultsAndCommand(List<String> results, Bundle bundle, Command command) {
+        private void sendResultsAndCommand(List<String> results, Bundle bundle, String commandId, String[] args) {
             mListener.onFinalResult(results, bundle);
-            Log.i("sendResultsAndCommand: command: " + command);
-            if (command == null) {
+            Log.i("sendResultsAndCommand: command: " + commandId);
+            if (commandId == null) {
                 setText(mTvMessage, lastChars(results, true));
             } else {
-                setText(mTvMessage, lastChars("<" + command.getId() + ">", true));
-                mListener.onCommand(command);
+                setText(mTvMessage, lastChars("<" + commandId + args + ">", true));
+                mListener.onCommand(commandId, args);
             }
         }
     }
