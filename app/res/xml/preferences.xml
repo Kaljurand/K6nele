@@ -188,6 +188,13 @@
                     android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
+            <Preference
+                android:summary="@string/summaryFormDemo"
+                android:title="@string/labelActivityFormDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.FormDemoActivity"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
 
         </PreferenceScreen>
     </PreferenceCategory>

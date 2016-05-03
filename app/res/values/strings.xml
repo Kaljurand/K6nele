@@ -32,6 +32,7 @@
     <string name="labelActivityHandsfreeDemo">Handsfree demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
+    <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
     <!-- Preferences activity -->
@@ -59,7 +60,7 @@
     <string name="titleRecordingRate">Sample rate</string>
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioFormat">Audio format</string>
-    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format results in 2x less network traffic. Requires Android v4.1 or even v5.0, and might not work on all devices.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format results in 2x less network traffic. Requires at least Android v4.1 or even v5.0, and might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleWsServer">WebSocket URL</string>
@@ -80,6 +81,7 @@
     <string name="summaryHandsfreeDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
     <string name="summaryEncoderDemo">Various demos/tests related to audio recording and encoding</string>
+    <string name="summaryFormDemo">HTML form with various types of fields for testing the IME</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
     <string name="titleSystemVoiceInputSettings">All recognition services</string>
@@ -239,6 +241,8 @@ More grammars are available at
     <!-- Entries for the database, both apos and its escape character need escaping. -->
     <string name="entryGrammarName1">[unrestricted input]</string>
     <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
+
+    <string name="fileFormDemo" translatable="false">file:///android_asset/form.html</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 

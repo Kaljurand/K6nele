@@ -34,10 +34,10 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 public class SpeechInputMethodService extends InputMethodService {
 
     private InputMethodManager mInputMethodManager;
-
     private SpeechInputView mInputView;
     private CommandEditor mCommandEditor = new InputConnectionCommandEditor();
     private CommandEditorManager mCommandEditorManager = new CommandEditorManager(mCommandEditor);
+    private boolean mIsListening;
 
     @Override
     public void onCreate() {
@@ -113,13 +113,14 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
+    // Moving to a different field
     @Override
     public void onFinishInput() {
         super.onFinishInput();
         Log.i("onFinishInput");
-        closeSession();
     }
 
+    // Moving to a different field
     @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
         super.onStartInputView(attribute, restarting);
@@ -128,8 +129,6 @@ public class SpeechInputMethodService extends InputMethodService {
         final InputConnection ic = getCurrentInputConnection();
         Log.i("InputConnection: " + ic);
         ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(ic);
-
-        closeSession();
 
         if (restarting) {
             return;
@@ -143,90 +142,11 @@ public class SpeechInputMethodService extends InputMethodService {
         extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
         CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
 
-        mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
-
-            @Override
-            public void onPartialResult(List<String> results) {
-                String text = "";
-                if (results.size() > 0) {
-                    text = results.get(0);
-                }
-                mCommandEditor.commitPartialResult(text);
-            }
-
-            @Override
-            public void onFinalResult(List<String> results, Bundle bundle) {
-                String text = "";
-                if (results.size() > 0) {
-                    text = results.get(0);
-                }
-                mCommandEditor.commitFinalResult(text);
-            }
-
-            @Override
-            public void onCommand(String commandId, String[] args) {
-                boolean success = mCommandEditorManager.execute(commandId, args);
-                if (success) {
-                    Log.i("Command successfully executed");
-                }
-            }
-
-            @Override
-            public void onSwitchIme(boolean isAskUser) {
-                switchIme(isAskUser);
-            }
-
-            @Override
-            public void onGo() {
-                closeSession();
-                performGo();
-                requestHideSelf(0);
-            }
-
-            @Override
-            public void onDeleteLastWord() {
-                mCommandEditor.deleteLeftWord();
-            }
-
-            @Override
-            public void onAddNewline() {
-                mCommandEditor.addNewline();
-            }
-
-            @Override
-            public void onAddSpace() {
-                mCommandEditor.addSpace();
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-                // TODO: store buffer
-            }
-
-            @Override
-            public void onSelectAll() {
-                // TODO: show ContextMenu
-                mCommandEditor.selectAll();
-            }
-
-            @Override
-            public void onReset() {
-                // TODO: hide ContextMenu (if visible)
-                mCommandEditor.reset();
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
-                    Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    SpeechInputMethodService.this.startActivity(intent);
-                }
-            }
-        });
+        mInputView.init(R.array.keysIme, callerInfo);
+        mInputView.setListener(getSpeechInputViewListener());
 
         // Launch recognition immediately (if set so)
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+        if (mIsListening || PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
         }
@@ -236,7 +156,9 @@ public class SpeechInputMethodService extends InputMethodService {
     public void onFinishInputView(boolean finishingInput) {
         super.onFinishInputView(finishingInput);
         Log.i("onFinishInputView: " + finishingInput);
-        closeSession();
+        if (!finishingInput) {
+            closeSession();
+        }
     }
 
     @Override
@@ -246,6 +168,7 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
     private void closeSession() {
+        mIsListening = false;
         if (mInputView != null) {
             mInputView.cancel();
         }
@@ -290,16 +213,91 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
 
-    /**
-     * Performs the Search-action, e.g. to launch search on a searchbar.
-     */
-    private void performGo() {
-        // Does not work on Google Searchbar
-        // getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_DONE);
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
+        return new SpeechInputView.SpeechInputViewListener() {
+            @Override
+            public void onPartialResult(List<String> results) {
+                mIsListening = true;
+                String text = "";
+                if (results.size() > 0) {
+                    text = results.get(0);
+                }
+                mCommandEditor.commitPartialResult(text);
+            }
 
-        // Works in Google Searchbar, GF Translator, but NOT in the Firefox search widget
-        //getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_GO);
+            @Override
+            public void onFinalResult(List<String> results, Bundle bundle) {
+                mIsListening = true;
+                String text = "";
+                if (results.size() > 0) {
+                    text = results.get(0);
+                }
+                mCommandEditor.commitFinalResult(text);
+            }
 
-        getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_SEARCH);
+            @Override
+            public void onCommand(String commandId, String[] args) {
+                mIsListening = true;
+                // TODO: if "go" then behave in the same way as "onGo"
+                boolean success = mCommandEditorManager.execute(commandId, args);
+                if (success) {
+                    Log.i("Command successfully executed");
+                }
+            }
+
+            @Override
+            public void onSwitchIme(boolean isAskUser) {
+                switchIme(isAskUser);
+            }
+
+            @Override
+            public void onGo() {
+                mIsListening = false;
+                closeSession();
+                mCommandEditor.go();
+                requestHideSelf(0);
+            }
+
+            @Override
+            public void onDeleteLastWord() {
+                mCommandEditor.deleteLeftWord();
+            }
+
+            @Override
+            public void onAddNewline() {
+                mCommandEditor.addNewline();
+            }
+
+            @Override
+            public void onAddSpace() {
+                mCommandEditor.addSpace();
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+                // TODO: store buffer
+            }
+
+            @Override
+            public void onSelectAll() {
+                // TODO: show ContextMenu
+                mCommandEditor.selectAll();
+            }
+
+            @Override
+            public void onReset() {
+                // TODO: hide ContextMenu (if visible)
+                mCommandEditor.reset();
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+                    Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    SpeechInputMethodService.this.startActivity(intent);
+                }
+            }
+        };
     }
 }

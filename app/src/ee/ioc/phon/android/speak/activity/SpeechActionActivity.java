@@ -121,7 +121,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
         // TODO: do we need to send the ComponentName of the calling activity instead
-        mView.setListener(R.array.keysActivity, callerInfo, getVoiceImeViewListener());
+        mView.init(R.array.keysActivity, callerInfo);
+        mView.setListener(getSpeechInputViewListener());
 
         if (isAutoStart()) {
             Log.i("Auto-starting");
@@ -140,7 +141,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
     }
 
-    private SpeechInputView.SpeechInputViewListener getVoiceImeViewListener() {
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new SpeechInputView.SpeechInputViewListener() {
 
             @Override

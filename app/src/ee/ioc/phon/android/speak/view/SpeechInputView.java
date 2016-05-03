@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -77,9 +78,64 @@ public class SpeechInputView extends LinearLayout {
         super(context, attrs);
     }
 
-
-    public void setListener(int keys, CallerInfo callerInfo, final SpeechInputViewListener listener) {
+    public void setListener(final SpeechInputViewListener listener) {
         mListener = listener;
+        ImageButton buttonGo = (ImageButton) findViewById(R.id.bImeGo);
+        if (mBImeKeyboard != null && buttonGo != null) {
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onSwitchIme(false);
+                }
+            });
+
+            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onSwitchIme(true);
+                    return true;
+                }
+            });
+
+            buttonGo.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelOrDestroy();
+                    mListener.onGo();
+                }
+            });
+        }
+
+
+        setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.onDeleteLastWord();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                mListener.onAddNewline();
+            }
+
+            @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
+
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
+
+            @Override
+            public void onLongPressMotion() {
+                mListener.onSelectAll();
+            }
+        });
+    }
+
+    public void init(int keys, CallerInfo callerInfo) {
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
@@ -155,60 +211,6 @@ public class SpeechInputView extends LinearLayout {
                 intent.putExtra("key", getContext().getString(key));
                 IntentUtils.startActivityIfAvailable(context, intent);
                 return true;
-            }
-        });
-
-        ImageButton buttonGo = (ImageButton) findViewById(R.id.bImeGo);
-        if (mBImeKeyboard != null && buttonGo != null) {
-            mBImeKeyboard.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onSwitchIme(false);
-                }
-            });
-
-            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onSwitchIme(true);
-                    return true;
-                }
-            });
-
-            buttonGo.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cancelOrDestroy();
-                    mListener.onGo();
-                }
-            });
-        }
-
-
-        setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeLeft() {
-                mListener.onDeleteLastWord();
-            }
-
-            @Override
-            public void onSwipeRight() {
-                mListener.onAddNewline();
-            }
-
-            @Override
-            public void onSingleTapMotion() {
-                mListener.onReset();
-            }
-
-            @Override
-            public void onDoubleTapMotion() {
-                mListener.onAddSpace();
-            }
-
-            @Override
-            public void onLongPressMotion() {
-                mListener.onSelectAll();
             }
         });
     }
@@ -518,7 +520,7 @@ public class SpeechInputView extends LinearLayout {
             if (commandId == null) {
                 setText(mTvMessage, lastChars(results, true));
             } else {
-                setText(mTvMessage, lastChars("<" + commandId + args + ">", true));
+                setText(mTvMessage, lastChars(commandId + "(" + TextUtils.join(",", args) + ")", true));
                 mListener.onCommand(commandId, args);
             }
         }
