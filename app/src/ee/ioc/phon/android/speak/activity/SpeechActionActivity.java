@@ -157,11 +157,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             }
 
             @Override
-            public void onCommand(String commandId, String[] args) {
-                // Ignore the command
-            }
-
-            @Override
             public void onSwitchIme(boolean isAskUser) {
                 // Not applicable
             }

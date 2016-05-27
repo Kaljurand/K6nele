@@ -27,8 +27,8 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
-import ee.ioc.phon.android.speechutils.editor.CommandEditorManager;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
@@ -36,7 +36,6 @@ public class SpeechInputMethodService extends InputMethodService {
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
     private CommandEditor mCommandEditor = new InputConnectionCommandEditor();
-    private CommandEditorManager mCommandEditorManager = new CommandEditorManager(mCommandEditor);
     private boolean mIsListening;
 
     @Override
@@ -135,6 +134,10 @@ public class SpeechInputMethodService extends InputMethodService {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        // TODO: update this less often (in onStart)
+        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
+        mCommandEditor.setUtteranceRewriter(utteranceRewriter);
+
         Bundle extras = new Bundle();
         boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, getResources(),
                 R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
@@ -236,16 +239,6 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
-            public void onCommand(String commandId, String[] args) {
-                mIsListening = true;
-                // TODO: if "go" then behave in the same way as "onGo"
-                boolean success = mCommandEditorManager.execute(commandId, args);
-                if (success) {
-                    Log.i("Command successfully executed");
-                }
-            }
-
-            @Override
             public void onSwitchIme(boolean isAskUser) {
                 switchIme(isAskUser);
             }
@@ -299,5 +292,12 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
             }
         };
+    }
+
+    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
+        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
+            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
+        }
+        return new UtteranceRewriter();
     }
 }

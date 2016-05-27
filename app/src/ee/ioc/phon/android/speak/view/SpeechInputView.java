@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -30,7 +29,6 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
@@ -52,8 +50,6 @@ public class SpeechInputView extends LinearLayout {
         void onPartialResult(List<String> text);
 
         void onFinalResult(List<String> text, Bundle bundle);
-
-        void onCommand(String commandId, String[] args);
 
         void onSwitchIme(boolean isAskUser);
 
@@ -362,18 +358,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
 
-    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
-            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
-        }
-        return new UtteranceRewriter();
-    }
-
-
     private class SpeechInputRecognitionListener implements RecognitionListener {
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
 
         @Override
         public void onReadyForSpeech(Bundle params) {
@@ -457,20 +442,13 @@ public class SpeechInputView extends LinearLayout {
             Log.i("onPartialResults: state = " + mState);
             ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             if (results != null && !results.isEmpty()) {
+                setText(mTvMessage, lastChars(results, true));
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
                 if (isSemiFinal) {
-                    Pair<Pair<String, String[]>, List<String>> pair = utteranceRewriter.rewrite(results);
-                    List<String> resultsRewritten = pair.second;
-                    String commandId = pair.first.first;
-                    String[] args = pair.first.second;
-                    Log.i("onResults: results rewritten = " + resultsRewritten);
-                    sendResultsAndCommand(resultsRewritten, bundle, commandId, args);
+                    mListener.onFinalResult(results, bundle);
                 } else {
-                    // TODO: use a more optimized rewriting since we know that we are not
-                    // going to execute a command
-                    Pair<Pair<String, String[]>, List<String>> pair = utteranceRewriter.rewrite(results);
-                    mListener.onPartialResult(pair.second);
+                    mListener.onPartialResult(results);
                 }
             }
         }
@@ -491,14 +469,9 @@ public class SpeechInputView extends LinearLayout {
                 // e.g. cancel was called.
                 mListener.onFinalResult(Collections.<String>emptyList(), bundle);
             } else {
-                Pair<Pair<String, String[]>, List<String>> pair = utteranceRewriter.rewrite(results);
-                List<String> resultsRewritten = pair.second;
-                String commandId = pair.first.first;
-                String[] args = pair.first.second;
-                Log.i("onResults: results rewritten = " + resultsRewritten);
-                sendResultsAndCommand(resultsRewritten, bundle, commandId, args);
+                mListener.onFinalResult(results, bundle);
+                setText(mTvMessage, lastChars(results, true));
             }
-
             setGuiInitState(0);
         }
 
@@ -512,17 +485,6 @@ public class SpeechInputView extends LinearLayout {
         public void onBufferReceived(byte[] buffer) {
             Log.i("View: onBufferReceived: " + buffer.length);
             mListener.onBufferReceived(buffer);
-        }
-
-        private void sendResultsAndCommand(List<String> results, Bundle bundle, String commandId, String[] args) {
-            mListener.onFinalResult(results, bundle);
-            Log.i("sendResultsAndCommand: command: " + commandId);
-            if (commandId == null) {
-                setText(mTvMessage, lastChars(results, true));
-            } else {
-                setText(mTvMessage, lastChars(commandId + "(" + TextUtils.join(",", args) + ")", true));
-                mListener.onCommand(commandId, args);
-            }
         }
     }
 }
