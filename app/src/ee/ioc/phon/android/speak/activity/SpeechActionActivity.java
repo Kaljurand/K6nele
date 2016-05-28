@@ -164,7 +164,11 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
                 if (results != null && results.size() > 0) {
-                    returnOrForwardMatches(mUtteranceRewriter.rewrite(results));
+                    if (mUtteranceRewriter == null) {
+                        returnOrForwardMatches(results);
+                    } else {
+                        returnOrForwardMatches(mUtteranceRewriter.rewrite(results));
+                    }
                 }
             }
 

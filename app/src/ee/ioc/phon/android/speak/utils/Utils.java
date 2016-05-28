@@ -339,6 +339,6 @@ public final class Utils {
         if (PreferenceUtils.getPrefBoolean(prefs, resources, R.string.keyRewrite, R.bool.defaultRewrite)) {
             return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, resources, R.string.keyRewritesFile, R.string.empty));
         }
-        return new UtteranceRewriter();
+        return null;
     }
 }

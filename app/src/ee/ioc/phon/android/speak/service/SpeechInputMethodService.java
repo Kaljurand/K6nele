@@ -214,27 +214,26 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
+    private static String getText(List<String> results) {
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return "";
+    }
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new SpeechInputView.SpeechInputViewListener() {
+
             @Override
             public void onPartialResult(List<String> results) {
                 mIsListening = true;
-                String text = "";
-                if (results.size() > 0) {
-                    text = results.get(0);
-                }
-                mCommandEditor.commitPartialResult(text);
+                mCommandEditor.commitPartialResult(getText(results));
             }
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
                 mIsListening = true;
-                String text = "";
-                if (results.size() > 0) {
-                    text = results.get(0);
-                }
-                mCommandEditor.commitFinalResult(text);
+                mCommandEditor.commitFinalResult(getText(results));
             }
 
             @Override
