@@ -24,11 +24,11 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
@@ -135,8 +135,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         // TODO: update this less often (in onStart)
-        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
-        mCommandEditor.setUtteranceRewriter(utteranceRewriter);
+        mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(prefs, getResources()));
 
         Bundle extras = new Bundle();
         boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, getResources(),
@@ -292,12 +291,5 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
             }
         };
-    }
-
-    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
-            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
-        }
-        return new UtteranceRewriter();
     }
 }

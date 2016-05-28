@@ -29,6 +29,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
@@ -206,7 +207,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_RECORD_AUDIO: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -435,7 +436,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
         String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
         IntentUtils.startSearchActivity(this, prefix + result + suffix);
-        finish();
+        // Do not finish if in multi window mode because the user might want
+        // ask a follow-up query.
+        // TODO: Android N only
+        if (!isInMultiWindowMode()) {
+            finish();
+        }
     }
 
     private SparseArray<String> createErrorMessages() {

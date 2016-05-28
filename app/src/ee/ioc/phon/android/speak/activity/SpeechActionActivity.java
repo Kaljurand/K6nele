@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.Manifest;
 import android.content.ComponentName;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
@@ -16,6 +17,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -60,6 +62,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
+    private UtteranceRewriter mUtteranceRewriter;
     private TextView mTvPrompt;
     private SpeechInputView mView;
 
@@ -103,6 +106,12 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO: do not use the default dialog style when in multi window mode
+        /*
+        if (isInMultiWindowMode()) {
+            setTheme(R.style.Theme_K6nele_NoActionBar);
+        }
+        */
         setUpActivity(R.layout.activity_recognizer);
         mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
     }
@@ -117,6 +126,9 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         setTvPrompt();
 
         setUpSettingsButton();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources());
 
         mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
@@ -152,7 +164,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
                 if (results != null && results.size() > 0) {
-                    returnOrForwardMatches(results);
+                    returnOrForwardMatches(mUtteranceRewriter.rewrite(results));
                 }
             }
 

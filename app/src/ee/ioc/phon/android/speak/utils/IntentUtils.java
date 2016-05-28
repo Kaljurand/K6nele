@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 
 import java.util.List;
 
+import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speechutils.Extras;
 
@@ -62,6 +63,11 @@ public final class IntentUtils {
     /**
      * Constructs a list of search intents.
      * The first one that can be handled by the device is launched.
+     * <p/>
+     * TODO: Maybe add intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT)
+     * (if Build.VERSION.SDK_INT >= Build.VERSION_CODES.N).
+     * Currently seemed to have no effect, i.e. launching to the other window worked anyway in multi
+     * window mode.
      *
      * @param context context
      * @param query   search query
@@ -84,6 +90,7 @@ public final class IntentUtils {
     public static boolean startActivityIfAvailable(Context context, Intent... intents) {
         for (Intent intent : intents) {
             if (isActivityAvailable(context, intent)) {
+                Log.i("starting activity: " + intent.getAction() + ", flags: " + intent.getFlags());
                 context.startActivity(intent);
                 return true;
             }

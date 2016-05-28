@@ -21,9 +21,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -48,6 +50,8 @@ import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
 /**
@@ -328,5 +332,13 @@ public final class Utils {
                 Build.DEVICE + "/" +
                 Build.DISPLAY + "; " +
                 caller;
+    }
+
+
+    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs, Resources resources) {
+        if (PreferenceUtils.getPrefBoolean(prefs, resources, R.string.keyRewrite, R.bool.defaultRewrite)) {
+            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, resources, R.string.keyRewritesFile, R.string.empty));
+        }
+        return new UtteranceRewriter();
     }
 }
