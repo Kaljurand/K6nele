@@ -431,6 +431,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
     }
 
+    //@Override
+    public boolean isInMultiWindowMode() {
+        return false;
+        //return super.isInMultiWindowMode();
+    }
+
     private void handleResultByWebSearch(String result) {
         Bundle extras = getExtras();
         String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
