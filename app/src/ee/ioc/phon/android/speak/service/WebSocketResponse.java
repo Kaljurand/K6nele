@@ -31,6 +31,9 @@ public class WebSocketResponse {
     // Recognition was aborted for some reason.
     public static final int STATUS_ABORTED = 2;
 
+    // No valid frames found before end of stream.
+    public static final int STATUS_NO_VALID_FRAMES = 5;
+
     // Used when all recognizer processes are currently in use and recognition cannot be performed.
     public static final int STATUS_NOT_AVAILABLE = 9;
 

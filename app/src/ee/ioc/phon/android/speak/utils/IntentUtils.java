@@ -155,10 +155,12 @@ public final class IntentUtils {
     private static Bundle toBundle(EditorInfo attribute) {
         Bundle bundle = new Bundle();
         bundle.putBundle("extras", attribute.extras);
+        bundle.putInt("inputType", attribute.inputType);
+        bundle.putInt("initialSelStart", attribute.initialSelStart);
+        bundle.putInt("initialSelEnd", attribute.initialSelEnd);
         bundle.putString("actionLabel", asString(attribute.actionLabel));
         bundle.putString("fieldName", asString(attribute.fieldName));
         bundle.putString("hintText", asString(attribute.hintText));
-        bundle.putString("inputType", String.valueOf(attribute.inputType));
         bundle.putString("label", asString(attribute.label));
         // This line gets the actual caller package registered in the package registry.
         // The key needs to be "packageName".

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
@@ -63,53 +65,55 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
     /**
-     * We check the type of editor control and if we probably cannot handle it (email addresses,
-     * dates) or do not want to (passwords) then we hand the editing over to an other keyboard.
+     * We check the type of editor control and if we probably cannot handle it (e.g. dates)
+     * or do not want to (e.g. passwords) then we hand the editing over to another keyboard.
      */
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
-        Log.i("onStartInput: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
+        String type = "UNKNOWN";
 
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:
-                Log.i("onStartInput: NUMBER");
+                type = "NUMBER";
                 break;
             case InputType.TYPE_CLASS_DATETIME:
-                Log.i("onStartInput: DATETIME");
+                type = "DATETIME";
                 switchIme(false);
                 break;
             case InputType.TYPE_CLASS_PHONE:
-                Log.i("onStartInput: PHONE");
-                switchIme(false);
+                type = "PHONE";
                 break;
             case InputType.TYPE_CLASS_TEXT:
                 int variation = attribute.inputType & InputType.TYPE_MASK_VARIATION;
-                Log.i("onStartInput: TEXT, variation: " + variation);
+                type = "TEXT/";
                 if (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    Log.i("onStartInput: PASSWORD || VISIBLE_PASSWORD");
                     // We refuse to recognize passwords for privacy reasons.
+                    type += "PASSWORD || VISIBLE_PASSWORD";
                     switchIme(false);
-                } else if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
-                    Log.i("onStartInput: EMAIL_ADDRESS");
-                    switchIme(false);
+                } else if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS ||
+                        variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS) {
+                    type += "EMAIL_ADDRESS";
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
-                    Log.i("onStartInput: URI");
                     // URI bar of Chrome and Firefox, can also handle search queries, thus supported
+                    type += "URI";
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
-                    Log.i("onStartInput: FILTER");
                     // List filtering? Used in the Dialer search bar, thus supported
+                    type += "FILTER";
+                } else {
+                    type += variation;
                 }
 
                 // This is used in the standard search bar (e.g. in Google Play).
                 if ((attribute.inputType & InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE) != 0) {
-                    Log.i("onStartInput: FLAG_AUTO_COMPLETE");
+                    type += "FLAG_AUTO_COMPLETE";
                 }
                 break;
 
             default:
         }
+        Log.i("onStartInput: " + type + ", " + attribute.inputType + ", " + attribute.imeOptions + ", " + restarting);
     }
 
     // Moving to a different field
@@ -119,36 +123,30 @@ public class SpeechInputMethodService extends InputMethodService {
         Log.i("onFinishInput");
     }
 
-    // Moving to a different field
+    /**
+     * Note that when editing a HTML page, then switching between form fields might fail to call
+     * this method with restarting=false, we thus always update the editor info (incl. inputType).
+     */
     @Override
-    public void onStartInputView(EditorInfo attribute, boolean restarting) {
-        super.onStartInputView(attribute, restarting);
-        Log.i("onStartInputView: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
+    public void onStartInputView(EditorInfo editorInfo, boolean restarting) {
+        super.onStartInputView(editorInfo, restarting);
+        Log.i("onStartInputView: " + editorInfo.inputType + "/" + editorInfo.imeOptions + "/" + restarting);
 
-        final InputConnection ic = getCurrentInputConnection();
-        Log.i("InputConnection: " + ic);
-        ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(ic);
-
-        if (restarting) {
-            return;
-        }
-
+        ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(getCurrentInputConnection());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Resources res = getResources();
+        mInputView.init(R.array.keysIme, new CallerInfo(makeExtras(prefs, res), editorInfo, getPackageName()));
+
+        //if (restarting) {
+        //  return;
+        //}
+
         // TODO: update this less often (in onStart)
-        mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(prefs, getResources()));
-
-        Bundle extras = new Bundle();
-        boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, getResources(),
-                R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
-        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, isUnlimitedDuration);
-        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
-        CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
-
-        mInputView.init(R.array.keysIme, callerInfo);
+        mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(prefs, res));
         mInputView.setListener(getSpeechInputViewListener());
 
         // Launch recognition immediately (if set so)
-        if (mIsListening || PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+        if (mIsListening || PreferenceUtils.getPrefBoolean(prefs, res, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
         }
@@ -221,6 +219,15 @@ public class SpeechInputMethodService extends InputMethodService {
         return "";
     }
 
+    private static Bundle makeExtras(SharedPreferences prefs, Resources res) {
+        Bundle extras = new Bundle();
+        boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, res,
+                R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, isUnlimitedDuration);
+        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
+        return extras;
+    }
+
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new SpeechInputView.SpeechInputViewListener() {
 
@@ -233,7 +240,10 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
                 mIsListening = true;
-                mCommandEditor.commitFinalResult(getText(results));
+                UtteranceRewriter.Triple triple = mCommandEditor.commitFinalResult(getText(results));
+                if (mInputView != null && triple != null && triple.mId != null) {
+                    mInputView.showMessage(triple.toString());
+                }
             }
 
             @Override
@@ -243,7 +253,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onGo() {
-                mIsListening = false;
                 closeSession();
                 mCommandEditor.go();
                 requestHideSelf(0);
@@ -278,11 +287,12 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                mCommandEditor.reset();
+                mCommandEditor.resetSel();
             }
 
             @Override
             public void onError(int errorCode) {
+                mIsListening = false;
                 if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
                     Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

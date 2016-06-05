@@ -230,6 +230,9 @@ public class SpeechInputView extends LinearLayout {
         setGuiInitState(0);
     }
 
+    public void showMessage(CharSequence message) {
+        setText(mTvMessage, message);
+    }
 
     private static String selectFirstResult(List<String> results) {
         if (results == null || results.size() < 1) {
