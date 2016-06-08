@@ -17,7 +17,7 @@ android {
     //compileSdkVersion 'android-N'
     //buildToolsVersion '24.0.0-rc3'
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
@@ -29,8 +29,8 @@ android {
         //targetSdkVersion 'N'
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1604
-        versionName '1.6.04'
+        versionCode 1606
+        versionName '1.6.06'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }

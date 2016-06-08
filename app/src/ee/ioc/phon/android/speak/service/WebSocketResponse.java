@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ee.ioc.phon.android.speechutils.editor.Constants;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 
 
 /**
@@ -85,33 +85,38 @@ public class WebSocketResponse {
 
 
     public static class Result {
-        private final ArrayList<String> mHypotheses = new ArrayList<>();
-        private final ArrayList<String> mHypothesesPp = new ArrayList<>();
-        private final boolean mIsFinal;
+        private final JSONObject mResult;
 
         public Result(JSONObject result) throws JSONException {
-            // The "final" field does not have to exist, but if it does
-            // then it must be a boolean.
-            mIsFinal = result.optBoolean("final", false);
-            JSONArray array = result.getJSONArray("hypotheses");
+            mResult = result;
+        }
 
-            for (int i = 0; i < array.length(); i++) {
-                String transcript = array.getJSONObject(i).getString("transcript");
-                mHypotheses.add(transcript);
-                mHypothesesPp.add(pp(transcript));
+        // TODO: yield transcript and do pretty-printing in the client
+        public ArrayList<String> getHypotheses(int maxHypotheses, boolean prettyPrint) throws WebSocketResponseException {
+            try {
+                ArrayList<String> hypotheses = new ArrayList<>();
+                JSONArray array = mResult.getJSONArray("hypotheses");
+                for (int i = 0; i < array.length() && i < maxHypotheses; i++) {
+                    String transcript = array.getJSONObject(i).getString("transcript");
+                    if (prettyPrint) {
+                        hypotheses.add(UtteranceRewriter.prettyPrint(transcript));
+                    } else {
+                        hypotheses.add(transcript);
+                    }
+                }
+                return hypotheses;
+            } catch (JSONException e) {
+                throw new WebSocketResponseException(e);
             }
         }
 
-        public ArrayList<String> getHypotheses() {
-            return mHypotheses;
-        }
-
-        public ArrayList<String> getHypothesesPp() {
-            return mHypothesesPp;
-        }
-
+        /**
+         * The "final" field does not have to exist, but if it does then it must be a boolean.
+         *
+         * @return true iff this result is final
+         */
         public boolean isFinal() {
-            return mIsFinal;
+            return mResult.optBoolean("final", false);
         }
     }
 
@@ -139,58 +144,5 @@ public class WebSocketResponse {
         public WebSocketResponseException(JSONException e) {
             super(e);
         }
-    }
-
-    /**
-     * Pretty-prints the string returned by the server to be orthographically correct (Estonian),
-     * assuming that the string represents a sequence of tokens separated by a single space character.
-     * Note that a text editor (which has additional information about the context of the cursor)
-     * will need to do additional pretty-printing, e.g. capitalization if the cursor follows a
-     * sentence end marker.
-     *
-     * @param str String to be pretty-printed
-     * @return Pretty-printed string (never null)
-     */
-    private static String pp(String str) {
-        boolean isSentenceStart = false;
-        boolean isWhitespaceBefore = false;
-        String text = "";
-        for (String tok : str.split(" ")) {
-            if (tok.length() == 0) {
-                continue;
-            }
-            String glue = " ";
-            char firstChar = tok.charAt(0);
-            if (isWhitespaceBefore
-                    || Constants.CHARACTERS_WS.contains(firstChar)
-                    || Constants.CHARACTERS_PUNCT.contains(firstChar)) {
-                glue = "";
-            }
-
-            if (isSentenceStart) {
-                tok = Character.toUpperCase(firstChar) + tok.substring(1);
-            }
-
-            if (text.length() == 0) {
-                text = tok;
-            } else {
-                text += glue + tok;
-            }
-
-            isWhitespaceBefore = Constants.CHARACTERS_WS.contains(firstChar);
-
-            // If the token is not a character then we are in the middle of the sentence.
-            // If the token is an EOS character then a new sentences has started.
-            // If the token is some other character other than whitespace (then we are in the
-            // middle of the sentences. (The whitespace characters are transparent.)
-            if (tok.length() > 1) {
-                isSentenceStart = false;
-            } else if (Constants.CHARACTERS_EOS.contains(firstChar)) {
-                isSentenceStart = true;
-            } else if (!isWhitespaceBefore) {
-                isSentenceStart = false;
-            }
-        }
-        return text;
     }
 }

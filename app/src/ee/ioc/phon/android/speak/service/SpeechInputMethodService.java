@@ -15,7 +15,6 @@ import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
@@ -140,7 +139,6 @@ public class SpeechInputMethodService extends InputMethodService {
         //if (restarting) {
         //  return;
         //}
-
         // TODO: update this less often (in onStart)
         mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(prefs, res));
         mInputView.setListener(getSpeechInputViewListener());
@@ -168,10 +166,10 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
     private void closeSession() {
-        mIsListening = false;
         if (mInputView != null) {
             mInputView.cancel();
         }
+        mIsListening = false;
     }
 
     private IBinder getToken() {
@@ -233,7 +231,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onPartialResult(List<String> results) {
-                mIsListening = true;
                 mCommandEditor.commitPartialResult(getText(results));
             }
 
