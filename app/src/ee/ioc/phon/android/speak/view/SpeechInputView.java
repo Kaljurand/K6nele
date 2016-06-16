@@ -57,6 +57,10 @@ public class SpeechInputView extends LinearLayout {
 
         void onDeleteLastWord();
 
+        void goUp();
+
+        void goDown();
+
         void onAddNewline();
 
         void onAddSpace();
@@ -112,6 +116,16 @@ public class SpeechInputView extends LinearLayout {
             @Override
             public void onSwipeRight() {
                 mListener.onAddNewline();
+            }
+
+            @Override
+            public void onSwipeUp() {
+                mListener.goUp();
+            }
+
+            @Override
+            public void onSwipeDown() {
+                mListener.goDown();
             }
 
             @Override

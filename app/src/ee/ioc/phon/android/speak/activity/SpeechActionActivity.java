@@ -188,6 +188,16 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             }
 
             @Override
+            public void goUp() {
+                // Not applicable
+            }
+
+            @Override
+            public void goDown() {
+                // Not applicable
+            }
+
+            @Override
             public void onAddNewline() {
                 // Not applicable
             }

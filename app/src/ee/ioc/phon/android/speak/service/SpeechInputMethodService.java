@@ -266,6 +266,16 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
+            public void goUp() {
+                mCommandEditor.goUp();
+            }
+
+            @Override
+            public void goDown() {
+                mCommandEditor.goDown();
+            }
+
+            @Override
             public void onAddSpace() {
                 mCommandEditor.addSpace();
             }
