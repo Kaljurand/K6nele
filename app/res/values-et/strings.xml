@@ -257,7 +257,7 @@
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleWsServer">WebSocket-aadress</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
-    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
+    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia, et see Androidi klaviatuuri ja sisestusmeetodite seadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
     <string name="titleReturnErrors">Tagasta veateated</string>

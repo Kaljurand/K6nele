@@ -459,9 +459,9 @@ public class SpeechInputView extends LinearLayout {
             Log.i("onPartialResults: state = " + mState);
             ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             if (results != null && !results.isEmpty()) {
-                setText(mTvMessage, lastChars(results, true));
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
+                setText(mTvMessage, lastChars(results, isSemiFinal));
                 if (isSemiFinal) {
                     mListener.onFinalResult(results, bundle);
                 } else {

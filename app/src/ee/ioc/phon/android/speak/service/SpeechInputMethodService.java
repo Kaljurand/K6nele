@@ -28,8 +28,8 @@ import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
+import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
@@ -237,9 +237,9 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
                 mIsListening = true;
-                UtteranceRewriter.Triple triple = mCommandEditor.commitFinalResult(getText(results));
-                if (mInputView != null && triple != null && triple.mId != null) {
-                    mInputView.showMessage(triple.toString());
+                CommandEditorResult result = mCommandEditor.commitFinalResult(getText(results));
+                if (mInputView != null && result != null && result.isCommand()) {
+                    mInputView.showMessage(result.toString());
                 }
             }
 

@@ -73,7 +73,7 @@
     <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
     <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
-    <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Tap here to enable it in the Android input method (IME) settings.</string>
+    <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Tap here to enable it in the Android keyboard and input method settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
