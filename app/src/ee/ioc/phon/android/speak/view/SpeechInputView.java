@@ -53,7 +53,7 @@ public class SpeechInputView extends LinearLayout {
 
         void onSwitchIme(boolean isAskUser);
 
-        void onGo();
+        void onSearch();
 
         void onDeleteLastWord();
 
@@ -72,6 +72,10 @@ public class SpeechInputView extends LinearLayout {
         void onBufferReceived(byte[] buffer);
 
         void onError(int errorCode);
+
+        void onStartListening();
+
+        void onStopListening();
     }
 
     public SpeechInputView(Context context, AttributeSet attrs) {
@@ -80,8 +84,8 @@ public class SpeechInputView extends LinearLayout {
 
     public void setListener(final SpeechInputViewListener listener) {
         mListener = listener;
-        ImageButton buttonGo = (ImageButton) findViewById(R.id.bImeGo);
-        if (mBImeKeyboard != null && buttonGo != null) {
+        ImageButton buttonSearch = (ImageButton) findViewById(R.id.bImeSearch);
+        if (mBImeKeyboard != null && buttonSearch != null) {
             mBImeKeyboard.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,11 +101,11 @@ public class SpeechInputView extends LinearLayout {
                 }
             });
 
-            buttonGo.setOnClickListener(new OnClickListener() {
+            buttonSearch.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cancelOrDestroy();
-                    mListener.onGo();
+                    mListener.onSearch();
                 }
             });
         }
@@ -237,6 +241,7 @@ public class SpeechInputView extends LinearLayout {
         if (mRecognizer != null) {
             mRecognizer.stopListening();
         }
+        mListener.onStopListening();
     }
 
     public void cancel() {
@@ -361,6 +366,7 @@ public class SpeechInputView extends LinearLayout {
         setGuiState(MicButton.State.WAITING);
         updateServiceLanguage(slc.getSpeechRecognizer());
         mRecognizer.startListening(slc.getIntent());
+        mListener.onStartListening();
     }
 
     /**

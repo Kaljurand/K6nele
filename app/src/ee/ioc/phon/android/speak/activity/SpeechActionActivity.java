@@ -178,7 +178,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             }
 
             @Override
-            public void onGo() {
+            public void onSearch() {
                 // Not applicable
             }
 
@@ -221,6 +221,16 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             public void onBufferReceived(byte[] buffer) {
                 Log.i("Activity: onBufferReceived: " + buffer.length);
                 addToAudioBuffer(buffer);
+            }
+
+            @Override
+            public void onStartListening() {
+                // Not applicable
+            }
+
+            @Override
+            public void onStopListening() {
+                // Not applicable
             }
 
             @Override

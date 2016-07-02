@@ -66,6 +66,7 @@ public class SpeechInputMethodService extends InputMethodService {
     /**
      * We check the type of editor control and if we probably cannot handle it (e.g. dates)
      * or do not want to (e.g. passwords) then we hand the editing over to another keyboard.
+     * TODO: handle inputType = 0
      */
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
@@ -169,7 +170,6 @@ public class SpeechInputMethodService extends InputMethodService {
         if (mInputView != null) {
             mInputView.cancel();
         }
-        mIsListening = false;
     }
 
     private IBinder getToken() {
@@ -236,7 +236,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                mIsListening = true;
                 CommandEditorResult result = mCommandEditor.commitFinalResult(getText(results));
                 if (mInputView != null && result != null && result.isCommand()) {
                     mInputView.showMessage(result.toString());
@@ -249,9 +248,11 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
-            public void onGo() {
+            public void onSearch() {
+                Log.i("mIsListening = false");
+                mIsListening = false;
                 closeSession();
-                mCommandEditor.go();
+                mCommandEditor.imeActionSearch();
                 requestHideSelf(0);
             }
 
@@ -297,9 +298,27 @@ public class SpeechInputMethodService extends InputMethodService {
                 mCommandEditor.resetSel();
             }
 
+
+            @Override
+            public void onStartListening() {
+                Log.i("mIsListening = true");
+                mIsListening = true;
+            }
+
+            @Override
+            public void onStopListening() {
+                Log.i("mIsListening = false");
+                mIsListening = false;
+                mCommandEditor.reset();
+            }
+
+            // TODO: add onCancel()
+
             @Override
             public void onError(int errorCode) {
+                Log.i("mIsListening = false");
                 mIsListening = false;
+                mCommandEditor.reset();
                 if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
                     Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
