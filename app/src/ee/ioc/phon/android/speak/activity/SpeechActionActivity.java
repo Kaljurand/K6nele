@@ -16,6 +16,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
@@ -154,12 +155,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     }
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
-        return new SpeechInputView.SpeechInputViewListener() {
-
-            @Override
-            public void onPartialResult(List<String> results) {
-                // Ignore the partial results
-            }
+        return new AbstractSpeechInputViewListener() {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
@@ -173,64 +169,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             }
 
             @Override
-            public void onSwitchIme(boolean isAskUser) {
-                // Not applicable
-            }
-
-            @Override
-            public void onSearch() {
-                // Not applicable
-            }
-
-            @Override
-            public void onDeleteLastWord() {
-                // Not applicable
-            }
-
-            @Override
-            public void goUp() {
-                // Not applicable
-            }
-
-            @Override
-            public void goDown() {
-                // Not applicable
-            }
-
-            @Override
-            public void onAddNewline() {
-                // Not applicable
-            }
-
-            @Override
-            public void onAddSpace() {
-                // Not applicable
-            }
-
-            @Override
-            public void onSelectAll() {
-                // Not applicable
-            }
-
-            @Override
-            public void onReset() {
-                // Not applicable
-            }
-
-            @Override
             public void onBufferReceived(byte[] buffer) {
-                Log.i("Activity: onBufferReceived: " + buffer.length);
                 addToAudioBuffer(buffer);
-            }
-
-            @Override
-            public void onStartListening() {
-                // Not applicable
-            }
-
-            @Override
-            public void onStopListening() {
-                // Not applicable
             }
 
             @Override

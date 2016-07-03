@@ -25,6 +25,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
@@ -227,7 +228,7 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
-        return new SpeechInputView.SpeechInputViewListener() {
+        return new AbstractSpeechInputViewListener() {
 
             @Override
             public void onPartialResult(List<String> results) {
@@ -279,11 +280,6 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onAddSpace() {
                 mCommandEditor.addSpace();
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-                // TODO: store buffer
             }
 
             @Override
