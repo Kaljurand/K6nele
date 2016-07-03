@@ -39,6 +39,7 @@ public class SpeechInputMethodService extends InputMethodService {
     private SpeechInputView mInputView;
     private CommandEditor mCommandEditor = new InputConnectionCommandEditor();
     private boolean mIsListening;
+    private boolean mShowPartialResults;
 
     @Override
     public void onCreate() {
@@ -144,6 +145,7 @@ public class SpeechInputMethodService extends InputMethodService {
         // TODO: update this less often (in onStart)
         mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(prefs, res));
         mInputView.setListener(getSpeechInputViewListener());
+        mShowPartialResults = PreferenceUtils.getPrefBoolean(prefs, res, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
         if (mIsListening || PreferenceUtils.getPrefBoolean(prefs, res, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
@@ -232,7 +234,9 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onPartialResult(List<String> results) {
-                mCommandEditor.commitPartialResult(getText(results));
+                if (mShowPartialResults) {
+                    mCommandEditor.commitPartialResult(getText(results));
+                }
             }
 
             @Override

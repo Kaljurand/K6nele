@@ -16,6 +16,7 @@
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAutoStopAfterPause" translatable="false">keyImeAutoStopAfterPause</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
+    <string name="keyImeShowPartialResults" translatable="false">keyImeShowPartialResults</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
     <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>

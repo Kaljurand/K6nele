@@ -3,6 +3,7 @@
 
     <!-- Defaults. IME. -->
     <bool name="defaultImeHelpText">true</bool>
+    <bool name="defaultImeShowPartialResults">true</bool>
 
     <!-- Defaults. Voice search panel. -->
     <bool name="defaultAutoStart">false</bool>
