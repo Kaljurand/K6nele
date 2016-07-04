@@ -93,7 +93,7 @@
     <string name="summaryRewrite">Apply rewrite rules to the transcription</string>
 
     <string name="titleLoadRewrites">Rewrite rules</string>
-    <string name="summaryLoadRewrites">Load rewrite rules from a file</string>
+    <string name="summaryLoadRewrites">Load rewrite rules from a tab-separated values file</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>

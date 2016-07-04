@@ -275,10 +275,10 @@
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
 
     <string name="titleRewrite">Ümberkirjutamine</string>
-    <string name="summaryRewrite">Rakenda transkriptsioonile jooksvalt ümberkirjutusreegleid</string>
+    <string name="summaryRewrite">Rakenda transkriptsioonile ümberkirjutusreegleid</string>
 
     <string name="titleLoadRewrites">Ümberkirjutusreeglid</string>
-    <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid failist</string>
+    <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid tsv-failist</string>
 
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>

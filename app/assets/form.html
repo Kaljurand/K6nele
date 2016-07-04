@@ -37,6 +37,13 @@ Textarea number 2
 <label for="website">url</label>
 <input id="website2" name="website2" type="url">
 <br>
-<button type="submit">Submit</button>
+<button type="submit" onClick="showAndroidToast('Submit pressed')">Submit</button>
+<input type="button" value="button1" onClick="showAndroidToast('button1 pressed')" />
+
+<script type="text/javascript">
+    function showAndroidToast(toast) {
+        Android.showToast(toast);
+    }
+</script>
 </body>
 </html>

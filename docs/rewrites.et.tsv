@@ -10,16 +10,13 @@ mõttekriips( |$)	-
 uus lõik	\n\n			
 # Poor man's autopunctuation.				
 # We optimize for precision by checking that the inserted comma is preceded by a word character, thus it only works within the utterance.				
-# Works incorrectly with "mis sa siis teed" etc.				
+# Works incorrectly with <mis sa siis teed> etc.				
 (\w) (aga|et|kuid|sest|siis|vaid)( |$)	$1, $2$3			
-				
 # Relative clause pronouns				
 (\w) (mille|kelle)(l|le|lt|s|sse|st|ni|na|ks|ga|ta)( |$)	$1, $2$3$4			
 (\w) (mi|ke)(s|da|lle)( |$)	$1, $2$3$4			
-				
 # Web addresses				
 (\w)\. Ee( |$)	$1.ee			
-				
 # Small numbers as numerals (needed for commands to work)				
 #(\w) üks( |$)				
 (\w) kaks( |$)	$1 2$2			
@@ -35,7 +32,7 @@ uus lõik	\n\n
 ^ärata mind( palun)? (\d+) (minutit hiljem|minuti pärast)	set alarm for $2 minutes			
 ^ärata mind( palun)? kell (.+)	set alarm $2 o'clock			
 ^mängi muusikat (.+)	play on YouTube $1			
-^tõlgi (.+)	translate $1			
+^tõlgi (.+)	translate from Estonian $1			
 # Document templates				
 muster (1|üks)	Tere,\n\n			
 muster (2|kaks)	Nimi: []\n\nIsikukood: []\n\nAadress: []\n\n			
@@ -47,12 +44,13 @@ mine( teksti)? lõpp?u		goToEnd
 mine positsioonile (\d+)		goToCharacterPosition	$1	
 mine (\d+) sammu edasi		goForward	$1	
 mine (\d+) sammu tagasi		goBackward	$1	
+mine eelmine lause		selectReBefore	[.?!]()[^.?!]*[.?!][^.?!]*	
 eelmine väli		goToPreviousField		
 järgmine väli		goToNextField		
 vali (.+) ja lisa ?jutumärgid		replace	$2	"$2"
 vali (.+) ja lisa ?tärnid		replace	$2	*$2*
 vali (.+) ja lisa ?kriipsud		replace	$2	_$2_
-vali klambrid		select	[]	
+vali klambrid		selectReBefore	\\[([^]]*)\\]	
 selekteeri.? (.+)		select	$1	
 asend[^ ]* sõna ?(.+) sõnaga (.+)		replace	$1	$2
 asend[^ ]* sõnaga (.+) sõna ?(.+)		replace	$2	$1
@@ -76,6 +74,7 @@ kopeeri (.+)		copyStr	$1
 vali kõik ja kustuta		deleteAll		
 vali kõik ja lõika		cutAll		
 vali kõik		selectAll		
+vali (.+) kuni (.+)		selectReBefore	$1(.*)$2	
 vali (.+)		select	$1	
 lõika		cut		
 kleebi		paste		
@@ -92,4 +91,4 @@ mine paremale		goRight
 mine		imeActionGo		
 otsi		imeActionSearch		
 saada		imeActionSend		
-lõpeta		imeActionDone		
+tehtud|lõpeta		imeActionDone		
