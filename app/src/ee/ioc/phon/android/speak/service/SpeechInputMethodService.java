@@ -268,7 +268,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onAddNewline() {
-                mCommandEditor.addNewline();
+                mCommandEditor.replaceSel("\n");
             }
 
             @Override
@@ -283,7 +283,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onAddSpace() {
-                mCommandEditor.addSpace();
+                mCommandEditor.replaceSel(" ");
             }
 
             @Override
