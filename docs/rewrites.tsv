@@ -109,6 +109,5 @@ editing	et			mine( dokumendi)? algusesse		goToCharacterPosition	0
 	et			klahv number (\d+)		keyCode	$1	
 	et			klahv enter		keyCodeStr	ENTER	
 	et			klahv (tabulaat|tabulaadur|tabula rasa)		keyCodeStr	TAB	
-	et			algus ?täht (.).*		replaceSel	$1	
 	et			(.).*algus ?täht		replaceSel	$1	
 	et			rakenda (\d+) korda		apply	$1	

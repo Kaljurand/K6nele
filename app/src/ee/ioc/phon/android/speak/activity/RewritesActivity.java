@@ -46,6 +46,7 @@ public class RewritesActivity extends ListActivity {
             if (stringArray != null) {
                 setListAdapter(new ArrayAdapter<>(this, R.layout.list_item_rewrite, stringArray));
             }
+            getListView().setFastScrollEnabled(true);
         }
     }
 }

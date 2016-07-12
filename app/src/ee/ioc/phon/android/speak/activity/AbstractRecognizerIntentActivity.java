@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -431,21 +432,18 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
     }
 
-    //@Override
-    public boolean isInMultiWindowMode() {
-        return false;
-        //return super.isInMultiWindowMode();
-    }
-
     private void handleResultByWebSearch(String result) {
         Bundle extras = getExtras();
         String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
         String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
         IntentUtils.startSearchActivity(this, prefix + result + suffix);
         // Do not finish if in multi window mode because the user might want
-        // ask a follow-up query.
-        // TODO: Android N only
-        if (!isInMultiWindowMode()) {
+        // to ask a follow-up query. Android N only
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (!isInMultiWindowMode()) {
+                finish();
+            }
+        } else {
             finish();
         }
     }

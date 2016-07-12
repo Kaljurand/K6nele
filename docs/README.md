@@ -5,20 +5,26 @@ Various documents, notes, examples
 
 [components.dot](components.dot) is a diagram of Kõnele components among Android APIs and apps.
 
-[rewrites.et.tsv](rewrites.et.tsv) is a simple tab-separated file that specifies rewrite rules and commands.
-The columns are:
+[rewrites.tsv](rewrites.tsv) is a sample file that specifies (mostly) Estonian rewrite rules and commands, and conditions under which they should be applied.
+The file contains the following tab-separated columns:
 
-1. Regular expression to match (parts of) the utterance
-2. Replacement string for the matched parts
-3. Command to be called if the expression fully matches the utterance
-4. Argument 1
-5. Argument 2
-6. ...
+1. Comment. Free-form comment
+2. Locale. Locale of the utterance (e.g. "et")
+3. Service. Regular expression to match the recognizer service class name
+4. App. Regular expression to match the app package name
+5. Utterance. Regular expression to match (parts of) the utterance
+6. Replacement. String that replaces the matched parts of the utterance
+7. Command. Command to be called if the expression fully matches the utterance
+8. Arg1. First argument of the command
+9. Arg2. Second argument of the command
+
+The first line of the table is a header that names the columns. Not all columns must be present.
+Non-header lines can be commented out using an initial '#'.
 
 Rewriting is done by:
 
-    utterance = java.util.regex.Pattern.compile( COL1 ).matcher(utterance).replaceAll( COL2 )
+    utt = java.util.regex.Pattern.compile( Utterance ).matcher(utt).replaceAll( Replacement )
 
 The pre-defined commands cover cursor movement within the text and between fields, selection, replacement, copy/paste/cut,
-and the editor actions `search`, `send`, `go`, and `done`. Most of the commands can be undone.
-The arguments can back reference expression groups (`$1`, `$2`, ...) and refer to the current selection by `{}`.
+and the editor actions `search`, `send`, `go`, and `done`. Most of the commands can be repeated or undone multiple times.
+The arguments can back-reference expression groups (`$1`, `$2`, ...) and refer to the current selection by `{}`.
