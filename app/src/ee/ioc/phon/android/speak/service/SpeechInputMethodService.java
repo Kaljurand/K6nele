@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -40,6 +41,8 @@ public class SpeechInputMethodService extends InputMethodService {
     private CommandEditor mCommandEditor = new InputConnectionCommandEditor();
     private boolean mIsListening;
     private boolean mShowPartialResults;
+    private SharedPreferences mPrefs;
+    private Resources mRes;
 
     @Override
     public void onCreate() {
@@ -135,20 +138,20 @@ public class SpeechInputMethodService extends InputMethodService {
         Log.i("onStartInputView: " + editorInfo.inputType + "/" + editorInfo.imeOptions + "/" + restarting);
 
         ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(getCurrentInputConnection());
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Resources res = getResources();
-        mInputView.init(R.array.keysIme, new CallerInfo(makeExtras(prefs, res), editorInfo, getPackageName()));
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mRes = getResources();
+        mInputView.init(R.array.keysIme, new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()));
 
         //if (restarting) {
         //  return;
         //}
         // TODO: update this less often (in onStart)
-        mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(prefs, res));
+
         mInputView.setListener(getSpeechInputViewListener());
-        mShowPartialResults = PreferenceUtils.getPrefBoolean(prefs, res, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
+        mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
-        if (mIsListening || PreferenceUtils.getPrefBoolean(prefs, res, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+        if (mIsListening || PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
         }
@@ -231,6 +234,13 @@ public class SpeechInputMethodService extends InputMethodService {
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new AbstractSpeechInputViewListener() {
+
+            @Override
+            public void onComboChange(String language, ComponentName service) {
+                // TODO: add the app to the matcher
+                ComponentName app = null;
+                mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(mPrefs, mRes, language, service, app));
+            }
 
             @Override
             public void onPartialResult(List<String> results) {

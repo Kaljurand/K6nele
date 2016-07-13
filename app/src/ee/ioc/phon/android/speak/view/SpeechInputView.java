@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.view;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,8 @@ public class SpeechInputView extends LinearLayout {
     private MicButton.State mState;
 
     public interface SpeechInputViewListener {
+        void onComboChange(String language, ComponentName service);
+
         void onPartialResult(List<String> text);
 
         void onFinalResult(List<String> text, Bundle bundle);
@@ -147,6 +150,8 @@ public class SpeechInputView extends LinearLayout {
                 mListener.onSelectAll();
             }
         });
+
+        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
     }
 
     public void init(int keys, CallerInfo callerInfo) {
@@ -211,6 +216,7 @@ public class SpeechInputView extends LinearLayout {
                     stopListening();
                 }
                 mSlc.next();
+                mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
                 updateComboSelector(mSlc);
             }
         });

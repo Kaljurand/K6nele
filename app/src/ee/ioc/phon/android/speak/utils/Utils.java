@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,6 +51,8 @@ import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -335,9 +338,11 @@ public final class Utils {
     }
 
 
-    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs, Resources resources) {
+    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs, Resources resources, String language, ComponentName service, ComponentName app) {
         if (PreferenceUtils.getPrefBoolean(prefs, resources, R.string.keyRewrite, R.bool.defaultRewrite)) {
-            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, resources, R.string.keyRewritesFile, R.string.empty));
+            CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, resources, R.string.keyRewritesFile, R.string.empty),
+                    commandMatcher);
         }
         return null;
     }

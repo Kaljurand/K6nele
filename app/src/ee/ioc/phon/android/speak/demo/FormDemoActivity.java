@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.demo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -38,7 +39,10 @@ public class FormDemoActivity extends Activity {
         setContentView(webview);
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webview.addJavascriptInterface(new WebAppInterface(this), "Android");
+        // addJavascriptInterface has security issues below API 17
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            webview.addJavascriptInterface(new WebAppInterface(this), "Android");
+        }
         webview.loadUrl(getString(R.string.fileFormDemo));
     }
 

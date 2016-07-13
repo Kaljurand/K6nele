@@ -128,9 +128,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
         setUpSettingsButton();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources());
-
         mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
         // TODO: do we need to send the ComponentName of the calling activity instead
@@ -156,6 +153,12 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new AbstractSpeechInputViewListener() {
+
+            @Override
+            public void onComboChange(String language, ComponentName service) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SpeechActionActivity.this);
+                mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), language, service, getCallingActivity());
+            }
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
