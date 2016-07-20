@@ -13,6 +13,7 @@
     <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
+    <string name="labelActivityRewritesLoader">Lisa Kõnele ü.k. reegliteks</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>

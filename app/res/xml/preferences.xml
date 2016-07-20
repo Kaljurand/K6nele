@@ -143,10 +143,9 @@
             android:summary="@string/summaryLoadRewrites"
             android:title="@string/titleLoadRewrites">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.activity.RewriteLoaderActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.RewritesLoaderActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
-        <!--
         <Preference
             android:summary="@string/summaryQuickSettings"
             android:title="@string/titleQuickSettings">
@@ -154,7 +153,6 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
-        -->
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">
