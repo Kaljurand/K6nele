@@ -267,7 +267,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     /**
      * Sets the RESULT_OK intent. Adds the recorded audio data if the caller has requested it
      * and the requested format is supported or unset.
-     * <p/>
+     * <p>
      * TODO: handle audioFormat inside getAudioUri(), which would return "null"
      * if format is not supported
      */

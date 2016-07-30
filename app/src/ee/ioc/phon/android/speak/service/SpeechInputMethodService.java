@@ -267,45 +267,45 @@ public class SpeechInputMethodService extends InputMethodService {
                 Log.i("mIsListening = false");
                 mIsListening = false;
                 closeSession();
-                mCommandEditor.imeActionSearch();
+                mCommandEditor.imeActionSearch().run();
                 requestHideSelf(0);
             }
 
             @Override
             public void onDeleteLastWord() {
-                mCommandEditor.deleteLeftWord();
+                mCommandEditor.deleteLeftWord().run();
             }
 
             @Override
             public void onAddNewline() {
-                mCommandEditor.replaceSel("\n");
+                mCommandEditor.replaceSel("\n").run();
             }
 
             @Override
             public void goUp() {
-                mCommandEditor.goUp();
+                mCommandEditor.goUp().run();
             }
 
             @Override
             public void goDown() {
-                mCommandEditor.goDown();
+                mCommandEditor.goDown().run();
             }
 
             @Override
             public void onAddSpace() {
-                mCommandEditor.replaceSel(" ");
+                mCommandEditor.replaceSel(" ").run();
             }
 
             @Override
             public void onSelectAll() {
                 // TODO: show ContextMenu
-                mCommandEditor.selectAll();
+                mCommandEditor.selectAll().run();
             }
 
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                mCommandEditor.resetSel();
+                mCommandEditor.resetSel().run();
             }
 
 

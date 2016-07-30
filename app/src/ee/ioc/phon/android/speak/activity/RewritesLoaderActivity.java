@@ -33,10 +33,14 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 /**
  * Loads the rewrites from the EXTRAs of an incoming SEND-intent, or if they are missing,
  * then launches ACTION_GET_CONTENT to load the rewrites from its result data.
+ * In case of an incoming SEND-intent we only accept "text/tab-separated-values".
+ * However, if the user explicitly launches a file picker from Kõnele, then any "text/*" files
+ * can be picked.
  */
 public class RewritesLoaderActivity extends Activity {
 
-    private static final String TYPE = "text/tab-separated-values";
+    //private static final String TYPE = "text/tab-separated-values";
+    private static final String TYPE = "text/*";
     private static final int GET_CONTENT_REQUEST_CODE = 1;
 
     @Override
