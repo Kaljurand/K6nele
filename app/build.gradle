@@ -7,15 +7,15 @@ dependencies {
     compile 'com.googlecode.json-simple:json-simple:1.1'
     // TODO: This did not work
     //compile 'com.googlecode.json-simple:json-simple:1.1.1'
-    compile 'com.koushikdutta.async:androidasync:2.1.3'
-    compile 'com.android.support:support-v13:24.1.1'
+    compile 'com.koushikdutta.async:androidasync:2.1.8'
+    compile 'com.android.support:support-v13:24.2.0'
     // Enable this when using the support library for the vector drawables
     //compile 'com.android.support:appcompat-v7:23.2.1'
 }
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.2'
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
@@ -25,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 1614
-        versionName '1.6.14'
+        versionCode 1616
+        versionName '1.6.16'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }
