@@ -25,8 +25,6 @@ import ee.ioc.phon.android.speechutils.Extras;
 
 public final class IntentUtils {
 
-    //private static boolean AT_LEAST_N = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
-
     private IntentUtils() {
     }
 
@@ -66,11 +64,7 @@ public final class IntentUtils {
     /**
      * Constructs a list of search intents.
      * The first one that can be handled by the device is launched.
-     * <p/>
-     * TODO: Maybe add intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT)
-     * (if Build.VERSION.SDK_INT >= Build.VERSION_CODES.N).
-     * Currently seemed to have no effect, i.e. launching to the other window worked anyway in multi
-     * window mode. Actually, did not work if the other window contained something other than Google Now.
+     * In split-screen mode, launch the activity into the other screen.
      *
      * @param context context
      * @param query   search query
@@ -85,14 +79,14 @@ public final class IntentUtils {
         //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
         Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
         intent1.putExtra(SearchManager.QUERY, query);
-        //if (AT_LEAST_N) {
-        //    intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-        //}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
         Intent intent2 = new Intent(Intent.ACTION_SEARCH);
         intent2.putExtra(SearchManager.QUERY, query);
-        //if (AT_LEAST_N) {
-        //    intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-        //}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
         startActivityIfAvailable(context, intent1, intent2);
     }
 

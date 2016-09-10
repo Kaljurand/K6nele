@@ -36,6 +36,10 @@
     <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
+    <string name="hintSearch">Search</string>
+    <string name="labelSearch">Search"</string>
+    <string name="titleSearchRewrites">Filter rewrites</string>
+
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>

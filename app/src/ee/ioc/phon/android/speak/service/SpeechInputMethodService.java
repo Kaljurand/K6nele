@@ -147,7 +147,7 @@ public class SpeechInputMethodService extends InputMethodService {
         //}
         // TODO: update this less often (in onStart)
 
-        mInputView.setListener(getSpeechInputViewListener());
+        mInputView.setListener(getSpeechInputViewListener(editorInfo.packageName));
         mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
@@ -232,13 +232,14 @@ public class SpeechInputMethodService extends InputMethodService {
         return extras;
     }
 
-    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final String packageName) {
         return new AbstractSpeechInputViewListener() {
 
             @Override
             public void onComboChange(String language, ComponentName service) {
-                // TODO: add the app to the matcher
-                ComponentName app = null;
+                // TODO: quick hack to add app to the matcher, not sure if we can access the
+                // class name of the app
+                ComponentName app = new ComponentName(packageName, packageName);
                 mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(mPrefs, mRes, language, service, app));
             }
 

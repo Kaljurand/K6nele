@@ -209,7 +209,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.RewritesActivity"
             android:label="@string/labelActivityRewrites"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"></meta-data>
+        </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>

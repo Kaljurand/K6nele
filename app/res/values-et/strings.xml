@@ -23,6 +23,11 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
 
+
+    <string name="hintSearch">Otsi</string>
+    <string name="labelSearch">Otsi"</string>
+    <string name="titleSearchRewrites">Otsi</string>
+
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
     <string name="titleCategoryIme">Kõneklaviatuur</string>
