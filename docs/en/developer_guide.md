@@ -25,7 +25,7 @@ In addition to the standard EXTRAs, Kõnele adds the following EXTRAs:
 
 | `SERVER_URL`          | URL                           | Web address of the speech recognition server
 | `GRAMMAR_URL`         | URL                           | Web address of a speech recognition grammar file
-| `GRAMMAR_TARGET_LANG` | Comma-separated langugae codes| One or more identifiers of languages into which the recognition server should translate the raw speech recognition output
+| `GRAMMAR_TARGET_LANG` | Comma-separated language codes| One or more identifiers of languages into which the recognition server should translate the raw speech recognition output
 | `PHRASE`              | String                        | Desired transcription (could be used for adaptation)
 | `GET_AUDIO`           | Boolean                       | Return audio iff true
 | `GET_AUDIO_FORMAT`    | Mime type (only "audio/wav")  | Audio format
@@ -33,7 +33,9 @@ In addition to the standard EXTRAs, Kõnele adds the following EXTRAs:
 (The `GET_AUDIO` EXTRAs are prefixed by `android.speech.extra`, all others by
 `ee.ioc.phon.android.extra`, e.g. `ee.ioc.phon.android.extra.SERVER_URL`.)
 
-Note that the end-user _can_ override the server and grammar EXTRAs via a the Kõnele settings, i.e. your app should not assume that the specified server or grammar was actually used.
+The full list of such additional EXTRAs (some of them only experimentally supported) is [part of the speechutils-project](https://github.com/Kaljurand/speechutils/blob/master/app/src/main/java/ee/ioc/phon/android/speechutils/Extras.java).
+
+Note that the end-user _can_ override the server and grammar EXTRAs via the Kõnele settings, i.e. your app should not assume that the specified server or grammar was actually used.
 
 If you know that Kõnele is available on the device and is the only one with the required features
 then you can call it directly, i.e. without any intermediate user-selection.
@@ -91,10 +93,12 @@ adb shell am start \
 
 ## Sample code
 
-List of open-source apps that use Kõnele:
+Kõnele calls its own services via the standard interfaces
+(e.g. in `view.SpeechInputView`),
+and classes which contain "Demo" in their names contain sample code.
+
+Here are links to open-source apps that use Kõnele:
 
   - <http://github.com/Kaljurand/Arvutaja>
   - <http://github.com/v3rm0n/haalda>
 
-Furthermore, Kõnele itself (e.g. in `view.SpeechInputView`) calls its own services via the standard interfaces.
-Also, classes which contain "Demo" in their names contain demo code.
