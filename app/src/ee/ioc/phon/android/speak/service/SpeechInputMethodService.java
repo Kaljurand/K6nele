@@ -16,6 +16,7 @@ import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
@@ -38,7 +39,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
-    private CommandEditor mCommandEditor = new InputConnectionCommandEditor();
+    private CommandEditor mCommandEditor;
     private boolean mIsListening;
     private boolean mShowPartialResults;
     private SharedPreferences mPrefs;
@@ -49,6 +50,7 @@ public class SpeechInputMethodService extends InputMethodService {
         super.onCreate();
         Log.i("onCreate");
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mCommandEditor = new InputConnectionCommandEditor(getApplicationContext());
     }
 
     /**
@@ -252,9 +254,26 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
+                String curPosAsString = "";
+                ExtractedText et1 = mCommandEditor.getExtractedText();
+                if (et1 != null) {
+                    curPosAsString = et1.startOffset + "-" + et1.selectionStart + "-" + et1.selectionEnd;
+                }
                 CommandEditorResult result = mCommandEditor.commitFinalResult(getText(results));
+                ExtractedText et2 = mCommandEditor.getExtractedText();
+                if (et2 != null) {
+                    curPosAsString += "/" + et2.startOffset + "-" + et2.selectionStart + "-" + et2.selectionEnd;
+                }
                 if (mInputView != null && result != null && result.isCommand()) {
-                    mInputView.showMessage(result.toString());
+                    if (Log.DEBUG) {
+                        mInputView.showMessage(result.toString() + ", " + curPosAsString);
+                    } else {
+                        mInputView.showMessage(result.toString());
+                    }
+                } else {
+                    if (Log.DEBUG) {
+                        mInputView.showMessage(", " + curPosAsString);
+                    }
                 }
             }
 
@@ -308,7 +327,6 @@ public class SpeechInputMethodService extends InputMethodService {
                 // TODO: hide ContextMenu (if visible)
                 mCommandEditor.resetSel().run();
             }
-
 
             @Override
             public void onStartListening() {

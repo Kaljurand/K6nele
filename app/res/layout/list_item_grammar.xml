@@ -8,7 +8,7 @@
         android:id="@+id/itemGrammarName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="Shopping list"
         android:textSize="@dimen/textSize3" />
 
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemGrammarName"
         android:gravity="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textSize="@dimen/textSize2"
         android:visibility="gone" />
 

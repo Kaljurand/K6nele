@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/itemAppIcon"
         android:layout_toRightOf="@+id/itemAppIcon"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="Google Maps for Android"
         android:textSize="@dimen/textSize3" />
 
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppName"
         android:gravity="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textSize="@dimen/textSize2"
         android:visibility="gone" />
 
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppGrammarTargetLang"
         android:ellipsize="middle"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf"
         android:textColor="@color/orange1"
         android:textSize="@dimen/textSize2" />

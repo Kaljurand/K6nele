@@ -13,7 +13,7 @@
         android:gravity="fill_horizontal"
         android:inputType="textUri"
         android:scrollHorizontally="true"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

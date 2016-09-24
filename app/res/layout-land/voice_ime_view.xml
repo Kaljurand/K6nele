@@ -50,7 +50,7 @@
             android:layout_toStartOf="@+id/bImeStartStop"
             android:ellipsize="start"
             android:padding="@dimen/layoutMargin1"
-            android:singleLine="true"
+            android:maxLines="1"
             android:text="@string/testComboLabel"
             android:textColor="@color/grey300"
             android:textSize="@dimen/textSize2" />
@@ -77,7 +77,7 @@
             android:ellipsize="end"
             android:minHeight="@dimen/layoutMargin3"
             android:minWidth="@dimen/layoutMargin3"
-            android:singleLine="true"
+            android:maxLines="1"
             android:text="@string/testComboLabel"
             android:textColor="@color/grey100"
             android:textSize="@dimen/textSize10sp" />
