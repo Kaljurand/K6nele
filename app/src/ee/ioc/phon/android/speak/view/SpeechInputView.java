@@ -496,10 +496,11 @@ public class SpeechInputView extends LinearLayout {
             if (results == null || results.isEmpty()) {
                 // If we got empty results then assume that the session ended,
                 // e.g. cancel was called.
-                mListener.onFinalResult(Collections.<String>emptyList(), bundle);
+                // TODO: not sure why this was needed
+                //mListener.onFinalResult(Collections.<String>emptyList(), bundle);
             } else {
-                mListener.onFinalResult(results, bundle);
                 setText(mTvMessage, lastChars(results, true));
+                mListener.onFinalResult(results, bundle);
             }
             setGuiInitState(0);
         }

@@ -259,20 +259,18 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (et1 != null) {
                     curPosAsString = et1.startOffset + "-" + et1.selectionStart + "-" + et1.selectionEnd;
                 }
-                CommandEditorResult result = mCommandEditor.commitFinalResult(getText(results));
+                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
                 ExtractedText et2 = mCommandEditor.getExtractedText();
                 if (et2 != null) {
                     curPosAsString += "/" + et2.startOffset + "-" + et2.selectionStart + "-" + et2.selectionEnd;
                 }
-                if (mInputView != null && result != null && result.isCommand()) {
-                    if (Log.DEBUG) {
-                        mInputView.showMessage(result.toString() + ", " + curPosAsString);
-                    } else {
-                        mInputView.showMessage(result.toString());
-                    }
-                } else {
-                    if (Log.DEBUG) {
-                        mInputView.showMessage(", " + curPosAsString);
+                if (editorResult != null && editorResult.isCommand()) {
+                    if (mInputView != null) {
+                        if (Log.DEBUG) {
+                            mInputView.showMessage(editorResult.toString() + ", " + curPosAsString);
+                        } else {
+                            mInputView.showMessage(editorResult.toString());
+                        }
                     }
                 }
             }
