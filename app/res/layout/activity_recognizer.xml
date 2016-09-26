@@ -67,7 +67,7 @@
                 android:layout_centerVertical="true"
                 android:ellipsize="start"
                 android:gravity="center"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:text="@string/testComboLabel"
                 android:textColor="@color/grey300"
                 android:textSize="@dimen/textSize2" />
@@ -112,7 +112,7 @@
             android:gravity="center"
             android:minHeight="@dimen/layoutMargin3"
             android:minWidth="@dimen/layoutMargin3"
-            android:maxLines="1"
+            android:singleLine="true"
             android:text="@string/testComboLabels"
             android:textColor="@color/grey100"
             android:textSize="@dimen/textSize10sp" />

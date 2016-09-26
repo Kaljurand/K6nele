@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppGrammarTargetLang"
         android:ellipsize="middle"
-        android:maxLines="1"
+        android:singleLine="true"
         android:text="http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf"
         android:textColor="@color/orange1"
         android:textSize="@dimen/textSize2" />
