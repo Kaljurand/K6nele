@@ -229,6 +229,78 @@ Android v6 on lisanud nn "Abirakenduse" mõiste, kuid kui abirakenduseks on vali
 (Vt ka vearaporteid [200494](https://code.google.com/p/android/issues/detail?id=200494)
 ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
+## Ümberkirjutusreeglid (alates v1.6 beeta)
+
+Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud
+transkriptsiooni jooksvaks muutmiseks. Sellised reeglid võimaldavad
+
+- sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), nt "minu lemmikmatemaatiku nimi" -> "Srinivasa Ramanujan";
+- sisestada korduma kippuvaid pikemaid tekste, nt "korduv tekst number üks" -> "... mingi pikem tekstilõik ...";
+- toimetada teksti käed vabalt (st ainult kõne abil), nt "kustuta eelmine sõna", "vali sõna kass".
+
+Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn tsv-fail),
+millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnaga, mis tuleb kirjutada tabeli esimesse ritta).
+
+- __Comment__ Rida kirjeldav kommentaar.
+- __Locale__ Regulaaravaldis keele/riigi (nn _locale_) kirjeldusega (nt `et`, `en-US`).
+- __Service__ Regulaaravaldis tuvastusteenuse Java klassi nime kirjeldusega.
+- __App__ Regulaaravaldis rakenduse nime kirjeldusega, milles Kõnelet kasutatakse.
+- __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks. Võib sisaldada alamgruppe (nn _capturing group_). Näiteks `^sõna (.)[^ ]+ algustäht$`.
+- __Replacement__ Asendustekst. Võib sisaldada viiteid gruppidele. Näiteks `täht $1`.
+- __Command__ Tekstitoimetuskäsu nimi (ingliskeelne märksõna)
+- __Arg1__ Käsu esimine argument
+- __Arg2__ Käsu teine argument
+
+Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__, __App__ määratlevad, kas reegel on antud keele, rakenduse, ja tuvastusteenuse puhul aktiivne.
+
+Tekstitoimetuskäsud võimaldavad kursori liigutamist (teksti sees ja väljade vahel) (nt `goToEnd`, `goToNextField`), sõnade/lausete valimist/asendamist (nt `select`, `selectReAfter`, `replaceSel`), lõika/kleebi/kopeeri operatsioone, Androidi `search`, `send`, `go`, ja `done` operatsioone. Enamus käske on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Argumendid võivad sisaldada tavalisi sümboleid, gruppiviiteid (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab esimene alamgrupp kursori uue asukoha. Igal käsul on 0 kuni 2 argumenti.
+
+Näide. Tavaline (eestikeelne) ümberkirjutusreegel. Küsimärk määrab igaks juhuks, et tühik on valikuline. Nõnda ei sõltu reegli rakendmine sellest, kuidas tuvastaja sõnu kokku/lahku kirjutab.
+
+- __Locale__ = `et`
+- __Utterance__ = `minu lemmik ?matemaatiku ?nimi`
+- __Replacement__ = `Srinivasa Ramanujan`
+
+Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud. Muid sõnu väljundisse ei lisata, kuna __Replacement__ on tühisõne.
+
+- __Locale__ = `et`
+- __Utterance__ = `lisa ?klambrid`
+- __Replacement__ =
+- __Command__ = `replaceSel`
+- __Arg1__ = `[{}]`
+
+Näide. (Eestikeelne) kõnekäsk "saatmisnupu" vajutamiseks Google'i rakendustes Hangouts (mille pakinimi sisaldab sõne "talk") ja Allo ("fireball").
+
+- __Locale__ = `et`
+- __App__ = `google.*(talk|fireball)`
+- __Utterance__ = `saada ära`
+- __Replacement__ =
+- __Command__ = `imeActionSend`
+
+Näide. (Eestikeelne) kõnekäsk, mis tuvastab lausele vastava mustri (sõne, mis algab ja lõpeb lauselõpu märgiga) kursorile järgnevas tekstis, ning liigutab kursori mustri teise esinemise keskele (pärast lauselõpu märki ja valikulist tühikut).
+
+- __Locale__ = `et`
+- __Utterance__ = `mine ülejärgmise lause algusesse`
+- __Replacement__ =
+- __Command__ = `selectReAfter`
+- __Arg1__ = `[.?!]\\s*()[^.?!]+[.?!]`
+- __Arg2__ = `2`
+
+Sellise faili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt Google'i Arvutustabelid (Google Sheets) võimaldab sellist faili luua nii lauaarvutis kui ka mobiiliseadmes, ning samuti erinevate seadmete ja kasutajate vahel jagada.
+
+Faili laadimiseks on kaks varianti:
+
+- Kõnele menüü "Ümberkirjutusreeglid" avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida;
+- tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-formaati teisendamisks ning tulemuse jagamiseks. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203027.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
+<img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203153.png">
+
+Näitena võib kasutada [seda tabelit](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing).
+
 ## Grammatika-põhine kõnetuvastus
 
 (Eeldab grammatikatoega teenuse kasutamist)
