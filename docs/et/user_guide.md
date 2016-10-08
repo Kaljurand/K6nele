@@ -231,35 +231,47 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 ## Ümberkirjutusreeglid (alates v1.6 beeta)
 
-Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud
-transkriptsiooni jooksvaks muutmiseks. Sellised reeglid võimaldavad
+Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, või juba sisestatud teksti muutmiseks tekstitoimetuskäskude abil. Sellised reeglid võimaldavad
 
-- sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), nt "minu lemmikmatemaatiku nimi" -> "Srinivasa Ramanujan";
-- sisestada korduma kippuvaid pikemaid tekste, nt "korduv tekst number üks" -> "... mingi pikem tekstilõik ...";
-- toimetada teksti käed vabalt (st ainult kõne abil), nt "kustuta eelmine sõna", "vali sõna kass".
+- sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), ja parandada muid tuvastaja võimalikke puudujääke (autopunktsiooni puudumine, emotikonide toe puudumine, jms);
+- sisestada tekste, mis ei kipu meelde jääma, või mida ei taha tuvastajale avaldada (nt telefoninumbrid, aadressid, kontonumbrid);
+- sisestada korduma kippuvaid pikemaid tekste;
+- toimetada juba olemas olevat teksti käed vabalt (st ainult kõne abil).
 
 Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn tsv-fail),
 millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnaga, mis tuleb kirjutada tabeli esimesse ritta).
 
-- __Comment__ Rida kirjeldav kommentaar.
+- __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks (lausungimuster). Võib sisaldada alamgruppe (nn _capturing group_), mis on tähistatud sulgudega `()` ja viiteid nendele (tähistatud `\1`, `\2`, ...).
+- __Replacement__ Asendustekst. Võib sisaldada viiteid __Utterance__ gruppidele (tähistatud `$1`, `$2`, ...).
+- __Command__ Tekstitoimetuskäsu nimi (ingliskeelne märksõna)
+- __Arg1__ Käsu esimene argument
+- __Arg2__ Käsu teine argument
 - __Locale__ Regulaaravaldis keele/riigi (nn _locale_) kirjeldusega (nt `et`, `en-US`).
 - __Service__ Regulaaravaldis tuvastusteenuse Java klassi nime kirjeldusega.
-- __App__ Regulaaravaldis rakenduse nime kirjeldusega, milles Kõnelet kasutatakse.
-- __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks. Võib sisaldada alamgruppe (nn _capturing group_). Näiteks `^sõna (.)[^ ]+ algustäht$`.
-- __Replacement__ Asendustekst. Võib sisaldada viiteid gruppidele. Näiteks `täht $1`.
-- __Command__ Tekstitoimetuskäsu nimi (ingliskeelne märksõna)
-- __Arg1__ Käsu esimine argument
-- __Arg2__ Käsu teine argument
+- __App__ Regulaaravaldis rakenduse paki nime kirjeldusega, milles Kõnelet kasutatakse.
+- __Comment__ Rida kirjeldav kommentaar.
 
-Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__, __App__ määratlevad, kas reegel on antud keele, rakenduse, ja tuvastusteenuse puhul aktiivne.
+Ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
+Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__, __App__ määratlevad, kas reegel on antud keele, rakenduse, ja tuvastusteenuse puhul aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/).
 
-Tekstitoimetuskäsud võimaldavad kursori liigutamist (teksti sees ja väljade vahel) (nt `goToEnd`, `goToNextField`), sõnade/lausete valimist/asendamist (nt `select`, `selectReAfter`, `replaceSel`), lõika/kleebi/kopeeri operatsioone, Androidi `search`, `send`, `go`, ja `done` operatsioone. Enamus käske on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Argumendid võivad sisaldada tavalisi sümboleid, gruppiviiteid (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab esimene alamgrupp kursori uue asukoha. Igal käsul on 0 kuni 2 argumenti.
+Tekstitoimetuskäsud võimaldavad kursori liigutamist teksti sees ja väljade vahel (nt `goToEnd`, `goToNextField`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `delete`, `replace`), operatsioone valikuga (nt `replaceSel`, `storeSel`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Igal käsul on 0 kuni 2 argumenti. Argumendid võivad sisaldada tavalisi sümboleid, viiteid __Utterance__ gruppidele (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
 
-Näide. Tavaline (eestikeelne) ümberkirjutusreegel. Küsimärk määrab igaks juhuks, et tühik on valikuline. Nõnda ei sõltu reegli rakendmine sellest, kuidas tuvastaja sõnu kokku/lahku kirjutab.
+Näide. Lihtne (eestikeelne) ümberkirjutusreegel. Küsimärk lausungi mustris määrab igaks juhuks, et tühik on lausungis valikuline. Nõnda ei sõltu reegli rakendmine sellest, kuidas tuvastaja sõnu kokku/lahku kirjutab.
 
 - __Locale__ = `et`
 - __Utterance__ = `minu lemmik ?matemaatiku ?nimi`
 - __Replacement__ = `Srinivasa Ramanujan`
+
+Näide. Pikema teksti sisestamine. Märgid `^` ja `$` nõuavad, et lausung vastaks mustrile algusest lõpuni. Asendustekstis olevad `\n` märgid tähistavad reavahetust, ning nurksulud on lisatud selleks, et hiljem oleks lihtsam kirjas täitmist vajavate osade juurde navigeerida (nt käsuga "vali klambrid").
+
+- __Locale__ = `et`
+- __Utterance__ = `^vastuse vorm müügipakkumisele$`
+- __Replacement__ = `Lugupeetud []\n\nTäname Teid, et vastasite meie pakkumisele.\n\nLugupidamisega\nHeikki Papper\nmüügijuht`
+
+Näide. Keelest sõltumatu reegel, mis tuvastab lausungis kahe järjestikuse sõna kordumise (nt "eks ole eks ole"), ja eemaldab korduse. Muster `[^ ]+ [^ ]+` kirjeldab ühte tühikut sisaldavat sõne (st kahte sõna) ja sulud selle ümber teevad ta viidatavaks `\1` ja `$1` abil.
+
+- __Utterance__ = `([^ ]+ [^ ]+) \1`
+- __Replacement__ = `$1`
 
 Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud. Muid sõnu väljundisse ei lisata, kuna __Replacement__ on tühisõne.
 
@@ -277,7 +289,7 @@ Näide. (Eestikeelne) kõnekäsk "saatmisnupu" vajutamiseks Google'i rakendustes
 - __Replacement__ =
 - __Command__ = `imeActionSend`
 
-Näide. (Eestikeelne) kõnekäsk, mis tuvastab lausele vastava mustri (sõne, mis algab ja lõpeb lauselõpu märgiga) kursorile järgnevas tekstis, ning liigutab kursori mustri teise esinemise keskele (pärast lauselõpu märki ja valikulist tühikut).
+Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõne, mis algab ja lõpeb lauselõpumärgiga) kursorile järgnevale tekstile, ning liigutab kursori mustri teise esinemise keskele (pärast lauselõpu märki ja valikulist tühikut).
 
 - __Locale__ = `et`
 - __Utterance__ = `mine ülejärgmise lause algusesse`
@@ -286,12 +298,10 @@ Näide. (Eestikeelne) kõnekäsk, mis tuvastab lausele vastava mustri (sõne, mi
 - __Arg1__ = `[.?!]\\s*()[^.?!]+[.?!]`
 - __Arg2__ = `2`
 
-Sellise faili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt Google'i Arvutustabelid (Google Sheets) võimaldab sellist faili luua nii lauaarvutis kui ka mobiiliseadmes, ning samuti erinevate seadmete ja kasutajate vahel jagada.
+Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt Google'i Arvutustabelid (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel tsv-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
 
-Faili laadimiseks on kaks varianti:
-
-- Kõnele menüü "Ümberkirjutusreeglid" avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida;
-- tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-formaati teisendamisks ning tulemuse jagamiseks. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
+- Kõnele menüüvalik "Ümberkirjutusreeglid" avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida;
+- tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-formaati teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
@@ -299,7 +309,7 @@ Faili laadimiseks on kaks varianti:
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203153.png">
 
-Näitena võib kasutada [seda tabelit](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing).
+Näitena võib kasutada [seda reeglifaili](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing).
 
 ## Grammatika-põhine kõnetuvastus
 
