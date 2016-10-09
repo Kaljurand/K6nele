@@ -107,6 +107,21 @@
         </Preference>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/titleCategoryRewrites">
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultRewrite"
+            android:key="@string/keyRewrite"
+            android:summary="@string/summaryRewrite"
+            android:title="@string/titleRewrite" />
+        <Preference
+            android:summary="@string/summaryLoadRewrites"
+            android:title="@string/titleLoadRewrites">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.activity.RewritesLoaderActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:key="@string/keyCategoryServices"
         android:title="@string/titleCategoryServices">
@@ -134,18 +149,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryDevel">
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultRewrite"
-            android:key="@string/keyRewrite"
-            android:summary="@string/summaryRewrite"
-            android:title="@string/titleRewrite" />
-        <Preference
-            android:summary="@string/summaryLoadRewrites"
-            android:title="@string/titleLoadRewrites">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.activity.RewritesLoaderActivity"
-                android:targetPackage="ee.ioc.phon.android.speak" />
-        </Preference>
         <Preference
             android:summary="@string/summaryQuickSettings"
             android:title="@string/titleQuickSettings">

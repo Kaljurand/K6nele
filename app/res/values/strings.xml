@@ -44,6 +44,7 @@
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps &amp; Grammars</string>
+    <string name="titleCategoryRewrites">Rewrite rules</string>
     <string name="titleCategoryIme">Speech keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>

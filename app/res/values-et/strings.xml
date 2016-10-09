@@ -32,6 +32,7 @@
     <string name="titleCategoryUi">Otsingupaneel</string>
     <string name="titleCategoryIme">Kõneklaviatuur</string>
     <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
+    <string name="titleCategoryRewrites">Ümberkirjutusreeglid</string>
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
