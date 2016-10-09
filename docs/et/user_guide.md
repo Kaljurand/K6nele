@@ -206,7 +206,7 @@ mis hoolitsevad ise kogu kasutajaliidese eest (mikrofoninupp, helisignaalid, VU-
 Selliselt kutsutavad teenused on kirjas süsteemses `Häälsisend`-menüüs,
 kus üks neist on alati seatud vaikimisi teenuseks.
 (Android v4-5: `Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend`;
-Android v6: `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`; Kõnele seadetes on ka otsetee `Kõik kõnetuvastusteenused`.)
+Android v6-7: `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`; Kõnele seadetes on ka otsetee `Kõik kõnetuvastusteenused`.)
 
 
 <img src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
@@ -251,8 +251,8 @@ millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnag
 - __App__ Regulaaravaldis rakenduse paki nime kirjeldusega, milles Kõnelet kasutatakse.
 - __Comment__ Rida kirjeldav kommentaar.
 
-Ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
-Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__, __App__ määratlevad, kas reegel on antud keele, rakenduse, ja tuvastusteenuse puhul aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/).
+Igale reale vastab üks reegel, ning ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
+Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, rakenduse, ja tuvastusteenuse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/).
 
 Tekstitoimetuskäsud võimaldavad kursori liigutamist teksti sees ja väljade vahel (nt `goToEnd`, `goToNextField`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `delete`, `replace`), operatsioone valikuga (nt `replaceSel`, `storeSel`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Igal käsul on 0 kuni 2 argumenti. Argumendid võivad sisaldada tavalisi sümboleid, viiteid __Utterance__ gruppidele (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
 
@@ -298,7 +298,7 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 - __Arg1__ = `[.?!]\\s*()[^.?!]+[.?!]`
 - __Arg2__ = `2`
 
-Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt Google'i Arvutustabelid (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel tsv-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
+Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel tsv-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
 
 - Kõnele menüüvalik "Ümberkirjutusreeglid" avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida;
 - tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-formaati teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
