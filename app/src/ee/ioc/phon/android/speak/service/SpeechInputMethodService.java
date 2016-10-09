@@ -266,10 +266,10 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
                 if (editorResult != null && editorResult.isCommand()) {
                     if (mInputView != null) {
-                        if (Log.DEBUG) {
-                            mInputView.showMessage(editorResult.toString() + ", " + curPosAsString);
+                        if (false && Log.DEBUG) {
+                            mInputView.showMessage(editorResult.toString() + ", " + curPosAsString, editorResult.isSuccess());
                         } else {
-                            mInputView.showMessage(editorResult.toString());
+                            mInputView.showMessage(editorResult.toString(), editorResult.isSuccess());
                         }
                     }
                 }
