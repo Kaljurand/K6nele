@@ -287,6 +287,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                             outerClass.onError(SpeechRecognizer.ERROR_RECOGNIZER_BUSY);
                         } else if (statusCode == WebSocketResponse.STATUS_NO_SPEECH) {
                             outerClass.onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
+                        } else if (statusCode == WebSocketResponse.STATUS_NO_VALID_FRAMES) {
+                            outerClass.onError(SpeechRecognizer.ERROR_NO_MATCH);
                         } else {
                             // Server sent unsupported status code, client should be updated
                             outerClass.onError(SpeechRecognizer.ERROR_CLIENT);
