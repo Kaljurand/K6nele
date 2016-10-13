@@ -24,11 +24,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
@@ -206,7 +208,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_RECORD_AUDIO: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -265,7 +267,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     /**
      * Sets the RESULT_OK intent. Adds the recorded audio data if the caller has requested it
      * and the requested format is supported or unset.
-     * <p/>
+     * <p>
      * TODO: handle audioFormat inside getAudioUri(), which would return "null"
      * if format is not supported
      */
@@ -435,7 +437,15 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
         String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
         IntentUtils.startSearchActivity(this, prefix + result + suffix);
-        finish();
+        // Do not finish if in multi window mode because the user might want
+        // to ask a follow-up query. Android N only
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (!isInMultiWindowMode()) {
+                finish();
+            }
+        } else {
+            finish();
+        }
     }
 
     private SparseArray<String> createErrorMessages() {
