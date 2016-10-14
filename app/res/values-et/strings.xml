@@ -255,7 +255,7 @@
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleWsServer">WebSocket-aadress</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
-    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia nupule, et see Androidi sisestusmeetodite (IME) seadetes sisse lülitada.</string>
+    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia, et see Androidi klaviatuuri ja sisestusmeetodite seadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
     <string name="titleReturnErrors">Tagasta veateated</string>
@@ -271,10 +271,10 @@
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
 
     <string name="titleRewrite">Ümberkirjutamine</string>
-    <string name="summaryRewrite">Rakenda transkriptsioonile jooksvalt ümberkirjutusreegleid</string>
+    <string name="summaryRewrite">Rakenda transkriptsioonile ümberkirjutusreegleid</string>
 
     <string name="titleLoadRewrites">Ümberkirjutusreeglid</string>
-    <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid failist</string>
+    <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid tsv-failist</string>
 
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
@@ -287,7 +287,7 @@
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
     </plurals>
     <string name="buttonDemoShowEncoders">Näita toetatud formaate</string>
-    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Vajalik Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Vajalik vähemalt Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
     <string name="buttonApplyDeveloperDefaults">Arendaja seaded</string>

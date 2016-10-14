@@ -7,13 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.inputmethod.EditorInfo;
 
 import java.util.List;
@@ -29,8 +30,8 @@ public final class IntentUtils {
     /**
      * @return table that maps SpeechRecognizer error codes to RecognizerIntent error codes
      */
-    public static SparseArray<Integer> createErrorCodesServiceToIntent() {
-        SparseArray<Integer> errorCodes = new SparseArray<>();
+    public static SparseIntArray createErrorCodesServiceToIntent() {
+        SparseIntArray errorCodes = new SparseIntArray();
         errorCodes.put(SpeechRecognizer.ERROR_AUDIO, RecognizerIntent.RESULT_AUDIO_ERROR);
         errorCodes.put(SpeechRecognizer.ERROR_CLIENT, RecognizerIntent.RESULT_CLIENT_ERROR);
         errorCodes.put(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS, RecognizerIntent.RESULT_CLIENT_ERROR);
@@ -62,6 +63,9 @@ public final class IntentUtils {
     /**
      * Constructs a list of search intents.
      * The first one that can be handled by the device is launched.
+     * In split-screen mode, launch the activity into the other screen. Test this by:
+     * 1. Launch Kõnele, 2. Start split-screen, 3. Press Kõnele mic button and speak,
+     * 4. The results should be loaded into the other window.
      *
      * @param context context
      * @param query   search query
@@ -76,8 +80,14 @@ public final class IntentUtils {
         //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
         Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
         intent1.putExtra(SearchManager.QUERY, query);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
         Intent intent2 = new Intent(Intent.ACTION_SEARCH);
         intent2.putExtra(SearchManager.QUERY, query);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
         startActivityIfAvailable(context, intent1, intent2);
     }
 
@@ -139,10 +149,12 @@ public final class IntentUtils {
     private static Bundle toBundle(EditorInfo attribute) {
         Bundle bundle = new Bundle();
         bundle.putBundle("extras", attribute.extras);
+        bundle.putInt("inputType", attribute.inputType);
+        bundle.putInt("initialSelStart", attribute.initialSelStart);
+        bundle.putInt("initialSelEnd", attribute.initialSelEnd);
         bundle.putString("actionLabel", asString(attribute.actionLabel));
         bundle.putString("fieldName", asString(attribute.fieldName));
         bundle.putString("hintText", asString(attribute.hintText));
-        bundle.putString("inputType", String.valueOf(attribute.inputType));
         bundle.putString("label", asString(attribute.label));
         // This line gets the actual caller package registered in the package registry.
         // The key needs to be "packageName".

@@ -6,6 +6,12 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 
+    <!-- Some Chromebooks don't support touch. Although not essential,
+     it's a good idea to explicitly include this declaration. -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:description="@string/descriptionApp"

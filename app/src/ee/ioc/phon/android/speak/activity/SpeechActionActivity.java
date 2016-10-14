@@ -103,6 +103,14 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO: do not use the default dialog style when in multi window mode
+        /*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (isInMultiWindowMode()) {
+                setTheme(R.style.Theme_K6nele_NoActionBar);
+            }
+        }
+        */
         setUpActivity(R.layout.activity_recognizer);
         mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
     }

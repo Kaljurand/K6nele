@@ -27,11 +27,19 @@ public class QuickSettingsActivity extends Activity {
             }
         });
 
-        Button b2 = (Button) findViewById(R.id.buttonApplyWsServerGlobal);
-        b2.setOnClickListener(new View.OnClickListener() {
+        Button b2Ws = (Button) findViewById(R.id.buttonApplyWsServerGlobalWs);
+        b2Ws.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngr.setWsServerGlobal();
+                mngr.setWsServerGlobalWs();
+            }
+        });
+
+        Button b2Wss = (Button) findViewById(R.id.buttonApplyWsServerGlobalWss);
+        b2Wss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mngr.setWsServerGlobalWss();
             }
         });
 

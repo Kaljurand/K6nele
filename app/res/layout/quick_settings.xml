@@ -14,10 +14,16 @@
         android:text="@string/buttonApplyDeveloperDefaults" />
 
     <Button
-        android:id="@+id/buttonApplyWsServerGlobal"
+        android:id="@+id/buttonApplyWsServerGlobalWs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WebSocket server global" />
+        android:text="WebSocket server global (ws)" />
+
+    <Button
+        android:id="@+id/buttonApplyWsServerGlobalWss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WebSocket server global (wss)" />
 
     <Button
         android:id="@+id/buttonApplyWsServerLocal"

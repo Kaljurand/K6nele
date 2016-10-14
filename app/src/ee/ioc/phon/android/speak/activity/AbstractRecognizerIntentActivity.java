@@ -32,6 +32,7 @@ import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -72,7 +73,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
 
-    private static SparseArray<Integer> mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
+    private static SparseIntArray mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
 
     private List<byte[]> mBufferList = new ArrayList<>();
 
@@ -468,10 +469,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected void setResultError(int errorCode) {
         if (mIsReturnErrors) {
             Integer errorCodeIntent = mErrorCodesServiceToIntent.get(errorCode);
-            if (errorCodeIntent != null) {
-                setResult(errorCodeIntent);
-                finish();
-            }
+            setResult(errorCodeIntent);
+            finish();
         }
     }
 
