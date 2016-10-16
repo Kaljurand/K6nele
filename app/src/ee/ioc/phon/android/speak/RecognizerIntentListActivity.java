@@ -37,10 +37,10 @@ import android.widget.AdapterView.OnItemClickListener;
 /**
  * <p>Some methods that various list activities can share by extending
  * this class rather than extending the ListActivity-class directly.</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
-public class RecognizerIntentListActivity extends ListActivity {
+public abstract class RecognizerIntentListActivity extends ListActivity {
 
 	protected void toast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -60,7 +60,7 @@ public class RecognizerIntentListActivity extends ListActivity {
 	protected void setClickToFinish(final Uri contentUri, final String columnName) {
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Cursor cursor = (Cursor) parent.getItemAtPosition(position); 
+				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 				final long key = cursor.getLong(cursor.getColumnIndex(columnName));
 				Intent intent = new Intent();
 				intent.setData(ContentUris.withAppendedId(contentUri, key));

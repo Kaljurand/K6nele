@@ -30,7 +30,6 @@ public class EncoderDemoActivity extends Activity {
     private Runnable mStopTask;
 
     private byte[] mRecording;
-    private byte[] mRecordingAsWav;
 
     private Button mBTest1;
 
@@ -111,11 +110,11 @@ public class EncoderDemoActivity extends Activity {
     private void stopRecording0() {
         releaseRecorder();
         if (mStopHandler != null) mStopHandler.removeCallbacks(mStopTask);
-        mRecordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, (short) 2, (short) 1);
+        byte[] recordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, (short) 2, (short) 1);
         mBTest1.setText(R.string.buttonImeSpeak);
 
         try {
-            Uri uriWav = getAudioUri("audio.wav", mRecordingAsWav);
+            Uri uriWav = getAudioUri("audio.wav", recordingAsWav);
             Intent intent = new Intent(this, DetailsActivity.class);
             intent.setDataAndType(uriWav, null);
             startActivity(intent);

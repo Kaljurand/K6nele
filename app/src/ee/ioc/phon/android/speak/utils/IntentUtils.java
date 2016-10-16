@@ -14,12 +14,11 @@ import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.inputmethod.EditorInfo;
 
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speechutils.Extras;
 
@@ -31,8 +30,8 @@ public final class IntentUtils {
     /**
      * @return table that maps SpeechRecognizer error codes to RecognizerIntent error codes
      */
-    public static SparseArray<Integer> createErrorCodesServiceToIntent() {
-        SparseArray<Integer> errorCodes = new SparseArray<>();
+    public static SparseIntArray createErrorCodesServiceToIntent() {
+        SparseIntArray errorCodes = new SparseIntArray();
         errorCodes.put(SpeechRecognizer.ERROR_AUDIO, RecognizerIntent.RESULT_AUDIO_ERROR);
         errorCodes.put(SpeechRecognizer.ERROR_CLIENT, RecognizerIntent.RESULT_CLIENT_ERROR);
         errorCodes.put(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS, RecognizerIntent.RESULT_CLIENT_ERROR);
@@ -64,7 +63,9 @@ public final class IntentUtils {
     /**
      * Constructs a list of search intents.
      * The first one that can be handled by the device is launched.
-     * In split-screen mode, launch the activity into the other screen.
+     * In split-screen mode, launch the activity into the other screen. Test this by:
+     * 1. Launch Kõnele, 2. Start split-screen, 3. Press Kõnele mic button and speak,
+     * 4. The results should be loaded into the other window.
      *
      * @param context context
      * @param query   search query
@@ -93,7 +94,6 @@ public final class IntentUtils {
     public static boolean startActivityIfAvailable(Context context, Intent... intents) {
         for (Intent intent : intents) {
             if (isActivityAvailable(context, intent)) {
-                Log.i("starting activity: " + intent.getAction() + ", flags: " + intent.getFlags());
                 context.startActivity(intent);
                 return true;
             }

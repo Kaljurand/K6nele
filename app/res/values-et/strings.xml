@@ -13,7 +13,7 @@
     <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
-    <string name="labelActivityRewritesLoader">Lisa Kõnele ü.k. reegliteks</string>
+    <string name="labelActivityRewritesLoader">Kõnele ü.k. reeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
@@ -263,7 +263,7 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleWsServer">WebSocket-aadress</string>
-    <string name="titleEnableIme">Kõneklaviatuuri sisse lülitamine</string>
+    <string name="titleEnableIme">Kõneklaviatuuri sisselülitamine</string>
     <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia, et see Androidi klaviatuuri ja sisestusmeetodite seadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
@@ -276,7 +276,7 @@
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
     <string name="summaryImeCombo">Uuendan…</string>
-    <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage nupule.</string>
+    <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage siia.</string>
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
     <string name="labelIme">Kõnele kõneklaviatuur</string>
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
