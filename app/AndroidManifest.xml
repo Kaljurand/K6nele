@@ -3,6 +3,7 @@
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
 
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 

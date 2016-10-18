@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -17,8 +18,13 @@ import android.text.SpannableString;
 import android.util.SparseIntArray;
 import android.view.inputmethod.EditorInfo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 import java.util.List;
 
+import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speechutils.Extras;
 
@@ -71,32 +77,37 @@ public final class IntentUtils {
      * @param query   search query
      */
     public static void startSearchActivity(Context context, CharSequence query) {
-        // TODO: how to pass the search query to ACTION_ASSIST
-        // TODO: maybe use SearchManager instead
-        //Intent intent0 = new Intent(Intent.ACTION_ASSIST);
-        //intent0.putExtra(Intent.EXTRA_ASSIST_CONTEXT, new Bundle());
-        //intent0.putExtra(SearchManager.QUERY, query);
-        //intent0.putExtra(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, false);
-        //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
-        Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
-        intent1.putExtra(SearchManager.QUERY, query);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        try {
+            startActivityIfAvailable(context, parseIntentQuery(query));
+        } catch (JSONException e) {
+            Log.i("startSearchActivity: JSON: " + e.getMessage());
+            // TODO: how to pass the search query to ACTION_ASSIST
+            // TODO: maybe use SearchManager instead
+            //Intent intent0 = new Intent(Intent.ACTION_ASSIST);
+            //intent0.putExtra(Intent.EXTRA_ASSIST_CONTEXT, new Bundle());
+            //intent0.putExtra(SearchManager.QUERY, query);
+            //intent0.putExtra(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, false);
+            //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
+            startActivityIfAvailable(context,
+                    getSearchIntent(Intent.ACTION_WEB_SEARCH, query),
+                    getSearchIntent(Intent.ACTION_SEARCH, query));
         }
-        Intent intent2 = new Intent(Intent.ACTION_SEARCH);
-        intent2.putExtra(SearchManager.QUERY, query);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-        }
-        startActivityIfAvailable(context, intent1, intent2);
     }
 
     public static boolean startActivityIfAvailable(Context context, Intent... intents) {
-        for (Intent intent : intents) {
-            if (isActivityAvailable(context, intent)) {
-                context.startActivity(intent);
-                return true;
+        try {
+            for (Intent intent : intents) {
+                if (isActivityAvailable(context, intent)) {
+                    context.startActivity(intent);
+                    return true;
+                } else {
+                    Log.i("startActivityIfAvailable: not available: " + intent);
+                }
             }
+        } catch (SecurityException e) {
+            // This happens if the user constructs an intent for which we do not have a
+            // permission, e.g. the SET_ALARM intent.
+            Log.i("startActivityIfAvailable: " + e.getMessage());
         }
         return false;
     }
@@ -177,5 +188,59 @@ public final class IntentUtils {
         final PackageManager mgr = context.getPackageManager();
         List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
+    }
+
+    private static Intent getSearchIntent(String action, CharSequence query) {
+        Intent intent = new Intent(action);
+        intent.putExtra(SearchManager.QUERY, query);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
+        return intent;
+    }
+
+    /**
+     * TODO: support: array extras, flags, etc.
+     *
+     * @param query Intent serialized as JSON
+     * @return Deserialized intent
+     * @throws JSONException if parsing fails
+     */
+    private static Intent parseIntentQuery(CharSequence query) throws JSONException {
+        Log.i("parseIntentQuery: " + query);
+        JSONObject json = new JSONObject(query.toString());
+        Intent intent = new Intent(json.getString("action"));
+        String data = json.optString("data", null);
+        if (data != null) {
+            intent.setData(Uri.parse(data));
+        }
+        JSONObject extras = json.optJSONObject("extras");
+        if (extras != null) {
+            Iterator<String> iter = extras.keys();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                Object val = extras.get(key);
+                if (val instanceof Long) {
+                    intent.putExtra(key, (Long) val);
+                } else if (val instanceof Integer) {
+                    intent.putExtra(key, (Integer) val);
+                } else if (val instanceof Boolean) {
+                    intent.putExtra(key, (Boolean) val);
+                } else if (val instanceof Double) {
+                    intent.putExtra(key, (Double) val);
+                } else if (val instanceof Float) {
+                    intent.putExtra(key, (Float) val);
+                } else if (val instanceof String) {
+                    intent.putExtra(key, (String) val);
+                }
+            }
+        }
+        // TODO: this could be expected from the JSON
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
+        Log.i("parseIntentQuery: " + intent);
+        Log.i("parseIntentQuery: " + Utils.ppBundle(intent.getExtras()));
+        return intent;
     }
 }
