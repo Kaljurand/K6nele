@@ -236,7 +236,8 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 - sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), ja parandada muid tuvastaja võimalikke puudujääke (autopunktsiooni puudumine, emotikonide toe puudumine, jms);
 - sisestada tekste, mis ei kipu meelde jääma, või mida ei taha tuvastajale avaldada (nt telefoninumbrid, aadressid, kontonumbrid);
 - sisestada korduma kippuvaid pikemaid tekste;
-- toimetada juba olemas olevat teksti käed vabalt (st ainult kõne abil).
+- toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil);
+- käivitada teisi Androidi rakendusi.
 
 Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn tsv-fail),
 millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnaga, mis tuleb kirjutada tabeli esimesse ritta).
@@ -273,6 +274,28 @@ Näide. Keelest sõltumatu reegel, mis tuvastab lausungis kahe järjestikuse sõ
 - __Utterance__ = `([^ ]+ [^ ]+) \1`
 - __Replacement__ = `$1`
 
+Näide. Eestikeelne kõnekäsk (nt `ärata mind kell 8 0 5 mine tööle`) äratuskella helisema panemiseks.
+Reegel eraldab lausungist vajalikud argumendid (tundide arv, minutite arv, täpsustav kommentaar) ning
+loob nende põhjal [JSON](http://www.json.org/)-struktuuri. Kõnele püüab intereteerida seda struktuuri kui Androidi
+[Intent](https://developer.android.com/reference/android/content/Intent.html) kirjeldust. Kui see õnnestub,
+siis püüab Kõnele leida _Intent_'ile vastava rakenduse ning selle käivitada.
+
+- __Locale__ = `et`
+- __Utterance__ = `^ärata mind(?: palun)? kell (\d+) (?:0 )?(\d+)\s*(.*)$`
+- __Replacement__ =
+
+{% highlight json %}
+         {
+             "action": "android.intent.action.SET_ALARM",
+             "extras": {
+                 "android.intent.extra.alarm.HOUR": $1,
+                 "android.intent.extra.alarm.MINUTES": $2,
+                 "android.intent.extra.alarm.MESSAGE": "$3",
+                 "android.intent.extra.alarm.SKIP_UI": true
+             }
+         }
+{% endhighlight %}
+
 Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud. Muid sõnu väljundisse ei lisata, kuna __Replacement__ on tühisõne.
 
 - __Locale__ = `et`
@@ -281,12 +304,12 @@ Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud.
 - __Command__ = `replaceSel`
 - __Arg1__ = `[{}]`
 
-Näide. (Eestikeelne) kõnekäsk "saatmisnupu" vajutamiseks Google'i rakendustes Hangouts (mille pakinimi sisaldab sõne "talk") ja Allo ("fireball").
+Näide. (Eestikeelne) kõnekäsk "saatmisnupu" vajutamiseks Google'i rakendustes Hangouts (mille pakinimi sisaldab sõne "talk") ja Allo ("fireball"). Lausungimuter sisaldab suvalist teksti `.*`, mida eraldab käsust `saada ära` sõnapiir `\b`. Ennem käsu (`imeActionSend`) täitmist lisatakse tekst väljundisse.
 
 - __Locale__ = `et`
 - __App__ = `google.*(talk|fireball)`
-- __Utterance__ = `saada ära`
-- __Replacement__ =
+- __Utterance__ = `(.*)\bsaada ära`
+- __Replacement__ = `$1`
 - __Command__ = `imeActionSend`
 
 Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõne, mis algab ja lõpeb lauselõpumärgiga) kursorile järgnevale tekstile, ning liigutab kursori mustri teise esinemise keskele (pärast lauselõpu märki ja valikulist tühikut).
