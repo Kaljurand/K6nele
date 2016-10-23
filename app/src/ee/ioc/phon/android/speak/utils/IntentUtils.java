@@ -17,6 +17,7 @@ import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
 import android.util.SparseIntArray;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speechutils.Extras;
 
@@ -104,10 +106,12 @@ public final class IntentUtils {
                     Log.i("startActivityIfAvailable: not available: " + intent);
                 }
             }
+            Toast.makeText(context, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
         } catch (SecurityException e) {
             // This happens if the user constructs an intent for which we do not have a
             // permission, e.g. the SET_ALARM intent.
             Log.i("startActivityIfAvailable: " + e.getMessage());
+            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }
@@ -209,7 +213,19 @@ public final class IntentUtils {
     private static Intent parseIntentQuery(CharSequence query) throws JSONException {
         Log.i("parseIntentQuery: " + query);
         JSONObject json = new JSONObject(query.toString());
-        Intent intent = new Intent(json.getString("action"));
+        Intent intent = new Intent();
+        String action = json.optString("action", null);
+        if (action != null) {
+            intent.setAction(action);
+        }
+        String component = json.optString("component", null);
+        if (component != null) {
+            intent.setComponent(ComponentName.unflattenFromString(component));
+        }
+        String packageName = json.optString("package", null);
+        if (component != null) {
+            intent.setPackage(packageName);
+        }
         String data = json.optString("data", null);
         if (data != null) {
             intent.setData(Uri.parse(data));
