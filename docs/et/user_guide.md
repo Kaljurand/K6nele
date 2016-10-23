@@ -110,7 +110,7 @@ Kui valitud on mitu teenust/keelt, siis on paneelil lisaks veel teenuse/keele va
 - lühike vajus lülitab järgmisele teenusele/keelele,
 - pikk vajutus kuvab kõik võimalikud teenused/keeled, võimaldades valikut muuta.
 
-(Vt näidet peatükis "Grammatika-põhine kõnetuvastus".)
+(Vt näidet peatükis "Grammatikapõhine kõnetuvastus".)
 
 Lisaks Kõnele oma seadetele, on Kõnelet võimalik konfigureerida kolmes Androidi süsteemses
 menüüs:
@@ -275,8 +275,8 @@ Näide. Keelest sõltumatu reegel, mis tuvastab lausungis kahe järjestikuse sõ
 - __Replacement__ = `$1`
 
 Näide. Eestikeelne kõnekäsk (nt `ärata mind kell 8 0 5 mine tööle`) äratuskella helisema panemiseks.
-Reegel eraldab lausungist vajalikud argumendid (tundide arv, minutite arv, täpsustav kommentaar) ning
-loob nende põhjal [JSON](http://www.json.org/)-struktuuri. Kõnele püüab intereteerida seda struktuuri kui Androidi
+Reegel eraldab lausungist vajalikud argumendid (tundide arv `8`, minutite arv `5`, täpsustav kommentaar `mine tööle`) ning
+loob nende põhjal [JSON](http://www.json.org/)-struktuuri. Kõnele püüab interpreteerida seda struktuuri kui Androidi
 [Intent](https://developer.android.com/reference/android/content/Intent.html) kirjeldust. Kui see õnnestub,
 siis püüab Kõnele leida _Intent_'ile vastava rakenduse ning selle käivitada.
 
@@ -324,7 +324,7 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel tsv-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
 
 - Kõnele menüüvalik "Ümberkirjutusreeglid" avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida;
-- tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-formaati teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
+- tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
@@ -334,7 +334,7 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 
 Näitena võib kasutada [seda reeglifaili](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing).
 
-## Grammatika-põhine kõnetuvastus
+## Grammatikapõhine kõnetuvastus
 
 (Eeldab grammatikatoega teenuse kasutamist)
 
@@ -354,7 +354,7 @@ mis tuleb eelnevalt serveris registreerida.
 Kõnele seadetes, menüüs "Grammatikad" on loend juba registreeritud grammatikatest.
 Grammatika omistamiseks rakendusele tuleb sellele "Rakendused" loendis pikalt vajutada (_long tap_).
 
-Vaatleme näitena grammatika-põhist tuvastust rakenduse _Google Now_ otsingureal.
+Vaatleme näitena grammatikapõhist tuvastust rakenduse _Google Now_ otsingureal.
 See rakendus võimaldab loomulikus keeles antud sisendi põhjal teha erinevaid toimingud
 (äratuskella helisema panemine, aadressiotsing, mõõtühikute teisendamine, jms), kuid
 eesti keelt sisendina ei toeta, st eestikeelse sisendi puhul sooritatakse pelgalt veebiotsing.
