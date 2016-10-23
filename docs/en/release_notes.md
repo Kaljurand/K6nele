@@ -23,6 +23,14 @@ Kõnele versions and their required Android versions:
 
 ## v1.1 - v1.5
 
+### v1.5.22 (2016-10-15)
+
+New in this release:
+
+- voice search panel now supports the Android v7 split screen mode, by loading the search results into the other window
+- fix occasional crash while recording (on Android v7), [speechutils issue #4](https://github.com/Kaljurand/speechutils/issues/4)
+- minor UI improvements
+
 ### v1.5.20 (2016-04-08)
 
 New in this release:
