@@ -178,6 +178,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
         }
 
+        if (mExtras.containsKey(Extras.EXTRA_COMBO)) {
+            PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyCurrentCombo, mExtras.getString(Extras.EXTRA_COMBO));
+        }
+
         if (!mExtras.isEmpty()) {
             mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
         }

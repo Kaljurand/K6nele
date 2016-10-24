@@ -1,11 +1,19 @@
 package ee.ioc.phon.android.speak.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -17,6 +25,7 @@ import java.util.Set;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.adapter.ComboAdapter;
 import ee.ioc.phon.android.speak.model.Combo;
+import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -51,13 +60,21 @@ public class ComboSelectorActivity extends Activity {
             super.onPause();
             ArrayAdapter<Combo> adapter = (ArrayAdapter<Combo>) getListAdapter();
             Set<String> selected = new HashSet<>();
+            List<Combo> selectedCombos = new ArrayList<>();
             for (int i = 0; i < adapter.getCount(); i++) {
                 Combo combo = adapter.getItem(i);
-                if (combo.isSelected()) {
+                if (combo != null && combo.isSelected()) {
                     selected.add(combo.getId());
+                    selectedCombos.add(combo);
                 }
             }
             PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), mKey, selected);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                // The app shortcuts correspond to the voice panel combo settings
+                if (mKey == R.string.keyCombo) {
+                    publishShortcuts(getActivity().getApplicationContext(), selectedCombos);
+                }
+            }
         }
 
         private void initModel() {
@@ -74,7 +91,7 @@ public class ComboSelectorActivity extends Activity {
 
                 @Override
                 public void onComplete(List<String> combos, Set<String> selectedCombos) {
-                    List<Combo> list = new ArrayList<Combo>();
+                    List<Combo> list = new ArrayList<>();
                     for (String comboAsString : combos) {
                         Combo combo = get(comboAsString);
                         if (selectedCombos.contains(comboAsString)) {
@@ -99,6 +116,26 @@ public class ComboSelectorActivity extends Activity {
 
         private Combo get(String id) {
             return new Combo(getActivity(), id);
+        }
+
+        @TargetApi(Build.VERSION_CODES.N_MR1)
+        private void publishShortcuts(Context context, List<Combo> selectedCombos) {
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+            List<ShortcutInfo> shortcuts = new ArrayList<>();
+            for (Combo combo : selectedCombos) {
+                Intent intent = new Intent(context, SpeechActionActivity.class);
+                intent.setAction(RecognizerIntent.ACTION_WEB_SEARCH);
+                intent.putExtra(Extras.EXTRA_COMBO, combo.getId());
+                intent.putExtra(Extras.EXTRA_AUTO_START, true);
+                // Add service label to short label
+                shortcuts.add(new ShortcutInfo.Builder(context, combo.getId())
+                        .setIntent(intent)
+                        .setShortLabel(combo.getLanguage())
+                        .setLongLabel(String.format(getResources().getString(R.string.labelComboItem), combo.getService(), combo.getLanguage()))
+                        .setIcon(Icon.createWithResource(context, R.drawable.ic_voice_search_api_material))
+                        .build());
+            }
+            shortcutManager.setDynamicShortcuts(shortcuts);
         }
     }
 }

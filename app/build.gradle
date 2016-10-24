@@ -14,8 +14,8 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '24.0.3'
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1620
         versionName '1.6.20'
         // Enable this when using the support library for the vector drawables
