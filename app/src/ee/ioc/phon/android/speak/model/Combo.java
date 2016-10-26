@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.model;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.util.Pair;
 
@@ -14,17 +15,24 @@ public class Combo {
     public static final Comparator SORT_BY_SELECTED_BY_LANGUAGE = new SortBySelectedByLanguage();
 
     private final String mId;
-    private final String mService;
-    private final String mLanguage;
+    private final String mServiceLabel;
+    private final String mLocaleShortLabel;
+    private final String mLocaleLongLabel;
     private final String mAsString;
+    private final String mFormatLabelComboItem;
+    private final ComponentName mComponentName;
     private boolean mIsSelected;
 
     public Combo(Context context, String id) {
+        // Can return <null, "">
+        Pair<ComponentName, String> pair = RecognitionServiceManager.unflattenFromString(id);
         mId = id;
-        Pair<String, String> comboPair = RecognitionServiceManager.getLabel(context, id);
-        mService = comboPair.first;
-        mLanguage = comboPair.second;
-        mAsString = String.format(context.getString(R.string.labelComboListItem), mService, mLanguage);
+        mComponentName = pair.first;
+        mServiceLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
+        mLocaleShortLabel = RecognitionServiceManager.getDisplayLanguage(pair.second);
+        mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(pair.second);
+        mFormatLabelComboItem = context.getString(R.string.labelComboItem);
+        mAsString = String.format(context.getString(R.string.labelComboListItem), mServiceLabel, mLocaleLongLabel);
     }
 
     public String getId() {
@@ -32,11 +40,23 @@ public class Combo {
     }
 
     public String getService() {
-        return mService;
+        return mServiceLabel;
     }
 
     public String getLanguage() {
-        return mLanguage;
+        return mLocaleLongLabel;
+    }
+
+    public String getShortLabel() {
+        return String.format(mFormatLabelComboItem, mServiceLabel, mLocaleShortLabel);
+    }
+
+    public String getLongLabel() {
+        return String.format(mFormatLabelComboItem, mServiceLabel, mLocaleLongLabel);
+    }
+
+    public int getIcon(Context context) {
+        return RecognitionServiceManager.getServiceIcon(context, mComponentName);
     }
 
     public String toString() {

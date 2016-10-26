@@ -28,6 +28,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
@@ -368,8 +369,8 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private void updateComboSelector(ServiceLanguageChooser slc) {
-        Pair<String, String> pair = RecognitionServiceManager.getLabel(getContext(), slc.getCombo());
-        mBComboSelector.setText(String.format(getResources().getString(R.string.labelComboItem), pair.first, pair.second));
+        Combo combo = new Combo(getContext(), slc.getCombo());
+        mBComboSelector.setText(combo.getLongLabel());
     }
 
     private void updateServiceLanguage(SpeechRecognizer sr) {

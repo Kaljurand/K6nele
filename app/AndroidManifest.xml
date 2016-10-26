@@ -259,6 +259,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <service
             android:name=".service.WebSocketRecognitionService"
             android:exported="true"
+            android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceWs"
             android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>
@@ -277,6 +278,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <service
             android:name=".service.HttpRecognitionService"
             android:exported="true"
+            android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceHttp"
             android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>

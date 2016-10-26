@@ -122,6 +122,8 @@ public class ComboSelectorActivity extends Activity {
         private void publishShortcuts(Context context, List<Combo> selectedCombos) {
             ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
             List<ShortcutInfo> shortcuts = new ArrayList<>();
+            int maxShortcutCountPerActivity = shortcutManager.getMaxShortcutCountPerActivity();
+            int counter = 0;
             for (Combo combo : selectedCombos) {
                 Intent intent = new Intent(context, SpeechActionActivity.class);
                 intent.setAction(RecognizerIntent.ACTION_WEB_SEARCH);
@@ -130,10 +132,15 @@ public class ComboSelectorActivity extends Activity {
                 // Add service label to short label
                 shortcuts.add(new ShortcutInfo.Builder(context, combo.getId())
                         .setIntent(intent)
-                        .setShortLabel(combo.getLanguage())
-                        .setLongLabel(String.format(getResources().getString(R.string.labelComboItem), combo.getService(), combo.getLanguage()))
-                        .setIcon(Icon.createWithResource(context, R.drawable.ic_voice_search_api_material))
+                        .setShortLabel(combo.getShortLabel())
+                        .setLongLabel(combo.getLongLabel())
+                        .setIcon(Icon.createWithResource(context, combo.getIcon(context)))
                         .build());
+                counter++;
+                // We are only allowed a certain number (5) of shortcuts
+                if (counter >= maxShortcutCountPerActivity) {
+                    break;
+                }
             }
             shortcutManager.setDynamicShortcuts(shortcuts);
         }

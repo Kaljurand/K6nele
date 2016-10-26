@@ -19,6 +19,7 @@ import android.util.SparseIntArray;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -204,7 +205,7 @@ public final class IntentUtils {
     }
 
     /**
-     * TODO: support: array extras, flags, etc.
+     * TODO: support: array extras, broadcast intent, voice interaction lauch mode, etc.
      *
      * @param query Intent serialized as JSON
      * @return Deserialized intent
@@ -251,10 +252,21 @@ public final class IntentUtils {
                 }
             }
         }
-        // TODO: this could be expected from the JSON
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        JSONArray categories = json.optJSONArray("categories");
+        if (categories != null) {
+            int length = categories.length();
+            for (int i = 0; i < length; i++) {
+                intent.addCategory(categories.getString(i));
+            }
         }
+        JSONArray flags = json.optJSONArray("flags");
+        if (flags != null) {
+            int length = flags.length();
+            for (int i = 0; i < length; i++) {
+                intent.addFlags(flags.getInt(i));
+            }
+        }
+
         Log.i("parseIntentQuery: " + intent);
         Log.i("parseIntentQuery: " + Utils.ppBundle(intent.getExtras()));
         return intent;
