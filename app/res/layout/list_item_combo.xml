@@ -11,11 +11,26 @@
         android:textColor="@color/grey50"
         android:textSize="@dimen/textSize3" />
 
+    <ImageView
+        android:id="@+id/serviceIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/service"
+        android:layout_below="@+id/language"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/cdServiceIcon"
+        android:maxHeight="24dp"
+        android:maxWidth="24dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_service" />
+
     <TextView
         android:id="@+id/service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/language"
+        android:layout_toEndOf="@+id/serviceIcon"
+        android:layout_toRightOf="@+id/serviceIcon"
         android:textSize="@dimen/textSize2" />
 
     <CheckBox

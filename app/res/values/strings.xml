@@ -240,6 +240,7 @@ More grammars are available at
     <string name="cdWaveform">Waveform of the spoken input</string>
     <string name="cdVolume">Volume level</string>
     <string name="cdAppIcon">App icon</string>
+    <string name="cdServiceIcon">Service icon</string>
     <string name="cdChangeInputMethod">Change input method</string>
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
