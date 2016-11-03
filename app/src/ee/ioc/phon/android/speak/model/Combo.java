@@ -21,6 +21,7 @@ public class Combo {
     private final String mAsString;
     private final String mFormatLabelComboItem;
     private final ComponentName mComponentName;
+    private final String mLocaleAsStr;
     private boolean mIsSelected;
 
     public Combo(Context context, String id) {
@@ -28,15 +29,24 @@ public class Combo {
         Pair<ComponentName, String> pair = RecognitionServiceManager.unflattenFromString(id);
         mId = id;
         mComponentName = pair.first;
+        mLocaleAsStr = pair.second;
         mServiceLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
-        mLocaleShortLabel = RecognitionServiceManager.getDisplayLanguage(pair.second);
-        mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(pair.second);
+        mLocaleShortLabel = RecognitionServiceManager.getDisplayLanguage(mLocaleAsStr);
+        mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(mLocaleAsStr);
         mFormatLabelComboItem = context.getString(R.string.labelComboItem);
         mAsString = String.format(context.getString(R.string.labelComboListItem), mServiceLabel, mLocaleLongLabel);
     }
 
     public String getId() {
         return mId;
+    }
+
+    public ComponentName getServiceComponent() {
+        return mComponentName;
+    }
+
+    public String getLocaleAsStr() {
+        return mLocaleAsStr;
     }
 
     public String getService() {

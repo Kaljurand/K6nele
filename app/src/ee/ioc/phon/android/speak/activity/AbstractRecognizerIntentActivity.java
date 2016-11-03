@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.PatternSyntaxException;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -55,6 +56,7 @@ import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
+import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -178,8 +180,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
         }
 
-        if (mExtras.containsKey(Extras.EXTRA_COMBO)) {
-            PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyCurrentCombo, mExtras.getString(Extras.EXTRA_COMBO));
+        if (mExtras.containsKey(Extras.EXTRA_SERVICE_COMPONENT)) {
+            String combo = mExtras.getString(Extras.EXTRA_SERVICE_COMPONENT);
+            if (mExtras.containsKey(RecognizerIntent.EXTRA_LANGUAGE)) {
+                combo = RecognitionServiceManager.createComboString(combo, mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE));
+            }
+            PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyCurrentCombo, combo);
         }
 
         if (!mExtras.isEmpty()) {
@@ -439,9 +445,17 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     private void handleResultByWebSearch(String result) {
         Bundle extras = getExtras();
-        String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
-        String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
-        IntentUtils.startSearchActivity(this, prefix + result + suffix);
+        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
+        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
+        if (utterance != null && replacement != null) {
+            toast(utterance + "->" + replacement);
+            try {
+                result = result.replaceAll(utterance, replacement);
+            } catch (PatternSyntaxException e) {
+                toast(e.getLocalizedMessage());
+            }
+        }
+        IntentUtils.startSearchActivity(this, result);
         // Do not finish if in multi window mode because the user might want
         // to ask a follow-up query. Android N only
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

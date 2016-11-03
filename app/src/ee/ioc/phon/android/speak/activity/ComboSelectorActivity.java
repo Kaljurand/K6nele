@@ -127,7 +127,8 @@ public class ComboSelectorActivity extends Activity {
             for (Combo combo : selectedCombos) {
                 Intent intent = new Intent(context, SpeechActionActivity.class);
                 intent.setAction(RecognizerIntent.ACTION_WEB_SEARCH);
-                intent.putExtra(Extras.EXTRA_COMBO, combo.getId());
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, combo.getLocaleAsStr());
+                intent.putExtra(Extras.EXTRA_SERVICE_COMPONENT, combo.getServiceComponent().flattenToShortString());
                 intent.putExtra(Extras.EXTRA_AUTO_START, true);
                 // Add service label to short label
                 shortcuts.add(new ShortcutInfo.Builder(context, combo.getId())
