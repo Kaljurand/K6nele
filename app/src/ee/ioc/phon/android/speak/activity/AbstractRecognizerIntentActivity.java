@@ -70,6 +70,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
 
     private static final int ACTIVITY_REQUEST_CODE_DETAILS = 1;
+    private static final int ACTIVITY_REQUEST_CODE_INTENT = 2;
 
     private static final String MSG = "MSG";
     private static final int MSG_TOAST = 1;
@@ -212,6 +213,11 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVITY_REQUEST_CODE_DETAILS) {
             if (resultCode == RESULT_OK && data != null) {
+                handleResultByWebSearch(data.getStringExtra(SearchManager.QUERY));
+            }
+        } else if (requestCode == ACTIVITY_REQUEST_CODE_INTENT) {
+            if (resultCode == RESULT_OK && data != null) {
+                // TODO: use some standard extra
                 handleResultByWebSearch(data.getStringExtra(SearchManager.QUERY));
             }
         }
@@ -456,6 +462,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             }
         }
         IntentUtils.startSearchActivity(this, result);
+
+        // TODO: we should not finish if the activity was launched for a result, otherwise
+        // the result would not be processed.
+
         // Do not finish if in multi window mode because the user might want
         // to ask a follow-up query. Android N only
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

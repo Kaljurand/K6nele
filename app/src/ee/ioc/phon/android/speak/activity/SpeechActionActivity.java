@@ -1,7 +1,9 @@
 package ee.ioc.phon.android.speak.activity;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;

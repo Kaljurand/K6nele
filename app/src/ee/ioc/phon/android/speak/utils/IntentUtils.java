@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.utils;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -76,12 +77,12 @@ public final class IntentUtils {
      * 1. Launch Kõnele, 2. Start split-screen, 3. Press Kõnele mic button and speak,
      * 4. The results should be loaded into the other window.
      *
-     * @param context context
-     * @param query   search query
+     * @param activity activity
+     * @param query    search query
      */
-    public static void startSearchActivity(Context context, CharSequence query) {
+    public static void startSearchActivity(Activity activity, CharSequence query) {
         try {
-            startActivityIfAvailable(context, parseIntentQuery(query));
+            startActivityIfAvailable(activity, parseIntentQuery(query));
         } catch (JSONException e) {
             Log.i("startSearchActivity: JSON: " + e.getMessage());
             // TODO: how to pass the search query to ACTION_ASSIST
@@ -91,28 +92,32 @@ public final class IntentUtils {
             //intent0.putExtra(SearchManager.QUERY, query);
             //intent0.putExtra(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, false);
             //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
-            startActivityIfAvailable(context,
+            startActivityIfAvailable(activity,
                     getSearchIntent(Intent.ACTION_WEB_SEARCH, query),
                     getSearchIntent(Intent.ACTION_SEARCH, query));
         }
     }
 
-    public static boolean startActivityIfAvailable(Context context, Intent... intents) {
+    public static boolean startActivityIfAvailable(Activity activity, Intent... intents) {
+        PackageManager mgr = activity.getPackageManager();
         try {
             for (Intent intent : intents) {
-                if (isActivityAvailable(context, intent)) {
-                    context.startActivity(intent);
+                if (isActivityAvailable(mgr, intent)) {
+                    // TODO: is it sensible to always start activity for result,
+                    // even if the activity is not designed to return a result
+                    //activity.startActivity(intent);
+                    activity.startActivityForResult(intent, 2);
                     return true;
                 } else {
                     Log.i("startActivityIfAvailable: not available: " + intent);
                 }
             }
-            Toast.makeText(context, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
         } catch (SecurityException e) {
             // This happens if the user constructs an intent for which we do not have a
             // permission, e.g. the SET_ALARM intent.
             Log.i("startActivityIfAvailable: " + e.getMessage());
-            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }
@@ -189,8 +194,7 @@ public final class IntentUtils {
         return o.toString();
     }
 
-    private static boolean isActivityAvailable(Context context, Intent intent) {
-        final PackageManager mgr = context.getPackageManager();
+    private static boolean isActivityAvailable(PackageManager mgr, Intent intent) {
         List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
     }
@@ -213,6 +217,9 @@ public final class IntentUtils {
      */
     private static Intent parseIntentQuery(CharSequence query) throws JSONException {
         Log.i("parseIntentQuery: " + query);
+        if (query == null) {
+            throw new JSONException("query is NULL");
+        }
         JSONObject json = new JSONObject(query.toString());
         Intent intent = new Intent();
         String action = json.optString("action", null);
