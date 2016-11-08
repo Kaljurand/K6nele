@@ -105,8 +105,8 @@ public final class IntentUtils {
                 if (isActivityAvailable(mgr, intent)) {
                     // TODO: is it sensible to always start activity for result,
                     // even if the activity is not designed to return a result
-                    //activity.startActivity(intent);
-                    activity.startActivityForResult(intent, 2);
+                    activity.startActivity(intent);
+                    //activity.startActivityForResult(intent, 2);
                     return true;
                 } else {
                     Log.i("startActivityIfAvailable: not available: " + intent);

@@ -12,19 +12,33 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
 
 """
-Very simple HTTP server in python.
+Simple dialog engine. Expects a single query parameter (q) whose value is a
+natural language uttrance. Maps the query to an action. Possibly executes the
+action in the local OS. Responds with a JSON that maps one-to-one to an Android
+intent, e.g. DEFAULT_RESPONSE (see below) can be used to launch Kõnele to get
+answers to possible follow-up questions.
 
 Usage::
-    server.py [<port>]
 
-Send a GET request::
-    curl http://localhost
+    sshpass -p raspberry scp server.py pi@192.168.0.11:/home/pi/
+    ssh pi@192.168.0.11
+    nohup python server.py 8000 &
+    exit
+    curl http://192.168.0.11/?q=a natural language sentence
 
-Send a HEAD request::
-    curl -I http://localhost
+TODO:
 
-Send a POST request::
-    curl -d "foo=bar&bin=baz" http://localhost:8000
+- dynamically determine IP on which we are running, this is needed for the callback
+- generate REPLACEMENT using json.dumps
+- blink RPi lights
+- play music using a headless music player (e.g. mpsyt)
+- play news using EKI TTS
+- parse query using EstNLTK
+- maintain dialog state
+- send back a multi-line rewrite table (where lines correspond to if-then branches)
+- add query param that specifies the input language
+- fix UTF8 in response
+- deal with latency (e.g. respond immediately)
 """
 
 # If this string is a transcription result (possibly due to rewriting),
@@ -47,7 +61,7 @@ DEFAULT_RESPONSE = {
       "android.speech.extra.MAX_RESULTS": 1,
       "ee.ioc.phon.android.extra.AUTO_START": True,
       "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",
-      "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "{\"component\": \"ee.ioc.phon.android.speak/.activity.FetchUrlActivity\", \"data\": \"http://192.168.1.5:8000/?q=$1\"}"
+      "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "{\"component\": \"ee.ioc.phon.android.speak/.activity.FetchUrlActivity\", \"data\": \"http://192.168.0.11:8000/?q=$1\"}"
     }
 }
 
@@ -73,9 +87,9 @@ class S(BaseHTTPRequestHandler):
         o = urlparse.urlparse(self.path)
         d = urlparse.parse_qs(o.query)
         print(d)
-        q = d['q']
+        q = d.get('q', None)
         if q:
-            m = re.search('play.*artist (.+)', q[0])
+            m = re.search(u'(?:mängi|laula|play)\s*(.+)', q[0], re.IGNORECASE | re.UNICODE)
             if m:
                 RESPONSE_MUSIC['extras']['query'] = m.group(1)
                 response_as_str = json.dumps(RESPONSE_MUSIC)
@@ -96,6 +110,7 @@ class S(BaseHTTPRequestHandler):
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
 
 def run(server_class=HTTPServer, handler_class=S, port=8000):
+    print('Starting on port ' + str(port))
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()

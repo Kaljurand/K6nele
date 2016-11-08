@@ -17,7 +17,6 @@
 package ee.ioc.phon.android.speak.activity;
 
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,6 +30,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import ee.ioc.phon.android.speak.utils.IntentUtils;
 
 /**
  * Fetches the given URL and send its content to the caller.
@@ -105,10 +106,7 @@ public class FetchUrlActivity extends ListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            toast("Sending: " + result);
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra(SearchManager.QUERY, result);
-            setResult(RESULT_OK, returnIntent);
+            IntentUtils.startSearchActivity(FetchUrlActivity.this, result);
             finish();
         }
     }
