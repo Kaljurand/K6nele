@@ -226,13 +226,11 @@ public class SpeechInputView extends LinearLayout {
             @Override
             public boolean onLongClick(View view) {
                 cancelOrDestroy();
-                Activity activity = getActivity();
-                if (activity != null) {
-                    Intent intent = new Intent(activity, ComboSelectorActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("key", activity.getString(key));
-                    IntentUtils.startActivityIfAvailable(activity, intent);
-                }
+                Context context = getContext();
+                Intent intent = new Intent(context, ComboSelectorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("key", context.getString(key));
+                IntentUtils.startActivityIfAvailable(context, intent);
                 return true;
             }
         });
@@ -396,20 +394,6 @@ public class SpeechInputView extends LinearLayout {
             mRecognizer.destroy();
             mRecognizer = null;
         }
-    }
-
-    /**
-     * http://stackoverflow.com/questions/8276634/android-get-hosting-activity-from-a-view
-     */
-    private Activity getActivity() {
-        Context context = getContext();
-        while (context instanceof ContextWrapper) {
-            if (context instanceof Activity) {
-                return (Activity) context;
-            }
-            context = ((ContextWrapper) context).getBaseContext();
-        }
-        return null;
     }
 
 

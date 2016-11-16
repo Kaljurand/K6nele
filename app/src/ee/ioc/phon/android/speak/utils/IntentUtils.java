@@ -98,26 +98,26 @@ public final class IntentUtils {
         }
     }
 
-    public static boolean startActivityIfAvailable(Activity activity, Intent... intents) {
-        PackageManager mgr = activity.getPackageManager();
+    public static boolean startActivityIfAvailable(Context context, Intent... intents) {
+        PackageManager mgr = context.getPackageManager();
         try {
             for (Intent intent : intents) {
                 if (isActivityAvailable(mgr, intent)) {
                     // TODO: is it sensible to always start activity for result,
                     // even if the activity is not designed to return a result
-                    activity.startActivity(intent);
+                    context.startActivity(intent);
                     //activity.startActivityForResult(intent, 2);
                     return true;
                 } else {
                     Log.i("startActivityIfAvailable: not available: " + intent);
                 }
             }
-            Toast.makeText(activity, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
         } catch (SecurityException e) {
             // This happens if the user constructs an intent for which we do not have a
             // permission, e.g. the SET_ALARM intent.
             Log.i("startActivityIfAvailable: " + e.getMessage());
-            Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }

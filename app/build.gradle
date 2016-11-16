@@ -8,7 +8,7 @@ dependencies {
     // TODO: This did not work
     //compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'com.koushikdutta.async:androidasync:2.1.8'
-    compile 'com.android.support:support-v13:25.0.0'
+    compile 'com.android.support:support-v13:25.0.1'
     // Enable this when using the support library for the vector drawables
     //compile 'com.android.support:appcompat-v7:23.2.1'
 }
