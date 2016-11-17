@@ -34,7 +34,13 @@ import java.net.URL;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 
 /**
- * Fetches the given URL and send its content to the caller.
+ * Queries the given URL, interprets its response an a JSON that encodes an intent, and launches this
+ * intent.
+ * <p>
+ * TODO: rename to FetchIntentActivity
+ * TODO: handle errors
+ * TODO: handle latency (show progress in notification)
+ * TODO: handle errors
  *
  * @author Kaarel Kaljurand
  */

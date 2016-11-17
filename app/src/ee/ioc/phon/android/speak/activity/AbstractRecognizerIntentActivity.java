@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -47,6 +48,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
@@ -57,6 +59,7 @@ import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
+import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -95,6 +98,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     private boolean mIsReturnErrors;
 
     private boolean mIsAutoStart;
+
+    private TtsProvider mTts;
 
     abstract void showError(String msg);
 
@@ -190,6 +195,11 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
         if (!mExtras.isEmpty()) {
             mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
+        }
+
+        if (mExtras.containsKey(Extras.EXTRA_VOICE_PROMPT)) {
+            sayVoicePrompt(mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE, "en-US"),
+                    mExtras.getString(Extras.EXTRA_VOICE_PROMPT));
         }
 
         mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO);
@@ -510,5 +520,37 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         ArrayList<String> resultsAsArrayList = new ArrayList<>();
         resultsAsArrayList.addAll(results);
         return resultsAsArrayList;
+    }
+
+    // TODO: use it to speak errors if EXTRA_SPEAK_ERRORS
+    private void sayVoicePrompt(final String lang, final String prompt) {
+        mTts = new TtsProvider(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    Locale locale = mTts.chooseLanguage(lang);
+                    if (locale == null) {
+                        // TODO
+                        //toast(getString(R.string.errorTtsLangNotAvailable, lang));
+                    } else {
+                        mTts.setLanguage(locale);
+                    }
+                    mTts.say(prompt);
+                } else {
+                    // TODO
+                    //toast(getString(R.string.errorTtsInitError));
+                    //Log.e(getString(R.string.errorTtsInitError));
+                }
+            }
+        });
+
+    }
+
+    protected void stopTts() {
+        // Stop TTS
+        if (mTts != null) {
+            mTts.shutdown();
+        }
+
     }
 }

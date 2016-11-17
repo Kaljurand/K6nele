@@ -151,6 +151,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         if (!isChangingConfigurations()) {
             mView.cancel();
         }
+
+        stopTts();
     }
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
