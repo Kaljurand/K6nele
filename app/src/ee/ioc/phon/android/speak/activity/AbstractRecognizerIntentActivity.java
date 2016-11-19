@@ -50,7 +50,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.regex.PatternSyntaxException;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -454,19 +453,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     private void handleResultByWebSearch(String result) {
-        Bundle extras = getExtras();
-        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
-        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
-        if (utterance != null && replacement != null) {
-            toast(utterance + "->" + replacement);
-            try {
-                result = result.replaceAll(utterance, replacement);
-            } catch (PatternSyntaxException e) {
-                toast(e.getLocalizedMessage());
-            }
-        }
         IntentUtils.startSearchActivity(this, result);
-
         // TODO: we should not finish if the activity was launched for a result, otherwise
         // the result would not be processed.
 
