@@ -1,0 +1,62 @@
+/**
+ * Communicating with devices via Kõnele.
+ * @author Kaarel Kaljurand
+ * @version 2016-11-19
+ */
+
+digraph G {
+
+    graph [style="dotted", fontsize=10 fontname="Helvetica"];
+    node [shape="box", fontsize=10 fontname="Helvetica"];
+    edge [arrowhead="normal", arrowsize="0.6", fontsize=9, fontname="monospace"];
+
+    user [label="User", shape="circle"];
+    k6nele [label="Kõnele\nSpeechActionActivity", tooltip="Maps natural language audio to an Android intent using an external recognition service, possibly followed by its own rewrite rules, and then launches the intent.", style="filled", fillcolor="yellow"];
+
+    subgraph cluster_0 {
+        //rankdir="RL";
+        label = "Cloud services";
+        style = "filled";
+        color = "lightblue";
+        //service_other [label="..."];
+        service_dialog [label="Dialog service", tooltip="Maps a natural language string (in the incoming HTTP query) to some action (performed e.g. via other services). Responds with an Android intent (encoded in JSON)."];
+        service_smart_home [label="Smart home service", tooltip="Maps REST queries to commands to actual devices."];
+    }
+
+    subgraph cluster_1 {
+        label = "Devices";
+        device_lightbulb [label="Lightbulb"];
+        device_door [label="Door"];
+        device_tv [label="TV"];
+        //device_other [label="..."];
+    }
+
+    subgraph cluster_3 {
+        label = "Android activities";
+        style = "filled";
+        color = "lightgreen";
+        k6nele;
+        fetch_intent [label="Kõnele\nFetchIntentActivity", tooltip="Fetches JSON from a URL, interprets it as an Android intent and launches it.", style="filled", fillcolor="yellow"];
+        app_lightbulb [label="LightBulbActivity", tooltip="Maps Android intent to an action on a concrete device."];
+    }
+
+    user -> k6nele [label="voice\ncommand"];
+    k6nele -> user [label="prompt"];
+    k6nele -> fetch_intent [label="intent\n{data=http}"];
+    k6nele -> app_lightbulb [label="intent"];
+    k6nele -> k6nele [label="intent"];
+    fetch_intent -> service_smart_home [label="http"];
+    fetch_intent -> app_lightbulb [label="intent", style="dashed"];
+    fetch_intent -> k6nele [label="intent", style="dashed"];
+    fetch_intent -> fetch_intent [label="intent", style="dashed"];
+
+    service_dialog -> service_smart_home [label="http"];
+    //service_dialog -> service_other [label="http"];
+
+    service_smart_home -> device_tv;
+    service_smart_home -> device_door;
+    app_lightbulb -> device_lightbulb;
+
+    fetch_intent -> service_dialog [label="http/json", dir="both"];
+    //service_dialog -> fetch_intent [label="json"];
+}

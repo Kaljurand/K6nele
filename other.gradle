@@ -43,6 +43,8 @@ task(makeDiagrams) << {
             }
     }
 
-    convertDot('svg', dir + 'RecognizerService')
-    convertDot('svg', dir + 'components')
+    def diagrams = ['RecognizerService', 'components', 'intents' ]
+    diagrams.each {
+        dia -> convertDot('svg', dir + dia)
+    }
 }
