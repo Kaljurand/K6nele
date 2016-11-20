@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -209,7 +210,7 @@ public final class IntentUtils {
     }
 
     /**
-     * TODO: support: array extras, broadcast intent, voice interaction lauch mode, etc.
+     * TODO: support: array extras, broadcast intent, voice interaction launch mode, etc.
      *
      * @param query Intent serialized as JSON
      * @return Deserialized intent
@@ -238,6 +239,10 @@ public final class IntentUtils {
         if (data != null) {
             intent.setData(Uri.parse(data));
         }
+        String type = json.optString("type", null);
+        if (type != null) {
+            intent.setType(type);
+        }
         JSONObject extras = json.optJSONObject("extras");
         if (extras != null) {
             Iterator<String> iter = extras.keys();
@@ -256,6 +261,15 @@ public final class IntentUtils {
                     intent.putExtra(key, (Float) val);
                 } else if (val instanceof String) {
                     intent.putExtra(key, (String) val);
+                } else if (val instanceof JSONArray) {
+                    // TODO: improve this, currently assumes that it's a string array
+                    JSONArray array = (JSONArray) val;
+                    int length = array.length();
+                    List<String> vals = new ArrayList<>();
+                    for (int i = 0; i < length; i++) {
+                        vals.add(array.optString(i, ""));
+                    }
+                    intent.putExtra(key, vals.toArray(new String[0]));
                 }
             }
         }
