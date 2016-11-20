@@ -332,7 +332,10 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203153.png">
 
-Näitena võib kasutada [seda reeglifaili](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing).
+Näited:
+
+- [üldine reeglifail](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing) sisaldab suurt hulka kasulikke reeglid;
+- [dialoogisüsteem e-kirja saatmiseks](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing) demonstreerib, kuidas kasutada ümberkirjutusreegleid programmeerimiskeelena, lihtsate dialoogisüsteemide loomiseks.
 
 ## Grammatikapõhine kõnetuvastus
 
