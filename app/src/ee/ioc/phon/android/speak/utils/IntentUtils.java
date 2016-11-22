@@ -210,6 +210,20 @@ public final class IntentUtils {
     }
 
     /**
+     * Parse JSON.
+     *
+     * @param chars CharSequence that corresponds to serialized JSON.
+     * @return JSONObject
+     * @throws JSONException if parsing fails
+     */
+    public static JSONObject parseJson(CharSequence chars) throws JSONException {
+        if (chars == null) {
+            throw new JSONException("input is NULL");
+        }
+        return new JSONObject(chars.toString());
+    }
+
+    /**
      * TODO: support: array extras, broadcast intent, voice interaction launch mode, etc.
      *
      * @param query Intent serialized as JSON
@@ -217,11 +231,7 @@ public final class IntentUtils {
      * @throws JSONException if parsing fails
      */
     private static Intent parseIntentQuery(CharSequence query) throws JSONException {
-        Log.i("parseIntentQuery: " + query);
-        if (query == null) {
-            throw new JSONException("query is NULL");
-        }
-        JSONObject json = new JSONObject(query.toString());
+        JSONObject json = parseJson(query.toString());
         Intent intent = new Intent();
         String action = json.optString("action", null);
         if (action != null) {
