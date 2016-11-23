@@ -181,8 +181,8 @@
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
             <Preference
-                android:summary="string/summaryChatDemo"
-                android:title="string/labelChatDemo">
+                android:summary="@string/summaryChatDemo"
+                android:title="@string/labelActivityChatDemo">
                 <intent
                     android:targetClass="ee.ioc.phon.android.speak.demo.ChatDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />

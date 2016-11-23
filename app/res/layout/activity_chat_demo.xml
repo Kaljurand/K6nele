@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/controls_tagselector"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey3"
+        android:orientation="vertical"
+        android:padding="@dimen/layoutMargin4dp">
+
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="wrap_content"
+            android:layout_height="0dip"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:contentDescription="@string/cdMicrophone"
+            android:gravity="center"
+            android:text="@string/buttonSpeak" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_matches"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/controls_tagselector"
+        android:layout_alignParentTop="true"
+        android:fontFamily="monospace"
+        android:textSize="@dimen/textSize10sp" />
+
+</RelativeLayout>

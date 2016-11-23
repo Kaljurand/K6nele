@@ -3,9 +3,12 @@ package ee.ioc.phon.android.speak.activity;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -137,9 +141,23 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         mView.init(R.array.keysActivity, callerInfo);
         mView.setListener(getSpeechInputViewListener());
 
-        if (isAutoStart()) {
-            Log.i("Auto-starting");
-            mView.start();
+        if (getExtras().containsKey(Extras.EXTRA_VOICE_PROMPT)) {
+            sayVoicePrompt(new TtsProvider.Listener() {
+                @Override
+                public void onDone() {
+                    if (isAutoStart()) {
+                        // TODO: test what happens if the view is started while TTS is running
+                        // and then started again when the TTS stops and calls onDone
+                        // TODO: gets disabled, not sure why
+                        //mView.start();
+                    }
+                }
+            });
+        } else {
+            if (isAutoStart()) {
+                Log.i("Auto-starting");
+                mView.start();
+            }
         }
     }
 
@@ -213,6 +231,11 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
                 } else {
                     setResultError(errorCode);
                 }
+            }
+
+            @Override
+            public void onStartListening() {
+                stopTts();
             }
         };
     }

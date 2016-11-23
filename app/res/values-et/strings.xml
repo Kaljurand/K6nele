@@ -17,6 +17,7 @@
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
+    <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
     <string name="labelActivityFormDemo">Form demo</string>
@@ -60,6 +61,7 @@
     <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimaid tulemusi,
 		transkribeerib uuesti, … Kõnele saab menüü abil omistada
 		grammatika.</string>
+    <string name="summaryChatDemo">Kõnekäskudega käivitatud rakenduste ajalugu</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
     <string name="summaryEncoderDemo">Heli lindistamise ja kokkupakkimisega seotud testid ja demod</string>

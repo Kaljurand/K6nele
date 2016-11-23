@@ -196,11 +196,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
         }
 
-        if (mExtras.containsKey(Extras.EXTRA_VOICE_PROMPT)) {
-            sayVoicePrompt(mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE, "en-US"),
-                    mExtras.getString(Extras.EXTRA_VOICE_PROMPT));
-        }
-
         mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO);
 
         mIsReturnErrors = mExtras.getBoolean(Extras.EXTRA_RETURN_ERRORS,
@@ -509,24 +504,30 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         return resultsAsArrayList;
     }
 
+    protected void sayVoicePrompt(final TtsProvider.Listener listener) {
+        sayVoicePrompt(mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE, "en-US"),
+                mExtras.getString(Extras.EXTRA_VOICE_PROMPT), listener);
+    }
+
     // TODO: use it to speak errors if EXTRA_SPEAK_ERRORS
-    private void sayVoicePrompt(final String lang, final String prompt) {
+    private void sayVoicePrompt(final String lang, final String prompt, final TtsProvider.Listener listener) {
         mTts = new TtsProvider(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     Locale locale = mTts.chooseLanguage(lang);
                     if (locale == null) {
-                        // TODO
-                        //toast(getString(R.string.errorTtsLangNotAvailable, lang));
+                        toast(String.format(getString(R.string.errorTtsLangNotAvailable), lang));
                     } else {
                         mTts.setLanguage(locale);
                     }
-                    mTts.say(prompt);
+                    if (listener == null) {
+                        mTts.say(prompt);
+                    } else {
+                        mTts.say(prompt, listener);
+                    }
                 } else {
-                    // TODO
-                    //toast(getString(R.string.errorTtsInitError));
-                    //Log.e(getString(R.string.errorTtsInitError));
+                    toast(getString(R.string.errorTtsInitError));
                 }
             }
         });
@@ -534,7 +535,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     protected void stopTts() {
-        // Stop TTS
         if (mTts != null) {
             mTts.shutdown();
         }

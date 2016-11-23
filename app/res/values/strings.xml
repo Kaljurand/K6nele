@@ -31,6 +31,7 @@
     <string name="labelActivitySimpleDemo">Simple demo</string>
     <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityHandsfreeDemo">Handsfree demo</string>
+    <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
     <string name="labelActivityFormDemo">Form demo</string>
@@ -87,6 +88,7 @@
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryHandsfreeDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
+    <string name="summaryChatDemo">Chat-style UI for calling intents</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
     <string name="summaryEncoderDemo">Various demos/tests related to audio recording and encoding</string>
     <string name="summaryFormDemo">HTML form with various types of fields for testing the IME</string>
