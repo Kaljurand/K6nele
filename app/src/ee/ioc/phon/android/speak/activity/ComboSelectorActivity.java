@@ -14,7 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
-import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,9 +34,9 @@ public class ComboSelectorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ComboSelectorFragment details = new ComboSelectorFragment();
-        details.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(android.R.id.content, details).commit();
+        ComboSelectorFragment fragment = new ComboSelectorFragment();
+        fragment.setArguments(getIntent().getExtras());
+        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     public static class ComboSelectorFragment extends ListFragment {
@@ -58,21 +58,24 @@ public class ComboSelectorActivity extends Activity {
 
         public void onPause() {
             super.onPause();
-            ArrayAdapter<Combo> adapter = (ArrayAdapter<Combo>) getListAdapter();
-            Set<String> selected = new HashSet<>();
-            List<Combo> selectedCombos = new ArrayList<>();
-            for (int i = 0; i < adapter.getCount(); i++) {
-                Combo combo = adapter.getItem(i);
-                if (combo != null && combo.isSelected()) {
-                    selected.add(combo.getId());
-                    selectedCombos.add(combo);
+            ListAdapter listAdapter = getListAdapter();
+            if (listAdapter != null && listAdapter instanceof ComboAdapter) {
+                Set<String> selected = new HashSet<>();
+                List<Combo> selectedCombos = new ArrayList<>();
+                ComboAdapter comboAdapter = (ComboAdapter) listAdapter;
+                for (int i = 0; i < comboAdapter.getCount(); i++) {
+                    Combo combo = comboAdapter.getItem(i);
+                    if (combo != null && combo.isSelected()) {
+                        selected.add(combo.getId());
+                        selectedCombos.add(combo);
+                    }
                 }
-            }
-            PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), mKey, selected);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-                // The app shortcuts correspond to the voice panel combo settings
-                if (mKey == R.string.keyCombo) {
-                    publishShortcuts(getActivity().getApplicationContext(), selectedCombos);
+                PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), mKey, selected);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                    // The app shortcuts correspond to the voice panel combo settings
+                    if (mKey == R.string.keyCombo) {
+                        publishShortcuts(getActivity().getApplicationContext(), selectedCombos);
+                    }
                 }
             }
         }
