@@ -242,7 +242,8 @@ public class SpeechInputMethodService extends InputMethodService {
                 // TODO: quick hack to add app to the matcher, not sure if we can access the
                 // class name of the app
                 ComponentName app = new ComponentName(packageName, packageName);
-                mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(mPrefs, mRes, language, service, app));
+                // TODO: name of the rewrites table configurable
+                mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(mPrefs, mRes, null, language, service, app));
             }
 
             @Override

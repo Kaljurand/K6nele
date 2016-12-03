@@ -28,6 +28,7 @@
     <string name="hintSearch">Otsi</string>
     <string name="labelSearch">Otsi"</string>
     <string name="titleSearchRewrites">Otsi</string>
+    <string name="hintName">nimi (vaikimisi reeglite jaoks jätke tühjaks)</string>
 
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
@@ -187,6 +188,7 @@
     <string name="dialogTitleChangeServer">Muuda serveri URL</string>
     <string name="dialogTitleNewServer">Lisa uus serveri URL</string>
     <string name="dialogTitleHypotheses">Kas ütlesite &#8230;</string>
+    <string name="dialogTitleChangeRewritesName">Salvesta nimega &#8230;</string>
     <string name="toastForwardedMatches">Tuvastasin: %1$s</string>
     <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Audioformaat pole toetatud: %1$s</string>

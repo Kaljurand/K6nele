@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/url_edit"
@@ -12,8 +12,8 @@
         android:layout_marginRight="10dp"
         android:gravity="fill_horizontal"
         android:inputType="textUri"
-        android:scrollHorizontally="true"
         android:maxLines="1"
+        android:scrollHorizontally="true"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

@@ -18,6 +18,7 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,8 +26,12 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
 
+import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -43,9 +48,73 @@ public class RewritesLoaderActivity extends Activity {
     private static final String TYPE = "text/*";
     private static final int GET_CONTENT_REQUEST_CODE = 1;
 
+    private String mName = Utils.SKILL_NAME_ROOT;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Resources res = getResources();
+        Set<String> keys = PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap);
+        CharSequence[] keysAsArray = new CharSequence[keys.size()];
+        int i = 0;
+        // Java 8: keys.stream().sorted().collect(...)
+        for (String key : keys) {
+            keysAsArray[i++] = key;
+        }
+        Arrays.sort(keysAsArray);
+        Utils.getTextEntryWithRadioDialog(
+                this,
+                getString(R.string.dialogTitleChangeRewritesName),
+                keysAsArray,
+                new ExecutableString() {
+                    public void execute(String name) {
+                        mName = name;
+                        loadRewrites();
+                    }
+                }
+        ).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null) {
+            Uri uri = resultData.getData();
+            if (uri != null) {
+                handleUtteranceRewriter(loadFromUri(uri));
+            }
+        }
+        finish();
+    }
+
+    private void handleUtteranceRewriter(UtteranceRewriter utteranceRewriter) {
+        if (utteranceRewriter == null) {
+            String errorMessage = String.format(getString(R.string.errorLoadRewrites), "");
+            toast(errorMessage);
+        } else {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            Resources res = getResources();
+            PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, mName, utteranceRewriter.toTsv());
+            show(res, utteranceRewriter);
+        }
+    }
+
+    private UtteranceRewriter loadFromUri(Uri uri) {
+        try {
+            return new UtteranceRewriter(getContentResolver(), uri);
+        } catch (IOException e) {
+            String errorMessage = String.format(getString(R.string.errorLoadRewrites), e.getLocalizedMessage());
+            toast(errorMessage);
+        }
+        return null;
+    }
+
+    private void loadRewrites() {
         Intent intent = getIntent();
         if (intent.getExtras() == null) {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -69,42 +138,10 @@ public class RewritesLoaderActivity extends Activity {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null) {
-            Uri uri = resultData.getData();
-            if (uri != null) {
-                handleUtteranceRewriter(loadFromUri(uri));
-            }
-        }
-        finish();
-    }
-
-    private void handleUtteranceRewriter(UtteranceRewriter utteranceRewriter) {
-        if (utteranceRewriter == null) {
-            String errorMessage = String.format(getString(R.string.errorLoadRewrites), "");
-            toast(errorMessage);
-        } else {
-            Resources res = getResources();
-            PreferenceUtils.putPrefString(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()), res, R.string.keyRewritesFile, utteranceRewriter.toTsv());
-            show(res, utteranceRewriter);
-        }
-    }
-
-    private UtteranceRewriter loadFromUri(Uri uri) {
-        try {
-            return new UtteranceRewriter(getContentResolver(), uri);
-        } catch (IOException e) {
-            String errorMessage = String.format(getString(R.string.errorLoadRewrites), e.getLocalizedMessage());
-            toast(errorMessage);
-        }
-        return null;
-    }
-
     private void show(Resources res, UtteranceRewriter utteranceRewriter) {
         int count = utteranceRewriter.size();
         Intent intent = new Intent(this, RewritesActivity.class);
-        intent.putExtra(DetailsActivity.EXTRA_TITLE, res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
+        intent.putExtra(DetailsActivity.EXTRA_TITLE, mName + " · " + res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
         intent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, utteranceRewriter.toStringArray());
         startActivity(intent);
     }

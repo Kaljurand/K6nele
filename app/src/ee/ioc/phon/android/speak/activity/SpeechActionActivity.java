@@ -202,7 +202,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             @Override
             public void onComboChange(String language, ComponentName service) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SpeechActionActivity.this);
-                mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), language, service, getCallingActivity());
+                String[] rewrites = getExtras().getStringArray(Extras.EXTRA_RESULT_REWRITES);
+                mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
             }
 
             @Override

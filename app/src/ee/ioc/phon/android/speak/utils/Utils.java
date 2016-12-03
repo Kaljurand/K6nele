@@ -67,6 +67,8 @@ public final class Utils {
     private Utils() {
     }
 
+    public static String SKILL_NAME_ROOT = "";
+
     /**
      * TODO: should we immediately return null if id = 0?
      */
@@ -217,10 +219,35 @@ public final class Utils {
 
 
     public static AlertDialog getTextEntryDialog(Context context, String title, String initialText, final ExecutableString ex) {
-        final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_text_entry, null);
+        final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_url_entry, null);
         final EditText et = (EditText) textEntryView.findViewById(R.id.url_edit);
         et.setText(initialText);
         return new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setView(textEntryView)
+                .setPositiveButton(R.string.buttonOk, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        ex.execute(et.getText().toString());
+                    }
+                })
+                .setNegativeButton(R.string.buttonCancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
+    }
+
+
+    public static AlertDialog getTextEntryWithRadioDialog(Context context, String title, final CharSequence[] items, final ExecutableString ex) {
+        final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_name_entry, null);
+        final EditText et = (EditText) textEntryView.findViewById(R.id.name_edit);
+        return new AlertDialog.Builder(context)
+                .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        ex.execute(items[whichButton].toString());
+                    }
+                })
                 .setTitle(title)
                 .setView(textEntryView)
                 .setPositiveButton(R.string.buttonOk, new DialogInterface.OnClickListener() {
@@ -338,11 +365,29 @@ public final class Utils {
     }
 
 
-    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs, Resources resources, String language, ComponentName service, ComponentName app) {
+    /**
+     * TODO: improve this. Remove the boolean "keyRewrite". Allow a list of rewrites. If empty then
+     * no rewriting is done. Currently we just take the first element of the list, or a default
+     * rewrite table, if the list is null or empty.
+     */
+    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs,
+                                                         Resources resources,
+                                                         String[] rewritesByName,
+                                                         String language,
+                                                         ComponentName service,
+                                                         ComponentName app) {
         if (PreferenceUtils.getPrefBoolean(prefs, resources, R.string.keyRewrite, R.bool.defaultRewrite)) {
-            CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
-            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, resources, R.string.keyRewritesFile, R.string.empty),
-                    commandMatcher);
+            String name;
+            if (rewritesByName == null || rewritesByName.length == 0) {
+                name = SKILL_NAME_ROOT;
+            } else {
+                name = rewritesByName[0];
+            }
+            String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, resources, R.string.keyRewritesMap, name);
+            if (rewritesAsStr != null) {
+                CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+                return new UtteranceRewriter(rewritesAsStr, commandMatcher);
+            }
         }
         return null;
     }
