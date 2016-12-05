@@ -41,6 +41,9 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  * In case of an incoming SEND-intent we only accept "text/tab-separated-values".
  * However, if the user explicitly launches a file picker from Kõnele, then any "text/*" files
  * can be picked.
+ *
+ * TODO: make a custom dialog (with scrolling)
+ * TODO: finish() if import fails
  */
 public class RewritesLoaderActivity extends Activity {
 
@@ -48,37 +51,15 @@ public class RewritesLoaderActivity extends Activity {
     private static final String TYPE = "text/*";
     private static final int GET_CONTENT_REQUEST_CODE = 1;
 
-    private String mName = Utils.SKILL_NAME_ROOT;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadRewrites();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Resources res = getResources();
-        Set<String> keys = PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap);
-        CharSequence[] keysAsArray = new CharSequence[keys.size()];
-        int i = 0;
-        // Java 8: keys.stream().sorted().collect(...)
-        for (String key : keys) {
-            keysAsArray[i++] = key;
-        }
-        Arrays.sort(keysAsArray);
-        Utils.getTextEntryWithRadioDialog(
-                this,
-                getString(R.string.dialogTitleChangeRewritesName),
-                keysAsArray,
-                new ExecutableString() {
-                    public void execute(String name) {
-                        mName = name;
-                        loadRewrites();
-                    }
-                }
-        ).show();
     }
 
     @Override
@@ -89,18 +70,34 @@ public class RewritesLoaderActivity extends Activity {
                 handleUtteranceRewriter(loadFromUri(uri));
             }
         }
-        finish();
     }
 
-    private void handleUtteranceRewriter(UtteranceRewriter utteranceRewriter) {
+    private void handleUtteranceRewriter(final UtteranceRewriter utteranceRewriter) {
         if (utteranceRewriter == null) {
             String errorMessage = String.format(getString(R.string.errorLoadRewrites), "");
             toast(errorMessage);
         } else {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            Resources res = getResources();
-            PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, mName, utteranceRewriter.toTsv());
-            show(res, utteranceRewriter);
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            final Resources res = getResources();
+            Set<String> keys = PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap);
+            CharSequence[] keysAsArray = new CharSequence[keys.size()];
+            int i = 0;
+            // Java 8: keys.stream().sorted().collect(...)
+            for (String key : keys) {
+                keysAsArray[i++] = key;
+            }
+            Arrays.sort(keysAsArray);
+            Utils.getTextEntryWithRadioDialog(
+                    this,
+                    getString(R.string.dialogTitleChangeRewritesName),
+                    keysAsArray,
+                    new ExecutableString() {
+                        public void execute(String name) {
+                            PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter.toTsv());
+                            show(res, name, utteranceRewriter);
+                        }
+                    }
+            ).show();
         }
     }
 
@@ -134,16 +131,16 @@ public class RewritesLoaderActivity extends Activity {
                 utteranceRewriter = new UtteranceRewriter(text);
             }
             handleUtteranceRewriter(utteranceRewriter);
-            finish();
         }
     }
 
-    private void show(Resources res, UtteranceRewriter utteranceRewriter) {
+    private void show(Resources res, String name, UtteranceRewriter utteranceRewriter) {
         int count = utteranceRewriter.size();
         Intent intent = new Intent(this, RewritesActivity.class);
-        intent.putExtra(DetailsActivity.EXTRA_TITLE, mName + " · " + res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
+        intent.putExtra(DetailsActivity.EXTRA_TITLE, name + " · " + res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
         intent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, utteranceRewriter.toStringArray());
         startActivity(intent);
+        finish();
     }
 
     private void toast(String message) {

@@ -91,6 +91,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     private SimpleMessageHandler mMessageHandler;
 
+    private String mVoicePrompt;
+
     // Store the complete audio recording
     private boolean mIsStoreAudio;
 
@@ -128,6 +130,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     protected boolean isAutoStart() {
         return mIsAutoStart;
+    }
+
+    protected boolean hasVoicePrompt() {
+        return mVoicePrompt != null && !mVoicePrompt.isEmpty();
     }
 
     protected Bundle getExtras() {
@@ -196,6 +202,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
         }
 
+        mVoicePrompt = mExtras.getString(Extras.EXTRA_VOICE_PROMPT);
         mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO);
 
         mIsReturnErrors = mExtras.getBoolean(Extras.EXTRA_RETURN_ERRORS,
@@ -505,8 +512,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     protected void sayVoicePrompt(final TtsProvider.Listener listener) {
-        sayVoicePrompt(mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE, "en-US"),
-                mExtras.getString(Extras.EXTRA_VOICE_PROMPT), listener);
+        sayVoicePrompt(mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE, "en-US"), mVoicePrompt, listener);
     }
 
     // TODO: use it to speak errors if EXTRA_SPEAK_ERRORS

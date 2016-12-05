@@ -141,7 +141,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         mView.init(R.array.keysActivity, callerInfo);
         mView.setListener(getSpeechInputViewListener());
 
-        if (getExtras().containsKey(Extras.EXTRA_VOICE_PROMPT)) {
+        if (hasVoicePrompt()) {
             sayVoicePrompt(new TtsProvider.Listener() {
                 @Override
                 public void onDone() {
