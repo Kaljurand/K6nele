@@ -40,7 +40,6 @@ public class SpeechInputMethodService extends InputMethodService {
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
     private CommandEditor mCommandEditor;
-    private boolean mIsListening;
     private boolean mShowPartialResults;
     private SharedPreferences mPrefs;
     private Resources mRes;
@@ -123,13 +122,6 @@ public class SpeechInputMethodService extends InputMethodService {
         Log.i("onStartInput: " + type + ", " + attribute.inputType + ", " + attribute.imeOptions + ", " + restarting);
     }
 
-    // Moving to a different field
-    @Override
-    public void onFinishInput() {
-        super.onFinishInput();
-        Log.i("onFinishInput");
-    }
-
     /**
      * Note that when editing a HTML page, then switching between form fields might fail to call
      * this method with restarting=false, we thus always update the editor info (incl. inputType).
@@ -144,28 +136,53 @@ public class SpeechInputMethodService extends InputMethodService {
         mRes = getResources();
         mInputView.init(R.array.keysIme, new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()));
 
-        //if (restarting) {
-        //  return;
-        //}
         // TODO: update this less often (in onStart)
+        closeSession();
+
+        if (restarting) {
+            return;
+        }
 
         mInputView.setListener(getSpeechInputViewListener(editorInfo.packageName));
         mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
-        if (mIsListening || PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+        if (PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
         }
     }
 
+    /**
+     * Called when the input view is being hidden from the user.
+     * This will be called either prior to hiding the window,
+     * or prior to switching to another target for editing.
+     *
+     * @param finishingInput If true, onFinishInput() will be called immediately after.
+     */
     @Override
     public void onFinishInputView(boolean finishingInput) {
+        // TODO: maybe do not call super
         super.onFinishInputView(finishingInput);
         Log.i("onFinishInputView: " + finishingInput);
         if (!finishingInput) {
             closeSession();
         }
+    }
+
+
+    /**
+     * Called to inform the input method that text input has finished in the last editor.
+     * At this point there may be a call to onStartInput(EditorInfo, boolean) to perform input in a new editor,
+     * or the input method may be left idle.
+     * This method is not called when input restarts in the same editor.
+     */
+    @Override
+    public void onFinishInput() {
+        // TODO: maybe do not call super
+        super.onFinishInput();
+        Log.i("onFinishInput");
+        closeSession();
     }
 
     @Override
@@ -283,8 +300,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onSearch() {
-                Log.i("mIsListening = false");
-                mIsListening = false;
                 closeSession();
                 mCommandEditor.imeActionSearch().run();
                 requestHideSelf(0);
@@ -329,14 +344,12 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onStartListening() {
-                Log.i("mIsListening = true");
-                mIsListening = true;
+                Log.i("IME: onStartListening");
             }
 
             @Override
             public void onStopListening() {
-                Log.i("mIsListening = false");
-                mIsListening = false;
+                Log.i("IME: onStopListening");
                 mCommandEditor.reset();
             }
 
@@ -344,8 +357,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onError(int errorCode) {
-                Log.i("mIsListening = false");
-                mIsListening = false;
+                Log.i("IME: onError: " + errorCode);
                 mCommandEditor.reset();
                 if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
                     Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
