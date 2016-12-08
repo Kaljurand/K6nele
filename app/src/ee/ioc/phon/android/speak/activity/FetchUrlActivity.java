@@ -68,9 +68,10 @@ public class FetchUrlActivity extends ListActivity {
 
     private static String downloadUrl(String myurl) throws IOException {
         InputStream is = null;
-        // Only display the first 500 characters of the retrieved
+        // Only display the first x characters of the retrieved
         // web page content.
-        int len = 500;
+        // TODO: fix this
+        int len = 1024;
 
         try {
             URL url = new URL(myurl);

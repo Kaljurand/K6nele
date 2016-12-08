@@ -11,12 +11,22 @@ import android.speech.SpeechRecognizer;
 
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncSSLSocketMiddleware;
 import com.koushikdutta.async.http.WebSocket;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
@@ -132,8 +142,24 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     void startSocket(String url) {
         mIsEosSent = false;
         Log.i(url);
+        AsyncHttpClient client = AsyncHttpClient.getDefaultInstance();
 
-        AsyncHttpClient.getDefaultInstance().websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
+        if (false) {
+            //http://stackoverflow.com/questions/37804816/androidasync-how-to-create-ssl-client-in-websocket-connection
+            AsyncSSLSocketMiddleware sslSocketMiddleware = new AsyncSSLSocketMiddleware(client);
+            SSLContext sslContext = null;
+            try {
+                sslContext = getSSLContext();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+            sslSocketMiddleware.setSSLContext(sslContext);
+            client.insertMiddleware(sslSocketMiddleware);
+        }
+
+        client.websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
             public void onCompleted(Exception ex, final WebSocket webSocket) {
@@ -307,5 +333,29 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                 }
             }
         }
+    }
+
+
+    // TODO: currently not used
+    private SSLContext getSSLContext() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        }}, new SecureRandom());
+
+        return sslContext;
     }
 }
