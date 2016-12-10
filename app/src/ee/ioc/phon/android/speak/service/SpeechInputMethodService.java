@@ -350,7 +350,6 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onStopListening() {
                 Log.i("IME: onStopListening");
-                mCommandEditor.reset();
             }
 
             // TODO: add onCancel()
@@ -358,7 +357,6 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onError(int errorCode) {
                 Log.i("IME: onError: " + errorCode);
-                mCommandEditor.reset();
                 if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
                     Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
