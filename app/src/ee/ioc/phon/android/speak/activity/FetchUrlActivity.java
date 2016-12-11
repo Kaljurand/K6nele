@@ -21,11 +21,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -34,17 +36,20 @@ import java.net.URL;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 
 /**
- * Queries the given URL, interprets its response an a JSON that encodes an intent, and launches this
- * intent.
+ * Queries the given URL,
+ * optionally interprets its response an a JSON that encodes an intent, and launches this intent.
  * <p>
- * TODO: rename to FetchIntentActivity
  * TODO: handle errors
  * TODO: handle latency (show progress in notification)
- * TODO: handle errors
+ * TODO: add extras for various HTTP parameters
  *
  * @author Kaarel Kaljurand
  */
 public class FetchUrlActivity extends ListActivity {
+
+    public static final String EXTRA_HTTP_METHOD = "ee.ioc.phon.android.extra.HTTP_METHOD";
+    public static final String EXTRA_HTTP_BODY = "ee.ioc.phon.android.extra.HTTP_BODY";
+    public static final String EXTRA_LAUNCH_RESPONSE_AS_INTENT = "ee.ioc.phon.android.extra.LAUNCH_RESPONSE_AS_INTENT";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,11 @@ public class FetchUrlActivity extends ListActivity {
         if (intent != null) {
             Uri uri = intent.getData();
             if (uri != null) {
-                DownloadWebpageTask task = new DownloadWebpageTask();
+                Bundle bundle = intent.getExtras();
+                if (bundle == null) {
+                    bundle = new Bundle();
+                }
+                HttpTask task = new HttpTask(bundle);
                 task.execute(uri.toString());
                 return;
             }
@@ -66,7 +75,13 @@ public class FetchUrlActivity extends ListActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private static String downloadUrl(String myurl) throws IOException {
+    private static String fetchUrl(String myurl, String method, String body) throws IOException {
+        byte[] outputInBytes = null;
+
+        if (body != null) {
+            outputInBytes = body.getBytes("UTF-8");
+        }
+
         InputStream is = null;
         // Only display the first x characters of the retrieved
         // web page content.
@@ -76,12 +91,20 @@ public class FetchUrlActivity extends ListActivity {
         try {
             URL url = new URL(myurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
+            conn.setReadTimeout(5000 /* milliseconds */);
+            conn.setConnectTimeout(5000 /* milliseconds */);
+            conn.setRequestMethod(method);
             conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
+
+            if (outputInBytes == null) {
+                conn.connect();
+            } else {
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                os.write(outputInBytes);
+                os.close();
+            }
+
             //int response = conn.getResponseCode();
             is = conn.getInputStream();
 
@@ -101,19 +124,35 @@ public class FetchUrlActivity extends ListActivity {
         return new String(buffer);
     }
 
-    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+    private class HttpTask extends AsyncTask<String, Void, String> {
+
+        private final String mHttpMethod;
+        private final String mHttpBody;
+        private final boolean mLaunchResponseAsIntent;
+
+        private HttpTask(@NonNull Bundle bundle) {
+            mHttpMethod = bundle.getString(EXTRA_HTTP_METHOD, "GET");
+            mHttpBody = bundle.getString(EXTRA_HTTP_BODY);
+            mLaunchResponseAsIntent = bundle.getBoolean(EXTRA_LAUNCH_RESPONSE_AS_INTENT, false);
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             try {
-                return downloadUrl(urls[0]);
+                return fetchUrl(urls[0], mHttpMethod, mHttpBody);
             } catch (IOException e) {
-                return "Unable to retrieve " + urls[0];
+                return "Unable to retrieve " + urls[0] + " " + e.getLocalizedMessage();
             }
         }
 
         @Override
         protected void onPostExecute(String result) {
-            IntentUtils.startSearchActivity(FetchUrlActivity.this, result);
+            // TODO: handle errors differently
+            if (mLaunchResponseAsIntent) {
+                IntentUtils.startSearchActivity(FetchUrlActivity.this, result);
+            } else {
+                toast(result);
+            }
             finish();
         }
     }
