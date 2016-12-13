@@ -41,7 +41,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  * In case of an incoming SEND-intent we only accept "text/tab-separated-values".
  * However, if the user explicitly launches a file picker from Kõnele, then any "text/*" files
  * can be picked.
- *
+ * <p>
  * TODO: make a custom dialog (with scrolling)
  * TODO: finish() if import fails
  */

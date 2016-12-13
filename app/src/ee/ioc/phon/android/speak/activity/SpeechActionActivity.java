@@ -10,9 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
@@ -138,15 +138,20 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         mView.init(R.array.keysActivity, callerInfo);
         mView.setListener(getSpeechInputViewListener());
 
-        if (hasVoicePrompt()) {
-            sayVoicePrompt(new TtsProvider.Listener() {
-                @Override
-                public void onDone() {
-                    start();
-                }
-            });
+        String[] results = getExtras().getStringArray(Extras.EXTRA_RESULT_RESULTS);
+        if (results == null) {
+            if (hasVoicePrompt()) {
+                sayVoicePrompt(new TtsProvider.Listener() {
+                    @Override
+                    public void onDone() {
+                        start();
+                    }
+                });
+            } else {
+                start();
+            }
         } else {
-            start();
+            handleResults(Arrays.asList(results));
         }
     }
 
@@ -199,6 +204,17 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         return results;
     }
 
+    public void handleResults(List<String> results) {
+        if (results != null && results.size() > 0) {
+            List<String> newResults = rewriteResultsWithExtras(results);
+            if (mUtteranceRewriter == null) {
+                returnOrForwardMatches(newResults);
+            } else {
+                returnOrForwardMatches(mUtteranceRewriter.rewrite(newResults));
+            }
+        }
+    }
+
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new AbstractSpeechInputViewListener() {
 
@@ -211,14 +227,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                if (results != null && results.size() > 0) {
-                    List<String> newResults = rewriteResultsWithExtras(results);
-                    if (mUtteranceRewriter == null) {
-                        returnOrForwardMatches(newResults);
-                    } else {
-                        returnOrForwardMatches(mUtteranceRewriter.rewrite(newResults));
-                    }
-                }
+                handleResults(results);
             }
 
             @Override

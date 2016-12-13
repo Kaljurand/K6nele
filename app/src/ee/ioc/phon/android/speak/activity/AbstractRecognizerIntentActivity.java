@@ -223,7 +223,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVITY_REQUEST_CODE_DETAILS) {
             if (resultCode == RESULT_OK && data != null) {
-                handleResultByWebSearch(data.getStringExtra(SearchManager.QUERY));
+                handleResultByLaunchIntent(data.getStringExtra(SearchManager.QUERY));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -335,7 +335,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected static class SimpleMessageHandler extends Handler {
         private final WeakReference<AbstractRecognizerIntentActivity> mRef;
 
-        public SimpleMessageHandler(AbstractRecognizerIntentActivity c) {
+        private SimpleMessageHandler(AbstractRecognizerIntentActivity c) {
             mRef = new WeakReference<>(c);
         }
 
@@ -398,7 +398,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     || isAutoStartAction(action)
                     || RecognizerIntent.ACTION_WEB_SEARCH.equals(action)
                     || getExtras().getBoolean(RecognizerIntent.EXTRA_WEB_SEARCH_ONLY)) {
-                handleResultsByWebSearch(matches);
+                handleResultByLaunchIntent(matches);
                 return;
             } else {
                 setResultIntent(handler, matches);
@@ -443,9 +443,9 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // In case of multiple hypotheses, ask the user to select from a list dialog.
     // TODO: fetch also confidence scores and treat a very confident hypothesis
     // as a single hypothesis.
-    private void handleResultsByWebSearch(final List<String> results) {
+    private void handleResultByLaunchIntent(final List<String> results) {
         if (results.size() == 1) {
-            handleResultByWebSearch(results.get(0));
+            handleResultByLaunchIntent(results.get(0));
         } else {
             Intent searchIntent = new Intent(this, DetailsActivity.class);
             searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
@@ -454,18 +454,25 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
     }
 
-    private void handleResultByWebSearch(String result) {
+    /**
+     * Launch a new activity based on the given result. The current activity will be finished
+     * if EXTRA_FINISH is set. If this EXTRA is not defined, then we also finish unless we are in
+     * "multi window mode" (Android N only).
+     *
+     * @param result Single string that can be interpreted as an activity to be started.
+     */
+    private void handleResultByLaunchIntent(String result) {
         IntentUtils.startSearchActivity(this, result);
         // TODO: we should not finish if the activity was launched for a result, otherwise
         // the result would not be processed.
 
-        // Do not finish if in multi window mode because the user might want
-        // to ask a follow-up query. Android N only
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!isInMultiWindowMode()) {
-                finish();
-            }
-        } else {
+        boolean isFinish = true;
+        if (mExtras.containsKey(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT)) {
+            isFinish = mExtras.getBoolean(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT, true);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
+            isFinish = false;
+        }
+        if (isFinish) {
             finish();
         }
     }
