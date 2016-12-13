@@ -3,12 +3,9 @@ package ee.ioc.phon.android.speak.activity;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 
@@ -145,19 +142,25 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             sayVoicePrompt(new TtsProvider.Listener() {
                 @Override
                 public void onDone() {
-                    if (isAutoStart()) {
-                        // TODO: test what happens if the view is started while TTS is running
-                        // and then started again when the TTS stops and calls onDone
-                        // TODO: gets disabled, not sure why
-                        //mView.start();
-                    }
+                    start();
                 }
             });
         } else {
-            if (isAutoStart()) {
-                Log.i("Auto-starting");
-                mView.start();
-            }
+            start();
+        }
+    }
+
+
+    private void start() {
+        if (isAutoStart()) {
+            // TODO: test what happens if the view is started while TTS is running
+            // and then started again when the TTS stops and calls onDone
+            mView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mView.start();
+                }
+            });
         }
     }
 
