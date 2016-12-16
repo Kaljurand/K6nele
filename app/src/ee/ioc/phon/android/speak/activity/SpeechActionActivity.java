@@ -2,7 +2,6 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.Manifest;
 import android.content.ComponentName;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
@@ -20,7 +19,6 @@ import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.TtsProvider;
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -65,9 +63,6 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
-    public static String[] HEADER_REWRITES_COL2 = {"Utterance", "Replacement"};
-
-    private UtteranceRewriter mUtteranceRewriter;
     private TextView mTvPrompt;
     private SpeechInputView mView;
 
@@ -151,7 +146,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
                 start();
             }
         } else {
-            handleResults(Arrays.asList(results));
+            returnOrForwardMatches(Arrays.asList(results));
         }
     }
 
@@ -182,52 +177,18 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         stopTts();
     }
 
-    /**
-     * Rewrite results based on EXTRAs.
-     * First, the utterance-replacement pair (if exists) is applied to the results.
-     * Then, the complete rewrite table (with a header) (if exists) is applied to the results.
-     */
-    private List<String> rewriteResultsWithExtras(List<String> results) {
-        Bundle extras = getExtras();
-        String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
-        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
-        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
-        if (utterance != null && replacement != null) {
-            toast(utterance + "->" + replacement);
-            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2);
-            results = utteranceRewriter.rewrite(results);
-        }
-        if (rewritesAsStr != null) {
-            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(rewritesAsStr);
-            results = utteranceRewriter.rewrite(results);
-        }
-        return results;
-    }
-
-    public void handleResults(List<String> results) {
-        if (results != null && results.size() > 0) {
-            List<String> newResults = rewriteResultsWithExtras(results);
-            if (mUtteranceRewriter == null) {
-                returnOrForwardMatches(newResults);
-            } else {
-                returnOrForwardMatches(mUtteranceRewriter.rewrite(newResults));
-            }
-        }
-    }
 
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
         return new AbstractSpeechInputViewListener() {
 
             @Override
             public void onComboChange(String language, ComponentName service) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SpeechActionActivity.this);
-                String[] rewrites = getExtras().getStringArray(Extras.EXTRA_RESULT_REWRITES);
-                mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
+                setUtteranceRewriter(language, service);
             }
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                handleResults(results);
+                returnOrForwardMatches(results);
             }
 
             @Override

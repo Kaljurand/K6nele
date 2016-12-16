@@ -19,6 +19,7 @@ package ee.ioc.phon.android.speak.activity;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,10 +56,12 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.TtsProvider;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -76,6 +79,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     private static final String MSG = "MSG";
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
+
+    public static String[] HEADER_REWRITES_COL2 = {"Utterance", "Replacement"};
+
+    private UtteranceRewriter mUtteranceRewriter;
 
     private static SparseIntArray mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
 
@@ -401,13 +408,15 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 handleResultByLaunchIntent(matches);
                 return;
             } else {
-                setResultIntent(handler, matches);
+                setResultIntent(handler, rewriteResults(matches));
             }
         } else {
             Bundle bundle = getExtras().getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
             if (bundle == null) {
                 bundle = new Bundle();
             }
+            // TODO: apply rewrites to just one result
+            matches = rewriteResults(matches);
             String match = matches.get(0);
             //mExtraResultsPendingIntentBundle.putString(SearchManager.QUERY, match);
             Intent intent = new Intent();
@@ -462,7 +471,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      * @param result Single string that can be interpreted as an activity to be started.
      */
     private void handleResultByLaunchIntent(String result) {
-        IntentUtils.startSearchActivity(this, result);
+        IntentUtils.startSearchActivity(this, rewriteResults(result));
         // TODO: we should not finish if the activity was launched for a result, otherwise
         // the result would not be processed.
 
@@ -551,6 +560,66 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         if (mTts != null) {
             mTts.shutdown();
         }
+    }
 
+    protected void setUtteranceRewriter(String language, ComponentName service) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String[] rewrites = getExtras().getStringArray(Extras.EXTRA_RESULT_REWRITES);
+        mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
+    }
+
+    private List<String> rewriteResults(List<String> results) {
+        List<String> newResults = rewriteResultsWithExtras(results);
+        if (mUtteranceRewriter == null) {
+            return newResults;
+        }
+        return mUtteranceRewriter.rewrite(newResults);
+    }
+
+    private String rewriteResults(String result) {
+        String newResult = rewriteResultsWithExtras(result);
+        if (mUtteranceRewriter == null) {
+            return newResult;
+        }
+        return mUtteranceRewriter.rewrite(newResult);
+    }
+
+    /**
+     * Rewrite results based on EXTRAs.
+     * First, the utterance-replacement pair (if exists) is applied to the results.
+     * Then, the complete rewrite table (with a header) (if exists) is applied to the results.
+     */
+    private List<String> rewriteResultsWithExtras(List<String> results) {
+        Bundle extras = getExtras();
+        String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
+        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
+        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
+        if (utterance != null && replacement != null) {
+            toast(utterance + "->" + replacement);
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2);
+            results = utteranceRewriter.rewrite(results);
+        }
+        if (rewritesAsStr != null) {
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(rewritesAsStr);
+            results = utteranceRewriter.rewrite(results);
+        }
+        return results;
+    }
+
+    private String rewriteResultsWithExtras(String result) {
+        Bundle extras = getExtras();
+        String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
+        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
+        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
+        if (utterance != null && replacement != null) {
+            toast(utterance + "->" + replacement);
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2);
+            result = utteranceRewriter.rewrite(result);
+        }
+        if (rewritesAsStr != null) {
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(rewritesAsStr);
+            result = utteranceRewriter.rewrite(result);
+        }
+        return result;
     }
 }
