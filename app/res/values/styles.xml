@@ -7,4 +7,10 @@
 
     <style name="Theme.K6nele.Dialog" parent="@android:style/Theme.DeviceDefault.Dialog" />
 
+    <style name="Theme.K6nele.Dialog.NoActionBar" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+    <style name="Theme.K6nele.DialogWhenLarge" parent="@android:style/Theme.DeviceDefault.DialogWhenLarge" />
+
+    <style name="Theme.K6nele.DialogWhenLarge.NoActionBar" parent="@android:style/Theme.DeviceDefault.DialogWhenLarge.NoActionBar" />
+
 </resources>

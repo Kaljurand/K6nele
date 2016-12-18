@@ -13,7 +13,7 @@
     <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
-    <string name="labelActivityRewritesLoader">Kõnele ü.k. reeglid</string>
+    <string name="labelActivityRewritesLoader">Kõnele ü.k.-reeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
@@ -24,11 +24,13 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
 
+    <string name="labelRewritesName">Salvestage ümberkirjutusreeglid uue nime all (jätke tühjaks, et salvestada vaikimisi reegliteks):</string>
+    <string name="labelRewritesChooser">või valige juba olemasolev nimi:</string>
 
     <string name="hintSearch">Otsi</string>
     <string name="labelSearch">Otsi"</string>
     <string name="titleSearchRewrites">Otsi</string>
-    <string name="hintName">nimi (vaikimisi reeglite jaoks jätke tühjaks)</string>
+    <string name="hintName">nimi</string>
 
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>

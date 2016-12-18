@@ -239,31 +239,6 @@ public final class Utils {
     }
 
 
-    public static AlertDialog getTextEntryWithRadioDialog(Context context, String title, final CharSequence[] items, final ExecutableString ex) {
-        final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_name_entry, null);
-        final EditText et = (EditText) textEntryView.findViewById(R.id.name_edit);
-        return new AlertDialog.Builder(context)
-                .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        ex.execute(items[whichButton].toString());
-                    }
-                })
-                .setTitle(title)
-                .setView(textEntryView)
-                .setPositiveButton(R.string.buttonOk, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        ex.execute(et.getText().toString());
-                    }
-                })
-                .setNegativeButton(R.string.buttonCancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                })
-                .create();
-    }
-
-
     public static String getVersionName(Context c) {
         PackageInfo info = getPackageInfo(c);
         if (info == null) {

@@ -200,7 +200,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.RewritesLoaderActivity"
             android:label="@string/labelActivityRewritesLoader"
-            android:theme="@style/Theme.K6nele.Dialog">
+            android:theme="@style/Theme.K6nele.Dialog.NoActionBar"
+            android:windowSoftInputMode="stateUnchanged">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -6,7 +6,6 @@
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
-    <string name="empty" translatable="false"></string>
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
@@ -37,10 +36,13 @@
     <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
+    <string name="labelRewritesName">Save the rewrites table under a new name (leave empty to save as default):</string>
+    <string name="labelRewritesChooser">or choose an existing name:</string>
+
     <string name="hintSearch">Search</string>
     <string name="labelSearch">Search"</string>
     <string name="titleSearchRewrites">Filter rewrites</string>
-    <string name="hintName">name (leave empty for default)</string>
+    <string name="hintName">name</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
