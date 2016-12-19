@@ -23,6 +23,7 @@
             android:id="@+id/etRewritesNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/layoutMargin4dp"
             android:layout_marginRight="@dimen/layoutMargin4dp"
             android:layout_weight="4"
             android:hint="@string/hintName"
@@ -40,7 +41,7 @@
             android:text="@string/buttonOk" />
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/llRewritesChooser"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

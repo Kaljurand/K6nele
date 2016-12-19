@@ -23,9 +23,10 @@
     <string name="keyImeAudioFormat" translatable="false">keyImeAudioFormat</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
-    <string name="keyRewrite" translatable="false">keyRewrite</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
+
+    <string name="defaultRewritesName" translatable="false">defaultRewritesName</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status

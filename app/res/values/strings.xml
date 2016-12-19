@@ -24,6 +24,7 @@
     <string name="labelActivityDetails">Details</string>
     <string name="labelActivityRewrites">Rewrite rules loading report</string>
     <string name="labelActivityRewritesLoader">Kõnele rewrite rules</string>
+    <string name="labelActivityRewritesSelector">Rewrite rules</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
     <string name="labelActivityServerList">Recognizer servers</string>
@@ -36,7 +37,7 @@
     <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
-    <string name="labelRewritesName">Save the rewrites table under a new name (leave empty to save as default):</string>
+    <string name="labelRewritesName">Save the rewrites table under a new name:</string>
     <string name="labelRewritesChooser">or choose an existing name:</string>
 
     <string name="hintSearch">Search</string>
@@ -47,8 +48,7 @@
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
-    <string name="titleCategoryApps">Apps &amp; Grammars</string>
-    <string name="titleCategoryRewrites">Rewrite rules</string>
+    <string name="titleCategoryApps">Apps, Grammars, Rewrite rules</string>
     <string name="titleCategoryIme">Speech keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>
@@ -100,11 +100,8 @@
     <string name="titleSystemVoiceInputSettings">All recognition services</string>
     <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
 
-    <string name="titleRewrite">Rewriting</string>
-    <string name="summaryRewrite">Apply rewrite rules to the transcription</string>
-
-    <string name="titleLoadRewrites">Load rewrite rules</string>
-    <string name="summaryLoadRewrites">Load rewrite rules from a tab-separated values file</string>
+    <string name="titleSelectRewrites">Rewrite rules</string>
+    <string name="summarySelectRewrites">Import rewrite rules from a tab-separated values file and manage existing rules</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>

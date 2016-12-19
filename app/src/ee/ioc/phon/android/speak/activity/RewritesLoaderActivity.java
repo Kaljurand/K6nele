@@ -118,11 +118,6 @@ public class RewritesLoaderActivity extends Activity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null) {
             Uri uri = resultData.getData();

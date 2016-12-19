@@ -198,6 +198,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityServerList"
             android:parentActivityName=".PreferencesRecognitionServiceHttp"></activity>
         <activity
+            android:name=".activity.RewritesSelectorActivity"
+            android:exported="true"
+            android:label="@string/labelActivityRewritesSelector"
+            android:parentActivityName=".activity.Preferences"></activity>
+        <activity
             android:name=".activity.RewritesLoaderActivity"
             android:label="@string/labelActivityRewritesLoader"
             android:theme="@style/Theme.K6nele.Dialog.NoActionBar"

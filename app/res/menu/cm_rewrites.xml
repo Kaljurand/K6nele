@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/cmRewritesActivate"
+        android:title="Activate/deactivate" />
+
+    <item
+        android:id="@+id/cmRewritesShare"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/cmRewritesRename"
+        android:showAsAction="ifRoom|withText"
+        android:title="Rename" />
+
+    <item
+        android:id="@+id/cmRewritesDelete"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/cmAppDelete" />
+
+</menu>

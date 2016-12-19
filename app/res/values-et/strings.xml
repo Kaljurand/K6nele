@@ -14,6 +14,7 @@
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
     <string name="labelActivityRewritesLoader">Kõnele ü.k.-reeglid</string>
+    <string name="labelActivityRewritesSelector">Ümberkirjutusreeglistikud</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
@@ -24,7 +25,7 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
 
-    <string name="labelRewritesName">Salvestage ümberkirjutusreeglid uue nime all (jätke tühjaks, et salvestada vaikimisi reegliteks):</string>
+    <string name="labelRewritesName">Salvestage ümberkirjutusreeglid uue nime all:</string>
     <string name="labelRewritesChooser">või valige juba olemasolev nimi:</string>
 
     <string name="hintSearch">Otsi</string>
@@ -35,8 +36,7 @@
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
     <string name="titleCategoryIme">Kõneklaviatuur</string>
-    <string name="titleCategoryApps">Rakendused &amp; Grammatikad</string>
-    <string name="titleCategoryRewrites">Ümberkirjutusreeglid</string>
+    <string name="titleCategoryApps">Rakendused, Grammatikad, Ümberkirjutusreeglid</string>
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleScreenDemos">Demod</string>
     <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
@@ -59,6 +59,8 @@
 		kõnesisendit</string>
     <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
+    <string name="titleSelectRewrites">Ümberkirjutusreeglistikud</string>
+    <string name="summarySelectRewrites">Reeglistike lisamine, vaatamine, aktiveerimine, ümbernimetamine, jne.</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
     <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimaid tulemusi,
@@ -288,13 +290,6 @@
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
     <string name="labelIme">Kõnele kõneklaviatuur</string>
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
-
-    <string name="titleRewrite">Ümberkirjutamine</string>
-    <string name="summaryRewrite">Rakenda transkriptsioonile ümberkirjutusreegleid</string>
-
-    <string name="titleLoadRewrites">Laadi ümberkirjutusreeglid</string>
-    <string name="summaryLoadRewrites">Laadi ümberkirjutusreeglid tsv-failist</string>
-
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
 
