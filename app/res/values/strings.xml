@@ -22,9 +22,9 @@
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
-    <string name="labelActivityRewrites">Rewrite rules loading report</string>
+    <string name="labelActivityRewrites">Rewrite rules</string>
     <string name="labelActivityRewritesLoader">Kõnele rewrite rules</string>
-    <string name="labelActivityRewritesSelector">Rewrite rules</string>
+    <string name="labelActivityRewritesSelector">Rewrite rule tables</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
     <string name="labelActivityServerList">Recognizer servers</string>
@@ -39,6 +39,8 @@
 
     <string name="labelRewritesName">Save the rewrites table under a new name:</string>
     <string name="labelRewritesChooser">or choose an existing name:</string>
+
+    <string name="labelRewritesShare">Share the rewrites table</string>
 
     <string name="hintSearch">Search</string>
     <string name="labelSearch">Search"</string>
@@ -101,7 +103,7 @@
     <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
 
     <string name="titleSelectRewrites">Rewrite rules</string>
-    <string name="summarySelectRewrites">Import rewrite rules from a tab-separated values file and manage existing rules</string>
+    <string name="summarySelectRewrites">List of rewrite rule tables (at most one can be active at a time)</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
@@ -164,8 +166,12 @@ More grammars are available at
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
+    <string name="emptylistRewrites">No rewrite tables. Add a new rewrite table via the Add-menu, and long-press it to activate it.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
+    <string name="toastSaved">Saved: %1$s</string>
+    <string name="toastActivated">Activated: %1$s</string>
+    <string name="toastDeactivated">Deactivated: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
     <string name="toastPlayingAudio">Playing the recorded audio: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Done playing the audio</string>
@@ -206,6 +212,7 @@ More grammars are available at
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>
+    <string name="confirmRenameEntry">Rename</string>
     <string name="dialogTitleChangeGrammarName">Change the name</string>
     <string name="dialogTitleChangeGrammarLang">Change the target language</string>
     <string name="dialogTitleChangeGrammarUrl">Change the grammar</string>
@@ -226,6 +233,11 @@ More grammars are available at
     <string name="cmGrammarDelete">Delete</string>
     <string name="cmServerEdit">Change URL</string>
     <string name="cmServerDelete">Delete</string>
+    <!-- General menu items -->
+    <string name="cmToggle">(De)activate</string>
+    <string name="cmShare">Share</string>
+    <string name="cmRename">Rename</string>
+    <string name="cmDelete">Delete</string>
     <string name="menuAppsSort">Sort …</string>
     <string name="menuAppsSortByName">by package name</string>
     <string name="menuAppsSortByCount">by usage frequency</string>
@@ -233,6 +245,7 @@ More grammars are available at
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuAbout">About</string>
+    <string name="menuRewritesAdd">Load rewrite rules from a tsv-file</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
     <string name="buttonDemoShowEncoders">Show the list of available encoders</string>

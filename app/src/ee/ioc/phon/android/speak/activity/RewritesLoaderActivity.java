@@ -65,12 +65,7 @@ public class RewritesLoaderActivity extends Activity {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final Resources res = getResources();
-        List<String> keysSorted = new ArrayList<>();
-        for (String key : PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap)) {
-            if (!key.isEmpty()) {
-                keysSorted.add(key);
-            }
-        }
+        List<String> keysSorted = new ArrayList<>(PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap));
 
         if (!keysSorted.isEmpty()) {
             Collections.sort(keysSorted);
@@ -147,10 +142,8 @@ public class RewritesLoaderActivity extends Activity {
     private void saveAndshow(SharedPreferences prefs, Resources res, String name) {
         if (utteranceRewriter != null) {
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter.toTsv());
-            int count = utteranceRewriter.size();
-            Intent intent = new Intent(this, RewritesActivity.class);
-            intent.putExtra(DetailsActivity.EXTRA_TITLE, name + " · " + res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
-            intent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, utteranceRewriter.toStringArray());
+            toast(String.format(getString(R.string.toastSaved), name));
+            Intent intent = new Intent(this, RewritesSelectorActivity.class);
             startActivity(intent);
         }
         finish();

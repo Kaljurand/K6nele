@@ -28,6 +28,8 @@
     <string name="labelRewritesName">Salvestage ümberkirjutusreeglid uue nime all:</string>
     <string name="labelRewritesChooser">või valige juba olemasolev nimi:</string>
 
+    <string name="labelRewritesShare">Jaga ümberkirjutusreegleid</string>
+
     <string name="hintSearch">Otsi</string>
     <string name="labelSearch">Otsi"</string>
     <string name="titleSearchRewrites">Otsi</string>
@@ -160,12 +162,14 @@
 		Lisa-nupu abil.</string>
     <string name="emptylistServers">Servereid pole. Lisa uus serveri URL Lisa-nupu
 		abil.</string>
+    <string name="emptylistRewrites">Ümberkirjutusreegleid pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil.</string>
     <string name="menuAppsSort">Järjesta …</string>
     <string name="menuAppsSortByName">rakenduse paki nime järgi</string>
     <string name="menuAppsSortByCount">kasutussageduse järgi</string>
     <string name="menuAppsSortByGrammar">grammatika URLi järgi</string>
     <string name="menuGrammarsAdd">Lisa</string>
     <string name="menuServersAdd">Lisa</string>
+    <string name="menuRewritesAdd">Laadi ümberkirjutusreeglite tabel tsv-formaadis failist</string>
     <string name="menuDemoGrammarAssign">Omista grammatika</string>
     <string name="menuAbout">Info</string>
     <string name="cmAppAssignGrammar">Omista grammatika</string>
@@ -180,11 +184,17 @@
     <string name="cmGrammarDelete">Kustuta</string>
     <string name="cmServerEdit">Muuda URL</string>
     <string name="cmServerDelete">Kustuta</string>
+    <!-- General menu items -->
+    <string name="cmToggle">(De)aktiveeri</string>
+    <string name="cmShare">Jaga</string>
+    <string name="cmRename">Muuda nime</string>
+    <string name="cmDelete">Kustuta</string>
     <string name="confirmDeleteEntry">Eemaldan loendist \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Tuvastan selles rakenduses kõnet ilma oma
 		grammatikata?</string>
     <string name="confirmRemoveServer">Tuvastan selles rakenduses kõnet vaikimisi määratud
 		serveriga?</string>
+    <string name="confirmRenameEntry">Muuda nime</string>
     <string name="dialogTitleChangeGrammarName">Muuda grammatika nimi</string>
     <string name="dialogTitleChangeGrammarLang">Muuda grammatika keel</string>
     <string name="dialogTitleChangeGrammarUrl">Muuda grammatika URL</string>
@@ -195,6 +205,9 @@
     <string name="dialogTitleChangeRewritesName">Salvesta nimega &#8230;</string>
     <string name="toastForwardedMatches">Tuvastasin: %1$s</string>
     <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
+    <string name="toastSaved">Salvestatud: %1$s</string>
+    <string name="toastActivated">Aktiveeritud: %1$s</string>
+    <string name="toastDeactivated">Deaktiveeritud: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Audioformaat pole toetatud: %1$s</string>
     <string name="toastPlayingAudio">Mängin lindistust: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Lindistuse lõpp</string>

@@ -3,20 +3,18 @@
 
     <item
         android:id="@+id/cmRewritesActivate"
-        android:title="Activate/deactivate" />
+        android:title="@string/cmToggle" />
 
     <item
         android:id="@+id/cmRewritesShare"
-        android:title="Share" />
+        android:title="@string/cmShare" />
 
     <item
         android:id="@+id/cmRewritesRename"
-        android:showAsAction="ifRoom|withText"
-        android:title="Rename" />
+        android:title="@string/cmRename" />
 
     <item
         android:id="@+id/cmRewritesDelete"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/cmAppDelete" />
+        android:title="@string/cmDelete" />
 
 </menu>
