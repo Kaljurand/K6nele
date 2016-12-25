@@ -78,7 +78,7 @@ public class RewritesLoaderActivity extends Activity {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    saveAndshow(prefs, res, (String) lv.getItemAtPosition(position));
+                    saveAndShow(prefs, res, (String) lv.getItemAtPosition(position));
                 }
 
             });
@@ -87,7 +87,7 @@ public class RewritesLoaderActivity extends Activity {
         bRewritesLoader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveAndshow(prefs, res, et.getText().toString());
+                saveAndShow(prefs, res, et.getText().toString());
             }
         });
 
@@ -139,11 +139,13 @@ public class RewritesLoaderActivity extends Activity {
         }
     }
 
-    private void saveAndshow(SharedPreferences prefs, Resources res, String name) {
+    private void saveAndShow(SharedPreferences prefs, Resources res, String name) {
         if (utteranceRewriter != null) {
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter.toTsv());
-            toast(String.format(getString(R.string.toastSaved), name));
-            Intent intent = new Intent(this, RewritesSelectorActivity.class);
+            int count = utteranceRewriter.size();
+            Intent intent = new Intent(this, RewritesActivity.class);
+            intent.putExtra(DetailsActivity.EXTRA_TITLE, name + " · " + res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
+            intent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, utteranceRewriter.toStringArray());
             startActivity(intent);
         }
         finish();

@@ -6,6 +6,7 @@
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
+    <string name="check" translatable="false">✓</string>
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
@@ -50,7 +51,7 @@
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
-    <string name="titleCategoryApps">Apps, Grammars, Rewrite rules</string>
+    <string name="titleCategoryApps">Apps, Grammars, Rewrites</string>
     <string name="titleCategoryIme">Speech keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>
@@ -80,11 +81,11 @@
     <string name="titleWsServer">WebSocket URL</string>
     <string name="summaryWsServer" translatable="false">%1$s</string>
     <string name="titleHelpText">Help text</string>
-    <string name="summaryHelpText">Show help text by the microphone button (makes the search panel larger)</string>
+    <string name="summaryHelpText">Show usage instructions by the microphone button. Makes the search panel larger.</string>
     <string name="titleReturnErrors">Return errors</string>
     <string name="summaryReturnErrors">Return network/audio/etc. errors to the caller (useful if the caller does error handling)</string>
     <string name="titleImeHelpText">Help text</string>
-    <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
+    <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the speech keyboard larger.</string>
     <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
     <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Tap here to enable it in the Android keyboard and input method settings.</string>
@@ -102,8 +103,8 @@
     <string name="titleSystemVoiceInputSettings">All recognition services</string>
     <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
 
-    <string name="titleSelectRewrites">Rewrite rules</string>
-    <string name="summarySelectRewrites">List of rewrite rule tables (at most one can be active at a time)</string>
+    <string name="titleSelectRewrites">Rewrites</string>
+    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. At most one table can be active at a time.</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
@@ -166,10 +167,9 @@ More grammars are available at
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
-    <string name="emptylistRewrites">No rewrite tables. Add a new rewrite table via the Add-menu, and long-press it to activate it.</string>
+    <string name="emptylistRewrites">No rewrite rule tables. Add a new table via the Add-menu, and long-press it to activate it.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
-    <string name="toastSaved">Saved: %1$s</string>
     <string name="toastActivated">Activated: %1$s</string>
     <string name="toastDeactivated">Deactivated: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
@@ -220,7 +220,6 @@ More grammars are available at
     <string name="dialogTitleChangeServer">Change the server</string>
     <string name="dialogTitleNewServer">Add a new server URL</string>
     <string name="dialogTitleHypotheses">Did you mean &#8230;</string>
-    <string name="dialogTitleChangeRewritesName">Save the rewrites table as &#8230;</string>
     <string name="cmAppAssignGrammar">Assign grammar</string>
     <string name="cmAppRemoveGrammar">Remove grammar</string>
     <string name="cmAppAssignServer">Assign server</string>
@@ -234,8 +233,9 @@ More grammars are available at
     <string name="cmServerEdit">Change URL</string>
     <string name="cmServerDelete">Delete</string>
     <!-- General menu items -->
-    <string name="cmToggle">(De)activate</string>
+    <string name="cmToggle">Toggle</string>
     <string name="cmShare">Share</string>
+    <string name="cmTest">Test in Kõnele</string>
     <string name="cmRename">Rename</string>
     <string name="cmDelete">Delete</string>
     <string name="menuAppsSort">Sort …</string>

@@ -8,8 +8,10 @@
         android:id="@+id/rewritesId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey50"
-        android:textSize="@dimen/textSize3" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary" />
 
     <TextView
         android:id="@+id/rewritesIsSelected"
@@ -17,6 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        android:text="@string/check"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary" />
 
 </RelativeLayout>

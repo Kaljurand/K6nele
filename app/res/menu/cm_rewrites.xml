@@ -10,6 +10,10 @@
         android:title="@string/cmShare" />
 
     <item
+        android:id="@+id/cmRewritesTest"
+        android:title="@string/cmTest" />
+
+    <item
         android:id="@+id/cmRewritesRename"
         android:title="@string/cmRename" />
 

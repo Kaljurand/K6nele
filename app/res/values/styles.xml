@@ -13,4 +13,17 @@
 
     <style name="Theme.K6nele.DialogWhenLarge.NoActionBar" parent="@android:style/Theme.DeviceDefault.DialogWhenLarge.NoActionBar" />
 
+    <!--
+        <style name="Theme.K6nele" parent="@android:style/Theme.Holo.Light" />
+
+        <style name="Theme.K6nele.NoActionBar" parent="@android:style/Theme.Holo.Light.NoActionBar" />
+
+        <style name="Theme.K6nele.Dialog" parent="@android:style/Theme.Holo.Light.Dialog" />
+
+        <style name="Theme.K6nele.Dialog.NoActionBar" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
+
+        <style name="Theme.K6nele.DialogWhenLarge" parent="@android:style/Theme.Holo.Light.DialogWhenLarge" />
+
+        <style name="Theme.K6nele.DialogWhenLarge.NoActionBar" parent="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar" />
+     -->
 </resources>

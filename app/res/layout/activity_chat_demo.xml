@@ -9,7 +9,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey3"
         android:orientation="vertical"
         android:padding="@dimen/layoutMargin4dp">
 
@@ -30,7 +29,6 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/controls_tagselector"
         android:layout_alignParentTop="true"
-        android:fontFamily="monospace"
-        android:textSize="@dimen/textSize10sp" />
+        android:fontFamily="monospace" />
 
 </RelativeLayout>

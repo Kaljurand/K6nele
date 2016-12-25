@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Shopping list"
+        android:text="@string/buttonGoToSettings"
+        android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/textSize3" />
 
     <TextView
@@ -21,7 +22,7 @@
         android:layout_toEndOf="@+id/itemGrammarName"
         android:layout_toRightOf="@+id/itemGrammarName"
         android:padding="1dp"
-        android:text="ShoppingAssist"
+        android:text="@string/labelRewritesChooser"
         android:textColor="@color/green1"
         android:textSize="@dimen/textSize1"
         android:typeface="monospace" />
@@ -31,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemGrammarName"
-        android:text="Shopping list items, e.g. &apos;two kilo carrots&apos;, &apos;half a liter of milk&apos;"
+        android:text="@string/summaryHelpText"
         android:textSize="@dimen/textSize2" />
 
     <TextView
@@ -49,7 +50,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemGrammarDesc"
-        android:text="http://example.org/grammars/pgf/shopping.pgf"
+        android:text="@string/defaultWsServer"
         android:textColor="@color/orange1"
         android:textSize="@dimen/textSize1" />
 

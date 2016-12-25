@@ -31,7 +31,9 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
     }
 
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public
+    @NonNull
+    View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
         if (convertView == null) {
             LayoutInflater inflator = context.getLayoutInflater();
@@ -47,9 +49,9 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
         Rewrites rewrites = list.get(position);
         holder.id.setText(rewrites.getId());
         if (rewrites.isSelected()) {
-            holder.isSelected.setText("✔");
+            holder.isSelected.setVisibility(View.VISIBLE);
         } else {
-            holder.isSelected.setText("");
+            holder.isSelected.setVisibility(View.INVISIBLE);
         }
         return view;
     }
