@@ -20,7 +20,7 @@ See mikrofoninupp on tihti seotud Androidi avatud kõnetuvastusliidesega,
 läbi mille on võimalik kasutada ka Kõnele poolt pakutud tuvastust.
 
 - Kui käivitada Kõnele otse, st mitte läbi teise rakenduse,
-siis suunatakse tuvastatud tekst edasi veebiotsingumootorile.
+siis suunatakse tuvastatud tekst (vaikimisi) edasi veebiotsingumootorile, või soovi korral (ümberkirjutusreeglite abil) nt kodurobotile.
 
 Kõnele kasutab kõne tekstiks teisendamiseks (ehk transkribeerimiseks) TTÜ Küberneetika Instituudi
 foneetika ja kõnetehnoloogia laboris (vt <http://phon.ioc.ee>) välja töötatud
@@ -37,7 +37,7 @@ transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
 on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
-Android v5 (Lollipop) ja Android v6 (Marshmallow) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
+Android v5 (Lollipop) kuni Android v7 (Nougat) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
 teistsugune, kuid mitte oluliselt.
 
 ## Demo
@@ -70,6 +70,19 @@ edasi seadme veebibrauserile.
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
+
+### Otselingid (alates Android v7.1)
+
+Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_). Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
+
+### Ümberkirjutusreeglid (alates v1.6 beeta)
+
+Ümberkirjutusreeglid (vt pikemalt allpool) võimaldavad muuta, kuidas tuvastustulemust interpreteeritakse. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
+
+- __Utterance__ = `(.*)`
+- __Replacement__ = `{"action": "android.intent.action.VIEW", "data": "geo:0,0?q=$1, Estonia"}`
 
 
 ## Kõnele seadistamine
@@ -236,8 +249,8 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 - sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), ja parandada muid tuvastaja võimalikke puudujääke (autopunktsiooni puudumine, emotikonide toe puudumine, jms);
 - sisestada tekste, mis ei kipu meelde jääma, või mida ei taha tuvastajale avaldada (nt telefoninumbrid, aadressid, kontonumbrid);
 - sisestada korduma kippuvaid pikemaid tekste;
-- toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil);
-- käivitada teisi Androidi rakendusi.
+- käivitada teisi Androidi rakendusi;
+- rakendada tekstitoimetuskäske.
 
 Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn tsv-fail),
 millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnaga, mis tuleb kirjutada tabeli esimesse ritta).
@@ -248,14 +261,11 @@ millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnag
 - __Service__ Regulaaravaldis tuvastusteenuse Java klassi nime kirjeldusega.
 - __App__ Regulaaravaldis rakenduse paki nime kirjeldusega, milles Kõnelet kasutatakse.
 - __Comment__ Rida kirjeldav kommentaar.
-- __Command__ Tekstitoimetuskäsu nimi (ingliskeelne märksõna).
-- __Arg1__ Käsu esimene argument.
-- __Arg2__ Käsu teine argument.
 
 Igale reale vastab üks reegel, ning ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
 Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, rakenduse, ja tuvastusteenuse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/).
 
-Näide. Lihtne (eestikeelne) ümberkirjutusreegel. Küsimärk lausungi mustris määrab igaks juhuks, et tühik on lausungis valikuline. Nõnda ei sõltu reegli rakendmine sellest, kuidas tuvastaja sõnu kokku/lahku kirjutab.
+Näide. Lihtne (eestikeelne) ümberkirjutusreegel. Küsimärk lausungimustris määrab igaks juhuks, et tühik on lausungis valikuline. Nõnda ei sõltu reegli rakendmine sellest, kuidas tuvastaja sõnu kokku/lahku kirjutab.
 
 - __Locale__ = `et`
 - __Utterance__ = `minu lemmik ?matemaatiku ?nimi`
@@ -298,7 +308,14 @@ siis püüab Kõnele leida _Intent_'ile vastava rakenduse ning selle käivitada.
 
 (Eksperimentaalne)
 
-Tekstitoimetuskäsud võimaldavad kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `goToNextField`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `delete`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Igal käsul on 0 kuni 2 argumenti. Argumendid võivad sisaldada tavalisi sümboleid, viiteid __Utterance__ gruppidele (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
+Tekstitoimetuskäsud on eeldefineeritud käsud, mida on võimalik kasutada koos Kõnele klaviatuuriga.
+Need võimaldavad toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil), nt kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `goToNextField`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `delete`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Igal käsul on 0 kuni 2 argumenti. Argumendid võivad sisaldada tavalisi sümboleid, viiteid __Utterance__ gruppidele (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
+
+Tekstitoimetuskäskude sidumiseks kõnekäskudega tuleb kasutada kolme lisaveergu:
+
+- __Command__ Tekstitoimetuskäsu nimi (ingliskeelne märksõna).
+- __Arg1__ Käsu esimene argument (valikuline).
+- __Arg2__ Käsu teine argument (valikuline).
 
 Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud. Muid sõnu väljundisse ei lisata, kuna __Replacement__ on tühisõne.
 
@@ -340,9 +357,50 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 
 ### Näited
 
-- [üldine reeglifail](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing) sisaldab suurt hulka kasulikke reeglid;
-- [dialoogisüsteem e-kirja saatmiseks](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing) näitab, kuidas kasutada ümberkirjutusreegleid programmeerimiskeelena, lihtsate dialoogisüsteemide loomiseks;
-- [kõnekäsud Philips Hue valgustite kontrollimiseks](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing) näitab, kuidas teha Kõnele abil HTTP-päringuid.
+- [Üldine reeglifail](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing) sisaldab suurt hulka kasulikke reeglid.
+- [Käsud tõlkerakenduse avamiseks](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing) näitab, kuidas avada tõlkerakendus etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljund keele ning tõlgitava fraasi määrab lausung.
+- [Dialoogisüsteem e-kirja saatmiseks](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing) näitab, kuidas kasutada ümberkirjutusreegleid programmeerimiskeelena, lihtsate dialoogisüsteemide loomiseks.
+- [Kõnekäsud Philips Hue valgustite kontrollimiseks](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing) näitab, kuidas teha Kõnele abil HTTP-päringuid.
+
+Olgugi ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomiseks mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks ise kõne tuvastama.
+
+Järgmine reegel (mille peaks salvestama nime all "Robot") saadab fraasiga "hei Siiri" algava päringu edasi kohtvõrku installeeritud veebiliidesega robotile:
+
+- __Utterance__ = `^hei Siiri (.+)$`
+- __Replacement__ =
+
+{% highlight json %}
+    {
+      "component": "ee.ioc.phon.android.speak/.activity.FetchUrlActivity",
+        "data": "http://192.168.0.11:8000/?lang=et-EE&q=$1",
+        "extras": {
+          "ee.ioc.phon.android.extra.LAUNCH_RESPONSE_AS_INTENT": True
+        }
+    }
+{% endhighlight %}
+
+Nt kui kasutaja ütleb "hei Siiri mängi Ivo Linnat", siis jõuab robotile päring "mängi Ivo Linnat", mida robot peab ise edasi analüüsima js sellele seejärel kuidagi reageerima.
+
+Juhul kui robot tahab küsida jätkuküsimusi, siis peaks ta päringule vastama umbes sellise JSON struktuuriga.
+
+{% highlight json %}
+{
+"component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity",
+"extras": {
+    "ee.ioc.phon.android.extra.VOICE_PROMPT": "Mis laulu?",
+    "android.speech.extra.MAX_RESULTS": 1,
+    "android.speech.extra.LANGUAGE": "et-EE",
+    "ee.ioc.phon.android.extra.AUTO_START": True,
+    "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",
+    "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "hei Siiri $1",
+    "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Robot"]
+  }
+}
+{% endhighlight %}
+
+Kõnele komponent `FetchUrlActivity` käivitab selle peale Kõnele otsingupaneeli, mis ütleb Androidi kõnesüntesaatori abil "Mis laulu?", lindistab kasutaja kõnesisendi, ning lisab transkriptsioonile prefiksi "hei Siiri", tagades nõnda, et tulemus saadetakse jälle roboti veebiliidesele.
+
+Nõnda on võimalik pikem käed-vaba dialoog robotiga, kus Kõnele roll on olla lihtsalt kõnetuvastaja, ning muud ülesanded (loomuliku keele analüüs, eelneva dialoogi mäletamine, suhtlemine teiste seadmetega) on roboti kanda.
 
 ## Grammatikapõhine kõnetuvastus
 
