@@ -14,7 +14,7 @@
     <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
     <string name="labelActivityRewritesLoader">Kõnele ü.k.-reeglid</string>
-    <string name="labelActivityRewritesSelector">Ümberkirjutusreeglistikud</string>
+    <string name="labelActivityRewritesSelector">Ümberkirjutusreeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
@@ -61,7 +61,7 @@
 		kõnesisendit</string>
     <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
-    <string name="titleSelectRewrites">Ümberkirjutusreeglistikud</string>
+    <string name="titleSelectRewrites">Ümberkirjutusreeglid</string>
     <string name="summarySelectRewrites">Reeglistike lisamine, vaatamine, aktiveerimine, ümbernimetamine, jne.</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
@@ -162,7 +162,8 @@
 		Lisa-nupu abil.</string>
     <string name="emptylistServers">Servereid pole. Lisa uus serveri URL Lisa-nupu
 		abil.</string>
-    <string name="emptylistRewrites">Ümberkirjutusreegleid pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil.</string>
+    <string name="emptylistRewrites">Ümberkirjutusreeglistikke pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil.</string>
+    <string name="emptylistRewriteRules">Ümberkirjutusreegleid ei leitud. Veenduge, et sisendfaili veerud on eraldatud tabulaatori abil ja esimene rida on päiseks.</string>
     <string name="menuAppsSort">Järjesta …</string>
     <string name="menuAppsSortByName">rakenduse paki nime järgi</string>
     <string name="menuAppsSortByCount">kasutussageduse järgi</string>
@@ -188,14 +189,14 @@
     <string name="cmToggle">(De)aktiveeri</string>
     <string name="cmShare">Jaga</string>
     <string name="cmTest">Testi Kõneles</string>
-    <string name="cmRename">Muuda nime</string>
+    <string name="cmRename">Muuda nimi</string>
     <string name="cmDelete">Kustuta</string>
     <string name="confirmDeleteEntry">Eemaldan loendist \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Tuvastan selles rakenduses kõnet ilma oma
 		grammatikata?</string>
     <string name="confirmRemoveServer">Tuvastan selles rakenduses kõnet vaikimisi määratud
 		serveriga?</string>
-    <string name="confirmRenameEntry">Muuda nime</string>
+    <string name="confirmRenameEntry">Muuda nimi</string>
     <string name="dialogTitleChangeGrammarName">Muuda grammatika nimi</string>
     <string name="dialogTitleChangeGrammarLang">Muuda grammatika keel</string>
     <string name="dialogTitleChangeGrammarUrl">Muuda grammatika URL</string>

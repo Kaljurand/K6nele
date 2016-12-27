@@ -19,14 +19,16 @@
         android:orientation="horizontal"
         android:padding="@dimen/layoutMargin4dp">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/etRewritesNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/layoutMargin4dp"
             android:layout_marginRight="@dimen/layoutMargin4dp"
             android:layout_weight="4"
+            android:completionThreshold="1"
             android:hint="@string/hintName"
+            android:imeOptions="actionDone"
             android:inputType="textCapWords"
             android:maxLines="1"
             android:scrollHorizontally="true"

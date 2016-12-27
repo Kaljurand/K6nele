@@ -23,13 +23,17 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -60,20 +64,41 @@ public class RewritesLoaderActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rewrites_loader);
-        final EditText et = (EditText) findViewById(R.id.etRewritesNameText);
-        final Button bRewritesLoader = (Button) findViewById(R.id.bRewritesNameOk);
-
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final Resources res = getResources();
+        final Button bRewritesLoader = (Button) findViewById(R.id.bRewritesNameOk);
+        final AutoCompleteTextView et = (AutoCompleteTextView) findViewById(R.id.etRewritesNameText);
+        et.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    bRewritesLoader.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+        bRewritesLoader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveAndShow(prefs, res, et.getText().toString());
+            }
+        });
         List<String> keysSorted = new ArrayList<>(PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap));
 
+        // If there are already some rewrites then we show their names as well
         if (!keysSorted.isEmpty()) {
             Collections.sort(keysSorted);
+            String[] names = keysSorted.toArray(new String[0]);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
+            et.setAdapter(adapter);
+
             final LinearLayout ll = (LinearLayout) findViewById(R.id.llRewritesChooser);
             ll.setVisibility(View.VISIBLE);
             final ListView lv = (ListView) findViewById(R.id.lvRewrites);
             lv.setAdapter(new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, keysSorted.toArray(new String[0])));
+                    android.R.layout.simple_list_item_1, android.R.id.text1, names));
 
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -84,28 +109,26 @@ public class RewritesLoaderActivity extends Activity {
             });
         }
 
-        bRewritesLoader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveAndShow(prefs, res, et.getText().toString());
-            }
-        });
-
         Intent intent = getIntent();
-        if (intent.getExtras() == null) {
+        Uri uri = intent.getData();
+        if (uri == null && intent.getExtras() == null) {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType(TYPE);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             Intent chooser = Intent.createChooser(intent, "");
             startActivityForResult(chooser, GET_CONTENT_REQUEST_CODE);
         } else {
+            // Responding to SEND and VIEW actions
             String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
             if (subject != null) {
                 et.setText(subject);
+                et.setSelection(subject.length());
             }
             String text = intent.getStringExtra(Intent.EXTRA_TEXT);
             if (text == null) {
-                Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                if (uri == null) {
+                    uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                }
                 if (uri != null) {
                     utteranceRewriter = loadFromUri(uri);
                 }

@@ -212,6 +212,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/tab-separated-values" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/tab-separated-values" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.RewritesActivity"

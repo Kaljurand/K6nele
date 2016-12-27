@@ -16,7 +16,8 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ListActivity;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -28,33 +29,21 @@ import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 
 import ee.ioc.phon.android.speak.R;
-
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 
 // TODO: use CursorAdapter to be able to specify the filterting
-public class RewritesActivity extends ListActivity implements SearchView.OnQueryTextListener {
+public class RewritesActivity extends Activity {
 
     public static final String EXTRA_TITLE = "EXTRA_TITLE";
     public static final String EXTRA_STRING_ARRAY = "EXTRA_STRING_ARRAY";
 
+    private RewritesFragment mFragment;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            String title = extras.getString(EXTRA_TITLE);
-            if (title != null) {
-                getActionBar().setSubtitle(title);
-            }
-
-            String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
-            if (stringArray != null) {
-                setListAdapter(new ArrayAdapter<>(this, R.layout.list_item_rewrite, stringArray));
-            }
-            getListView().setFastScrollEnabled(true);
-        }
+        mFragment = new RewritesFragment();
+        getFragmentManager().beginTransaction().add(android.R.id.content, mFragment).commit();
     }
 
     @Override
@@ -68,19 +57,44 @@ public class RewritesActivity extends ListActivity implements SearchView.OnQuery
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(false);
-        searchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextListener(mFragment);
 
         return true;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String s) {
-        return false;
-    }
+    public static class RewritesFragment extends K6neleListFragment implements SearchView.OnQueryTextListener {
 
-    @Override
-    public boolean onQueryTextChange(String s) {
-        ((ArrayAdapter) getListAdapter()).getFilter().filter(s);
-        return true;
+        @Override
+        public void onResume() {
+            super.onResume();
+            Intent intent = getActivity().getIntent();
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                String title = extras.getString(EXTRA_TITLE);
+                if (title != null) {
+                    ActionBar actionBar = getActivity().getActionBar();
+                    if (actionBar != null) {
+                        actionBar.setSubtitle(title);
+                    }
+                }
+                String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
+                if (stringArray != null) {
+                    setListAdapter(new ArrayAdapter<>(getActivity(), R.layout.list_item_rewrite, stringArray));
+                }
+                getListView().setFastScrollEnabled(true);
+            }
+            setEmptyView(getString(R.string.emptylistRewriteRules));
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+            ((ArrayAdapter) getListAdapter()).getFilter().filter(s);
+            return true;
+        }
     }
 }
