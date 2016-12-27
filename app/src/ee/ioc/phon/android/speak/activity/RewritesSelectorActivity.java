@@ -94,7 +94,7 @@ public class RewritesSelectorActivity extends Activity {
                     initAdapter();
                     return true;
                 case R.id.cmRewritesShare:
-                    Intent intent = rewrites.getShareIntent();
+                    Intent intent = rewrites.getSendIntent();
                     startActivity(Intent.createChooser(intent, getResources().getText(R.string.labelRewritesShare)));
                     return true;
                 case R.id.cmRewritesTest:

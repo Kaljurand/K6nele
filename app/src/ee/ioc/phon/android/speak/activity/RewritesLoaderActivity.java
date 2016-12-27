@@ -99,6 +99,10 @@ public class RewritesLoaderActivity extends Activity {
             Intent chooser = Intent.createChooser(intent, "");
             startActivityForResult(chooser, GET_CONTENT_REQUEST_CODE);
         } else {
+            String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+            if (subject != null) {
+                et.setText(subject);
+            }
             String text = intent.getStringExtra(Intent.EXTRA_TEXT);
             if (text == null) {
                 Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);

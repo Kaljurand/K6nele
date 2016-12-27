@@ -3,6 +3,7 @@ package ee.ioc.phon.android.speak.model;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.speech.RecognizerIntent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,6 +64,7 @@ public class Rewrites {
     public Intent getK6neleIntent() {
         Intent intent = new Intent();
         intent.setClassName("ee.ioc.phon.android.speak", "ee.ioc.phon.android.speak.activity.SpeechActionActivity");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, mId);
         intent.putExtra(Extras.EXTRA_RESULT_REWRITES, new String[]{mId});
         return intent;
     }
@@ -78,12 +80,12 @@ public class Rewrites {
         return intent;
     }
 
-    public Intent getShareIntent() {
+    public Intent getSendIntent() {
         String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
         UtteranceRewriter ur = new UtteranceRewriter(rewrites);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TITLE, mId);
+        intent.putExtra(Intent.EXTRA_SUBJECT, mId);
         intent.putExtra(Intent.EXTRA_TEXT, ur.toTsv());
         intent.setType("text/tab-separated-values");
         return intent;
