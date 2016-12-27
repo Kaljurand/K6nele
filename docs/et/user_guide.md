@@ -252,7 +252,7 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 - käivitada teisi Androidi rakendusi;
 - rakendada tekstitoimetuskäske.
 
-Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn tsv-fail),
+Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn TSV-fail),
 millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnaga, mis tuleb kirjutada tabeli esimesse ritta).
 
 - __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks (lausungimuster). Võib sisaldada alamgruppe (nn _capturing group_), mis on tähistatud sulgudega `()` ja viiteid nendele (tähistatud `\1`, `\2`, ...).
@@ -344,10 +344,10 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 
 ### Reeglite tegemine
 
-Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel tsv-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
+Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel TSV-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
 
-- Kõnele menüüvalik "Ümberkirjutusreeglid" avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida;
-- tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili tsv-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
+- Kõnele menüüvalik "Ümberkirjutusreeglid" avab nimekirja olemasolevatest reeglistikest. Seal on Lisa-nupp, mis avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida.
+- Tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili TSV-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
@@ -357,14 +357,15 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 
 ### Näited
 
-- [Üldine reeglifail](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing) sisaldab suurt hulka kasulikke reeglid.
-- [Käsud tõlkerakenduse avamiseks](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing) näitab, kuidas avada tõlkerakendus etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljund keele ning tõlgitava fraasi määrab lausung.
-- [Dialoogisüsteem e-kirja saatmiseks](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing) näitab, kuidas kasutada ümberkirjutusreegleid programmeerimiskeelena, lihtsate dialoogisüsteemide loomiseks.
-- [Kõnekäsud Philips Hue valgustite kontrollimiseks](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing) näitab, kuidas teha Kõnele abil HTTP-päringuid.
+- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU/edit?usp=sharing)] Ühest reeglist koosnev reeglistik, mis näitab, kuidas avada veebibrauseri asemel kaardirakendus.
+- [[Sheets](https://docs.google.com/spreadsheets/d/179hiQTLQnMOpSclOk2fQZ2lVLAJASwxO83zMMmBey5A/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid ja keerulisemaid tekstitoimetusreegleid.
+- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
+- [[Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
+- [[Sheets](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing)] Kõnekäsud Philips Hue valgustite kontrollimiseks näitab, kuidas teha Kõnele abil HTTP-päringuid.
 
-Olgugi ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomiseks mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks ise kõne tuvastama.
+Olgugi, et ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomisel mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks oskama ise kõne tuvastada.
 
-Järgmine reegel (mille peaks salvestama nime all "Robot") saadab fraasiga "hei Siiri" algava päringu edasi kohtvõrku installeeritud veebiliidesega robotile:
+Järgmine reegel (mille peaks salvestama reeglistikku nimega "Robot") saadab fraasiga "hei Siiri" algava päringu edasi kohtvõrku installeeritud veebiliidesega robotile:
 
 - __Utterance__ = `^hei Siiri (.+)$`
 - __Replacement__ =
@@ -379,7 +380,7 @@ Järgmine reegel (mille peaks salvestama nime all "Robot") saadab fraasiga "hei 
     }
 {% endhighlight %}
 
-Nt kui kasutaja ütleb "hei Siiri mängi Ivo Linnat", siis jõuab robotile päring "mängi Ivo Linnat", mida robot peab ise edasi analüüsima js sellele seejärel kuidagi reageerima.
+Nt kui kasutaja ütleb "hei Siiri mängi Ivo Linnat", siis jõuab robotile päring "mängi Ivo Linnat", mida robot peab ise edasi analüüsima ja sellele seejärel kuidagi reageerima.
 
 Juhul kui robot tahab küsida jätkuküsimusi, siis peaks ta päringule vastama umbes sellise JSON struktuuriga.
 
@@ -398,9 +399,9 @@ Juhul kui robot tahab küsida jätkuküsimusi, siis peaks ta päringule vastama 
 }
 {% endhighlight %}
 
-Kõnele komponent `FetchUrlActivity` käivitab selle peale Kõnele otsingupaneeli, mis ütleb Androidi kõnesüntesaatori abil "Mis laulu?", lindistab kasutaja kõnesisendi, ning lisab transkriptsioonile prefiksi "hei Siiri", tagades nõnda, et tulemus saadetakse jälle roboti veebiliidesele.
+Kõnele komponent `FetchUrlActivity` käivitab sellise vastuse peale Kõnele otsingupaneeli, mis ütleb läbi Androidi kõnesüntesaatori "Mis laulu?", lindistab kasutaja kõnesisendi, ning lisab transkriptsioonile prefiksi "hei Siiri", tagades nõnda, et tulemus saadetakse jälle roboti veebiliidesele.
 
-Nõnda on võimalik pikem käed-vaba dialoog robotiga, kus Kõnele roll on olla lihtsalt kõnetuvastaja, ning muud ülesanded (loomuliku keele analüüs, eelneva dialoogi mäletamine, suhtlemine teiste seadmetega) on roboti kanda.
+Nõnda on võimalik pikem käed-vaba dialoog robotiga, kus Kõnele roll on olla lihtsalt kõnetuvastaja, ning muud ülesanded (nt loomuliku keele analüüs, eelneva dialoogi mäletamine, teadmised kasutaja profiilist, suhtlemine teiste seadmetega) on roboti kanda.
 
 ## Grammatikapõhine kõnetuvastus
 
