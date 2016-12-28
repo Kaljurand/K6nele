@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -210,7 +211,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
 
         mVoicePrompt = mExtras.getString(Extras.EXTRA_VOICE_PROMPT);
-        mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO);
+        mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO) || MediaStore.Audio.Media.RECORD_SOUND_ACTION.equals(getIntent().getAction());
 
         mIsReturnErrors = mExtras.getBoolean(Extras.EXTRA_RETURN_ERRORS,
                 PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyReturnErrors, R.bool.defaultReturnErrors));
