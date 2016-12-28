@@ -37,7 +37,7 @@ transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
 on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
-Android v5 (Lollipop) kuni Android v7 (Nougat) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
+Android v5 (Lollipop) kuni v7 (Nougat) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
 teistsugune, kuid mitte oluliselt.
 
 ## Demo
@@ -58,7 +58,7 @@ frameborder="0"> </iframe>
 
 Allpool tuleb kõikidest nendest kasutusolukordadest lähemalt juttu.
 
-## Kõnepõhine veebiotsing
+## Kõnele kui iseseisev rakendus
 
 Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb mikrofoninupuga paneel.
 Nupule vajutades teisendab Kõnele sisendkõne tekstiks ning edastab selle
@@ -70,12 +70,6 @@ edasi seadme veebibrauserile.
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
-
-### Otselingid (alates Android v7.1)
-
-Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_). Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
-
-<img src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
 
 ### Ümberkirjutusreeglid (alates v1.6 beeta)
 
@@ -105,8 +99,7 @@ seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
 Samuti on võimalik vaadata, läbi milliste rakenduste on kõnetuvastust kasutatud ning
 omistada erinevatele rakendustele erinevaid grammatikaid (vt allpool).
 
-Kõnele sisaldab kahte erinevat kõnetuvastusteenust, mis kasutavad vastavalt kahte erinevat
-kõnetuvastusserverit (mille aadressid on samuti konfigureeritavad):
+Kõnele toetab kahte erinevat kõnetuvastusteenust:
 
   - "grammatikatoega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/ruby-pocketsphinx-server>)
     lubab sisendkõnele omistada tõlkegrammatikaid, kuid on aeglasem ja sisendkõne pikkus ei tohi ületada
@@ -114,14 +107,16 @@ kõnetuvastusserverit (mille aadressid on samuti konfigureeritavad):
   - "kiire tuvastusega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/kaldi-gstreamer-server>)
     tagastab tuvastustulemuse juba rääkimise ajal, ega sea sisendkõne pikkusele mingit piirangut.
 
-Otsingupaneel kasutab vaikimisi "grammatikatoega" kõnetuvastusteenust, kuid
-lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
-keeli (nt Kõnele "kiire tuvastusega" teenus ja Google'i teenus),
-muutes vastavat seadet.
-Kui valitud on mitu teenust/keelt, siis on paneelil lisaks veel teenuse/keele vahetamise nupp:
+Mõlemad teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku.
 
-- lühike vajus lülitab järgmisele teenusele/keelele,
-- pikk vajutus kuvab kõik võimalikud teenused/keeled, võimaldades valikut muuta.
+Otsingupaneel kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
+lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
+keeli (nt Kõnele "grammatikatoega" teenus ja Google'i teenus),
+muutes vastavat seadet.
+Kui valitud on mitu keelt/teenust, siis on paneelil lisaks veel keele/teenuse vahetamise nupp:
+
+- lühike vajus lülitab järgmisele keelele/teenusele,
+- pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta.
 
 (Vt näidet peatükis "Grammatikapõhine kõnetuvastus".)
 
@@ -133,6 +128,12 @@ menüüs:
   - Androidi kõnetuvastusrakenduste vaikeväärtused
 
 Neist tuleb juttu allpool.
+
+### Otselingid (alates Android v7.1)
+
+Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_). Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
 
 ## Kõnele klaviatuurirakendusena
 
