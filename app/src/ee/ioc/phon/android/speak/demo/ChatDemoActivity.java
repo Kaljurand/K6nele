@@ -34,6 +34,7 @@ import java.util.List;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 
 
 /**
@@ -81,7 +82,7 @@ public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
             String result = matches.get(0);
             //String resultPp = "voice command (the raw utterance)\n\n" + result;
             try {
-                String resultPp = "/* .... */\n" + IntentUtils.parseJson(result).toString(2);
+                String resultPp = "/* .... */\n" + JsonUtils.parseJson(result).toString(2);
                 mMatches.add(resultPp);
             } catch (JSONException e) {
                 mMatches.add("ERROR: " + e.getLocalizedMessage());
@@ -103,7 +104,7 @@ public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
     }
 
     private void startActivity(String intentAsJson) {
-        IntentUtils.startSearchActivity(this, intentAsJson);
+        IntentUtils.startActivityFromJson(this, intentAsJson);
     }
 
     private static Intent createRecognizerIntent() {
@@ -111,9 +112,9 @@ public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say command");
-        //intent.putExtra(Extras.EXTRA_VOICE_PROMPT, "Say command");
+        intent.putExtra(Extras.EXTRA_VOICE_PROMPT, "Say command");
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-        //intent.putExtra(Extras.EXTRA_AUTO_START, true);
+        intent.putExtra(Extras.EXTRA_AUTO_START, true);
         intent.putExtra(Extras.EXTRA_RETURN_ERRORS, true);
         // TODO: load a specific rewrites file
         return intent;

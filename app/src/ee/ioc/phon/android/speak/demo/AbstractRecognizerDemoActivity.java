@@ -132,17 +132,20 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 
 
     protected void launchRecognizerIntent(Intent intent) {
+        String prompt;
         if (mGrammarId == 0) {
             String[] phrasesDemo = getResources().getStringArray(R.array.phrasesDemo);
             String phraseDemo = phrasesDemo[(new Random()).nextInt(phrasesDemo.length)];
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, String.format(getString(R.string.promptDemo), phraseDemo));
             intent.putExtra(Extras.EXTRA_PHRASE, phraseDemo);
+            prompt = String.format(getString(R.string.promptDemo), phraseDemo);
         } else {
             String grammarTargetLang = getGrammarTargetLang();
             intent.putExtra(Extras.EXTRA_GRAMMAR_URL, getGrammarUrl());
             intent.putExtra(Extras.EXTRA_GRAMMAR_TARGET_LANG, grammarTargetLang);
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak " + getGrammarName() + " to " + grammarTargetLang);
+            prompt = "Speak " + getGrammarName() + " to " + grammarTargetLang;
         }
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, prompt);
+        intent.putExtra(Extras.EXTRA_VOICE_PROMPT, prompt);
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 

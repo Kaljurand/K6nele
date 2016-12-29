@@ -183,6 +183,16 @@ More grammars are available at
         <item quantity="one">1 rule</item>
         <item quantity="other">%d rules</item>
     </plurals>
+    <plurals name="statusLoadRewritesErrors">
+        <item quantity="zero">No errors</item>
+        <item quantity="one">1 error</item>
+        <item quantity="other">%d errors</item>
+    </plurals>
+    <plurals name="subtitleRewritesSelector">
+        <item quantity="zero">No tables</item>
+        <item quantity="one">1 table</item>
+        <item quantity="other">%d tables</item>
+    </plurals>
 
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
@@ -213,7 +223,8 @@ More grammars are available at
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>
-    <string name="confirmRenameEntry">Rename</string>
+    <string name="confirmRename">Rename</string>
+    <string name="confirmDelete">Are you sure you want to delete \"%1$s\"?</string>
     <string name="dialogTitleChangeGrammarName">Change the name</string>
     <string name="dialogTitleChangeGrammarLang">Change the target language</string>
     <string name="dialogTitleChangeGrammarUrl">Change the grammar</string>

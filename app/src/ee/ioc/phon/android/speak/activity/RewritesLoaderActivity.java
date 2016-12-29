@@ -169,10 +169,9 @@ public class RewritesLoaderActivity extends Activity {
     private void saveAndShow(SharedPreferences prefs, Resources res, String name) {
         if (utteranceRewriter != null) {
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter.toTsv());
-            int count = utteranceRewriter.size();
             Intent intent = new Intent(this, RewritesActivity.class);
-            intent.putExtra(DetailsActivity.EXTRA_TITLE, name + " · " + res.getQuantityString(R.plurals.statusLoadRewrites, count, count));
-            intent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, utteranceRewriter.toStringArray());
+            intent.putExtra(RewritesActivity.EXTRA_NAME, name);
+            intent.putExtra(RewritesActivity.EXTRA_ERRORS, utteranceRewriter.getErrorsAsStringArray());
             startActivity(intent);
         }
         finish();

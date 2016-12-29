@@ -196,7 +196,8 @@
 		grammatikata?</string>
     <string name="confirmRemoveServer">Tuvastan selles rakenduses kõnet vaikimisi määratud
 		serveriga?</string>
-    <string name="confirmRenameEntry">Muuda nimi</string>
+    <string name="confirmRename">Muuda nimi</string>
+    <string name="confirmDelete">Kustutan \"%1$s\"?</string>
     <string name="dialogTitleChangeGrammarName">Muuda grammatika nimi</string>
     <string name="dialogTitleChangeGrammarLang">Muuda grammatika keel</string>
     <string name="dialogTitleChangeGrammarUrl">Muuda grammatika URL</string>
@@ -215,6 +216,14 @@
     <plurals name="statusLoadRewrites">
         <item quantity="one">1 reegel</item>
         <item quantity="other">%d reeglit</item>
+    </plurals>
+    <plurals name="statusLoadRewritesErrors">
+        <item quantity="one">1 viga</item>
+        <item quantity="other">%d viga</item>
+    </plurals>
+    <plurals name="subtitleRewritesSelector">
+        <item quantity="one">1 tabelit</item>
+        <item quantity="other">%d tabelit</item>
     </plurals>
     <string name="entryGrammarName1">[piiramata sisend]</string>
     <string name="entryGrammarDesc1">Selle grammatika saab omistada rakendustele, kus te

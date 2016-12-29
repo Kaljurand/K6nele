@@ -3,8 +3,11 @@
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
 
+    <!-- Used to set the alarm clock if the transcription resolves to an AlarmClock intent. -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <!-- Used to reach the speech recognition server. -->
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <!-- Used to record the speech input to be transcribed. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 
     <!-- Some Chromebooks don't support touch. Although not essential,
@@ -227,9 +230,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".activity.RewritesActivity"
             android:label="@string/labelActivityRewrites"
             android:parentActivityName=".activity.RewritesSelectorActivity">
+            <!--
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"></meta-data>
+                -->
         </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"

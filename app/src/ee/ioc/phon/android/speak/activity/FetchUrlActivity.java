@@ -40,7 +40,7 @@ import ee.ioc.phon.android.speak.utils.IntentUtils;
  * optionally interprets its response an a JSON that encodes an intent, and launches this intent.
  * <p>
  * TODO: handle errors
- * TODO: handle latency (show progress in notification)
+ * TODO: handle latency, e.g. show progress in notification (but notifications are not available on Android Things)
  * TODO: add extras for various HTTP parameters
  *
  * @author Kaarel Kaljurand
@@ -149,7 +149,7 @@ public class FetchUrlActivity extends ListActivity {
         protected void onPostExecute(String result) {
             // TODO: handle errors differently
             if (mLaunchResponseAsIntent) {
-                IntentUtils.startSearchActivity(FetchUrlActivity.this, result);
+                IntentUtils.startActivityFromJson(FetchUrlActivity.this, result);
             } else {
                 toast(result);
             }

@@ -472,7 +472,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      * @param result Single string that can be interpreted as an activity to be started.
      */
     private void handleResultByLaunchIntent(String result) {
-        IntentUtils.startSearchActivity(this, rewriteResults(result));
+        IntentUtils.startActivityFromJson(this, rewriteResults(result));
         // TODO: we should not finish if the activity was launched for a result, otherwise
         // the result would not be processed.
 

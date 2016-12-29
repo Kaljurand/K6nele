@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.List;
+
 import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.R;
@@ -27,8 +30,7 @@ public class RewritesSelectorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RewritesSelectorFragment fragment = new RewritesSelectorFragment();
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getFragmentManager().beginTransaction().add(android.R.id.content, new RewritesSelectorFragment()).commit();
     }
 
     @Override
@@ -66,8 +68,7 @@ public class RewritesSelectorActivity extends Activity {
         public void onResume() {
             super.onResume();
             initAdapter();
-            ListView listView = getListView();
-            registerForContextMenu(listView);
+            registerForContextMenu(getListView());
             setEmptyView(getString(R.string.emptylistRewrites));
         }
 
@@ -85,8 +86,7 @@ public class RewritesSelectorActivity extends Activity {
             final String name = rewrites.getId();
             switch (item.getItemId()) {
                 case R.id.cmRewritesActivate:
-                    boolean isActive = rewrites.toggle();
-                    if (isActive) {
+                    if (rewrites.toggle()) {
                         toast(String.format(getString(R.string.toastActivated), name));
                     } else {
                         toast(String.format(getString(R.string.toastDeactivated), name));
@@ -94,8 +94,7 @@ public class RewritesSelectorActivity extends Activity {
                     initAdapter();
                     return true;
                 case R.id.cmRewritesShare:
-                    Intent intent = rewrites.getSendIntent();
-                    startActivity(Intent.createChooser(intent, getResources().getText(R.string.labelRewritesShare)));
+                    startActivity(Intent.createChooser(rewrites.getSendIntent(), getResources().getText(R.string.labelRewritesShare)));
                     return true;
                 case R.id.cmRewritesTest:
                     startActivity(rewrites.getK6neleIntent());
@@ -103,7 +102,7 @@ public class RewritesSelectorActivity extends Activity {
                 case R.id.cmRewritesRename:
                     Utils.getTextEntryDialog(
                             getActivity(),
-                            getString(R.string.confirmRenameEntry),
+                            getString(R.string.confirmRename),
                             name,
                             new ExecutableString() {
                                 public void execute(String newName) {
@@ -118,7 +117,7 @@ public class RewritesSelectorActivity extends Activity {
                 case R.id.cmRewritesDelete:
                     Utils.getYesNoDialog(
                             getActivity(),
-                            String.format(getString(R.string.confirmDeleteEntry), name),
+                            String.format(getString(R.string.confirmDelete), name),
                             new Executable() {
                                 public void execute() {
                                     rewrites.delete();
@@ -138,7 +137,13 @@ public class RewritesSelectorActivity extends Activity {
         }
 
         private void initAdapter() {
-            setListAdapter(new RewritesAdapter(this, Rewrites.getTables(mPrefs, mRes)));
+            List<Rewrites> tables = Rewrites.getTables(mPrefs, mRes);
+            setListAdapter(new RewritesAdapter(this, tables));
+            ActionBar actionBar = getActivity().getActionBar();
+            if (actionBar != null) {
+                int count = tables.size();
+                actionBar.setSubtitle(mRes.getQuantityString(R.plurals.subtitleRewritesSelector, count, count));
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.activity.DetailsActivity;
+import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
@@ -26,9 +26,8 @@ public class Rewrites {
     private Resources mRes;
 
     private final String mId;
-    private boolean mIsSelected;
 
-    private Rewrites(SharedPreferences prefs, Resources res, String id) {
+    public Rewrites(SharedPreferences prefs, Resources res, String id) {
         mPrefs = prefs;
         mRes = res;
         mId = id;
@@ -43,22 +42,16 @@ public class Rewrites {
     }
 
     public boolean isSelected() {
-        return mIsSelected;
-    }
-
-    private void setSelected(boolean b) {
-        mIsSelected = b;
+        return mId.equals(PreferenceUtils.getPrefString(mPrefs, mRes, R.string.defaultRewritesName));
     }
 
     public boolean toggle() {
-        String currentDefault = PreferenceUtils.getPrefString(mPrefs, mRes, R.string.defaultRewritesName);
-        if (mId.equals(currentDefault)) {
+        if (isSelected()) {
             PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, null);
             return false;
-        } else {
-            PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, mId);
-            return true;
         }
+        PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, mId);
+        return true;
     }
 
     public Intent getK6neleIntent() {
@@ -70,13 +63,9 @@ public class Rewrites {
     }
 
     public Intent getShowIntent() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
-        int count = ur.size();
         Intent intent = new Intent();
         intent.setClassName("ee.ioc.phon.android.speak", "ee.ioc.phon.android.speak.activity.RewritesActivity");
-        intent.putExtra(DetailsActivity.EXTRA_TITLE, mId + " · " + mRes.getQuantityString(R.plurals.statusLoadRewrites, count, count));
-        intent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, ur.toStringArray());
+        intent.putExtra(RewritesActivity.EXTRA_NAME, mId);
         return intent;
     }
 
@@ -89,6 +78,12 @@ public class Rewrites {
         intent.putExtra(Intent.EXTRA_TEXT, ur.toTsv());
         intent.setType("text/tab-separated-values");
         return intent;
+    }
+
+    public String[] getRules() {
+        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        return ur.toStringArray();
     }
 
     public void rename(String newName) {
@@ -108,13 +103,10 @@ public class Rewrites {
     }
 
     public static List<Rewrites> getTables(SharedPreferences prefs, Resources res) {
-        String currentDefault = PreferenceUtils.getPrefString(prefs, res, R.string.defaultRewritesName);
         List<String> rewritesIds = new ArrayList<>(PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap));
         List<Rewrites> rewritesTables = new ArrayList<>();
         for (String id : rewritesIds) {
-            Rewrites rewrites = new Rewrites(prefs, res, id);
-            rewrites.setSelected(id.equals(currentDefault));
-            rewritesTables.add(rewrites);
+            rewritesTables.add(new Rewrites(prefs, res, id));
         }
         Collections.sort(rewritesTables, SORT_BY_ID);
         return rewritesTables;
