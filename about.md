@@ -54,7 +54,7 @@ __For the app developer, Kõnele__
   - implements [android.speech.RecognitionService](http://developer.android.com/reference/android/speech/RecognitionService.html), backed by two open servers:
     - <http://github.com/alumae/kaldi-gstreamer-server> (continuous full-duplex server),
     - <http://github.com/alumae/ruby-pocketsphinx-server> (grammar-supporting server);
-  - is open and configurable, e.g. allowing one to specify the grammars and recognition servers via intent EXTRAs.
+  - is open and configurable, supporting many input EXTRAs and allowing the output to be changed by regex-based rewrite rules.
 
 See more in the [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
 
@@ -70,8 +70,8 @@ The latest testing version is available on Google Play after joining
 [the testing program][k6nele-beta-link]. (Alternatively, you can also join
 [this Google+ community][k6nele-beta] and click on "Signup for Kõnele".)
 
-[![]({{ site.baseurl }}/images/en/available-on-google-play.png)][k6nele-play]
-[![]({{ site.baseurl }}/images/en/available-on-fdroid.png)][k6nele-fdroid]
+[![]({{ site.baseurl }}/images/en/google-play-badge.png)][k6nele-play]
+[![]({{ site.baseurl }}/images/en/f-droid-badge.png)][k6nele-fdroid]
 
 ## Other
 

@@ -4,6 +4,9 @@ comments: true
 title: Kasutusjuhend
 ---
 
+- TOC
+{:toc}
+
 ## Sissejuhatus
 
 __Kõnele__ on kõnetuvastusteenus Androidi rakendustele, mis võimaldab kõne abil
@@ -40,7 +43,7 @@ Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutaj
 Android v5 (Lollipop) kuni v7 (Nougat) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
 teistsugune, kuid mitte oluliselt.
 
-## Demo
+## Demovideo
 
 Järgnev video näitab
 (1) kõnepõhist veebiotsingut;
@@ -71,9 +74,7 @@ edasi seadme veebibrauserile.
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
-### Ümberkirjutusreeglid (alates v1.6 beeta)
-
-Ümberkirjutusreeglid (vt pikemalt allpool) võimaldavad muuta, kuidas tuvastustulemust interpreteeritakse. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
+Ümberkirjutusreeglid (alates v1.6 beeta, vt pikemalt allpool) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
 
 - __Utterance__ = `(.*)`
 - __Replacement__ = `{"action": "android.intent.action.VIEW", "data": "geo:0,0?q=$1, Estonia"}`
@@ -107,7 +108,7 @@ Kõnele toetab kahte erinevat kõnetuvastusteenust:
   - "kiire tuvastusega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/kaldi-gstreamer-server>)
     tagastab tuvastustulemuse juba rääkimise ajal, ega sea sisendkõne pikkusele mingit piirangut.
 
-Mõlemad teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku.
+Mõlema teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku.
 
 Otsingupaneel kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
 lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
@@ -120,6 +121,10 @@ Kui valitud on mitu keelt/teenust, siis on paneelil lisaks veel keele/teenuse va
 
 (Vt näidet peatükis "Grammatikapõhine kõnetuvastus".)
 
+Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_), alates Android v7.1. Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
+
+<img src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
+
 Lisaks Kõnele oma seadetele, on Kõnelet võimalik konfigureerida kolmes Androidi süsteemses
 menüüs:
 
@@ -128,12 +133,6 @@ menüüs:
   - Androidi kõnetuvastusrakenduste vaikeväärtused
 
 Neist tuleb juttu allpool.
-
-### Otselingid (alates Android v7.1)
-
-Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_). Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
-
-<img src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
 
 ## Kõnele klaviatuurirakendusena
 
@@ -366,9 +365,9 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 
 Olgugi, et ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomisel mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks oskama ise kõne tuvastada.
 
-Järgmine reegel (mille peaks salvestama reeglistikku nimega "Robot") saadab fraasiga "hei Siiri" algava päringu edasi kohtvõrku installeeritud veebiliidesega robotile:
+Järgmine reegel (mille peaks salvestama reeglistikku nimega "Robot") saadab fraasiga "hei Robot" algava päringu edasi kohtvõrku installeeritud veebiliidesega robotile:
 
-- __Utterance__ = `^hei Siiri (.+)$`
+- __Utterance__ = `^hei Robot (.+)$`
 - __Replacement__ =
 
 {% highlight json %}
@@ -381,7 +380,7 @@ Järgmine reegel (mille peaks salvestama reeglistikku nimega "Robot") saadab fra
     }
 {% endhighlight %}
 
-Nt kui kasutaja ütleb "hei Siiri mängi Ivo Linnat", siis jõuab robotile päring "mängi Ivo Linnat", mida robot peab ise edasi analüüsima ja sellele seejärel kuidagi reageerima.
+Nt kui kasutaja ütleb "hei Robot mängi Ivo Linnat", siis jõuab robotile päring "mängi Ivo Linnat", mida robot peab ise edasi analüüsima ja sellele seejärel kuidagi reageerima.
 
 Juhul kui robot tahab küsida jätkuküsimusi, siis peaks ta päringule vastama umbes sellise JSON struktuuriga.
 
@@ -394,13 +393,13 @@ Juhul kui robot tahab küsida jätkuküsimusi, siis peaks ta päringule vastama 
     "android.speech.extra.LANGUAGE": "et-EE",
     "ee.ioc.phon.android.extra.AUTO_START": True,
     "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",
-    "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "hei Siiri $1",
+    "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "hei Robot $1",
     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Robot"]
   }
 }
 {% endhighlight %}
 
-Kõnele komponent `FetchUrlActivity` käivitab sellise vastuse peale Kõnele otsingupaneeli, mis ütleb läbi Androidi kõnesüntesaatori "Mis laulu?", lindistab kasutaja kõnesisendi, ning lisab transkriptsioonile prefiksi "hei Siiri", tagades nõnda, et tulemus saadetakse jälle roboti veebiliidesele.
+Kõnele komponent `FetchUrlActivity` käivitab sellise vastuse peale Kõnele otsingupaneeli, mis ütleb läbi Androidi kõnesüntesaatori "Mis laulu?", lindistab kasutaja kõnesisendi, ning lisab transkriptsioonile prefiksi "hei Robot", tagades nõnda, et tulemus saadetakse jälle roboti veebiliidesele.
 
 Nõnda on võimalik pikem käed-vaba dialoog robotiga, kus Kõnele roll on olla lihtsalt kõnetuvastaja, ning muud ülesanded (nt loomuliku keele analüüs, eelneva dialoogi mäletamine, teadmised kasutaja profiilist, suhtlemine teiste seadmetega) on roboti kanda.
 
