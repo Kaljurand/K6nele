@@ -87,12 +87,14 @@ public class Rewrites {
     }
 
     public void rename(String newName) {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
-        delete();
-        String currentDefault = PreferenceUtils.getPrefString(mPrefs, mRes, R.string.defaultRewritesName);
-        if (mId.equals(currentDefault)) {
-            PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, newName);
+        if (!mId.equals(newName)) {
+            String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+            delete();
+            PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
+            String currentDefault = PreferenceUtils.getPrefString(mPrefs, mRes, R.string.defaultRewritesName);
+            if (mId.equals(currentDefault)) {
+                PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, newName);
+            }
         }
     }
 

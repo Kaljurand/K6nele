@@ -116,7 +116,7 @@ public final class IntentUtils {
             Toast.makeText(context, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
         } catch (SecurityException e) {
             // This happens if the user constructs an intent for which we do not have a
-            // permission, e.g. the SET_ALARM intent.
+            // permission, e.g. the CALL intent.
             Log.i("startActivityIfAvailable: " + e.getMessage());
             Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
