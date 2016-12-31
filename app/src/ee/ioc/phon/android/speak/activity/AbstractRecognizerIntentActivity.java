@@ -434,10 +434,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     private void handleResultByWebSearch(String result) {
-        Bundle extras = getExtras();
-        String prefix = extras.getString(Extras.EXTRA_RESULT_PREFIX, "");
-        String suffix = extras.getString(Extras.EXTRA_RESULT_SUFFIX, "");
-        IntentUtils.startSearchActivity(this, prefix + result + suffix);
+        IntentUtils.startSearchActivity(this, result);
         // Do not finish if in multi window mode because the user might want
         // to ask a follow-up query. Android N only
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
