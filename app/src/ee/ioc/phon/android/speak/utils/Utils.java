@@ -18,12 +18,15 @@ package ee.ioc.phon.android.speak.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -48,6 +51,10 @@ import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
 /**
@@ -210,9 +217,12 @@ public final class Utils {
 
 
     public static AlertDialog getTextEntryDialog(Context context, String title, String initialText, final ExecutableString ex) {
-        final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_text_entry, null);
+        final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_url_entry, null);
         final EditText et = (EditText) textEntryView.findViewById(R.id.url_edit);
-        et.setText(initialText);
+        if (initialText != null) {
+            et.setText(initialText);
+            et.setSelection(initialText.length());
+        }
         return new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setView(textEntryView)
@@ -328,5 +338,36 @@ public final class Utils {
                 Build.DEVICE + "/" +
                 Build.DISPLAY + "; " +
                 caller;
+    }
+
+
+    /**
+     * TODO: improve this. Allow a list of rewrites. If empty then
+     * no rewriting is done. Currently we just take the first element of the list, or a default
+     * rewrite table, if the list is null or empty.
+     */
+    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs,
+                                                         Resources resources,
+                                                         String[] rewritesByName,
+                                                         String language,
+                                                         ComponentName service,
+                                                         ComponentName app) {
+
+        String name;
+        if (rewritesByName == null) {
+            name = PreferenceUtils.getPrefString(prefs, resources, R.string.defaultRewritesName);
+        } else if (rewritesByName.length == 0) {
+            return null;
+        } else {
+            name = rewritesByName[0];
+        }
+        if (name != null) {
+            String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, resources, R.string.keyRewritesMap, name);
+            if (rewritesAsStr != null) {
+                CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+                return new UtteranceRewriter(rewritesAsStr, commandMatcher);
+            }
+        }
+        return null;
     }
 }

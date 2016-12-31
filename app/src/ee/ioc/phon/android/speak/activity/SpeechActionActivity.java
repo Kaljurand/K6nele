@@ -9,13 +9,16 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
+import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -105,10 +108,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         super.onCreate(savedInstanceState);
         // TODO: do not use the default dialog style when in multi window mode
         /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (isInMultiWindowMode()) {
-                setTheme(R.style.Theme_K6nele_NoActionBar);
-            }
+        if (isInMultiWindowMode()) {
+            setTheme(R.style.Theme_K6nele_NoActionBar);
         }
         */
         setUpActivity(R.layout.activity_recognizer);
@@ -129,11 +130,37 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
         // TODO: do we need to send the ComponentName of the calling activity instead
-        mView.setListener(R.array.keysActivity, callerInfo, getVoiceImeViewListener());
+        mView.init(R.array.keysActivity, callerInfo);
+        mView.setListener(getSpeechInputViewListener());
 
+        String[] results = getExtras().getStringArray(Extras.EXTRA_RESULT_RESULTS);
+        if (results == null) {
+            if (hasVoicePrompt()) {
+                sayVoicePrompt(new TtsProvider.Listener() {
+                    @Override
+                    public void onDone() {
+                        start();
+                    }
+                });
+            } else {
+                start();
+            }
+        } else {
+            returnOrForwardMatches(Arrays.asList(results));
+        }
+    }
+
+
+    private void start() {
         if (isAutoStart()) {
-            Log.i("Auto-starting");
-            mView.start();
+            // TODO: test what happens if the view is started while TTS is running
+            // and then started again when the TTS stops and calls onDone
+            mView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mView.start();
+                }
+            });
         }
     }
 
@@ -146,61 +173,26 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         if (!isChangingConfigurations()) {
             mView.cancel();
         }
+
+        stopTts();
     }
 
-    private SpeechInputView.SpeechInputViewListener getVoiceImeViewListener() {
-        return new SpeechInputView.SpeechInputViewListener() {
+
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
+        return new AbstractSpeechInputViewListener() {
 
             @Override
-            public void onPartialResult(List<String> results) {
-                // Ignore the partial results
+            public void onComboChange(String language, ComponentName service) {
+                setUtteranceRewriter(language, service);
             }
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                if (results != null && results.size() > 0) {
-                    returnOrForwardMatches(results);
-                }
-            }
-
-            @Override
-            public void onSwitchIme(boolean isAskUser) {
-                // Not applicable
-            }
-
-            @Override
-            public void onGo() {
-                // Not applicable
-            }
-
-            @Override
-            public void onDeleteLastWord() {
-                // Not applicable
-            }
-
-            @Override
-            public void onAddNewline() {
-                // Not applicable
-            }
-
-            @Override
-            public void onAddSpace() {
-                // Not applicable
-            }
-
-            @Override
-            public void onSelectAll() {
-                // Not applicable
-            }
-
-            @Override
-            public void onReset() {
-                // Not applicable
+                returnOrForwardMatches(results);
             }
 
             @Override
             public void onBufferReceived(byte[] buffer) {
-                Log.i("Activity: onBufferReceived: " + buffer.length);
                 addToAudioBuffer(buffer);
             }
 
@@ -213,6 +205,11 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
                 } else {
                     setResultError(errorCode);
                 }
+            }
+
+            @Override
+            public void onStartListening() {
+                stopTts();
             }
         };
     }

@@ -1,12 +1,20 @@
 package ee.ioc.phon.android.speak.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.widget.ArrayAdapter;
+import android.speech.RecognizerIntent;
+import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +25,7 @@ import java.util.Set;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.adapter.ComboAdapter;
 import ee.ioc.phon.android.speak.model.Combo;
+import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -25,9 +34,9 @@ public class ComboSelectorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ComboSelectorFragment details = new ComboSelectorFragment();
-        details.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(android.R.id.content, details).commit();
+        ComboSelectorFragment fragment = new ComboSelectorFragment();
+        fragment.setArguments(getIntent().getExtras());
+        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     public static class ComboSelectorFragment extends ListFragment {
@@ -49,15 +58,26 @@ public class ComboSelectorActivity extends Activity {
 
         public void onPause() {
             super.onPause();
-            ArrayAdapter<Combo> adapter = (ArrayAdapter<Combo>) getListAdapter();
-            Set<String> selected = new HashSet<>();
-            for (int i = 0; i < adapter.getCount(); i++) {
-                Combo combo = adapter.getItem(i);
-                if (combo.isSelected()) {
-                    selected.add(combo.getId());
+            ListAdapter listAdapter = getListAdapter();
+            if (listAdapter != null && listAdapter instanceof ComboAdapter) {
+                Set<String> selected = new HashSet<>();
+                List<Combo> selectedCombos = new ArrayList<>();
+                ComboAdapter comboAdapter = (ComboAdapter) listAdapter;
+                for (int i = 0; i < comboAdapter.getCount(); i++) {
+                    Combo combo = comboAdapter.getItem(i);
+                    if (combo != null && combo.isSelected()) {
+                        selected.add(combo.getId());
+                        selectedCombos.add(combo);
+                    }
+                }
+                PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), mKey, selected);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                    // The app shortcuts correspond to the voice panel combo settings
+                    if (mKey == R.string.keyCombo) {
+                        publishShortcuts(getActivity().getApplicationContext(), selectedCombos);
+                    }
                 }
             }
-            PreferenceUtils.putPrefStringSet(PreferenceManager.getDefaultSharedPreferences(getActivity()), getResources(), mKey, selected);
         }
 
         private void initModel() {
@@ -74,7 +94,7 @@ public class ComboSelectorActivity extends Activity {
 
                 @Override
                 public void onComplete(List<String> combos, Set<String> selectedCombos) {
-                    List<Combo> list = new ArrayList<Combo>();
+                    List<Combo> list = new ArrayList<>();
                     for (String comboAsString : combos) {
                         Combo combo = get(comboAsString);
                         if (selectedCombos.contains(comboAsString)) {
@@ -99,6 +119,36 @@ public class ComboSelectorActivity extends Activity {
 
         private Combo get(String id) {
             return new Combo(getActivity(), id);
+        }
+
+        @TargetApi(Build.VERSION_CODES.N_MR1)
+        private void publishShortcuts(Context context, List<Combo> selectedCombos) {
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+            List<ShortcutInfo> shortcuts = new ArrayList<>();
+            int maxShortcutCountPerActivity = shortcutManager.getMaxShortcutCountPerActivity();
+            int counter = 0;
+            for (Combo combo : selectedCombos) {
+                Intent intent = new Intent(context, SpeechActionActivity.class);
+                intent.setAction(RecognizerIntent.ACTION_WEB_SEARCH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, combo.getLocaleAsStr());
+                intent.putExtra(Extras.EXTRA_SERVICE_COMPONENT, combo.getServiceComponent().flattenToShortString());
+                intent.putExtra(Extras.EXTRA_AUTO_START, true);
+                // TODO: launch the activity so that the existing Kõnele activities would not
+                // show in the background. These flags did not help.
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                shortcuts.add(new ShortcutInfo.Builder(context, combo.getId())
+                        .setIntent(intent)
+                        .setShortLabel(combo.getShortLabel())
+                        .setLongLabel(combo.getLongLabel())
+                        .setIcon(Icon.createWithResource(context, combo.getIcon(context)))
+                        .build());
+                counter++;
+                // We are only allowed a certain number (5) of shortcuts
+                if (counter >= maxShortcutCountPerActivity) {
+                    break;
+                }
+            }
+            shortcutManager.setDynamicShortcuts(shortcuts);
         }
     }
 }

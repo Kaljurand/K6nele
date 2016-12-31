@@ -3,6 +3,7 @@
 
     <!-- Defaults. IME. -->
     <bool name="defaultImeHelpText">true</bool>
+    <bool name="defaultImeShowPartialResults">true</bool>
 
     <!-- Defaults. Voice search panel. -->
     <bool name="defaultAutoStart">false</bool>
@@ -25,7 +26,4 @@ locale but assume Estonian even if the app does not specify it (e.g. Arvutaja v4
     <!-- Google always beeps and it cannot be switched off,
 thus, when using Google's service, the user would want to have the beep off anyway. -->
     <bool name="defaultImeAudioCues">false</bool>
-
-    <!-- Rewrite incoming transcription with regular expressions. -->
-    <bool name="defaultRewrite">false</bool>
 </resources>

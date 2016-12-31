@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Form test</title>
+</head>
+<body>
+<textarea rows="8" cols="28">
+12345678901234567890
+elas metsas mutionu
+koerkass
+kass koer
+</textarea>
+<br>
+<label for="email">email</label>
+<input id="email" name="email" type="email">
+<br>
+<label for="website">url</label>
+<input id="website" name="website" type="url">
+<br>
+<textarea rows="3" cols="8">
+Textarea number 2
+</textarea>
+<br>
+<label for="query">search</label>
+<input id="query" name="query" type="search">
+<br>
+<label for="amount">number 5-20</label>
+<input id="amount" name="amount" type="number" min="5" max="20">
+<br>
+<label for="dtstart">date</label>
+<input id="dtstart" name="dtstart" type="date">
+<br>
+<label for="phone">tel</label>
+<input id="phone" name="phone" type="tel">
+<br>
+<label for="website">url</label>
+<input id="website2" name="website2" type="url">
+<br>
+<button type="submit" onClick="showAndroidToast('Submit pressed')">Submit</button>
+<input type="button" value="button1" onClick="showAndroidToast('button1 pressed')" />
+
+<script type="text/javascript">
+    function showAndroidToast(toast) {
+        Android.showToast(toast);
+    }
+</script>
+</body>
+</html>

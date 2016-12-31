@@ -16,15 +16,17 @@
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAutoStopAfterPause" translatable="false">keyImeAutoStopAfterPause</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
+    <string name="keyImeShowPartialResults" translatable="false">keyImeShowPartialResults</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
     <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
     <string name="keyImeAudioFormat" translatable="false">keyImeAudioFormat</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
-    <string name="keyRewrite" translatable="false">keyRewrite</string>
-    <string name="keyRewritesFile" translatable="false">keyRewritesFile</string>
+    <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
+
+    <string name="defaultRewritesName" translatable="false">defaultRewritesName</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status

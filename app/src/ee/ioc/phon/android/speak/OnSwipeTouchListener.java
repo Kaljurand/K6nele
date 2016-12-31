@@ -22,6 +22,14 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
         // intentionally empty
     }
 
+    public void onSwipeUp() {
+        // intentionally empty
+    }
+
+    public void onSwipeDown() {
+        // intentionally empty
+    }
+
     public void onSingleTapMotion() {
         // intentionally empty
     }
@@ -50,14 +58,23 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            float distanceX = e2.getX() - e1.getX();
-            float distanceY = e2.getY() - e1.getY();
-            if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD
-                    && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                if (distanceX > 0)
+            float changeX = e2.getX() - e1.getX();
+            float changeY = e2.getY() - e1.getY();
+            float distanceX = Math.abs(changeX);
+            float distanceY = Math.abs(changeY);
+            if (distanceX > distanceY && distanceX > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (changeX > 0) {
                     onSwipeRight();
-                else
+                } else {
                     onSwipeLeft();
+                }
+                return true;
+            } else if (distanceY > distanceX && distanceY > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                if (changeY > 0) {
+                    onSwipeDown();
+                } else {
+                    onSwipeUp();
+                }
                 return true;
             }
             return false;

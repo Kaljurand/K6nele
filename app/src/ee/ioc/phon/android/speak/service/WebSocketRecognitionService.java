@@ -11,12 +11,22 @@ import android.speech.SpeechRecognizer;
 
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncSSLSocketMiddleware;
 import com.koushikdutta.async.http.WebSocket;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
@@ -35,6 +45,12 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     // When does the chunk sending start and what is its interval
     private static final int TASK_DELAY_SEND = 100;
     private static final int TASK_INTERVAL_SEND = 200;
+    // Limit to the number of hypotheses that the service will return
+    // TODO: make configurable
+    private static final int MAX_HYPOTHESES = 100;
+    // Pretty-print results
+    // TODO: make configurable
+    private static final boolean PRETTY_PRINT = true;
 
     private static final String EOS = "EOS";
 
@@ -126,8 +142,24 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     void startSocket(String url) {
         mIsEosSent = false;
         Log.i(url);
+        AsyncHttpClient client = AsyncHttpClient.getDefaultInstance();
 
-        AsyncHttpClient.getDefaultInstance().websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
+        if (false) {
+            //http://stackoverflow.com/questions/37804816/androidasync-how-to-create-ssl-client-in-websocket-connection
+            AsyncSSLSocketMiddleware sslSocketMiddleware = new AsyncSSLSocketMiddleware(client);
+            SSLContext sslContext = null;
+            try {
+                sslContext = getSSLContext();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+            sslSocketMiddleware.setSSLContext(sslContext);
+            client.insertMiddleware(sslSocketMiddleware);
+        }
+
+        client.websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
             public void onCompleted(Exception ex, final WebSocket webSocket) {
@@ -253,8 +285,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                         if (statusCode == WebSocketResponse.STATUS_SUCCESS && response.isResult()) {
                             WebSocketResponse.Result responseResult = response.parseResult();
                             if (responseResult.isFinal()) {
-                                ArrayList<String> hypotheses = responseResult.getHypothesesPp();
-                                if (hypotheses == null || hypotheses.isEmpty()) {
+                                ArrayList<String> hypotheses = responseResult.getHypotheses(MAX_HYPOTHESES, PRETTY_PRINT);
+                                if (hypotheses.isEmpty()) {
                                     Log.i("Empty final result (" + hypotheses + "), stopping");
                                     outerClass.onError(SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
                                 } else {
@@ -271,8 +303,8 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                             } else {
                                 // We fire this only if the caller wanted partial results
                                 if (mIsPartialResults) {
-                                    ArrayList<String> hypotheses = responseResult.getHypothesesPp();
-                                    if (hypotheses == null || hypotheses.isEmpty()) {
+                                    ArrayList<String> hypotheses = responseResult.getHypotheses(MAX_HYPOTHESES, PRETTY_PRINT);
+                                    if (hypotheses.isEmpty()) {
                                         Log.i("Empty non-final result (" + hypotheses + "), ignoring");
                                     } else {
                                         outerClass.onPartialResults(toResultsBundle(hypotheses, false));
@@ -301,5 +333,29 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
                 }
             }
         }
+    }
+
+
+    // TODO: currently not used
+    private SSLContext getSSLContext() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        }}, new SecureRandom());
+
+        return sslContext;
     }
 }

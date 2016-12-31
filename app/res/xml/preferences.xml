@@ -34,7 +34,12 @@
             android:key="@string/keyImeAutoStart"
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
-            -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultImeShowPartialResults"
+            android:key="@string/keyImeShowPartialResults"
+            android:summary="@string/summaryImeShowPartialResults"
+            android:title="@string/titleImeShowPartialResults" />
+        -->
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"
@@ -100,6 +105,13 @@
                 android:targetClass="ee.ioc.phon.android.speak.GrammarListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
+        <Preference
+            android:summary="@string/summarySelectRewrites"
+            android:title="@string/titleSelectRewrites">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -129,18 +141,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryDevel">
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultRewrite"
-            android:key="@string/keyRewrite"
-            android:summary="@string/summaryRewrite"
-            android:title="@string/titleRewrite" />
-        <Preference
-            android:summary="@string/summaryLoadRewrites"
-            android:title="@string/titleLoadRewrites">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.activity.RewriteLoaderActivity"
-                android:targetPackage="ee.ioc.phon.android.speak" />
-        </Preference>
         <!--
         <Preference
             android:summary="@string/summaryQuickSettings"
@@ -174,6 +174,15 @@
                     android:targetClass="ee.ioc.phon.android.speak.demo.HandsfreeDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
+            <!--
+            <Preference
+                android:summary="@string/summaryChatDemo"
+                android:title="@string/labelActivityChatDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.ChatDemoActivity"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            -->
             <Preference
                 android:summary="@string/summaryVoiceSearchDemo"
                 android:title="@string/labelActivityVoiceSearchDemo">
@@ -186,6 +195,13 @@
                 android:title="@string/labelActivityEncoderDemo">
                 <intent
                     android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            <Preference
+                android:summary="@string/summaryFormDemo"
+                android:title="@string/labelActivityFormDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.FormDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
 

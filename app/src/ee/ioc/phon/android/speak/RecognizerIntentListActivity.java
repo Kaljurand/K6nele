@@ -39,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * this class rather than extending the ListActivity-class directly.</p>
  *
  * @author Kaarel Kaljurand
+ * @deprecated use K6neleListFragment
  */
 public abstract class RecognizerIntentListActivity extends ListActivity {
 

@@ -19,6 +19,7 @@ package ee.ioc.phon.android.speak.activity;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +30,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -47,14 +50,19 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
+import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
+import ee.ioc.phon.android.speechutils.TtsProvider;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -73,6 +81,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
 
+    public static String[] HEADER_REWRITES_COL2 = {"Utterance", "Replacement"};
+
+    private UtteranceRewriter mUtteranceRewriter;
+
     private static SparseIntArray mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
 
     private List<byte[]> mBufferList = new ArrayList<>();
@@ -87,12 +99,16 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     private SimpleMessageHandler mMessageHandler;
 
+    private String mVoicePrompt;
+
     // Store the complete audio recording
     private boolean mIsStoreAudio;
 
     private boolean mIsReturnErrors;
 
     private boolean mIsAutoStart;
+
+    private TtsProvider mTts;
 
     abstract void showError(String msg);
 
@@ -122,6 +138,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     protected boolean isAutoStart() {
         return mIsAutoStart;
+    }
+
+    protected boolean hasVoicePrompt() {
+        return mVoicePrompt != null && !mVoicePrompt.isEmpty();
     }
 
     protected Bundle getExtras() {
@@ -178,11 +198,20 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
         }
 
+        if (mExtras.containsKey(Extras.EXTRA_SERVICE_COMPONENT)) {
+            String combo = mExtras.getString(Extras.EXTRA_SERVICE_COMPONENT);
+            if (mExtras.containsKey(RecognizerIntent.EXTRA_LANGUAGE)) {
+                combo = RecognitionServiceManager.createComboString(combo, mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE));
+            }
+            PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyCurrentCombo, combo);
+        }
+
         if (!mExtras.isEmpty()) {
             mExtraResultsPendingIntent = IntentUtils.getPendingIntent(mExtras);
         }
 
-        mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO);
+        mVoicePrompt = mExtras.getString(Extras.EXTRA_VOICE_PROMPT);
+        mIsStoreAudio = mExtras.getBoolean(Extras.EXTRA_GET_AUDIO) || MediaStore.Audio.Media.RECORD_SOUND_ACTION.equals(getIntent().getAction());
 
         mIsReturnErrors = mExtras.getBoolean(Extras.EXTRA_RETURN_ERRORS,
                 PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyReturnErrors, R.bool.defaultReturnErrors));
@@ -202,7 +231,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVITY_REQUEST_CODE_DETAILS) {
             if (resultCode == RESULT_OK && data != null) {
-                handleResultByWebSearch(data.getStringExtra(SearchManager.QUERY));
+                handleResultByLaunchIntent(data.getStringExtra(SearchManager.QUERY));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -314,7 +343,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected static class SimpleMessageHandler extends Handler {
         private final WeakReference<AbstractRecognizerIntentActivity> mRef;
 
-        public SimpleMessageHandler(AbstractRecognizerIntentActivity c) {
+        private SimpleMessageHandler(AbstractRecognizerIntentActivity c) {
             mRef = new WeakReference<>(c);
         }
 
@@ -377,16 +406,18 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     || isAutoStartAction(action)
                     || RecognizerIntent.ACTION_WEB_SEARCH.equals(action)
                     || getExtras().getBoolean(RecognizerIntent.EXTRA_WEB_SEARCH_ONLY)) {
-                handleResultsByWebSearch(matches);
+                handleResultByLaunchIntent(matches);
                 return;
             } else {
-                setResultIntent(handler, matches);
+                setResultIntent(handler, rewriteResults(matches));
             }
         } else {
             Bundle bundle = getExtras().getBundle(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT_BUNDLE);
             if (bundle == null) {
                 bundle = new Bundle();
             }
+            // TODO: apply rewrites to just one result
+            matches = rewriteResults(matches);
             String match = matches.get(0);
             //mExtraResultsPendingIntentBundle.putString(SearchManager.QUERY, match);
             Intent intent = new Intent();
@@ -422,9 +453,9 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     // In case of multiple hypotheses, ask the user to select from a list dialog.
     // TODO: fetch also confidence scores and treat a very confident hypothesis
     // as a single hypothesis.
-    private void handleResultsByWebSearch(final List<String> results) {
+    private void handleResultByLaunchIntent(final List<String> results) {
         if (results.size() == 1) {
-            handleResultByWebSearch(results.get(0));
+            handleResultByLaunchIntent(results.get(0));
         } else {
             Intent searchIntent = new Intent(this, DetailsActivity.class);
             searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
@@ -433,15 +464,25 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
     }
 
-    private void handleResultByWebSearch(String result) {
-        IntentUtils.startSearchActivity(this, result);
-        // Do not finish if in multi window mode because the user might want
-        // to ask a follow-up query. Android N only
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!isInMultiWindowMode()) {
-                finish();
-            }
-        } else {
+    /**
+     * Launch a new activity based on the given result. The current activity will be finished
+     * if EXTRA_FINISH is set. If this EXTRA is not defined, then we also finish unless we are in
+     * "multi window mode" (Android N only).
+     *
+     * @param result Single string that can be interpreted as an activity to be started.
+     */
+    private void handleResultByLaunchIntent(String result) {
+        IntentUtils.startActivityFromJson(this, rewriteResults(result));
+        // TODO: we should not finish if the activity was launched for a result, otherwise
+        // the result would not be processed.
+
+        boolean isFinish = true;
+        if (mExtras.containsKey(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT)) {
+            isFinish = mExtras.getBoolean(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT, true);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
+            isFinish = false;
+        }
+        if (isFinish) {
             finish();
         }
     }
@@ -485,5 +526,101 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         ArrayList<String> resultsAsArrayList = new ArrayList<>();
         resultsAsArrayList.addAll(results);
         return resultsAsArrayList;
+    }
+
+    protected void sayVoicePrompt(final TtsProvider.Listener listener) {
+        sayVoicePrompt(mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE, "en-US"), mVoicePrompt, listener);
+    }
+
+    // TODO: use it to speak errors if EXTRA_SPEAK_ERRORS
+    private void sayVoicePrompt(final String lang, final String prompt, final TtsProvider.Listener listener) {
+        mTts = new TtsProvider(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    Locale locale = mTts.chooseLanguage(lang);
+                    if (locale == null) {
+                        toast(String.format(getString(R.string.errorTtsLangNotAvailable), lang));
+                    } else {
+                        mTts.setLanguage(locale);
+                    }
+                    if (listener == null) {
+                        mTts.say(prompt);
+                    } else {
+                        mTts.say(prompt, listener);
+                    }
+                } else {
+                    toast(getString(R.string.errorTtsInitError));
+                }
+            }
+        });
+
+    }
+
+    protected void stopTts() {
+        if (mTts != null) {
+            mTts.shutdown();
+        }
+    }
+
+    protected void setUtteranceRewriter(String language, ComponentName service) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String[] rewrites = getExtras().getStringArray(Extras.EXTRA_RESULT_REWRITES);
+        mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
+    }
+
+    private List<String> rewriteResults(List<String> results) {
+        List<String> newResults = rewriteResultsWithExtras(results);
+        if (mUtteranceRewriter == null) {
+            return newResults;
+        }
+        return mUtteranceRewriter.rewrite(newResults);
+    }
+
+    private String rewriteResults(String result) {
+        String newResult = rewriteResultsWithExtras(result);
+        if (mUtteranceRewriter == null) {
+            return newResult;
+        }
+        return mUtteranceRewriter.rewrite(newResult);
+    }
+
+    /**
+     * Rewrite results based on EXTRAs.
+     * First, the utterance-replacement pair (if exists) is applied to the results.
+     * Then, the complete rewrite table (with a header) (if exists) is applied to the results.
+     */
+    private List<String> rewriteResultsWithExtras(List<String> results) {
+        Bundle extras = getExtras();
+        String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
+        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
+        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
+        if (utterance != null && replacement != null) {
+            toast(utterance + "->" + replacement);
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2);
+            results = utteranceRewriter.rewrite(results);
+        }
+        if (rewritesAsStr != null) {
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(rewritesAsStr);
+            results = utteranceRewriter.rewrite(results);
+        }
+        return results;
+    }
+
+    private String rewriteResultsWithExtras(String result) {
+        Bundle extras = getExtras();
+        String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
+        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
+        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
+        if (utterance != null && replacement != null) {
+            toast(utterance + "->" + replacement);
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2);
+            result = utteranceRewriter.rewrite(result);
+        }
+        if (rewritesAsStr != null) {
+            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(rewritesAsStr);
+            result = utteranceRewriter.rewrite(result);
+        }
+        return result;
     }
 }

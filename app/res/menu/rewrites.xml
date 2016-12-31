@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menuRewritesToggle"
+        android:actionLayout="@layout/ab_switch"
+        android:showAsAction="always"
+        android:title="" />
+    <item
+        android:id="@+id/menuRewritesShare"
+        android:title="@string/cmShare" />
+
+    <item
+        android:id="@+id/menuRewritesTest"
+        android:title="@string/cmTest" />
+
+    <item
+        android:id="@+id/menuRewritesRename"
+        android:title="@string/cmRename" />
+
+    <item
+        android:id="@+id/menuRewritesDelete"
+        android:title="@string/cmDelete" />
+
+    <!--
+    <item
+        android:id="@+id/search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_input_extract_action_search"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="@string/titleSearchRewrites" />
+     -->
+</menu>

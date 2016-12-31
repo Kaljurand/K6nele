@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="@dimen/layoutMargin4dp"
+    android:orientation="vertical"
+    android:padding="@dimen/layoutMargin4dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/layoutMargin4dp"
+        android:text="@string/labelRewritesName"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/layoutMargin4dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/etRewritesNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/layoutMargin4dp"
+            android:layout_marginRight="@dimen/layoutMargin4dp"
+            android:layout_weight="4"
+            android:completionThreshold="1"
+            android:hint="@string/hintName"
+            android:imeOptions="actionDone"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/bRewritesNameOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/buttonOk"
+            android:text="@string/buttonOk" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llRewritesChooser"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="@dimen/layoutMargin4dp"
+        android:orientation="vertical"
+        android:padding="@dimen/layoutMargin4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/labelRewritesChooser"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ListView
+            android:id="@+id/lvRewrites"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+</LinearLayout>

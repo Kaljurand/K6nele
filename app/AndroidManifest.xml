@@ -3,7 +3,11 @@
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
 
+    <!-- Used to set the alarm clock if the transcription resolves to an AlarmClock intent. -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <!-- Used to reach the speech recognition server. -->
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <!-- Used to record the speech input to be transcribed. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
 
     <!-- Some Chromebooks don't support touch. Although not essential,
@@ -109,6 +113,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
+                <action android:name="android.provider.MediaStore.RECORD_SOUND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -197,14 +206,40 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityServerList"
             android:parentActivityName=".PreferencesRecognitionServiceHttp"></activity>
         <activity
-            android:name=".activity.RewriteLoaderActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:name=".activity.RewritesSelectorActivity"
+            android:label="@string/labelActivityRewritesSelector"
+            android:parentActivityName=".activity.Preferences"></activity>
+        <activity
+            android:name=".activity.RewritesLoaderActivity"
+            android:label="@string/labelActivityRewritesLoader"
+            android:theme="@style/Theme.K6nele.Dialog.NoActionBar"
+            android:windowSoftInputMode="stateUnchanged">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/tab-separated-values" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/tab-separated-values" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.RewritesActivity"
             android:label="@string/labelActivityRewrites"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.RewritesSelectorActivity">
+            <!--
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"></meta-data>
+                -->
+        </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <activity
+            android:name=".activity.FetchUrlActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name=".activity.QuickSettingsActivity"
@@ -227,6 +262,10 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             </intent-filter>
         </activity>
         <activity
+            android:name=".demo.ChatDemoActivity"
+            android:exported="true"
+            android:label="@string/labelActivityChatDemo"></activity>
+        <activity
             android:name=".demo.VoiceSearchDemo"
             android:label="@string/labelActivityVoiceSearchDemo"></activity>
 
@@ -235,6 +274,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:exported="true"
             android:label="@string/labelActivityEncoderDemo"></activity>
 
+        <activity
+            android:name=".demo.FormDemoActivity"
+            android:exported="true"
+            android:label="@string/labelActivityFormDemo"></activity>
+
         <service android:name="RecognizerIntentService"></service>
 
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
@@ -242,6 +286,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <service
             android:name=".service.WebSocketRecognitionService"
             android:exported="true"
+            android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceWs"
             android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>
@@ -260,6 +305,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <service
             android:name=".service.HttpRecognitionService"
             android:exported="true"
+            android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceHttp"
             android:permission="android.permission.RECORD_AUDIO">
             <intent-filter>

@@ -2,8 +2,10 @@ package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,33 +16,40 @@ import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.CommandEditor;
+import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
+import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
 
     private InputMethodManager mInputMethodManager;
-
     private SpeechInputView mInputView;
+    private CommandEditor mCommandEditor;
+    private boolean mShowPartialResults;
+    private SharedPreferences mPrefs;
+    private Resources mRes;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i("onCreate");
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mCommandEditor = new InputConnectionCommandEditor(getApplicationContext());
     }
 
     /**
@@ -61,173 +70,118 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
     /**
-     * We check the type of editor control and if we probably cannot handle it (email addresses,
-     * dates) or do not want to (passwords) then we hand the editing over to an other keyboard.
+     * We check the type of editor control and if we probably cannot handle it (e.g. dates)
+     * or do not want to (e.g. passwords) then we hand the editing over to another keyboard.
+     * TODO: handle inputType = 0
      */
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
-        Log.i("onStartInput: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
+        String type = "UNKNOWN";
 
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:
-                Log.i("onStartInput: NUMBER");
+                type = "NUMBER";
                 break;
             case InputType.TYPE_CLASS_DATETIME:
-                Log.i("onStartInput: DATETIME");
+                type = "DATETIME";
                 switchIme(false);
                 break;
             case InputType.TYPE_CLASS_PHONE:
-                Log.i("onStartInput: PHONE");
-                switchIme(false);
+                type = "PHONE";
                 break;
             case InputType.TYPE_CLASS_TEXT:
                 int variation = attribute.inputType & InputType.TYPE_MASK_VARIATION;
-                Log.i("onStartInput: TEXT, variation: " + variation);
+                type = "TEXT/";
                 if (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    Log.i("onStartInput: PASSWORD || VISIBLE_PASSWORD");
                     // We refuse to recognize passwords for privacy reasons.
+                    type += "PASSWORD || VISIBLE_PASSWORD";
                     switchIme(false);
-                } else if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
-                    Log.i("onStartInput: EMAIL_ADDRESS");
-                    switchIme(false);
+                } else if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS ||
+                        variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS) {
+                    type += "EMAIL_ADDRESS";
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_URI) {
-                    Log.i("onStartInput: URI");
                     // URI bar of Chrome and Firefox, can also handle search queries, thus supported
+                    type += "URI";
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
-                    Log.i("onStartInput: FILTER");
                     // List filtering? Used in the Dialer search bar, thus supported
+                    type += "FILTER";
+                } else {
+                    type += variation;
                 }
 
                 // This is used in the standard search bar (e.g. in Google Play).
                 if ((attribute.inputType & InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE) != 0) {
-                    Log.i("onStartInput: FLAG_AUTO_COMPLETE");
+                    type += "FLAG_AUTO_COMPLETE";
                 }
                 break;
 
             default:
         }
+        Log.i("onStartInput: " + type + ", " + attribute.inputType + ", " + attribute.imeOptions + ", " + restarting);
     }
 
+    /**
+     * Note that when editing a HTML page, then switching between form fields might fail to call
+     * this method with restarting=false, we thus always update the editor info (incl. inputType).
+     */
     @Override
-    public void onFinishInput() {
-        super.onFinishInput();
-        Log.i("onFinishInput");
-        closeSession();
-    }
+    public void onStartInputView(EditorInfo editorInfo, boolean restarting) {
+        super.onStartInputView(editorInfo, restarting);
+        Log.i("onStartInputView: " + editorInfo.inputType + "/" + editorInfo.imeOptions + "/" + restarting);
 
-    @Override
-    public void onStartInputView(EditorInfo attribute, boolean restarting) {
-        super.onStartInputView(attribute, restarting);
-        Log.i("onStartInputView: " + attribute.inputType + "/" + attribute.imeOptions + "/" + restarting);
+        ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(getCurrentInputConnection());
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mRes = getResources();
+        mInputView.init(R.array.keysIme, new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()));
 
+        // TODO: update this less often (in onStart)
         closeSession();
 
         if (restarting) {
             return;
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Bundle extras = new Bundle();
-        boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, getResources(),
-                R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
-        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, isUnlimitedDuration);
-        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
-        CallerInfo callerInfo = new CallerInfo(extras, attribute, getPackageName());
-
-        mInputView.setListener(R.array.keysIme, callerInfo, new SpeechInputView.SpeechInputViewListener() {
-
-            TextUpdater mTextUpdater = new TextUpdater();
-
-            @Override
-            public void onPartialResult(List<String> results) {
-                String text = "";
-                if (results.size() > 0) {
-                    text = results.get(0);
-                }
-                mTextUpdater.commitPartialResult(getCurrentInputConnection(), text);
-            }
-
-            @Override
-            public void onFinalResult(List<String> results, Bundle bundle) {
-                String text = "";
-                if (results.size() > 0) {
-                    text = results.get(0);
-                }
-                mTextUpdater.commitFinalResult(getCurrentInputConnection(), text);
-            }
-
-            @Override
-            public void onSwitchIme(boolean isAskUser) {
-                switchIme(isAskUser);
-            }
-
-            @Override
-            public void onGo() {
-                closeSession();
-                performGo();
-                requestHideSelf(0);
-            }
-
-            @Override
-            public void onDeleteLastWord() {
-                mTextUpdater.deleteWord(getCurrentInputConnection());
-            }
-
-            @Override
-            public void onAddNewline() {
-                mTextUpdater.addNewline(getCurrentInputConnection());
-            }
-
-            @Override
-            public void onAddSpace() {
-                mTextUpdater.addSpace(getCurrentInputConnection());
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-                // TODO: store buffer
-            }
-
-            @Override
-            public void onSelectAll() {
-                // TODO: show ContextMenu
-                getCurrentInputConnection().performContextMenuAction(android.R.id.selectAll);
-            }
-
-            @Override
-            public void onReset() {
-                // TODO: hide ContextMenu (if visible)
-                InputConnection ic = getCurrentInputConnection();
-                CharSequence cs = ic.getSelectedText(0);
-                if (cs != null) {
-                    int len = cs.length();
-                    ic.setSelection(len, len);
-                }
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
-                    Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    SpeechInputMethodService.this.startActivity(intent);
-                }
-            }
-        });
+        mInputView.setListener(getSpeechInputViewListener(editorInfo.packageName));
+        mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
+        if (PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeAutoStart, R.bool.defaultImeAutoStart)) {
             Log.i("Auto-starting");
             mInputView.start();
         }
     }
 
+    /**
+     * Called when the input view is being hidden from the user.
+     * This will be called either prior to hiding the window,
+     * or prior to switching to another target for editing.
+     *
+     * @param finishingInput If true, onFinishInput() will be called immediately after.
+     */
     @Override
     public void onFinishInputView(boolean finishingInput) {
+        // TODO: maybe do not call super
         super.onFinishInputView(finishingInput);
         Log.i("onFinishInputView: " + finishingInput);
+        if (!finishingInput) {
+            closeSession();
+        }
+    }
+
+
+    /**
+     * Called to inform the input method that text input has finished in the last editor.
+     * At this point there may be a call to onStartInput(EditorInfo, boolean) to perform input in a new editor,
+     * or the input method may be left idle.
+     * This method is not called when input restarts in the same editor.
+     */
+    @Override
+    public void onFinishInput() {
+        // TODO: maybe do not call super
+        super.onFinishInput();
+        Log.i("onFinishInput");
         closeSession();
     }
 
@@ -281,162 +235,134 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
-
-    /**
-     * Performs the Search-action, e.g. to launch search on a searchbar.
-     */
-    private void performGo() {
-        // Does not work on Google Searchbar
-        // getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_DONE);
-
-        // Works in Google Searchbar, GF Translator, but NOT in the Firefox search widget
-        //getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_GO);
-
-        getCurrentInputConnection().performEditorAction(EditorInfo.IME_ACTION_SEARCH);
+    private static String getText(List<String> results) {
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return "";
     }
 
-    private static class TextUpdater {
-        // Maximum number of characters that left-swipe is willing to delete
-        private static final int MAX_DELETABLE_CONTEXT = 100;
-        // Token optionally preceded by whitespace
-        private static final Pattern WHITESPACE_AND_TOKEN = Pattern.compile("\\s*\\w+");
-
-        private String mPrevText = "";
-
-        private TextUpdater() {
-        }
-
-        /**
-         * Writes the text into the text field and forgets the previous entry.
-         */
-        public void commitFinalResult(InputConnection ic, String text) {
-            commitText(ic, text);
-            mPrevText = "";
-        }
-
-        /**
-         * Writes the text into the text field and stores it for future reference.
-         */
-        public void commitPartialResult(InputConnection ic, String text) {
-            commitText(ic, text);
-            mPrevText = text;
-        }
-
-        public void addNewline(InputConnection ic) {
-            if (ic != null) {
-                ic.commitText("\n", 1);
-            }
-        }
-
-        public void addSpace(InputConnection ic) {
-            if (ic != null) {
-                ic.commitText(" ", 1);
-            }
-        }
-
-        /**
-         * Deletes all characters up to the leftmost whitespace from the cursor (including the whitespace).
-         * If something is selected then delete the selection.
-         * TODO: maybe expensive?
-         */
-        public void deleteWord(InputConnection ic) {
-            if (ic != null) {
-                // If something is selected then delete the selection and return
-                if (ic.getSelectedText(0) != null) {
-                    ic.commitText("", 0);
-                } else {
-                    CharSequence beforeCursor = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
-                    if (beforeCursor != null) {
-                        int beforeCursorLength = beforeCursor.length();
-                        Matcher m = WHITESPACE_AND_TOKEN.matcher(beforeCursor);
-                        int lastIndex = 0;
-                        while (m.find()) {
-                            // If the cursor is immediately left from WHITESPACE_AND_TOKEN, then
-                            // delete the WHITESPACE_AND_TOKEN, otherwise delete whatever is in between.
-                            lastIndex = beforeCursorLength == m.end() ? m.start() : m.end();
-                        }
-                        if (lastIndex > 0) {
-                            ic.deleteSurroundingText(beforeCursorLength - lastIndex, 0);
-                        } else if (beforeCursorLength < MAX_DELETABLE_CONTEXT) {
-                            ic.deleteSurroundingText(beforeCursorLength, 0);
-                        }
-                    }
-                }
-            }
-        }
-
-        /**
-         * Updates the text field, modifying only the parts that have changed.
-         */
-        private void commitText(InputConnection ic, String text) {
-            if (ic != null && text != null && text.length() > 0) {
-                // Calculate the length of the text that has changed
-                String commonPrefix = greatestCommonPrefix(mPrevText, text);
-                int commonPrefixLength = commonPrefix.length();
-                int prevLength = mPrevText.length();
-                int deletableLength = prevLength - commonPrefixLength;
-
-                if (deletableLength > 0) {
-                    ic.deleteSurroundingText(deletableLength, 0);
-                }
-
-                if (commonPrefixLength == text.length()) {
-                    return;
-                }
-
-                // We look at the left context of the cursor
-                // to decide which glue symbol to use and whether to capitalize the text.
-                CharSequence leftContext = ic.getTextBeforeCursor(MAX_DELETABLE_CONTEXT, 0);
-                String glue = "";
-                if (commonPrefixLength == 0) {
-                    char firstChar = text.charAt(0);
-
-                    if (!(leftContext.length() == 0
-                            || Constants.CHARACTERS_WS.contains(firstChar)
-                            || Constants.CHARACTERS_PUNCT.contains(firstChar)
-                            || Constants.CHARACTERS_WS.contains(leftContext.charAt(leftContext.length() - 1)))) {
-                        glue = " ";
-                    }
-                } else {
-                    text = text.substring(commonPrefixLength);
-                }
-
-                // Capitalize if required by left context
-                String leftContextTrimmed = leftContext.toString().trim();
-                if (leftContextTrimmed.length() == 0
-                        || Constants.CHARACTERS_EOS.contains(leftContextTrimmed.charAt(leftContextTrimmed.length() - 1))) {
-                    // Since the text can start with whitespace (newline),
-                    // we capitalize the first non-whitespace character.
-                    int firstNonWhitespaceIndex = -1;
-                    for (int i = 0; i < text.length(); i++) {
-                        if (!Constants.CHARACTERS_WS.contains(text.charAt(i))) {
-                            firstNonWhitespaceIndex = i;
-                            break;
-                        }
-                    }
-                    if (firstNonWhitespaceIndex > -1) {
-                        String newText = text.substring(0, firstNonWhitespaceIndex)
-                                + Character.toUpperCase(text.charAt(firstNonWhitespaceIndex));
-                        if (firstNonWhitespaceIndex < text.length() - 1) {
-                            newText += text.substring(firstNonWhitespaceIndex + 1);
-                        }
-                        text = newText;
-                    }
-                }
-
-                ic.commitText(glue + text, 1);
-            }
-        }
-
+    private static Bundle makeExtras(SharedPreferences prefs, Resources res) {
+        Bundle extras = new Bundle();
+        boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, res,
+                R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, isUnlimitedDuration);
+        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
+        return extras;
     }
 
-    private static String greatestCommonPrefix(String a, String b) {
-        int minLength = Math.min(a.length(), b.length());
-        for (int i = 0; i < minLength; i++) {
-            if (a.charAt(i) != b.charAt(i)) {
-                return a.substring(0, i);
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final String packageName) {
+        return new AbstractSpeechInputViewListener() {
+
+            @Override
+            public void onComboChange(String language, ComponentName service) {
+                // TODO: quick hack to add app to the matcher, not sure if we can access the
+                // class name of the app
+                ComponentName app = new ComponentName(packageName, packageName);
+                // TODO: name of the rewrites table configurable
+                mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(mPrefs, mRes, null, language, service, app));
             }
-        }
-        return a.substring(0, minLength);
+
+            @Override
+            public void onPartialResult(List<String> results) {
+                if (mShowPartialResults) {
+                    mCommandEditor.commitPartialResult(getText(results));
+                }
+            }
+
+            @Override
+            public void onFinalResult(List<String> results, Bundle bundle) {
+                String curPosAsString = "";
+                ExtractedText et1 = mCommandEditor.getExtractedText();
+                if (et1 != null) {
+                    curPosAsString = et1.startOffset + "-" + et1.selectionStart + "-" + et1.selectionEnd;
+                }
+                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
+                ExtractedText et2 = mCommandEditor.getExtractedText();
+                if (et2 != null) {
+                    curPosAsString += "/" + et2.startOffset + "-" + et2.selectionStart + "-" + et2.selectionEnd;
+                }
+                if (editorResult != null && editorResult.isCommand()) {
+                    if (mInputView != null) {
+                        if (false && Log.DEBUG) {
+                            mInputView.showMessage(editorResult.toString() + ", " + curPosAsString, editorResult.isSuccess());
+                        } else {
+                            mInputView.showMessage(editorResult.toString(), editorResult.isSuccess());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onSwitchIme(boolean isAskUser) {
+                switchIme(isAskUser);
+            }
+
+            @Override
+            public void onSearch() {
+                closeSession();
+                mCommandEditor.imeActionSearch().run();
+                requestHideSelf(0);
+            }
+
+            @Override
+            public void onDeleteLastWord() {
+                mCommandEditor.deleteLeftWord().run();
+            }
+
+            @Override
+            public void onAddNewline() {
+                mCommandEditor.replaceSel("\n").run();
+            }
+
+            @Override
+            public void goUp() {
+                mCommandEditor.goUp().run();
+            }
+
+            @Override
+            public void goDown() {
+                mCommandEditor.goDown().run();
+            }
+
+            @Override
+            public void onAddSpace() {
+                mCommandEditor.replaceSel(" ").run();
+            }
+
+            @Override
+            public void onSelectAll() {
+                // TODO: show ContextMenu
+                mCommandEditor.selectAll().run();
+            }
+
+            @Override
+            public void onReset() {
+                // TODO: hide ContextMenu (if visible)
+                mCommandEditor.resetSel().run();
+            }
+
+            @Override
+            public void onStartListening() {
+                Log.i("IME: onStartListening");
+            }
+
+            @Override
+            public void onStopListening() {
+                Log.i("IME: onStopListening");
+            }
+
+            // TODO: add onCancel()
+
+            @Override
+            public void onError(int errorCode) {
+                Log.i("IME: onError: " + errorCode);
+                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+                    Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    SpeechInputMethodService.this.startActivity(intent);
+                }
+            }
+        };
     }
 }

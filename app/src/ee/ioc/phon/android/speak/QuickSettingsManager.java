@@ -52,9 +52,6 @@ public class QuickSettingsManager {
         editor.putString(mRes.getString(R.string.keyImeAudioFormat), "audio/x-flac");
         editor.putBoolean(mRes.getString(R.string.keyImeAudioCues), false);
 
-        // Other
-        editor.putBoolean(mRes.getString(R.string.keyRewrite), true);
-
         editor.apply();
     }
 

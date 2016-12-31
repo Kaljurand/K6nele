@@ -24,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/itemAppIcon"
         android:layout_toRightOf="@+id/itemAppIcon"
-        android:singleLine="true"
-        android:text="Google Maps for Android"
+        android:maxLines="1"
+        android:text="@string/labelActivityHandsfreeDemo"
+        android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/textSize3" />
 
     <TextView
@@ -35,7 +36,7 @@
         android:layout_below="@+id/itemAppName"
         android:layout_toEndOf="@+id/itemAppIcon"
         android:layout_toRightOf="@+id/itemAppIcon"
-        android:text="com.google.android.apps.maps.with.offline.maps.feature"
+        android:text="@string/dialogTitleChangeGrammarUrl"
         android:textSize="@dimen/textSize2" />
 
     <TextView
@@ -44,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppName"
         android:gravity="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textSize="@dimen/textSize2"
         android:visibility="gone" />
 
@@ -55,9 +56,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@color/semi_transparent"
         android:padding="2dp"
-        android:text="6576"
+        android:text="@string/defaultRecordingRate"
         android:textSize="@dimen/textSize2" />
 
     <TextView
@@ -65,7 +65,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppFname"
-        android:text="Gmaps"
+        android:text="@string/buttonDemoShowEncoders"
         android:textColor="@color/green1"
         android:textSize="16sp" />
 
@@ -75,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppGrammarTargetLang"
         android:ellipsize="middle"
-        android:singleLine="true"
-        android:text="http://kaljurand.github.com/Grammars/grammars/pgf/Tallinndirection.pgf"
+        android:maxLines="1"
+        android:text="@string/keyWsServer"
         android:textColor="@color/orange1"
         android:textSize="@dimen/textSize2" />
 

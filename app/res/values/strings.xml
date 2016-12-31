@@ -6,7 +6,7 @@
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
-    <string name="empty" translatable="false"></string>
+    <string name="check" translatable="false">✓</string>
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
@@ -24,20 +24,34 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
     <string name="labelActivityRewrites">Rewrite rules</string>
+    <string name="labelActivityRewritesLoader">Kõnele rewrite rules</string>
+    <string name="labelActivityRewritesSelector">Rewrite rule tables</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
     <string name="labelActivityServerList">Recognizer servers</string>
     <string name="labelActivitySimpleDemo">Simple demo</string>
     <string name="labelActivityExtrasDemo">Extras demo</string>
     <string name="labelActivityHandsfreeDemo">Handsfree demo</string>
+    <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Audio demo</string>
+    <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
+
+    <string name="labelRewritesName">Save the rewrites table under a new name:</string>
+    <string name="labelRewritesChooser">or choose an existing name:</string>
+
+    <string name="labelRewritesShare">Share the rewrites table</string>
+
+    <string name="hintSearch">Search</string>
+    <string name="labelSearch">Search"</string>
+    <string name="titleSearchRewrites">Filter rewrites</string>
+    <string name="hintName">name</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
-    <string name="titleCategoryApps">Apps &amp; Grammars</string>
+    <string name="titleCategoryApps">Apps, Grammars, Rewrites</string>
     <string name="titleCategoryIme">Speech keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>
@@ -53,6 +67,8 @@
     <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
+    <string name="titleImeShowPartialResults">Partial results</string>
+    <string name="summaryImeShowPartialResults">Show partial results in the editor window</string>
     <string name="titleRespectLocale">Support device language</string>
     <string name="summaryRespectLocale">Assume that the input speech is in the device\'s default language,
         unless the app sets a different language</string>
@@ -65,11 +81,11 @@
     <string name="titleWsServer">WebSocket URL</string>
     <string name="summaryWsServer" translatable="false">%1$s</string>
     <string name="titleHelpText">Help text</string>
-    <string name="summaryHelpText">Show help text by the microphone button (makes the search panel larger)</string>
+    <string name="summaryHelpText">Show usage instructions by the microphone button. Makes the search panel larger.</string>
     <string name="titleReturnErrors">Return errors</string>
     <string name="summaryReturnErrors">Return network/audio/etc. errors to the caller (useful if the caller does error handling)</string>
     <string name="titleImeHelpText">Help text</string>
-    <string name="summaryImeHelpText">Show help text by the microphone button (makes the speech keyboard larger)</string>
+    <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the speech keyboard larger.</string>
     <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
     <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Tap here to enable it in the Android keyboard and input method settings.</string>
@@ -78,18 +94,17 @@
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryHandsfreeDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
+    <string name="summaryChatDemo">Chat-style UI for calling intents</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
     <string name="summaryEncoderDemo">Various demos/tests related to audio recording and encoding</string>
+    <string name="summaryFormDemo">HTML form with various types of fields for testing the IME</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
     <string name="titleSystemVoiceInputSettings">All recognition services</string>
     <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
 
-    <string name="titleRewrite">Rewriting</string>
-    <string name="summaryRewrite">Apply rewrite rules to the transcription</string>
-
-    <string name="titleLoadRewrites">Rewrite rules</string>
-    <string name="summaryLoadRewrites">Load rewrite rules from a file</string>
+    <string name="titleSelectRewrites">Rewrites</string>
+    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. At most one table can be active at a time.</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
@@ -152,8 +167,12 @@ More grammars are available at
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
+    <string name="emptylistRewrites">No rewrite rule tables. Add a new table via the Add-menu, and long-press it to activate it.</string>
+    <string name="emptylistRewriteRules">No rewrite rules were found. Make sure the input file is in the correct format, i.e. the columns are tab-separated and the first line is a header.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
+    <string name="toastActivated">Activated: %1$s</string>
+    <string name="toastDeactivated">Deactivated: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
     <string name="toastPlayingAudio">Playing the recorded audio: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Done playing the audio</string>
@@ -164,10 +183,21 @@ More grammars are available at
         <item quantity="one">1 rule</item>
         <item quantity="other">%d rules</item>
     </plurals>
+    <plurals name="statusLoadRewritesErrors">
+        <item quantity="zero">No errors</item>
+        <item quantity="one">1 error</item>
+        <item quantity="other">%d errors</item>
+    </plurals>
+    <plurals name="subtitleRewritesSelector">
+        <item quantity="zero">No tables</item>
+        <item quantity="one">1 table</item>
+        <item quantity="other">%d tables</item>
+    </plurals>
 
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: malformed URL</string>
     <string name="errorFailedLaunchApp">App cannot be launched or is not installed (anymore): %1$s</string>
+    <string name="errorFailedLaunchIntent">Intent is not serviced by any app</string>
     <string name="errorFailedPlayAudio">Failed to play the recorded audio: %1$s, %2$s</string>
 
     // SpeechRecognizer error messages (9) shown in the IME
@@ -193,6 +223,8 @@ More grammars are available at
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>
+    <string name="confirmRename">Rename</string>
+    <string name="confirmDelete">Are you sure you want to delete \"%1$s\"?</string>
     <string name="dialogTitleChangeGrammarName">Change the name</string>
     <string name="dialogTitleChangeGrammarLang">Change the target language</string>
     <string name="dialogTitleChangeGrammarUrl">Change the grammar</string>
@@ -212,6 +244,12 @@ More grammars are available at
     <string name="cmGrammarDelete">Delete</string>
     <string name="cmServerEdit">Change URL</string>
     <string name="cmServerDelete">Delete</string>
+    <!-- General menu items -->
+    <string name="cmToggle">Toggle</string>
+    <string name="cmShare">Share</string>
+    <string name="cmTest">Test in Kõnele</string>
+    <string name="cmRename">Rename</string>
+    <string name="cmDelete">Delete</string>
     <string name="menuAppsSort">Sort …</string>
     <string name="menuAppsSortByName">by package name</string>
     <string name="menuAppsSortByCount">by usage frequency</string>
@@ -219,6 +257,7 @@ More grammars are available at
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuAbout">About</string>
+    <string name="menuRewritesAdd">Load rewrite rules from a tsv-file</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
     <string name="buttonDemoShowEncoders">Show the list of available encoders</string>
@@ -229,6 +268,7 @@ More grammars are available at
     <string name="cdWaveform">Waveform of the spoken input</string>
     <string name="cdVolume">Volume level</string>
     <string name="cdAppIcon">App icon</string>
+    <string name="cdServiceIcon">Service icon</string>
     <string name="cdChangeInputMethod">Change input method</string>
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
@@ -239,6 +279,8 @@ More grammars are available at
     <!-- Entries for the database, both apos and its escape character need escaping. -->
     <string name="entryGrammarName1">[unrestricted input]</string>
     <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
+
+    <string name="fileFormDemo" translatable="false">file:///android_asset/form.html</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 

@@ -1,9 +1,11 @@
 package ee.ioc.phon.android.speak.view;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
@@ -15,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Log;
@@ -25,7 +27,6 @@ import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
-import ee.ioc.phon.android.speak.service.UtteranceRewriter;
 import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
@@ -46,15 +47,21 @@ public class SpeechInputView extends LinearLayout {
     private MicButton.State mState;
 
     public interface SpeechInputViewListener {
+        void onComboChange(String language, ComponentName service);
+
         void onPartialResult(List<String> text);
 
         void onFinalResult(List<String> text, Bundle bundle);
 
         void onSwitchIme(boolean isAskUser);
 
-        void onGo();
+        void onSearch();
 
         void onDeleteLastWord();
+
+        void goUp();
+
+        void goDown();
 
         void onAddNewline();
 
@@ -67,15 +74,86 @@ public class SpeechInputView extends LinearLayout {
         void onBufferReceived(byte[] buffer);
 
         void onError(int errorCode);
+
+        void onStartListening();
+
+        void onStopListening();
     }
 
     public SpeechInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-
-    public void setListener(int keys, CallerInfo callerInfo, final SpeechInputViewListener listener) {
+    public void setListener(final SpeechInputViewListener listener) {
         mListener = listener;
+        ImageButton buttonSearch = (ImageButton) findViewById(R.id.bImeSearch);
+        if (mBImeKeyboard != null && buttonSearch != null) {
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onSwitchIme(false);
+                }
+            });
+
+            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onSwitchIme(true);
+                    return true;
+                }
+            });
+
+            buttonSearch.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelOrDestroy();
+                    mListener.onSearch();
+                }
+            });
+        }
+
+
+        setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.onDeleteLastWord();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                mListener.onAddNewline();
+            }
+
+            @Override
+            public void onSwipeUp() {
+                mListener.goUp();
+            }
+
+            @Override
+            public void onSwipeDown() {
+                mListener.goDown();
+            }
+
+            @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
+
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
+
+            @Override
+            public void onLongPressMotion() {
+                mListener.onSelectAll();
+            }
+        });
+
+        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+    }
+
+    public void init(int keys, CallerInfo callerInfo) {
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
@@ -93,7 +171,7 @@ public class SpeechInputView extends LinearLayout {
         }
         updateServiceLanguage(mSlc.getSpeechRecognizer());
         updateComboSelector(mSlc);
-        setText(mTvMessage, "");
+        showMessage("", true);
         setGuiInitState(0);
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
@@ -137,6 +215,7 @@ public class SpeechInputView extends LinearLayout {
                     stopListening();
                 }
                 mSlc.next();
+                mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
                 updateComboSelector(mSlc);
             }
         });
@@ -148,63 +227,9 @@ public class SpeechInputView extends LinearLayout {
                 Context context = getContext();
                 Intent intent = new Intent(context, ComboSelectorActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("key", getContext().getString(key));
+                intent.putExtra("key", context.getString(key));
                 IntentUtils.startActivityIfAvailable(context, intent);
                 return true;
-            }
-        });
-
-        ImageButton buttonGo = (ImageButton) findViewById(R.id.bImeGo);
-        if (mBImeKeyboard != null && buttonGo != null) {
-            mBImeKeyboard.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onSwitchIme(false);
-                }
-            });
-
-            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onSwitchIme(true);
-                    return true;
-                }
-            });
-
-            buttonGo.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cancelOrDestroy();
-                    mListener.onGo();
-                }
-            });
-        }
-
-
-        setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeLeft() {
-                mListener.onDeleteLastWord();
-            }
-
-            @Override
-            public void onSwipeRight() {
-                mListener.onAddNewline();
-            }
-
-            @Override
-            public void onSingleTapMotion() {
-                mListener.onReset();
-            }
-
-            @Override
-            public void onDoubleTapMotion() {
-                mListener.onAddSpace();
-            }
-
-            @Override
-            public void onLongPressMotion() {
-                mListener.onSelectAll();
             }
         });
     }
@@ -221,6 +246,7 @@ public class SpeechInputView extends LinearLayout {
         if (mRecognizer != null) {
             mRecognizer.stopListening();
         }
+        mListener.onStopListening();
     }
 
     public void cancel() {
@@ -228,6 +254,18 @@ public class SpeechInputView extends LinearLayout {
         setGuiInitState(0);
     }
 
+    public void showMessage(CharSequence message, boolean isSuccess) {
+        if (message == null || message.length() == 0) {
+            setText(mTvMessage, "");
+        } else {
+            if (isSuccess) {
+                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            } else {
+                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+            setText(mTvMessage, message);
+        }
+    }
 
     private static String selectFirstResult(List<String> results) {
         if (results == null || results.size() < 1) {
@@ -244,11 +282,11 @@ public class SpeechInputView extends LinearLayout {
     private void setGuiInitState(int message) {
         if (message == 0) {
             // Do not clear a possible error message
-            //setText(mTvMessage, "");
+            //showMessage("");
             setGuiState(MicButton.State.INIT);
         } else {
             setGuiState(MicButton.State.ERROR);
-            setText(mTvMessage, String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
+            showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)), true);
         }
         if (mBImeKeyboard != null) {
             setVisibility(mBImeKeyboard, View.VISIBLE);
@@ -257,7 +295,10 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private static String lastChars(List<String> results, boolean isFinal) {
-        String str = selectFirstResult(results);
+        return lastChars(selectFirstResult(results), isFinal);
+    }
+
+    private static String lastChars(String str, boolean isFinal) {
         if (str == null) {
             str = "";
         } else {
@@ -339,6 +380,7 @@ public class SpeechInputView extends LinearLayout {
         setGuiState(MicButton.State.WAITING);
         updateServiceLanguage(slc.getSpeechRecognizer());
         mRecognizer.startListening(slc.getIntent());
+        mListener.onStartListening();
     }
 
     /**
@@ -353,25 +395,14 @@ public class SpeechInputView extends LinearLayout {
     }
 
 
-    private UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs) {
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyRewrite, R.bool.defaultRewrite)) {
-            return new UtteranceRewriter(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyRewritesFile, R.string.empty));
-        }
-        return new UtteranceRewriter();
-    }
-
-
     private class SpeechInputRecognitionListener implements RecognitionListener {
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        final UtteranceRewriter utteranceRewriter = getUtteranceRewriter(prefs);
 
         @Override
         public void onReadyForSpeech(Bundle params) {
             Log.i("onReadyForSpeech: state = " + mState);
             setGuiState(MicButton.State.LISTENING);
             setText(mTvInstruction, R.string.buttonImeStop);
-            setText(mTvMessage, "");
+            showMessage("", true);
             if (mBImeKeyboard != null) {
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
             }
@@ -446,15 +477,15 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onPartialResults(final Bundle bundle) {
             Log.i("onPartialResults: state = " + mState);
-            List<String> resultsRewritten = utteranceRewriter.rewrite(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-            if (!resultsRewritten.isEmpty()) {
+            ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            if (results != null && !results.isEmpty()) {
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
-                setText(mTvMessage, lastChars(resultsRewritten, isSemiFinal));
+                showMessage(lastChars(results, isSemiFinal), true);
                 if (isSemiFinal) {
-                    mListener.onFinalResult(resultsRewritten, bundle);
+                    mListener.onFinalResult(results, bundle);
                 } else {
-                    mListener.onPartialResult(resultsRewritten);
+                    mListener.onPartialResult(results);
                 }
             }
         }
@@ -468,14 +499,16 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public void onResults(final Bundle bundle) {
             Log.i("onResults: state = " + mState);
-            List<String> resultsRewritten = utteranceRewriter.rewrite(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-            if (resultsRewritten.isEmpty()) {
+            ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            Log.i("onResults: results = " + results);
+            if (results == null || results.isEmpty()) {
                 // If we got empty results then assume that the session ended,
                 // e.g. cancel was called.
-                mListener.onFinalResult(Collections.<String>emptyList(), bundle);
+                // TODO: not sure why this was needed
+                //mListener.onFinalResult(Collections.<String>emptyList(), bundle);
             } else {
-                setText(mTvMessage, lastChars(resultsRewritten, true));
-                mListener.onFinalResult(resultsRewritten, bundle);
+                showMessage(lastChars(results, true), true);
+                mListener.onFinalResult(results, bundle);
             }
             setGuiInitState(0);
         }

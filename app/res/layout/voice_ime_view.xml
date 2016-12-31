@@ -34,9 +34,9 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/layoutMargin4dp"
             android:layout_toEndOf="@+id/bImeKeyboard"
-            android:layout_toLeftOf="@+id/bImeGo"
+            android:layout_toLeftOf="@+id/bImeSearch"
             android:layout_toRightOf="@+id/bImeKeyboard"
-            android:layout_toStartOf="@+id/bImeGo"
+            android:layout_toStartOf="@+id/bImeSearch"
             android:ellipsize="start"
             android:gravity="center"
             android:singleLine="true"
@@ -45,7 +45,7 @@
             android:textSize="@dimen/textSize2" />
 
         <ImageButton
-            android:id="@+id/bImeGo"
+            android:id="@+id/bImeSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

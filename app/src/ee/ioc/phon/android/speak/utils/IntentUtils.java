@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.utils;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -16,11 +17,17 @@ import android.speech.SpeechRecognizer;
 import android.text.SpannableString;
 import android.util.SparseIntArray;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
+
+import org.json.JSONException;
 
 import java.util.List;
 
+import ee.ioc.phon.android.speak.Log;
+import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 
 public final class IntentUtils {
 
@@ -60,6 +67,15 @@ public final class IntentUtils {
         return pm.getLaunchIntentForPackage(packageName);
     }
 
+    public static void startActivityFromJson(Activity activity, CharSequence query) {
+        try {
+            startActivityIfAvailable(activity, JsonUtils.createIntent(query));
+        } catch (JSONException e) {
+            Log.i("startSearchActivity: JSON: " + e.getMessage());
+            startActivitySearch(activity, query);
+        }
+    }
+
     /**
      * Constructs a list of search intents.
      * The first one that can be handled by the device is launched.
@@ -67,10 +83,10 @@ public final class IntentUtils {
      * 1. Launch Kõnele, 2. Start split-screen, 3. Press Kõnele mic button and speak,
      * 4. The results should be loaded into the other window.
      *
-     * @param context context
-     * @param query   search query
+     * @param activity activity
+     * @param query    search query
      */
-    public static void startSearchActivity(Context context, CharSequence query) {
+    private static void startActivitySearch(Activity activity, CharSequence query) {
         // TODO: how to pass the search query to ACTION_ASSIST
         // TODO: maybe use SearchManager instead
         //Intent intent0 = new Intent(Intent.ACTION_ASSIST);
@@ -78,25 +94,31 @@ public final class IntentUtils {
         //intent0.putExtra(SearchManager.QUERY, query);
         //intent0.putExtra(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, false);
         //intent0.putExtra(Intent.EXTRA_ASSIST_PACKAGE, context.getPackageName());
-        Intent intent1 = new Intent(Intent.ACTION_WEB_SEARCH);
-        intent1.putExtra(SearchManager.QUERY, query);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent1.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-        }
-        Intent intent2 = new Intent(Intent.ACTION_SEARCH);
-        intent2.putExtra(SearchManager.QUERY, query);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent2.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-        }
-        startActivityIfAvailable(context, intent1, intent2);
+        startActivityIfAvailable(activity,
+                getSearchIntent(Intent.ACTION_WEB_SEARCH, query),
+                getSearchIntent(Intent.ACTION_SEARCH, query));
     }
 
     public static boolean startActivityIfAvailable(Context context, Intent... intents) {
-        for (Intent intent : intents) {
-            if (isActivityAvailable(context, intent)) {
-                context.startActivity(intent);
-                return true;
+        PackageManager mgr = context.getPackageManager();
+        try {
+            for (Intent intent : intents) {
+                if (isActivityAvailable(mgr, intent)) {
+                    // TODO: is it sensible to always start activity for result,
+                    // even if the activity is not designed to return a result
+                    context.startActivity(intent);
+                    //activity.startActivityForResult(intent, 2);
+                    return true;
+                } else {
+                    Log.i("startActivityIfAvailable: not available: " + intent);
+                }
             }
+            Toast.makeText(context, R.string.errorFailedLaunchIntent, Toast.LENGTH_LONG).show();
+        } catch (SecurityException e) {
+            // This happens if the user constructs an intent for which we do not have a
+            // permission, e.g. the CALL intent.
+            Log.i("startActivityIfAvailable: " + e.getMessage());
+            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }
@@ -173,9 +195,17 @@ public final class IntentUtils {
         return o.toString();
     }
 
-    private static boolean isActivityAvailable(Context context, Intent intent) {
-        final PackageManager mgr = context.getPackageManager();
+    private static boolean isActivityAvailable(PackageManager mgr, Intent intent) {
         List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
+    }
+
+    private static Intent getSearchIntent(String action, CharSequence query) {
+        Intent intent = new Intent(action);
+        intent.putExtra(SearchManager.QUERY, query);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        }
+        return intent;
     }
 }

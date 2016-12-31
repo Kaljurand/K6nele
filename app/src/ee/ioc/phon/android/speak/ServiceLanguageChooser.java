@@ -29,6 +29,8 @@ public class ServiceLanguageChooser {
     private int mIndex;
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mIntent;
+    private String mLanguage = null;
+    private ComponentName mRecognizerComponentName = null;
 
     public ServiceLanguageChooser(Context context, SharedPreferences prefs, int keys, CallerInfo callerInfo) {
 
@@ -84,26 +86,34 @@ public class ServiceLanguageChooser {
         return mCombosAsList.get(mIndex);
     }
 
+    public String getLanguage() {
+        return mLanguage;
+    }
+
+    public ComponentName getService() {
+        return mRecognizerComponentName;
+    }
 
     private void update() {
         String language = null;
         String[] splits = TextUtils.split(getCombo(), ";");
 
-        ComponentName recognizerComponentName = ComponentName.unflattenFromString(splits[0]);
+        mRecognizerComponentName = ComponentName.unflattenFromString(splits[0]);
         if (splits.length > 1) {
             language = splits[1];
         }
 
         // If the stored combo name does not refer to an existing service on the device then we use
         // the default service. This can happen if services get removed or renamed.
-        if (recognizerComponentName == null || !IntentUtils.isRecognitionAvailable(mContext, recognizerComponentName)) {
+        if (mRecognizerComponentName == null || !IntentUtils.isRecognitionAvailable(mContext, mRecognizerComponentName)) {
             mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext);
         } else {
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext, recognizerComponentName);
+            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext, mRecognizerComponentName);
         }
 
         // TODO: support other actions
         mIntent = IntentUtils.getRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH, mCallerInfo, language);
+        mLanguage = language;
     }
 
 

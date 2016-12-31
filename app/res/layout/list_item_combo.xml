@@ -8,15 +8,34 @@
         android:id="@+id/language"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey50"
-        android:textSize="@dimen/textSize3" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary" />
+
+    <ImageView
+        android:id="@+id/serviceIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/service"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/language"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/cdServiceIcon"
+        android:maxHeight="24dp"
+        android:maxWidth="24dp"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/language"
-        android:textSize="@dimen/textSize2" />
+        android:layout_toEndOf="@+id/serviceIcon"
+        android:layout_toRightOf="@+id/serviceIcon"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:textColorSecondary" />
 
     <CheckBox
         android:id="@+id/check"

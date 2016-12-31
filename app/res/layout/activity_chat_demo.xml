@@ -26,9 +26,9 @@
     <ListView
         android:id="@+id/list_matches"
         android:layout_width="fill_parent"
-
         android:layout_height="fill_parent"
         android:layout_above="@id/controls_tagselector"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:fontFamily="monospace" />
 
 </RelativeLayout>
