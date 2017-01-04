@@ -23,6 +23,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,39 +52,31 @@ public class RewritesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Resources res = getResources();
         Bundle extras = getIntent().getExtras();
-        String name = extras.getString(EXTRA_NAME);
-        String[] errors = extras.getStringArray(EXTRA_ERRORS);
-        mRewrites = new Rewrites(prefs, res, name);
-
-        String subtitle = "";
-        if (name != null) {
-            subtitle = name;
-        }
-        int ruleCount = mRewrites.getRules().length;
-        subtitle += " · " + res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
-
-        if (errors != null) {
-            int errorCount = errors.length;
-            if (errorCount > 0) {
-                String errorMessage = res.getQuantityString(R.plurals.statusLoadRewritesErrors, errorCount, errorCount);
-                showErrors(errorMessage, errors);
-                subtitle += " · " + errorMessage;
-            }
-        }
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null && !subtitle.isEmpty()) {
-            actionBar.setSubtitle(subtitle);
-        }
-
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setRewrites(extras.getString(EXTRA_NAME), extras.getStringArray(EXTRA_ERRORS));
         getFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment()).commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
             case R.id.menuRewritesShare:
                 startActivity(Intent.createChooser(mRewrites.getSendIntent(), getResources().getText(R.string.labelRewritesShare)));
                 return true;
@@ -98,6 +92,7 @@ public class RewritesActivity extends Activity {
                             public void execute(String newName) {
                                 if (!newName.isEmpty()) {
                                     mRewrites.rename(newName);
+                                    setRewrites(newName, null);
                                 }
                             }
                         }
@@ -110,6 +105,8 @@ public class RewritesActivity extends Activity {
                         new Executable() {
                             public void execute() {
                                 mRewrites.delete();
+                                toast(String.format(getString(R.string.toastDeleted), mRewrites.getId()));
+                                finish();
                             }
                         }
                 ).show();
@@ -149,6 +146,32 @@ public class RewritesActivity extends Activity {
 
     protected void toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void setRewrites(String name, String[] errors) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Resources res = getResources();
+        mRewrites = new Rewrites(prefs, res, name);
+
+        String subtitle = "";
+        if (name != null) {
+            subtitle = name;
+        }
+        int ruleCount = mRewrites.getRules().length;
+        subtitle += " · " + res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
+
+        if (errors != null) {
+            int errorCount = errors.length;
+            if (errorCount > 0) {
+                String errorMessage = res.getQuantityString(R.plurals.statusLoadRewritesErrors, errorCount, errorCount);
+                showErrors(errorMessage, errors);
+                subtitle += " · " + errorMessage;
+            }
+        }
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null && !subtitle.isEmpty()) {
+            actionBar.setSubtitle(subtitle);
+        }
     }
 
     private Rewrites getRewrites() {

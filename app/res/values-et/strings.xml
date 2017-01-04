@@ -209,6 +209,7 @@
     <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
     <string name="toastActivated">Aktiveeritud: %1$s</string>
     <string name="toastDeactivated">Deaktiveeritud: %1$s</string>
+    <string name="toastDeleted">Kustutatud: %1$s</string>
     <string name="toastRequestedAudioFormatNotSupported">Audioformaat pole toetatud: %1$s</string>
     <string name="toastPlayingAudio">Mängin lindistust: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Lindistuse lõpp</string>

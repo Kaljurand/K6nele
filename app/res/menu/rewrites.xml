@@ -8,18 +8,22 @@
         android:title="" />
     <item
         android:id="@+id/menuRewritesShare"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/cmShare" />
 
     <item
         android:id="@+id/menuRewritesTest"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/cmTest" />
 
     <item
         android:id="@+id/menuRewritesRename"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/cmRename" />
 
     <item
         android:id="@+id/menuRewritesDelete"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/cmDelete" />
 
     <!--
