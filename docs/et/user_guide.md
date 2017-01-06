@@ -74,10 +74,13 @@ edasi seadme veebibrauserile.
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
-Ümberkirjutusreeglid (alates v1.6 beeta, vt pikemalt allpool) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
+Ümberkirjutusreeglid (alates v1.6 beeta) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
 
-- __Utterance__ = `(.*)`
-- __Replacement__ = `{"action": "android.intent.action.VIEW", "data": "geo:0,0?q=$1, Estonia"}`
+{% highlight sh %}
+    (.*)<HT>{"action":"android.intent.action.VIEW", "data":"geo:0,0?q=$1, Estonia"}
+{% endhighlight %}
+
+Lihtsal reeglil on kaks poolt: regulaaravaldis, mis vastab lausungile (nt ``(.*)`` vastab suvalisele lausungile), ning asendussõne (antud näites on selleks JSON struktuuriga kirjeldatud Androidi Intent, mis viitab ``$1`` abil kasutaja sisendile). Regulaaravaldis on asendussõnest eraldatud tabulaatoriga (ülal tähistatud kui ``<HT>``). Ümberkirjutusreegleid käsitleb pikemalt eraldi peatükk.
 
 
 ## Kõnele seadistamine
@@ -252,8 +255,7 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 - käivitada teisi Androidi rakendusi;
 - rakendada tekstitoimetuskäske.
 
-Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist (nn TSV-fail),
-millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnaga, mis tuleb kirjutada tabeli esimesse ritta).
+Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist, nn TSV-failist, kus veerueraldajaks on tabulaator ja reaeraldajaks reavahetussümbol. Kõnele toetab järgmisi veerge (muid ignoreerib):
 
 - __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks (lausungimuster). Võib sisaldada alamgruppe (nn _capturing group_), mis on tähistatud sulgudega `()` ja viiteid nendele (tähistatud `\1`, `\2`, ...).
 - __Replacement__ Asendustekst. Võib sisaldada viiteid __Utterance__ gruppidele (tähistatud `$1`, `$2`, ...).
@@ -264,6 +266,8 @@ millel on järgmised veerud (veeru tüüp on määratud ingliskeelse märksõnag
 
 Igale reale vastab üks reegel, ning ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
 Veergude järjekord pole oluline. Kohustuslikud veerud on ainult __Utterance__ ja __Replacement__. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, rakenduse, ja tuvastusteenuse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/).
+
+Veergude tüübid on määratud esimesse ritta (nn päisesse) kirjutatud ingliskeelse märksõnaga ("Utterance", "Replacement", jne). Kui päis puudub (st esimene rida ei sisalda kohustuslikkude veergude nimesid "Utterance" ja "Replacement"), siis arvestatakse ainult tabeli esimest kahte veergu ning interpreteeritakse neid kui __Utterance__ ja __Replacement__ veerge. St kõige lihtsam tabel on ``a<HT>b`` (asenda kõik "a" tähed, "b" tähe vastu).
 
 Näide. Lihtne (eestikeelne) ümberkirjutusreegel. Küsimärk lausungimustris määrab igaks juhuks, et tühik on lausungis valikuline. Nõnda ei sõltu reegli rakendmine sellest, kuidas tuvastaja sõnu kokku/lahku kirjutab.
 
@@ -308,8 +312,9 @@ siis püüab Kõnele leida _Intent_'ile vastava rakenduse ning selle käivitada.
 
 (Eksperimentaalne)
 
-Tekstitoimetuskäsud on eeldefineeritud käsud, mida on võimalik kasutada koos Kõnele klaviatuuriga.
+Tekstitoimetuskäsud on eeldefineeritud käsud, mida saab kasutada koos Kõnele klaviatuuriga.
 Need võimaldavad toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil), nt kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `goToNextField`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `delete`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Igal käsul on 0 kuni 2 argumenti. Argumendid võivad sisaldada tavalisi sümboleid, viiteid __Utterance__ gruppidele (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
+Vt ka [kõikide käskude nimekiri](https://github.com/Kaljurand/speechutils/blob/master/app/src/main/java/ee/ioc/phon/android/speechutils/editor/CommandEditor.java).
 
 Tekstitoimetuskäskude sidumiseks kõnekäskudega tuleb kasutada kolme lisaveergu:
 
