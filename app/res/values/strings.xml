@@ -38,8 +38,8 @@
     <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
-    <string name="labelRewritesName">Save the rewrites table under a new name:</string>
-    <string name="labelRewritesChooser">or choose an existing name:</string>
+    <string name="labelRewritesName">Save the rewrites table as:</string>
+    <string name="labelRewritesChooser">or overwrite an existing table:</string>
 
     <string name="labelRewritesShare">Share the rewrites table</string>
 

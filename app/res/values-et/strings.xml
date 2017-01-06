@@ -25,8 +25,8 @@
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
 
-    <string name="labelRewritesName">Salvestage ümberkirjutusreeglid uue nime all:</string>
-    <string name="labelRewritesChooser">või valige juba olemasolev nimi:</string>
+    <string name="labelRewritesName">Pange ümberkirjutusreeglitele nimeks:</string>
+    <string name="labelRewritesChooser">või kirjutage olemasolev reeglifail üle:</string>
 
     <string name="labelRewritesShare">Jaga ümberkirjutusreegleid</string>
 
