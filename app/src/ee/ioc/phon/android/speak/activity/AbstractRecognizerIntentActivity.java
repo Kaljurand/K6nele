@@ -81,7 +81,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     private static final int MSG_TOAST = 1;
     private static final int MSG_RESULT_ERROR = 2;
 
-    public static String[] HEADER_REWRITES_COL2 = {"Utterance", "Replacement"};
+    public static String HEADER_REWRITES_COL2 = "Utterance\tReplacement";
 
     private UtteranceRewriter mUtteranceRewriter;
 

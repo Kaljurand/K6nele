@@ -133,9 +133,8 @@ public class ComboSelectorActivity extends Activity {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, combo.getLocaleAsStr());
                 intent.putExtra(Extras.EXTRA_SERVICE_COMPONENT, combo.getServiceComponent().flattenToShortString());
                 intent.putExtra(Extras.EXTRA_AUTO_START, true);
-                // TODO: launch the activity so that the existing Kõnele activities would not
-                // show in the background. These flags did not help.
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                // Launch the activity so that the existing Kõnele activities are not in the background stack.
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 shortcuts.add(new ShortcutInfo.Builder(context, combo.getId())
                         .setIntent(intent)
                         .setShortLabel(combo.getShortLabel())

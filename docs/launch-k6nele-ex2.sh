@@ -32,6 +32,7 @@ adb shell 'am start \
 -e android.speech.extra.LANGUAGE "'$language'" \
 -e ee.ioc.phon.android.extra.SERVICE_COMPONENT "'$component'" \
 -e android.speech.extra.PROMPT "Say the name of a song or an artist" \
+-e ee.ioc.phon.android.extra.VOICE_PROMPT "Öelge laulu või muusiku nimi" \
 --ez ee.ioc.phon.android.extra.AUTO_START true \
 --ei android.speech.extra.MAX_RESULTS 1 \
 -e ee.ioc.phon.android.extra.RESULT_UTTERANCE "(.+)" \

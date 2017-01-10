@@ -11,7 +11,7 @@ Possible tasks
 --------------
 
 - support for other languages, see [Issue #38](https://github.com/Kaljurand/K6nele/issues/38)
-- optimize UX for Android Wear, Auto, TV, ...
+- optimize UX for Android Wear, Auto, TV, Things, ...
 - audio compression
 - support for external (e.g. Bluetooth) microphone
 - improve the offered intents/extras to better integrate with Tasker and similar apps

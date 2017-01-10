@@ -36,7 +36,7 @@ digraph G {
         style = "filled";
         color = "lightgreen";
         k6nele;
-        fetch_intent [label="Kõnele\nFetchIntentActivity", tooltip="Fetches JSON from a URL, interprets it as an Android intent and launches it.", style="filled", fillcolor="yellow"];
+        fetch_intent [label="Kõnele\nFetchUrlActivity", tooltip="Fetches JSON from a URL, interprets it as an Android intent and launches it.", style="filled", fillcolor="yellow"];
         app_lightbulb [label="LightBulbActivity", tooltip="Maps Android intent to an action on a concrete device."];
     }
 

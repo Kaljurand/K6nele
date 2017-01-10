@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2016-2017, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -45,7 +45,7 @@ import ee.ioc.phon.android.speak.utils.IntentUtils;
  *
  * @author Kaarel Kaljurand
  */
-public class FetchUrlActivity extends ListActivity {
+public class FetchUrlActivity extends Activity {
 
     public static final String EXTRA_HTTP_METHOD = "ee.ioc.phon.android.extra.HTTP_METHOD";
     public static final String EXTRA_HTTP_BODY = "ee.ioc.phon.android.extra.HTTP_BODY";
