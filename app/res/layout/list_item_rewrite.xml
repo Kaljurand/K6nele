@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:fontFamily="monospace"
     android:padding="@dimen/layoutMargin4dp"
+    android:textIsSelectable="true"
     android:textSize="@dimen/textSize2">
 
 </TextView>

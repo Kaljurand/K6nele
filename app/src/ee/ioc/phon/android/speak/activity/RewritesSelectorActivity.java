@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
@@ -46,6 +47,11 @@ public class RewritesSelectorActivity extends Activity {
             case R.id.menuRewritesAdd:
                 Intent intent = new Intent(this, RewritesLoaderActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menuRewritesHelp:
+                Intent view = new Intent(Intent.ACTION_VIEW);
+                view.setData(Uri.parse(getString(R.string.urlRewritesDoc)));
+                startActivity(view);
                 return true;
             default:
                 return super.onContextItemSelected(item);

@@ -248,7 +248,7 @@ More grammars are available at
     <!-- General menu items -->
     <string name="cmToggle">Toggle</string>
     <string name="cmShare">Share</string>
-    <string name="cmTest">Test in Kõnele</string>
+    <string name="cmTest">Test</string>
     <string name="cmRename">Rename</string>
     <string name="cmDelete">Delete</string>
     <string name="menuAppsSort">Sort …</string>
@@ -259,6 +259,7 @@ More grammars are available at
     <string name="menuServersAdd">Add</string>
     <string name="menuAbout">About</string>
     <string name="menuRewritesAdd">Load rewrite rules from a tsv-file</string>
+    <string name="menuRewritesHelp">Help page with links to examples</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
     <string name="buttonDemoShowEncoders">Show the list of available encoders</string>
@@ -282,6 +283,9 @@ More grammars are available at
     <string name="entryGrammarDesc1">This grammar can be assigned to apps, where you always want to use unrestricted input regardless of the app\'\'s own settings</string>
 
     <string name="fileFormDemo" translatable="false">file:///android_asset/form.html</string>
+
+    <!-- TODO: make separate doc for English -->
+    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#mberkirjutusreeglid-alates-v16-beeta</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 

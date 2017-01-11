@@ -58,6 +58,7 @@ public class Rewrites {
         Intent intent = new Intent();
         intent.setClassName("ee.ioc.phon.android.speak", "ee.ioc.phon.android.speak.activity.SpeechActionActivity");
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, mId);
+        intent.putExtra(Extras.EXTRA_AUTO_START, true);
         intent.putExtra(Extras.EXTRA_RESULT_REWRITES, new String[]{mId});
         return intent;
     }

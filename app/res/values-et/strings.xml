@@ -171,6 +171,7 @@
     <string name="menuGrammarsAdd">Lisa</string>
     <string name="menuServersAdd">Lisa</string>
     <string name="menuRewritesAdd">Laadi ümberkirjutusreeglite tabel tsv-formaadis failist</string>
+    <string name="menuRewritesHelp">Kasutusjuhend näidetega</string>
     <string name="menuDemoGrammarAssign">Omista grammatika</string>
     <string name="menuAbout">Info</string>
     <string name="cmAppAssignGrammar">Omista grammatika</string>
@@ -188,7 +189,7 @@
     <!-- General menu items -->
     <string name="cmToggle">(De)aktiveeri</string>
     <string name="cmShare">Jaga</string>
-    <string name="cmTest">Testi Kõneles</string>
+    <string name="cmTest">Proovi</string>
     <string name="cmRename">Muuda nimi</string>
     <string name="cmDelete">Kustuta</string>
     <string name="confirmDeleteEntry">Eemaldan loendist \"%1$s\"?</string>

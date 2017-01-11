@@ -6,4 +6,10 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/menuRewritesAdd" />
 
+    <item
+        android:id="@+id/menuRewritesHelp"
+        android:icon="@drawable/ic_menu_help"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menuRewritesHelp" />
+
 </menu>
