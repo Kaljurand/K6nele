@@ -6,4 +6,10 @@
         android:icon="@drawable/ic_menu_info_details"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menuAbout" />
+
+    <item
+        android:id="@+id/menuHelp"
+        android:icon="@drawable/ic_menu_help"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menuHelp" />
 </menu>

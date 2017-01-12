@@ -12,7 +12,6 @@
     <string name="labelActivityAbout">Info</string>
     <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityDetails">Detailid</string>
-    <string name="labelActivityRewrites">Ümberkirjutusreeglid</string>
     <string name="labelActivityRewritesLoader">Kõnele ü.k.-reeglid</string>
     <string name="labelActivityRewritesSelector">Ümberkirjutusreeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
@@ -174,6 +173,7 @@
     <string name="menuRewritesHelp">Kasutusjuhend näidetega</string>
     <string name="menuDemoGrammarAssign">Omista grammatika</string>
     <string name="menuAbout">Info</string>
+    <string name="menuHelp">Kasutusjuhend</string>
     <string name="cmAppAssignGrammar">Omista grammatika</string>
     <string name="cmAppRemoveGrammar">Eemalda grammatika</string>
     <string name="cmAppAssignServer">Omista server</string>

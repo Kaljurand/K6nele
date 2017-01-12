@@ -23,7 +23,6 @@
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityDetails">Details</string>
-    <string name="labelActivityRewrites">Rewrite rules</string>
     <string name="labelActivityRewritesLoader">Kõnele rewrite rules</string>
     <string name="labelActivityRewritesSelector">Rewrite rule tables</string>
     <string name="labelActivityAppList">Apps</string>
@@ -258,6 +257,7 @@ More grammars are available at
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuAbout">About</string>
+    <string name="menuHelp">Help</string>
     <string name="menuRewritesAdd">Load rewrite rules from a tsv-file</string>
     <string name="menuRewritesHelp">Help page with links to examples</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
@@ -284,7 +284,8 @@ More grammars are available at
 
     <string name="fileFormDemo" translatable="false">file:///android_asset/form.html</string>
 
-    <!-- TODO: make separate doc for English -->
+    <!-- TODO: make separate docs for English -->
+    <string name="urlDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html</string>
     <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#mberkirjutusreeglid-alates-v16-beeta</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>

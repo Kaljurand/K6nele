@@ -53,7 +53,10 @@ public class RewritesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         setRewrites(extras.getString(EXTRA_NAME), extras.getStringArray(EXTRA_ERRORS));
         getFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment()).commit();
     }
@@ -153,12 +156,8 @@ public class RewritesActivity extends Activity {
         Resources res = getResources();
         mRewrites = new Rewrites(prefs, res, name);
 
-        String subtitle = "";
-        if (name != null) {
-            subtitle = name;
-        }
         int ruleCount = mRewrites.getRules().length;
-        subtitle += " · " + res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
+        String subtitle = res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
 
         if (errors != null) {
             int errorCount = errors.length;
@@ -169,7 +168,8 @@ public class RewritesActivity extends Activity {
             }
         }
         ActionBar actionBar = getActionBar();
-        if (actionBar != null && !subtitle.isEmpty()) {
+        if (actionBar != null) {
+            actionBar.setTitle(name);
             actionBar.setSubtitle(subtitle);
         }
     }

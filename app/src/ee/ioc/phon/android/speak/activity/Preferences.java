@@ -19,6 +19,7 @@ package ee.ioc.phon.android.speak.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -73,6 +74,11 @@ public class Preferences extends PreferenceActivity {
             case R.id.menuAbout:
                 Intent searchIntent = new Intent(this, AboutActivity.class);
                 startActivity(searchIntent);
+                return true;
+            case R.id.menuHelp:
+                Intent view = new Intent(Intent.ACTION_VIEW);
+                view.setData(Uri.parse(getString(R.string.urlDoc)));
+                startActivity(view);
                 return true;
 
             default:

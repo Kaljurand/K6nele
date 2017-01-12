@@ -565,7 +565,16 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     protected void setUtteranceRewriter(String language, ComponentName service) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String[] rewrites = getExtras().getStringArray(Extras.EXTRA_RESULT_REWRITES);
+        Bundle extras = getExtras();
+        String[] rewrites = null;
+        Object rewritesAsObject = extras.get(Extras.EXTRA_RESULT_REWRITES);
+        if (rewritesAsObject != null) {
+            if (rewritesAsObject instanceof String[]) {
+                rewrites = (String[]) rewritesAsObject;
+            } else if (rewritesAsObject instanceof String) {
+                rewrites = new String[]{(String) rewritesAsObject};
+            }
+        }
         mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
     }
 
