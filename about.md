@@ -42,7 +42,9 @@ __For the end-user, Kõnele__
   - provides a simple speech recognition activity, that opens from the Kõnele launcher icon, and that is also callable from other Android apps;
   - provides a speech keyboard that can be used to dictate into any text field (apart from password fields) in any app using any speech recognition service/language available on the device;
   - provides two speech recognition services that are pre-configured to use Estonian speech recognition;
-  - provides a grammar-based speech recognition service for English and Estonian voice actions applications (e.g. alarm clock, unit converter, address search), for the list of existing grammars see <http://kaljurand.github.io/Grammars/>;
+  - provides a grammar-based speech recognition service for English and Estonian voice actions applications (e.g. alarm clock, unit converter, address search), for the list of existing grammars see <http://kaljurand.github.io/Grammars/>, for a client app of grammar-based recognition see [Arvutaja](http://kaljurand.github.io/Arvutaja/);
+  - provides a way to change the transcription result using custom rewrite rules;
+  - provides a way to launch an Android activity based on the (rewritten) transcription;
   - requires only two permissions (to access the microphone and the internet);
   - comes with two user interface languages: English, Estonian.
 
