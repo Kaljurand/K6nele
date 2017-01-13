@@ -67,10 +67,10 @@ Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb mikrofoninupuga pan
 Nupule vajutades teisendab Kõnele sisendkõne tekstiks ning edastab selle
 edasi seadme veebibrauserile.
 
-<img title="Ekraanipilt: käivitusikoon" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-50.png">
+<img title="Ekraanipilt: käivitusikoon" alt="Ekraanipilt: käivitusikoon" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-50.png">
 <img title="Ekraanipilt: mikrofoninupuga paneel" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-59.png">
-<img title="Ekraanipilt: lindistamine" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-10.png">
-<img title="Ekraanipilt: transkribeerimine" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
+<img title="Ekraanipilt: lindistamine" alt="Ekraanipilt: lindistamine ja transkribeerimine" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-10.png">
+<img title="Ekraanipilt: transkribeerimine" alt="Ekraanipilt: transkribeerimine peale lindistamise lõppu" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
 <img title="Ekraanipilt: valik tuvastustulemusi" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img title="Ekraanipilt: tuvastustulemus veebiotsinguna" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
