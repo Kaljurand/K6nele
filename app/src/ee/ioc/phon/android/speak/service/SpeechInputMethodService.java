@@ -16,7 +16,6 @@ import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
@@ -272,24 +271,9 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                String curPosAsString = "";
-                ExtractedText et1 = mCommandEditor.getExtractedText();
-                if (et1 != null) {
-                    curPosAsString = et1.startOffset + "-" + et1.selectionStart + "-" + et1.selectionEnd;
-                }
                 CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
-                ExtractedText et2 = mCommandEditor.getExtractedText();
-                if (et2 != null) {
-                    curPosAsString += "/" + et2.startOffset + "-" + et2.selectionStart + "-" + et2.selectionEnd;
-                }
-                if (editorResult != null && editorResult.isCommand()) {
-                    if (mInputView != null) {
-                        if (false && Log.DEBUG) {
-                            mInputView.showMessage(editorResult.toString() + ", " + curPosAsString, editorResult.isSuccess());
-                        } else {
-                            mInputView.showMessage(editorResult.toString(), editorResult.isSuccess());
-                        }
-                    }
+                if (editorResult != null && mInputView != null && editorResult.isCommand()) {
+                    mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
                 }
             }
 
@@ -317,12 +301,12 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void goUp() {
-                mCommandEditor.goUp().run();
+                mCommandEditor.keyUp().run();
             }
 
             @Override
             public void goDown() {
-                mCommandEditor.goDown().run();
+                mCommandEditor.keyDown().run();
             }
 
             @Override
@@ -339,7 +323,7 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                mCommandEditor.resetSel().run();
+                mCommandEditor.moveAbs(-1).run();
             }
 
             @Override

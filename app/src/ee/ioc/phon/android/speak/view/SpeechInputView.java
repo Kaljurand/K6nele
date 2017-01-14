@@ -171,7 +171,7 @@ public class SpeechInputView extends LinearLayout {
         }
         updateServiceLanguage(mSlc.getSpeechRecognizer());
         updateComboSelector(mSlc);
-        showMessage("", true);
+        showMessage("");
         setGuiInitState(0);
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
@@ -254,14 +254,23 @@ public class SpeechInputView extends LinearLayout {
         setGuiInitState(0);
     }
 
+    public void showMessage(CharSequence message) {
+        if (message == null || message.length() == 0) {
+            setText(mTvMessage, "");
+        } else {
+            mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG & ~Paint.UNDERLINE_TEXT_FLAG);
+            setText(mTvMessage, message);
+        }
+    }
+
     public void showMessage(CharSequence message, boolean isSuccess) {
         if (message == null || message.length() == 0) {
             setText(mTvMessage, "");
         } else {
             if (isSuccess) {
-                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG) | Paint.UNDERLINE_TEXT_FLAG);
             } else {
-                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG) | Paint.STRIKE_THRU_TEXT_FLAG);
             }
             setText(mTvMessage, message);
         }
@@ -286,7 +295,7 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.INIT);
         } else {
             setGuiState(MicButton.State.ERROR);
-            showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)), true);
+            showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
         if (mBImeKeyboard != null) {
             setVisibility(mBImeKeyboard, View.VISIBLE);
@@ -402,7 +411,7 @@ public class SpeechInputView extends LinearLayout {
             Log.i("onReadyForSpeech: state = " + mState);
             setGuiState(MicButton.State.LISTENING);
             setText(mTvInstruction, R.string.buttonImeStop);
-            showMessage("", true);
+            showMessage("");
             if (mBImeKeyboard != null) {
                 setVisibility(mBImeKeyboard, View.INVISIBLE);
             }
@@ -481,7 +490,7 @@ public class SpeechInputView extends LinearLayout {
             if (results != null && !results.isEmpty()) {
                 // This can be true only with kaldi-gstreamer-server
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
-                showMessage(lastChars(results, isSemiFinal), true);
+                showMessage(lastChars(results, isSemiFinal));
                 if (isSemiFinal) {
                     mListener.onFinalResult(results, bundle);
                 } else {
@@ -507,7 +516,7 @@ public class SpeechInputView extends LinearLayout {
                 // TODO: not sure why this was needed
                 //mListener.onFinalResult(Collections.<String>emptyList(), bundle);
             } else {
-                showMessage(lastChars(results, true), true);
+                showMessage(lastChars(results, true));
                 mListener.onFinalResult(results, bundle);
             }
             setGuiInitState(0);
