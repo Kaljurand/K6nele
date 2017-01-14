@@ -286,7 +286,7 @@ More grammars are available at
 
     <!-- TODO: make separate docs for English -->
     <string name="urlDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html</string>
-    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#mberkirjutusreeglid-alates-v16-beeta</string>
+    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#mberkirjutusreeglid</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 
