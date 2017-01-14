@@ -25,8 +25,8 @@ läbi mille on võimalik kasutada ka Kõnele poolt pakutud tuvastust.
 - Kui käivitada Kõnele otse, st mitte läbi teise rakenduse,
 siis suunatakse tuvastatud tekst (vaikimisi) edasi veebiotsingumootorile, või soovi korral (ümberkirjutusreeglite abil) nt kodurobotile.
 
-Kõnele kasutab kõne tekstiks teisendamiseks (ehk transkribeerimiseks) TTÜ Küberneetika Instituudi
-foneetika ja kõnetehnoloogia laboris (vt <http://phon.ioc.ee>) välja töötatud
+Kõnele kasutab kõne tekstiks teisendamiseks ehk transkribeerimiseks [TTÜ Küberneetika Instituudi
+foneetika ja kõnetehnoloogia laboris](http://phon.ioc.ee) välja töötatud
 serveripõhist kõnetuvastustarkvara, mis on maailmas hetkel ainus, mis
 sisendina eesti keelt toetab.
 Samuti toetab see grammatikapõhist kõnetuvastust,
@@ -52,8 +52,8 @@ Järgnev video näitab
 (4) Kõnele konfigureerimist Androidi vaikimisi kõnetuvastajaks, ja selle kasutamist _Google Translate_ rakenduses;
 (5) tõlkegrammatika omistamist _Wolfram Alpha_ rakendusele, ja selles mõõtühikuteisendamist;
 (6) _Arvutaja_ rakenduse kasutamist (vahelduseks inglise keeles) äratuskella seadmiseks.
-(Video on tehtud Kõnele versiooniga 0.8.56, uuemates versioonides on kasutajaliides natuke
-muutunud.)
+Video on tehtud Kõnele versiooniga 0.8.56, uuemates versioonides on kasutajaliides natuke
+muutunud.
 
 <iframe id="ytplayer" type="text/html" width="480" height="360"
 src="http://www.youtube.com/embed/gKFIWSA2GWc?origin=http://kaljurand.github.io"
@@ -67,12 +67,12 @@ Vajutades Kõnele käivitusikoonile (_launcher icon_) avaneb mikrofoninupuga pan
 Nupule vajutades teisendab Kõnele sisendkõne tekstiks ning edastab selle
 edasi seadme veebibrauserile.
 
-<img title="Ekraanipilt: käivitusikoon" alt="Ekraanipilt: käivitusikoon" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-50.png">
-<img title="Ekraanipilt: mikrofoninupuga paneel" alt="Ekraanipilt: mikrofoninupuga paneel" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-59.png">
-<img title="Ekraanipilt: lindistamine" alt="Ekraanipilt: lindistamine ja transkribeerimine" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-10.png">
-<img title="Ekraanipilt: transkribeerimine" alt="Ekraanipilt: transkribeerimine peale lindistamise lõppu" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
-<img title="Ekraanipilt: valik tuvastustulemusi" alt="Ekraanipilt: valik tuvastustulemusi" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
-<img title="Ekraanipilt: tuvastustulemus veebiotsinguna" alt="Ekraanipilt: tuvastustulemus veebiotsinguna" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
+<img title="Ekraanipilt: käivitusikoon" alt="Ekraanipilt: käivitusikoon." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-50.png">
+<img title="Ekraanipilt: mikrofoninupuga paneel" alt="Ekraanipilt: mikrofoninupuga paneel." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-01-59.png">
+<img title="Ekraanipilt: lindistamine" alt="Ekraanipilt: lindistamine ja transkribeerimine." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-10.png">
+<img title="Ekraanipilt: transkribeerimine" alt="Ekraanipilt: transkribeerimine peale lindistamise lõppu." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-27.png">
+<img title="Ekraanipilt: valik tuvastustulemusi" alt="Ekraanipilt: valik tuvastustulemusi." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
+<img title="Ekraanipilt: tuvastustulemus veebiotsinguna" alt="Ekraanipilt: tuvastustulemus veebiotsinguna." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
 Ümberkirjutusreeglid (alates v1.6 beeta) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
 
@@ -97,8 +97,8 @@ Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määr
 Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest ning
 seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
 
-<img title="Ekraanipilt: seadistamine 1" alt="Ekraanipilt: seadistamine 1" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-23.png">
-<img title="Ekraanipilt: seadistamine 2" alt="Ekraanipilt: seadistamine 2" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-53.png">
+<img title="Ekraanipilt: seadistamine 1" alt="Ekraanipilt: seadistamine 1." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-23.png">
+<img title="Ekraanipilt: seadistamine 2" alt="Ekraanipilt: seadistamine 2." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-53.png">
 
 Samuti on võimalik vaadata, läbi milliste rakenduste on kõnetuvastust kasutatud ning
 omistada erinevatele rakendustele erinevaid grammatikaid (vt allpool).
@@ -126,7 +126,7 @@ Kui valitud on mitu keelt/teenust, siis on paneelil lisaks veel keele/teenuse va
 
 Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_), alates Android v7.1. Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
 
-<img title="Ekraanipilt: otselingid" alt="Ekraanipilt: otselingid" src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
+<img title="Ekraanipilt: otselingid" alt="Ekraanipilt: otselingid." src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
 
 Otselink on lihtne näide, kuidas käivitada Kõnele otsingupaneel sisendparameetritega, mille väärtused erinevad nendest, mis seadetes kirjas. Kõnele toetab palju erinevaid sisendparameeterid (nn EXTRA), mis võimaldavad teistel rakendustel (nt [Tasker](https://tasker.dinglisch.net/)) Kõnelega otse suhelda. Vt täpsemalt [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
 
@@ -147,18 +147,18 @@ Kõnele sisaldab endas sellist klaviatuurirakendust, kuid erinevalt traditsiooni
 tähtede ja numbritega klahvist on Kõnele klaviatuuril ainult üks nupp, mis
 võimaldab kõnesisendit.
 
-<img title="Ekraanipilt: klaviatuur ja otsingurida" alt="Ekraanipilt: klaviatuur ja otsingurida" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-15-41.png">
-<img title="Ekraanipilt: klaviatuur ja märkmerakendus" alt="Ekraanipilt: klaviatuur ja märkmerakendus" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-23-30.png">
+<img title="Ekraanipilt: klaviatuur ja otsingurida" alt="Ekraanipilt: klaviatuur ja otsingurida." src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-15-41.png">
+<img title="Ekraanipilt: klaviatuur ja märkmerakendus" alt="Ekraanipilt: klaviatuur ja märkmerakendus." src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-23-30.png">
 
 Kõnele klaviatuuri kasutamiseks tuleb see ennem sisse lülitada Androidi süsteemses menüüs
 `Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`, valides
 seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
 
-<img title="Ekraanipilt: Androidi sisestusmeetodite seadistamine" alt="Ekraanipilt: Androidi sisestusmeetodite seadistamine" src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-32-57.png">
-<img title="Ekraanipilt: Androidi vaikeklaviatuuri muutmine" alt="Ekraanipilt: Androidi vaikeklaviatuuri muutmine" src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-10.png">
-<img title="Ekraanipilt: nimekiri sisselülitatud klaviatuuridest" alt="Ekraanipilt: nimekiri sisselülitatud klaviatuuridest" src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-51.png">
-<img title="Ekraanipilt: klaviatuuri sisselülitamine" alt="Ekraanipilt: klaviatuuri sisselülitamine" src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-00.png">
-<img title="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks" alt="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks" src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-24.png">
+<img title="Ekraanipilt: Androidi sisestusmeetodite seadistamine" alt="Ekraanipilt: Androidi sisestusmeetodite seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-32-57.png">
+<img title="Ekraanipilt: Androidi vaikeklaviatuuri muutmine" alt="Ekraanipilt: Androidi vaikeklaviatuuri muutmine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-10.png">
+<img title="Ekraanipilt: nimekiri sisselülitatud klaviatuuridest" alt="Ekraanipilt: nimekiri sisselülitatud klaviatuuridest." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-51.png">
+<img title="Ekraanipilt: klaviatuuri sisselülitamine" alt="Ekraanipilt: klaviatuuri sisselülitamine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-00.png">
+<img title="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks" alt="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-24.png">
 
 Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuur järgmisi operatsioone:
@@ -176,7 +176,7 @@ Kõneklaviatuuri on mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
 Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
 kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
 Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
-(ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi).
+ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi.
 Muudes olukordades võib ümber lülitada teisele klaviatuurile.
 Android v5+ seadmetes on lihtne teksti kirjutamise ajal klaviatuure
 vahetada, sest seadme põhinuppude (_Back_, _Home_, _Recent apps_) kõrvale ilmub teksti kirjutamise
@@ -187,7 +187,7 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Google Keyboard_ klaviatuuril
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
+<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
 
 
 ## Kõnele kutsumine teistest rakendustest (koos kasutajaliidesega)
@@ -203,9 +203,9 @@ Kui seadmes on mitu erinevat kõnetuvastusteenust (üheks on tavaliselt _Google'
 siis palub Android kõigepealt valida, millist neist kasutada. Valitud teenuse võib
 määrata ka vaikimisi valikuks (`ALATI`).
 
-<img title="Ekraanipilt: mikrofoninupuga märkmerakendus" alt="Ekraanipilt: mikrofoninupuga märkmerakendus" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-17.png">
-<img title="Ekraanipilt: tuvastusteenust pakkuvate rakenduste valik" alt="Ekraanipilt: tuvastusteenust pakkuvate rakenduste valik" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-32.png">
-<img title="Ekraanipilt: Kõnele otsingupaneel märkmerakendusele tuvastusteenuse pakkujana" alt="Ekraanipilt: Kõnele otsingupaneel märkmerakendusele tuvastusteenuse pakkujana" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-45.png">
+<img title="Ekraanipilt: mikrofoninupuga märkmerakendus" alt="Ekraanipilt: mikrofoninupuga märkmerakendus." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-17.png">
+<img title="Ekraanipilt: tuvastusteenust pakkuvate rakenduste valik" alt="Ekraanipilt: tuvastusteenust pakkuvate rakenduste valik." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-32.png">
+<img title="Ekraanipilt: Kõnele otsingupaneel märkmerakendusele tuvastusteenuse pakkujana" alt="Ekraanipilt: Kõnele otsingupaneel märkmerakendusele tuvastusteenuse pakkujana." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-27-14-39-45.png">
 
 Juhul kui valikuvõimalust ei tekkinud, st valikudialoogiakent ei kuvatud
 ning kohe käivitus nt _Google'i rakendus_, siis järelikult oli see
@@ -227,7 +227,7 @@ kus üks neist on alati seatud vaikimisi teenuseks.
 Android v6-7: `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`; Kõnele seadetes on ka otsetee `Kõik kõnetuvastusteenused`.)
 
 
-<img title="Ekraanipilt: nimekiri paigaldatud tuvastusteenustest" alt="Ekraanipilt: nimekiri paigaldatud tuvastusteenustest" src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
+<img title="Ekraanipilt: nimekiri paigaldatud tuvastusteenustest" alt="Ekraanipilt: nimekiri paigaldatud tuvastusteenustest." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
 
 Ühe Kõnele teenustest võib seada vaikimisi teenuseks. See ei garanteeri küll kahjuks, et kõik rakendused
 hakkavad nüüd kõnetuvastuseks Kõnelet kasutama, sest paljud neist ignoreerivad kasutajamääratud
@@ -269,7 +269,7 @@ Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist, nn T
 - __Comment__ Rida kirjeldav kommentaar.
 
 Igale reale vastab üks reegel, ning ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
-Veergude järjekord pole oluline. Kohustuslik veerg on ainult __Utterance__. Kui __Replacement__ puudub, siis on asendustekst alati tühisõne. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, rakenduse, ja tuvastusteenuse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/). (Põhjalik regulaaravaldiste õpetus on <http://www.regular-expressions.info>.)
+Veergude järjekord pole oluline. Kohustuslik veerg on ainult __Utterance__. Kui __Replacement__ puudub, siis on asendustekst alati tühisõne. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, rakenduse, ja tuvastusteenuse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/). Põhjalik regulaaravaldiste õpetus on nt <http://www.regular-expressions.info>.
 
 Veergude tüübid on määratud esimesse ritta (nn päisesse) kirjutatud ingliskeelse märksõnaga ("Utterance", "Replacement", jne). Kui päis puudub (st esimene rida ei sisalda kohustusliku veeru nime "Utterance"), siis arvestatakse ainult tabeli esimest kahte veergu ning interpreteeritakse neid kui __Utterance__ ja __Replacement__ veerge. Kui tabelil on ainult üks veerg, siis on __Replacement__ alati tühisõne. Seega, kõige lihtsam tabel koosneb ainult ühest sümbolist, nt ``a`` (kustuta kõik "a" tähed).
 
@@ -358,11 +358,11 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 - Kõnele menüüvalik "Ümberkirjutusreeglid" avab nimekirja olemasolevatest reeglistikest. Seal on Lisa-nupp, mis avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida.
 - Tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili TSV-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
-<img title="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses" alt="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses" src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
-<img title="Ekraanipilt: ümberkirjutusreeglite jagamine 1" alt="Ekraanipilt: ümberkirjutusreeglite jagamine 1" src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
-<img title="Ekraanipilt: ümberkirjutusreeglite jagamine 2" alt="Ekraanipilt: ümberkirjutusreeglite jagamine 2" src="{{ site.baseurl }}/images/et/Screenshot_20160925-203027.png">
-<img title="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati" alt="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati" src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
-<img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" src="{{ site.baseurl }}/images/et/Screenshot_20160925-203153.png">
+<img title="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses" alt="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses." src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
+<img title="Ekraanipilt: ümberkirjutusreeglite jagamine 1" alt="Ekraanipilt: ümberkirjutusreeglite jagamine 1." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
+<img title="Ekraanipilt: ümberkirjutusreeglite jagamine 2" alt="Ekraanipilt: ümberkirjutusreeglite jagamine 2." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203027.png">
+<img title="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati" alt="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
+<img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203153.png">
 
 ### Näited
 
@@ -446,18 +446,18 @@ Järgmised pildid näitavad valuuta konverteerimist, kus sisend
 ("kaksteist tuhat kolmsada nelikümmend viis norra krooni eurodes") jooksvalt _Google Now_-le
 arusaadavale kujule ("convert 12345 NOK to EUR") teisendatakse.
 
-<img title="Ekraanipilt: dikteerimine otsingureal" alt="Ekraanipilt: dikteerimine otsingureal" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-02.png">
-<img title="Ekraanipilt: transkriptsioon on teisendatud formaalseks avaldiseks" alt="Ekraanipilt: transkriptsioon on teisendatud formaalseks avaldiseks" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-32.png">
-<img title="Ekraanipilt: avaldisele vastav Google'i otsingutulemus" alt="Ekraanipilt: avaldisele vastav Google'i otsingutulemus" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-59.png">
+<img title="Ekraanipilt: dikteerimine otsingureal" alt="Ekraanipilt: dikteerimine otsingureal." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-02.png">
+<img title="Ekraanipilt: transkriptsioon on teisendatud formaalseks avaldiseks" alt="Ekraanipilt: transkriptsioon on teisendatud formaalseks avaldiseks." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-32.png">
+<img title="Ekraanipilt: avaldisele vastav Google'i otsingutulemus" alt="Ekraanipilt: avaldisele vastav Google'i otsingutulemus." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-47-59.png">
 
 Selleks, et see nii töötaks peab kõneklaviatuuril olema sisse lülitatud "eesti keel/grammatikatoega".
 Samuti, peab _Google Now_ rakendusele ("com.google.android.googlequicksearchbox")
 omistama _Action_-grammatika. (Seda omistust kasutab ainult grammatikatoega teenus,
 muude teenuste puhul seda ignoreeritakse.)
 
-<img title="Ekraanipilt: Kõnele seaded" alt="Ekraanipilt: Kõnele seaded" src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-49-21.png">
-<img title="Ekraanipilt: Kõnele teenuste ja keelte valik" alt="Ekraanipilt: Kõnele teenuste ja keelte valik" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-22-04-18.png">
-<img title="Ekraanipilt: nimekiri rakendustest ja nendele vastavatest grammatikatest" alt="Ekraanipilt: nimekiri rakendustest ja nendele vastavatest grammatikatest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-49-06.png">
+<img title="Ekraanipilt: Kõnele seaded" alt="Ekraanipilt: Kõnele seaded." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-49-21.png">
+<img title="Ekraanipilt: Kõnele teenuste ja keelte valik" alt="Ekraanipilt: Kõnele teenuste ja keelte valik." src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-22-04-18.png">
+<img title="Ekraanipilt: nimekiri rakendustest ja nendele vastavatest grammatikatest" alt="Ekraanipilt: nimekiri rakendustest ja nendele vastavatest grammatikatest." src="{{ site.baseurl }}/images/et/Screenshot_2015-06-13-21-49-06.png">
 
 Olemasolevate grammatikate kohta on võimalik lugeda aadressil <http://kaljurand.github.io/Grammars/>
 ning nende registreerimine ja kasutamine grammatikatoega serveris on kirjeldatud lehel
