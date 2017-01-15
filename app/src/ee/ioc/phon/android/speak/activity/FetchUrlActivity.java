@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ee.ioc.phon.android.speak.utils.IntentUtils;
+import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 
 /**
  * Queries the given URL,

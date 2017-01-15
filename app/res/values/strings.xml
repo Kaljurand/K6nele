@@ -197,7 +197,6 @@ More grammars are available at
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: Malformed URL</string>
     <string name="errorFailedLaunchApp">ERROR: App cannot be launched or is not installed (anymore): %1$s</string>
-    <string name="errorFailedLaunchIntent">ERROR: Intent is not serviced by any app</string>
     <string name="errorFailedPlayAudio">ERROR: Failed to play the recorded audio: %1$s, %2$s</string>
 
     // SpeechRecognizer error messages (9) shown in the IME

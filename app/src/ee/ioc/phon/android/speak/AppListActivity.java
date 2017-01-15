@@ -37,8 +37,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import ee.ioc.phon.android.speak.provider.App;
-import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 
 /**
  * <p>This activity shows the list of apps where the user

@@ -239,7 +239,6 @@
     <string name="errorFailedPlayAudio">VIGA: lindistatud heli mahamängimine luhtus: %1$s, %2$s</string>
     <string name="errorFailedLaunchApp">VIGA: see rakendus pole käivitatav või pole (enam)
 		installeeritud: %1$s</string>
-    <string name="errorFailedLaunchIntent">VIGA: Intent-päringule vastavat rakendust ei leitud</string>
     <string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>
     <string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
 

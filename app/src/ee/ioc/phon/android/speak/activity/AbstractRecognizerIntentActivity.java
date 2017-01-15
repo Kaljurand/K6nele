@@ -56,7 +56,6 @@ import java.util.Set;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.provider.FileContentProvider;
-import ee.ioc.phon.android.speak.utils.IntentUtils;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
@@ -64,6 +63,7 @@ import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
+import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {

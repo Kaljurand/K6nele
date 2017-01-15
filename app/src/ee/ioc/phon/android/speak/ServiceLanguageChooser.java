@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.model.CallerInfo;
-import ee.ioc.phon.android.speak.utils.IntentUtils;
+import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
@@ -112,7 +113,7 @@ public class ServiceLanguageChooser {
         }
 
         // TODO: support other actions
-        mIntent = IntentUtils.getRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH, mCallerInfo, language);
+        mIntent = Utils.getRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH, mCallerInfo, language);
         mLanguage = language;
     }
 
