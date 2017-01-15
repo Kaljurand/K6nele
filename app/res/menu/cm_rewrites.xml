@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/cmRewritesActivate"
-        android:title="@string/cmToggle" />
+        android:title="@string/cmActivate" />
 
     <item
         android:id="@+id/cmRewritesTest"

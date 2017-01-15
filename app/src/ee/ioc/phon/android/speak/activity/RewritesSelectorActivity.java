@@ -83,6 +83,14 @@ public class RewritesSelectorActivity extends Activity {
             super.onCreateContextMenu(menu, v, menuInfo);
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.cm_rewrites, menu);
+
+            final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            final Rewrites rewrites = (Rewrites) getListView().getItemAtPosition(info.position);
+            if (rewrites.isSelected()) {
+                menu.findItem(R.id.cmRewritesActivate).setTitle(R.string.cmDeactivate);
+            } else {
+                menu.findItem(R.id.cmRewritesActivate).setTitle(R.string.cmActivate);
+            }
         }
 
         @Override

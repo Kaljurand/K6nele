@@ -3,13 +3,13 @@
     <item
         android:id="@+id/menuRewritesAdd"
         android:icon="@drawable/ic_menu_add"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/menuRewritesAdd" />
 
     <item
         android:id="@+id/menuRewritesHelp"
         android:icon="@drawable/ic_menu_help"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/menuRewritesHelp" />
 
 </menu>

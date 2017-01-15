@@ -323,7 +323,7 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                mCommandEditor.moveAbs(-1).run();
+                mCommandEditor.moveRel(0).run();
             }
 
             @Override
