@@ -359,10 +359,11 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 - Tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili TSV-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
 <img title="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses" alt="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses." src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
-<img title="Ekraanipilt: ümberkirjutusreeglite jagamine 1" alt="Ekraanipilt: ümberkirjutusreeglite jagamine 1." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
-<img title="Ekraanipilt: ümberkirjutusreeglite jagamine 2" alt="Ekraanipilt: ümberkirjutusreeglite jagamine 2." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203027.png">
+<img title="Ekraanipilt: ümberkirjutusreeglite jagamine menüüvalikuga 'Jagamine ja eksportimine'" alt="Ekraanipilt: ümberkirjutusreeglite jagamine menüüvalikuga 'Jagamine ja eksportimine'." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
+<img title="Ekraanipilt: ümberkirjutusreeglite jagamine menüüvalikuga 'Saada koopia'" alt="Ekraanipilt: ümberkirjutusreeglite jagamine menüüvalikuga 'Saada koopia'." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203027.png">
 <img title="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati" alt="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
-<img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203153.png">
+<img title="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse" alt="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse." src="{{ site.baseurl }}/images/et/Screenshot_20170115-154706.png">
+<img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri." src="{{ site.baseurl }}/images/et/Screenshot_20170115-160910.png">
 
 ### Näited
 
