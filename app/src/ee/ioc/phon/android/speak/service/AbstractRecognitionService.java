@@ -164,11 +164,15 @@ public abstract class AbstractRecognitionService extends RecognitionService {
         mListener = listener;
         Log.i("onStartListening");
 
-        setAudioCuesEnabled(isAudioCues());
-
         mExtras = recognizerIntent.getExtras();
         if (mExtras == null) {
             mExtras = new Bundle();
+        }
+
+        if (mExtras.containsKey(Extras.EXTRA_AUDIO_CUES)) {
+            setAudioCuesEnabled(mExtras.getBoolean(Extras.EXTRA_AUDIO_CUES));
+        } else {
+            setAudioCuesEnabled(isAudioCues());
         }
 
         try {
