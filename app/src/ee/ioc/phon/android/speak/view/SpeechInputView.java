@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -258,6 +259,7 @@ public class SpeechInputView extends LinearLayout {
         if (message == null || message.length() == 0) {
             setText(mTvMessage, "");
         } else {
+            mTvMessage.setEllipsize(TextUtils.TruncateAt.END);
             mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG & ~Paint.UNDERLINE_TEXT_FLAG);
             setText(mTvMessage, message);
         }
@@ -267,6 +269,7 @@ public class SpeechInputView extends LinearLayout {
         if (message == null || message.length() == 0) {
             setText(mTvMessage, "");
         } else {
+            mTvMessage.setEllipsize(TextUtils.TruncateAt.MIDDLE);
             if (isSuccess) {
                 mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG) | Paint.UNDERLINE_TEXT_FLAG);
             } else {

@@ -61,7 +61,7 @@
     <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
     <string name="titleSelectRewrites">Ümberkirjutusreeglid</string>
-    <string name="summarySelectRewrites">Reeglistike lisamine, vaatamine, sisse/välja lülitamine, testimine, …</string>
+    <string name="summarySelectRewrites">Reeglistike lisamine, vaatamine, sisse/välja lülitamine, testimine, … Korraga saab olla sisselülitatud maksimaalselt üks reeglistik.</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
     <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimaid tulemusi,
@@ -161,7 +161,7 @@
 		Lisa-nupu abil.</string>
     <string name="emptylistServers">Servereid pole. Lisa uus serveri URL Lisa-nupu
 		abil.</string>
-    <string name="emptylistRewrites">Ümberkirjutusreeglistikke pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil.</string>
+    <string name="emptylistRewrites">Ümberkirjutusreeglistikke pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil või eksportides see tabelarvutusrakendusest TSV-formaadis.</string>
     <string name="emptylistRewriteRules">Ümberkirjutusreegleid ei leitud. Veenduge, et sisendfaili veerud on eraldatud tabulaatori abil ja esimene rida on päiseks.</string>
     <string name="menuAppsSort">Järjesta …</string>
     <string name="menuAppsSortByName">rakenduse paki nime järgi</string>
@@ -298,7 +298,7 @@
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleWsServer">WebSocket-aadress</string>
     <string name="titleEnableIme">Kõneklaviatuuri sisselülitamine</string>
-    <string name="summaryEnableIme">Kõnele klaviatuur pole praegu sisse lülitatud. Vajutage siia, et see Androidi klaviatuuri ja sisestusmeetodite seadetes sisse lülitada.</string>
+    <string name="summaryEnableIme">Kõnele klaviatuur võimaldab dikteerida kõikidesse tekstikastidesse, kõikides rakendustes. Vajutage siia, et see Androidi klaviatuuri ja sisestusmeetodite seadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
     <string name="titleReturnErrors">Tagasta veateated</string>

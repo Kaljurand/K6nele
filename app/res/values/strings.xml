@@ -87,7 +87,7 @@
     <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the speech keyboard larger.</string>
     <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable speech keyboard</string>
-    <string name="summaryEnableIme">The Kõnele speech keyboard is currently disabled. Tap here to enable it in the Android keyboard and input method settings.</string>
+    <string name="summaryEnableIme">The Kõnele speech keyboard allows you to dictate into any text field in any app. Tap here to enable it in the Android keyboard and input method settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
@@ -166,7 +166,7 @@ More grammars are available at
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
-    <string name="emptylistRewrites">No rewrite rule tables. Add a new table via the Add-menu, and long-press it to activate it.</string>
+    <string name="emptylistRewrites">No rewrite rule tables. Add a table via the Add-menu or by exporting it from a spreadsheet app as a TSV-file.</string>
     <string name="emptylistRewriteRules">No rewrite rules were found. Make sure the input file is in the correct format, i.e. the columns are tab-separated and the first line is a header.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
