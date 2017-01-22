@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
+import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 
 /**
  * Queries the given URL,
@@ -149,7 +152,11 @@ public class FetchUrlActivity extends Activity {
         protected void onPostExecute(String result) {
             // TODO: handle errors differently
             if (mLaunchResponseAsIntent) {
-                IntentUtils.startActivityFromJson(FetchUrlActivity.this, result);
+                try {
+                    IntentUtils.startActivityIfAvailable(FetchUrlActivity.this, JsonUtils.createIntent(result));
+                } catch (JSONException e) {
+                    toast(e.getLocalizedMessage());
+                }
             } else {
                 toast(result);
             }

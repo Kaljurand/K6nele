@@ -104,7 +104,11 @@ public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
     }
 
     private void startActivity(String intentAsJson) {
-        IntentUtils.startActivityFromJson(this, intentAsJson);
+        try {
+            IntentUtils.startActivityIfAvailable(this, JsonUtils.createIntent(intentAsJson));
+        } catch (JSONException e) {
+            toast(e.getLocalizedMessage());
+        }
     }
 
     private static Intent createRecognizerIntent() {

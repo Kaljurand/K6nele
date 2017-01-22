@@ -43,6 +43,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -64,6 +66,7 @@ import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
+import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
@@ -472,7 +475,10 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      * @param result Single string that can be interpreted as an activity to be started.
      */
     private void handleResultByLaunchIntent(String result) {
-        IntentUtils.startActivityFromJson(this, rewriteResults(result));
+        String newResult = rewriteResult(result);
+        if (newResult != null) {
+            IntentUtils.startActivitySearch(this, newResult);
+        }
         // TODO: we should not finish if the activity was launched for a result, otherwise
         // the result would not be processed.
 
@@ -578,6 +584,11 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
     }
 
+    /**
+     * Rewrites a list of transcription hypotheses.
+     * Used if Kõnele was called from another app (possibly with a pending intent.
+     * Note: ignores rewrite commands such as "activity".
+     */
     private List<String> rewriteResults(List<String> results) {
         List<String> newResults = rewriteResultsWithExtras(results);
         if (mUtteranceRewriter == null) {
@@ -586,12 +597,12 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         return mUtteranceRewriter.rewrite(newResults);
     }
 
-    private String rewriteResults(String result) {
+    private String rewriteResult(String result) {
         String newResult = rewriteResultsWithExtras(result);
-        if (mUtteranceRewriter == null) {
+        if (newResult == null || mUtteranceRewriter == null) {
             return newResult;
         }
-        return mUtteranceRewriter.rewrite(newResult);
+        return launchIfIntent(mUtteranceRewriter, newResult);
     }
 
     /**
@@ -616,20 +627,53 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         return results;
     }
 
+    /**
+     * TODO: support COMMAND, ARG1, ARG2; make REPLACEMENT optional
+     */
     private String rewriteResultsWithExtras(String result) {
         Bundle extras = getExtras();
-        String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
         String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
         String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
         if (utterance != null && replacement != null) {
             toast(utterance + "->" + replacement);
-            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2);
-            result = utteranceRewriter.rewrite(result);
+            result = launchIfIntent(new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2), result);
         }
-        if (rewritesAsStr != null) {
-            UtteranceRewriter utteranceRewriter = new UtteranceRewriter(rewritesAsStr);
-            result = utteranceRewriter.rewrite(result);
+        if (result != null) {
+            String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
+            if (rewritesAsStr != null) {
+                result = launchIfIntent(new UtteranceRewriter(rewritesAsStr), result);
+            }
         }
         return result;
+    }
+
+    /**
+     * Tries to launch the intent if rewriting results in a command.
+     * Otherwise returns the rewritten string.
+     */
+    private String launchIfIntent(UtteranceRewriter utteranceRewriter, String text) {
+        UtteranceRewriter.Rewrite rewrite = utteranceRewriter.getRewrite(text);
+        if (rewrite.isCommand() && rewrite.mArgs != null && rewrite.mArgs.length > 0) {
+            try {
+                Intent intent = JsonUtils.createIntent(rewrite.mArgs[0]);
+                switch (rewrite.mId) {
+                    case "activity":
+                        IntentUtils.startActivityIfAvailable(this, intent);
+                        break;
+                    case "service":
+                        // TODO
+                        break;
+                    case "broadcast":
+                        // TODO
+                        break;
+                    default:
+                        break;
+                }
+            } catch (JSONException e) {
+                Log.i("launchIfIntent: JSON: " + e.getLocalizedMessage());
+            }
+            return null;
+        }
+        return rewrite.mStr;
     }
 }
