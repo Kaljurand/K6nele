@@ -1,1 +1,2 @@
-(.*)	{"action": "android.intent.action.VIEW", "data": "geo:0,0?q=$1, Estonia"}
+Utterance	Command	Arg1
+(.*)	activity	{"action": "android.intent.action.VIEW", "data": "geo:0,0?q=$1, Estonia"}
