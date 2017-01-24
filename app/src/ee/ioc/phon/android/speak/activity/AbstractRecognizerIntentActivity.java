@@ -63,6 +63,7 @@ import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.TtsProvider;
+import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
@@ -627,16 +628,28 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         return results;
     }
 
-    /**
-     * TODO: support COMMAND, ARG1, ARG2; make REPLACEMENT optional
-     */
     private String rewriteResultsWithExtras(String result) {
         Bundle extras = getExtras();
-        String utterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
-        String replacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
-        if (utterance != null && replacement != null) {
-            toast(utterance + "->" + replacement);
-            result = launchIfIntent(new UtteranceRewriter(utterance + "\t" + replacement, HEADER_REWRITES_COL2), result);
+        String resultUtterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
+        if (resultUtterance != null) {
+            String resultReplacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
+            String resultCommand = extras.getString(Extras.EXTRA_RESULT_COMMAND, null);
+            String resultArg1 = extras.getString(Extras.EXTRA_RESULT_ARG1, null);
+            String resultArg2 = extras.getString(Extras.EXTRA_RESULT_ARG2, null);
+
+            String[] resultArgs;
+
+            if (resultArg1 == null) {
+                resultArgs = null;
+            } else if (resultArg2 == null) {
+                resultArgs = new String[]{resultArg1};
+            } else {
+                resultArgs = new String[]{resultArg1, resultArg2};
+            }
+
+            List<Command> commands = new ArrayList<>();
+            commands.add(new Command(resultUtterance, resultReplacement, resultCommand, resultArgs));
+            result = launchIfIntent(new UtteranceRewriter(commands), result);
         }
         if (result != null) {
             String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
