@@ -43,8 +43,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,11 +61,9 @@ import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.TtsProvider;
-import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
-import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public abstract class AbstractRecognizerIntentActivity extends Activity {
@@ -599,11 +595,11 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     private String rewriteResult(String result) {
-        String newResult = rewriteResultsWithExtras(result);
+        String newResult = IntentUtils.rewriteResultWithExtras(this, mExtras, result);
         if (newResult == null || mUtteranceRewriter == null) {
             return newResult;
         }
-        return launchIfIntent(mUtteranceRewriter, newResult);
+        return IntentUtils.launchIfIntent(this, mUtteranceRewriter, newResult);
     }
 
     /**
@@ -626,67 +622,5 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             results = utteranceRewriter.rewrite(results);
         }
         return results;
-    }
-
-    private String rewriteResultsWithExtras(String result) {
-        Bundle extras = getExtras();
-        String resultUtterance = extras.getString(Extras.EXTRA_RESULT_UTTERANCE, null);
-        if (resultUtterance != null) {
-            String resultReplacement = extras.getString(Extras.EXTRA_RESULT_REPLACEMENT, null);
-            String resultCommand = extras.getString(Extras.EXTRA_RESULT_COMMAND, null);
-            String resultArg1 = extras.getString(Extras.EXTRA_RESULT_ARG1, null);
-            String resultArg2 = extras.getString(Extras.EXTRA_RESULT_ARG2, null);
-
-            String[] resultArgs;
-
-            if (resultArg1 == null) {
-                resultArgs = null;
-            } else if (resultArg2 == null) {
-                resultArgs = new String[]{resultArg1};
-            } else {
-                resultArgs = new String[]{resultArg1, resultArg2};
-            }
-
-            List<Command> commands = new ArrayList<>();
-            commands.add(new Command(resultUtterance, resultReplacement, resultCommand, resultArgs));
-            result = launchIfIntent(new UtteranceRewriter(commands), result);
-        }
-        if (result != null) {
-            String rewritesAsStr = extras.getString(Extras.EXTRA_RESULT_REWRITES_AS_STR, null);
-            if (rewritesAsStr != null) {
-                result = launchIfIntent(new UtteranceRewriter(rewritesAsStr), result);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Tries to launch the intent if rewriting results in a command.
-     * Otherwise returns the rewritten string.
-     */
-    private String launchIfIntent(UtteranceRewriter utteranceRewriter, String text) {
-        UtteranceRewriter.Rewrite rewrite = utteranceRewriter.getRewrite(text);
-        if (rewrite.isCommand() && rewrite.mArgs != null && rewrite.mArgs.length > 0) {
-            try {
-                Intent intent = JsonUtils.createIntent(rewrite.mArgs[0]);
-                switch (rewrite.mId) {
-                    case "activity":
-                        IntentUtils.startActivityIfAvailable(this, intent);
-                        break;
-                    case "service":
-                        // TODO
-                        break;
-                    case "broadcast":
-                        // TODO
-                        break;
-                    default:
-                        break;
-                }
-            } catch (JSONException e) {
-                Log.i("launchIfIntent: JSON: " + e.getLocalizedMessage());
-            }
-            return null;
-        }
-        return rewrite.mStr;
     }
 }

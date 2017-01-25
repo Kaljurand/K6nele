@@ -24,23 +24,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
-import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 
 /**
- * Queries the given URL,
- * optionally interprets its response an a JSON that encodes an intent, and launches this intent.
+ * Queries the given URL and rewrites the response. Toasts the result unless it was executed as a command.
  * <p>
  * TODO: handle errors
  * TODO: handle latency, e.g. show progress in notification (but notifications are not available on Android Things)
@@ -52,7 +48,6 @@ public class FetchUrlActivity extends Activity {
 
     public static final String EXTRA_HTTP_METHOD = "ee.ioc.phon.android.extra.HTTP_METHOD";
     public static final String EXTRA_HTTP_BODY = "ee.ioc.phon.android.extra.HTTP_BODY";
-    public static final String EXTRA_LAUNCH_RESPONSE_AS_INTENT = "ee.ioc.phon.android.extra.LAUNCH_RESPONSE_AS_INTENT";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +81,6 @@ public class FetchUrlActivity extends Activity {
         }
 
         InputStream is = null;
-        // Only display the first x characters of the retrieved
-        // web page content.
-        // TODO: fix this
-        int len = 1024;
 
         try {
             URL url = new URL(myurl);
@@ -110,33 +101,46 @@ public class FetchUrlActivity extends Activity {
 
             //int response = conn.getResponseCode();
             is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            return readIt(is, len);
+            return inputStreamToString(is, 1024);
         } finally {
-            if (is != null) {
-                is.close();
-            }
+            closeQuietly(is);
         }
     }
 
-    private static String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        Reader reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+    private static void closeQuietly(InputStream is) {
+        try {
+            if (is != null) {
+                is.close();
+            }
+        } catch (Exception e) {
+            Log.i(e.getMessage());
+        }
+    }
+
+    private static String inputStreamToString(final InputStream is, final int bufferSize) throws IOException {
+        final char[] buffer = new char[bufferSize];
+        final StringBuilder out = new StringBuilder();
+        Reader in = new InputStreamReader(is, "UTF-8");
+        while (true) {
+            int rsz = in.read(buffer, 0, buffer.length);
+            if (rsz < 0) {
+                break;
+            }
+            out.append(buffer, 0, rsz);
+        }
+        return out.toString();
     }
 
     private class HttpTask extends AsyncTask<String, Void, String> {
 
+        private final Bundle mBundle;
         private final String mHttpMethod;
         private final String mHttpBody;
-        private final boolean mLaunchResponseAsIntent;
 
         private HttpTask(@NonNull Bundle bundle) {
+            mBundle = bundle;
             mHttpMethod = bundle.getString(EXTRA_HTTP_METHOD, "GET");
             mHttpBody = bundle.getString(EXTRA_HTTP_BODY);
-            mLaunchResponseAsIntent = bundle.getBoolean(EXTRA_LAUNCH_RESPONSE_AS_INTENT, false);
         }
 
         @Override
@@ -151,14 +155,9 @@ public class FetchUrlActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             // TODO: handle errors differently
-            if (mLaunchResponseAsIntent) {
-                try {
-                    IntentUtils.startActivityIfAvailable(FetchUrlActivity.this, JsonUtils.createIntent(result));
-                } catch (JSONException e) {
-                    toast(e.getLocalizedMessage());
-                }
-            } else {
-                toast(result);
+            String newResult = IntentUtils.rewriteResultWithExtras(FetchUrlActivity.this, mBundle, result);
+            if (newResult != null) {
+                toast(newResult);
             }
             finish();
         }

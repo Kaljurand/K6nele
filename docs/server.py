@@ -37,7 +37,7 @@ RESPONSE_DEFAULT = {
     "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity",
     "extras": {
         "ee.ioc.phon.android.extra.VOICE_PROMPT": "Say for example: play Gangnam Style.",
-        "android.speech..extra.PROMPT": "Say: play <name of song or artist>",
+        "android.speech.extra.PROMPT": "Say: play <name of song or artist>",
         "android.speech.extra.MAX_RESULTS": 1,
         "android.speech.extra.LANGUAGE": "en",
         "ee.ioc.phon.android.extra.AUTO_START": True,
@@ -46,7 +46,7 @@ RESPONSE_DEFAULT = {
         "ee.ioc.phon.android.extra.RESULT_ARG1": json.dumps({
             "component": "ee.ioc.phon.android.speak/.activity.FetchUrlActivity",
             "data": "http://192.168.1.5:8000/?q=$1",
-            "extras": {"ee.ioc.phon.android.extra.LAUNCH_RESPONSE_AS_INTENT": True}
+            "extras": {"ee.ioc.phon.android.extra.RESULT_LAUNCH_AS_ACTIVITY": True}
         })
     }
 }
@@ -64,7 +64,7 @@ class S(BaseHTTPRequestHandler):
         d = urlparse.parse_qs(o.query)
         q = d.get('q', None)
         if q:
-            m = re.search(u'(?:mängi|laula|play)\s*(.+)', q[0], re.IGNORECASE | re.UNICODE)
+            m = re.search(u'(?:mängi|laula|play)\s*(.+)', q[0].decode('utf8'), re.IGNORECASE | re.UNICODE)
             if m:
                 RESPONSE_MUSIC['extras']['query'] = m.group(1)
                 self.wfile.write(json.dumps(RESPONSE_MUSIC))
