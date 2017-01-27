@@ -252,13 +252,13 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 (_Alates v1.6 beeta_)
 
-Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, või juba sisestatud teksti muutmiseks tekstitoimetuskäskude abil. Sellised reeglid võimaldavad
+Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks. Sellised reeglid võimaldavad
 
 - sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), ja parandada muid tuvastaja võimalikke puudujääke (autopunktsiooni puudumine, emotikonide toe puudumine, jms);
 - sisestada tekste, mis ei kipu meelde jääma, või mida ei taha tuvastajale avaldada (nt telefoninumbrid, aadressid, kontonumbrid);
 - sisestada korduma kippuvaid pikemaid tekste;
 - käivitada teisi Androidi rakendusi;
-- rakendada tekstitoimetuskäske.
+- rakendada tekstitoimetuskäske juba sisestatud teksti muutmiseks.
 
 Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist, nn TSV-failist, kus veerueraldajaks on tabulaator ja reaeraldajaks reavahetussümbol. Kõnele toetab järgmisi veerge (muid ignoreerib):
 
@@ -291,6 +291,18 @@ Näide. Keelest sõltumatu reegel, mis tuvastab lausungis kahe järjestikuse sõ
 - __Utterance__ = `([^ ]+ [^ ]+) \1`
 - __Replacement__ = `$1`
 
+### Käsud
+
+(_Eksperimentaalne_)
+
+Käskude sidumiseks lausungiga tuleb kasutada kuni kolme lisaveergu:
+
+- __Command__ Käsu nimi (ingliskeelne märksõna).
+- __Arg1__ Käsu esimene argument (valikuline).
+- __Arg2__ Käsu teine argument (valikuline).
+
+Argumendid võivad sisaldada viiteid __Utterance__ gruppidele (`$1`, `$2`, ...).
+
 Näide. Eestikeelne kõnekäsk (nt `ärata mind kell 8 0 5 mine tööle`) äratuskella helisema panemiseks.
 Reegel eraldab lausungist vajalikud argumendid (tundide arv `8`, minutite arv `5`, täpsustav kommentaar `mine tööle`) ning
 loob nende põhjal [JSON](http://www.json.org/)-struktuuri. Käsk `activity` püüab interpreteerida seda struktuuri kui Androidi
@@ -314,19 +326,13 @@ siis püüab leida _Intent_'ile vastava rakenduse ning selle käivitada.
          }
 {% endhighlight %}
 
-### Tekstitoimetuskäsud
+(Loetavuse huvides on __Arg1__ näites kasutatud reavahetusi. Reeglitabelis eraldab reavahetus reegleid, seega ei tohi ükski tabelilahter reavahetussümbolit sisaldada.)
 
-(_Eksperimentaalne_)
+#### Tekstitoimetuskäsud
 
-Tekstitoimetuskäsud on eeldefineeritud käsud, mida saab kasutada koos Kõnele klaviatuuriga.
-Need võimaldavad toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil), nt kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `imeActionNext`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Igal käsul on 0 kuni 2 argumenti. Argumendid võivad sisaldada tavalisi sümboleid, viiteid __Utterance__ gruppidele (`$1`, `$2`, ...) ning viidet parasjagu aktiivse valiku sisule (`{}`). Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
-Vt ka [kõikide käskude nimekiri](https://github.com/Kaljurand/speechutils/blob/master/app/src/main/java/ee/ioc/phon/android/speechutils/editor/CommandEditor.java).
-
-Tekstitoimetuskäskude sidumiseks kõnekäskudega tuleb kasutada kolme lisaveergu:
-
-- __Command__ Tekstitoimetuskäsu nimi (ingliskeelne märksõna).
-- __Arg1__ Käsu esimene argument (valikuline).
-- __Arg2__ Käsu teine argument (valikuline).
+Tekstitoimetuskäsud on käsud, mida saab kasutada ainult koos Kõnele klaviatuuriga.
+Need võimaldavad toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil), nt kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `keyUp`, `imeActionNext`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Argumendid võivad viidata parasjagu aktiivse valiku sisule sümboliga `{}`. Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
+Vt ka [kõikide tekstitoimetuskäskude nimekiri](https://github.com/Kaljurand/speechutils/blob/master/app/src/main/java/ee/ioc/phon/android/speechutils/editor/CommandEditor.java).
 
 Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud. Muid sõnu väljundisse ei lisata, kuna __Replacement__ on tühisõne.
 
@@ -391,7 +397,7 @@ Järgmine reegel (mille peaks salvestama reeglistikku nimega "Robot") saadab fra
       "component": "ee.ioc.phon.android.speak/.activity.FetchUrlActivity",
         "data": "http://192.168.0.11:8000/?lang=et-EE&q=$1",
         "extras": {
-          "ee.ioc.phon.android.extra.LAUNCH_RESPONSE_AS_INTENT": True
+          "ee.ioc.phon.android.extra.RESULT_LAUNCH_AS_ACTIVITY": true
         }
     }
 {% endhighlight %}
@@ -407,7 +413,7 @@ Juhul kui robot tahab küsida jätkuküsimusi, siis peaks ta päringule vastama 
     "ee.ioc.phon.android.extra.VOICE_PROMPT": "Mis laulu?",
     "android.speech.extra.MAX_RESULTS": 1,
     "android.speech.extra.LANGUAGE": "et-EE",
-    "ee.ioc.phon.android.extra.AUTO_START": True,
+    "ee.ioc.phon.android.extra.AUTO_START": true,
     "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",
     "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "hei Robot $1",
     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Robot"]
