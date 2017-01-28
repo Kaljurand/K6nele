@@ -285,50 +285,51 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onSearch() {
                 closeSession();
-                mCommandEditor.imeActionSearch().run();
+                mCommandEditor.runOp(mCommandEditor.imeActionSearch());
                 requestHideSelf(0);
             }
 
             @Override
             public void onDeleteLastWord() {
-                mCommandEditor.deleteLeftWord().run();
+                mCommandEditor.runOp(mCommandEditor.deleteLeftWord());
             }
 
             @Override
             public void onAddNewline() {
-                mCommandEditor.replaceSel("\n").run();
+                mCommandEditor.runOp(mCommandEditor.replaceSel("\n"));
             }
 
             @Override
             public void goUp() {
-                mCommandEditor.keyUp().run();
+                mCommandEditor.runOp(mCommandEditor.keyUp());
             }
 
             @Override
             public void goDown() {
-                mCommandEditor.keyDown().run();
+                mCommandEditor.runOp(mCommandEditor.keyDown());
             }
 
             @Override
             public void onAddSpace() {
-                mCommandEditor.replaceSel(" ").run();
+                mCommandEditor.runOp(mCommandEditor.replaceSel(" "));
             }
 
             @Override
             public void onSelectAll() {
                 // TODO: show ContextMenu
-                mCommandEditor.selectAll().run();
+                mCommandEditor.runOp(mCommandEditor.selectAll());
             }
 
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                mCommandEditor.moveRel(0).run();
+                mCommandEditor.runOp(mCommandEditor.moveRel(0));
             }
 
             @Override
             public void onStartListening() {
                 Log.i("IME: onStartListening");
+                mCommandEditor.reset();
             }
 
             @Override
