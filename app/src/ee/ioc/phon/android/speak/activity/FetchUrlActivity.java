@@ -32,9 +32,8 @@ import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 /**
  * Queries the given URL and rewrites the response. Toasts the result unless it was executed as a command.
  * <p>
- * TODO: handle errors
  * TODO: handle latency, e.g. show progress in notification (but notifications are not available on Android Things)
- * TODO: add extras for various HTTP parameters
+ * TODO: add extras for various HTTP parameters and error handing (e.g. map 503 to a string)
  *
  * @author Kaarel Kaljurand
  */

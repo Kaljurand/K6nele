@@ -34,12 +34,12 @@
             android:key="@string/keyImeAutoStart"
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
+        -->
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeShowPartialResults"
             android:key="@string/keyImeShowPartialResults"
             android:summary="@string/summaryImeShowPartialResults"
             android:title="@string/titleImeShowPartialResults" />
-        -->
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"

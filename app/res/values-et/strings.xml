@@ -304,7 +304,7 @@
     <string name="titleReturnErrors">Tagasta veateated</string>
     <string name="summaryReturnErrors">Tagasta audio/võrgu/jne vigade teated kutsuvale rakendusele</string>
     <string name="titleImeShowPartialResults">Vahetulemused</string>
-    <string name="summaryImeShowPartialResults">Näita tekstiredaktori aknas vahetulemusi</string>
+    <string name="summaryImeShowPartialResults">Näita tekstiredaktori aknas kõnetuvastuse vahetulemusi</string>
     <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
