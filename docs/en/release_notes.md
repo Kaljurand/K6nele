@@ -5,23 +5,36 @@ title: Release notes
 
 (For more detailed notes see <https://github.com/Kaljurand/K6nele/commits/master>)
 
-Kõnele versions and their required Android versions:
-
-  - v1.1.xx - v1.5.xx, requires Android 4.0+
-    - extension of v0.8.xx, but with Android 4.0+ style UI
-  - v0.8.xx (not maintained), requires Android 2.2+
-    - extension of v0.7.xx, but additionally implements the RecognitionService-interface
-    - settings are part of the global settings
-    - launcher submits the transcription to the standard websearch
-    - starting with v0.8.50 implements the IME interface
-  - v0.7.xx (not maintained), requires Android 1.6+
-    - launcher icon opens the settings
-
-----
-
 (Old issue numbers refer to `code.google.com/p/recognizer-intent/issues/list`, which is no longer available.)
 
-## v1.1 - v1.5
+## v1.1 - v1.6
+
+Requires Android 4.0+
+
+- extension of v0.8.xx, but with Android 4.0+ style UI
+
+### v1.6.xx (not released)
+
+This release introduces various small extensions and generalizations that collectively allow Kõnele to interact with external apps and devices, e.g. it is now relatively easy to use Kõnele as a voice interface to a third-party (text-only) chatbot, control your home lights with voice commands, or simply launch other apps on the device.
+
+New in this release:
+
+- add rewrite rule table columns __Locale__, __App__, __Service__, which allow one to match the utterance only in a certain locale, app, or service
+- add rewrite rule table columns __Command__, __Arg1__, __Arg2__, which allow one to execute a command (e.g. launch an activity, manipulate the editor contents) based on the utterance
+- support more input EXTRAs, adding more flexibility when launching Kõnele from adb or other apps, e.g. Tasker
+- introduce a JSON-based format for Android intents, usable in the 1st argument of the `activity` command
+- add `FetchUrlActivity` that executes the given HTTP query and applies rewrites to the response
+- support voice prompts using Android's text-to-speech service (can be enabled only using the `VOICE_PROMPT` EXTRA)
+- support app shortcuts for each selected language/service combo (only on Android 7.1)
+- add a more powerful GUI for managing rewrite rule tables
+- simplify the importing of rewrite tables from spreadsheets
+- show erroneous commands/rewrites after importing a rewrites table
+- add service icons in combo selector list for quicker finding of Kõnele services
+- require the permission for setting the alarm (enables the common use case of setting the alarm with a voice command)
+- IME: add setting to disable showing partial results
+- IME: add swipe up/down
+- IME: do not change the text selection before the final transcription has been obtained
+- IME: improve the behavior of selection reset (single tap)
 
 ### v1.5.22 (2016-10-15)
 
@@ -127,7 +140,14 @@ Name changes and deprecation:
 - remove some hidden developer features, reducing the APK size by 40k
 - fix crash due to the WEB_SEARCH activity not available on some devices (we now fall back to SEARCH, or no activity if SEARCH is also not available)
 
-## v0.8
+## v0.8 (not maintained)
+
+Requires Android 2.2+
+
+- extension of v0.7.xx, but additionally implements the RecognitionService-interface
+- settings are part of the global settings
+- launcher submits the transcription to the standard websearch
+- starting with v0.8.50 implements the IME interface
 
 ### v0.8.58 (2015-01-29) (released on Google Play: 2015-01-29)
 
@@ -285,7 +305,9 @@ It is now possible to configure which sample rate is used when recording the aud
 
 Preliminary implementation of the `RecognitionService`-interface.
 
-## v0.7
+## v0.7 (not maintained)
+
+Requires Android 1.6+
 
 ### v0.7.36 (2011-12-05) (released on Android Market: 2011-12-31)
 
