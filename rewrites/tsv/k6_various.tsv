@@ -1,0 +1,204 @@
+Locale	Service	App	Utterance	Replacement	Command	Arg1	Arg2	Comment	Tags
+		:	mida ütleb rebane|what does the fox say	{ "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity", "extras": {     "ee.ioc.phon.android.extra.VOICE_PROMPT": "aoäia õe uue oaõieaia õueaua ööau aoäia õe uue oaõieaia õueaua ööau",     "android.speech.extra.PROMPT": "Rebane ütleb nii...",     "android.speech.extra.LANGUAGE": "en" }}				Example of voice prompt
+et		[^:]	(.*)\bmine(?: dokumendi| teksti)? lõpp?u	$1	moveAbs	-1
+			([^ ]+ [^ ]+) \1	$1				delete repetition
+#en		com\.google\.android\.apps\.fireball	^assist[a-z]+	@google 				Query Google Assistant
+#en		com\.google\.android\.apps\.fireball	^(at )?Google	@google 				Query Google Assistant
+et			kolm karu	🐻🐻🐻
+en			smiley face|:-\)	😊				Emoji
+et			naeru ?näo(ga|l)? ?sümbol	😊
+et			rõõmsa ?näo(ga|l)? ?sümbol	😊
+et			väga ?kurva ?näo(ga|l)? ?sümbol	:'(
+et			nutu ?näo(ga|l)? ?sümbol	:-(
+et			kurva ?näo(ga|l)? ?sümbol	:-(
+en			old man dark skin tone	👴🏿				Emoji
+et			vana mustanahaline mees	👴🏿				Emoji
+et			sulud algavad	(
+et			sulud lõpevad	)
+et			klambrid algavad	[
+et			klambrid lõpevad	]
+et			sidekriips( |$)	-
+et			mõttekriips( |$)	 -- 
+et			uus lõik	\n\n
+en			dollar sign	\$				Dollar sign must be escaped.
+et			(\w) (aga|et|kuid|sest|siis|vaid)( |$)	$1, $2$3				autopunctuation. We optimize for precision by checking that the inserted comma is preceded by a word character, thus it only works within the utterance. Works incorrectly with <mis sa siis teed> etc.
+et			(\w) (mille|kelle)(l|le|lt|s|sse|st|ni|na|ks|ga|ta)( |$)	$1, $2$3$4				relcl pronoun
+et			(\w) (mi|ke)(s|da|lle)( |$)	$1, $2$3$4				relcl pronoun
+#et			\büks\b	1				number; "üks" is ambiguous	number
+et			\bkaks\b	2					number
+et			\bkolm\b	3					number
+et			\bneli\b	4					number
+et			\bviis minuti	5 minuti				number; "viis" is ambiguous	number
+et			\bkuus\b	6					number
+et			\bseitse\b	7					number
+et			\bkaheksa\b	8					number
+et			\büheksa\b	9					number
+et			\bkümme\b	10					number
+et			(\d) kolmandikku	$1/3					number
+et			(\d) neljandikku	$1/4					number
+et			(\d) viiendikku	$1/5					number
+et			(\d) kuuendikku	$1/6					number
+et			(\d) seitsmendikku	$1/7					number
+et			(\d) kaheksandikku	$1/8					number
+et			(\d) üheksandikku	$1/9					number
+et			^näita äratuskell.?$	{ "action": "android.intent.action.SHOW_ALARMS", "flags": [4096] }					intent, alarm
+			^(?:taimer|timer|taime|Daimler) (\d+)$	{ "action": "android.intent.action.SET_TIMER", "extras": {     "android.intent.extra.alarm.LENGTH": $1,     "android.intent.extra.alarm.MESSAGE": "Tiksub",     "android.intent.extra.alarm.SKIP_UI": false     } }					intent, alarm
+et			^.*ärata mind(?: palun)?(?: kell)? (\d+) (?:0 )?(\d+)\s*(.*)$	{ "action": "android.intent.action.SET_ALARM", "extras": {     "android.intent.extra.alarm.HOUR": $1,     "android.intent.extra.alarm.MINUTES": $2,     "android.intent.extra.alarm.MESSAGE": "$3"     }, "categories": ["android.intent.category.VOICE"], "flags": [4096] }					intent, alarm
+et			^.*ärata mind(?: palun)? kell (\d+)\s*(.*)$	{ "action": "android.intent.action.SET_ALARM", "extras": {     "android.intent.extra.alarm.HOUR": $1,     "android.intent.extra.alarm.MESSAGE": "$2"     }, "categories": ["android.intent.category.VOICE"], "flags": [4096] }					intent, alarm
+en			^set(?: the)? alarm.* (\d+):?0?(\d+)\s*(.*)$	{ "action": "android.intent.action.SET_ALARM", "extras": {     "android.intent.extra.alarm.HOUR": $1,     "android.intent.extra.alarm.MINUTES": $2,     "android.intent.extra.alarm.MESSAGE": "$3"     } }					intent, alarm
+et		:	^ava (.+)$	{ "action": "android.intent.action.VIEW", "data": "http://www.$1.ee" }					intent, http
+et		:	algus (.+) lõpp (.+)	{ "action": "android.intent.action.VIEW", "data": "http://maps.google.com/maps?saddr=$1&daddr=$2" }
+et		:	^otsi (.+)$	{ "action": "com.google.android.gms.actions.SEARCH_ACTION", "extras": {     "query": "$1"     } }					intent, component
+et		:	^vali number (.+)$	{ "action": "android.intent.action.DIAL", "data": "tel:$1" }					intent, component
+et		:	^mängi muusikat (.+)$	{ "action": "android.media.action.MEDIA_PLAY_FROM_SEARCH", "extras": {     "android.intent.extra.focus": "vnd.android.cursor.item/*",     "query": "$1"     }, "flags": [4096] }					intent, alarm
+et			(\d+(\.\d+)?) korda (?=\d+(\.\d+)?)	$1 * 				Using lookahead. "korda" is ambiguous, but between numbers and in VimTouch it is written as "*".
+			^Pealkiri (.+)	# $1
+et		[^:]	muster (1|üks)	Tere,\n\n				template
+et		[^:]	muster (2|kaks)	Nimi: []\n\nIsikukood: []\n\nAadress: []\n\n				template
+et		[^:]	^vastuse vorm müügipakkumisele$	Lugupeetud []\n \n Täname Teid, et vastasite meie\n \n Lugupidamisega\n Heikki Papper\n müügijuht					template
+			^([{].+)		activity	$1		Launch activity if the Utterance starts with "{".
+et		vimtouch	^(kopeeri rida|kopeerida|kopeeri *\\n)$	yy				In VimTouch, the editing commands are simple replacements.
+et		vimtouch	^(kleebi rida|kleebi *\\n)$	p
+et		vimtouch	^(kustuta rida|kustuta *\\n)$	dd
+et		vimtouch	^(sisestus ?režiim)$	i
+et		vimtouch	^jätka järgmiselt realt$	o
+et		vimtouch	^otsi (.+)$	/$1\n
+et		vimtouch	^korda$	*
+et		vimtouch	^asend[^ ]* sõna ?(.+) sõnaga (.+)$	:%s/$1/$2/g\n
+et		vimtouch	^võtt?a tagasi$	u
+et		vimtouch	^(.+)$	$1	noop			Stop looking at the rest of the table.	test
+et		[^:]	näita lõike ?lauda		showClipboard
+en		[^:]	show clipboard		showClipboard
+et		[^:]	(?:kustuta|puhasta|tühjenda) lõike ?lauda?		clearClipboard
+et		[^:]	vali tume		select	🏿			test
+et		[^:]	tee heledamaks		replace	🏿	🏼	Change the skin color to lighter	test
+et		[^:]	korrasta(da)? tühi(kud| ?ruum)		replaceSelRe	 *([ ,;.!?])	\$1	Remove extra space chars. TODO: obsolete: use replaceRe	test
+en		[^:]	normalize whitespace		replaceSelRe	 *([ ,;.!?])	\$1	Remove extra space chars. TODO: obsolete: use replaceRe	test
+et		[^:]	paranda (.+?) .+ (.+)		replaceSelRe	$1 (.+) $2	$1 \$1 $2	TODO: experiment without $3, i.e. open ended span	test
+et		[^:]	pane..imeks (.+)		saveClip	$1	@sel()
+et		[^:]	salvesta (.+)		saveClip	$1	@sel()
+et		[^:]	^salvesta$		saveClip	K6_DEFAULT_CLIPBOARD_KEY	@sel()
+et		[^:]	sisesta (.+)		loadClip	$1
+et		[^:]	^sisesta$		loadClip	K6_DEFAULT_CLIPBOARD_KEY
+et		[^:]	mine laus. alguses(se)?		selectReBefore	(?:^|[.?!]\\s+)()		Use of non-capturing group
+et		[^:]	mine laus. lõppu		selectReAfter	(?:$|[.?!]\\s+)()		TODO: $ does not work in app (but works in tests)
+et		[^:]	mine eelmise lause algusesse		selectReBefore	[.?!]\\s*()[^.?!]+[.?!]
+et		[^:]	mine eelmise lause lõppu		selectReBefore	[.?!]\\s*[^.?!]+[.?!]()
+et		[^:]	vali eelmine lause		selectReBefore	[.?!]\\s*([^.?!]+[.?!])
+et		[^:]	vali eelmine sõna		selectReBefore	\\b(.+)
+et		[^:]	mine järgmise lause algusesse		selectReAfter	[.?!]\\s*()[^.?!]+[.?!]		TODO
+et		[^:]	mine järgmise lause lõppu		selectReAfter	(?:$|[.?!]\\s+)()	2
+et		[^:]	vali järgmine lause		selectReAfter	[.?!]\\s*([^.?!]+[.?!])		TODO
+et		[^:]	vali järgmine lõik		selectReAfter	\\n\\n\\s*(.+?)\\s*\\n\\n		TODO
+et		[^:]	vali üle ?järgmine lõik		selectReAfter	\\n\\n\\s*(.+?)\\s*\\n\\n	2	TODO
+et		[^:]	mine üle ?järgmise lause algusesse		selectReAfter	[.?!]\\s*()[^.?!]+[.?!]	2	TODO
+et		[^:]	mine üle ?järgmise lause lõppu		selectReAfter	(?:$|[.?!]\\s+)()	3
+et		[^:]	vali üle ?järgmine lause		selectReAfter	[.?!]\\s*([^.?!]+[.?!])	2	TODO
+et		[^:]	mine eelmine lõik		selectReBefore	[.?!]()\\n\\n		untested
+et		[^:]	mine (\d+) lauset tagasi		selectReBefore	()([^.?!]*[.?!]){$1}		untested
+et		[^:]	mine (\d+) sõna tagasi		selectReBefore	()(\\b[^\\s]+\\b){$1}		untested
+et		[^:]	mine viis sõna tagasi		selectReBefore	()(\\b[^\\s]+\\b){5}		untested
+et		[^:]	mine üks sõna tagasi		selectReBefore	()(\\b[^\\s]+\\b)		untested
+et		[^:]	mine (\d+) tähte tagasi		selectReBefore	(.){$1}		untested
+et		[^:]	mine (\d+) tähte edasi		selectReAfter	.()	$1	untested
+et		[^:]	vali järgmine (täht|sümbol)		selectReAfter	(.)	1
+et		[^:]	vali üle ?järgmine (täht|sümbol)		selectReAfter	(.)	2
+et		[^:]	(.*)\bmine(?: dokumendi| teksti)? alguses(se)?	$1	moveAbs	0
+et		[^:]	(.*)\bmine(?: dokumendi| teksti)? lõpp?u	$1	moveAbs	-1
+et		[^:]	mine positsioonile miinus (\d+)		moveAbs	-$1
+et		[^:]	mine positsioonile (-?\d+)		moveAbs	$1
+et		[^:]	mine (\d+) sammu edasi		moveRel	$1
+et		[^:]	mine üks sammu? edasi		moveRel	1
+et		[^:]	mine (\d+) sammu tagasi		moveRel	-$1
+et		[^:]	mine üks sammu? tagasi		moveRel	-1
+et		[^:]	(.*)\bmine eelmisele väljale$	$1	imeActionPrevious
+et		[^:]	(.*)\beelmine väli$	$1	imeActionPrevious
+et		[^:]	(.*)\bmine järgmisele väljale$	$1	imeActionNext
+et		[^:]	(.*)\bjärgmine väli$	$1	imeActionNext
+et		[^:]	valin? (.+) ja lisan? ?jutumärgid		replace	$2	"$2"
+et		[^:]	valin? (.+) ja lisan? ?tärnid		replace	$2	*$2*
+et		[^:]	vali (.+) ja lisan? ?kriipsud		replace	$2	_$2_
+et		[^:]	valin? klambrid		selectReBefore	\\[([^]]*)\\]
+et		[^:]	valin? järgmised klambrid		selectReAfter	\\[([^]]*)\\]
+et		[^:]	valin? järgmine (.+)		selectReAfter	$1
+et		[^:]	valin? üle ?järgmine (.+)		selectReAfter	$1	2
+en		[^:]	select next (.+)		selectReAfter	$1
+en		[^:]	select (the )?(second|II|2nd) (.+) to the right		selectReAfter	$3	2
+et		[^:]	panen?(?: sõna)? (.+) asemele (.+)		replace	$1	$2
+et		[^:]	asend[^ ]* sõna ?(.+) sõnaga (.+)		replace	$1	$2
+et		[^:]	asend[^ ]* sõnaga (.+) sõna ?(.+)		replace	$2	$1
+et		[^:]	ühend[^ ]* sõnad (.+) (?:ja|ning) (.+) side ?kriipsuga		replace	$1 $2	$1-$2
+et		[^:]	ühend[^ ]* sõnad (.+) (?:ja|ning) (.+)		replace	$1 $2	$1$2
+et		[^:]	erald[^ ]* sõnad (.+) (?:ja|ning) (.+)		replace	$1$2	$1 $2
+et		[^:]	asend[^ ]* sõnaga (.+)		replaceSel	$1
+et		[^:]	lisan? ?jutumärgid		replaceSel	"@sel()"
+en		[^:]	add quotation marks		replaceSel	"@sel()"
+et		[^:]	lisan? ?tärnid		replaceSel	*@sel()*
+et		[^:]	lisan? ?(ala ?)?kriipsud		replaceSel	_@sel()_
+et		[^:]	lisan? ?klambrid		replaceSel	[@sel()]
+et		[^:]	lisan? ?vasak ?klamber		replaceSel	[@sel()
+et		[^:]	lisan? ?parem ?klamber		replaceSel	@sel()]
+et		[^:]	lisan? ?sulud		replaceSel	(@sel())
+et		[^:]	lisan? ?vasak ?sulg		replaceSel	(@sel()
+et		[^:]	lisan? ?parem ?sulg		replaceSel	@sel())
+et		[^:]	suured tähed		ucSel
+et		[^:]	väike?sed tähed		lcSel
+et		[^:]	eemaldan? valik		moveRel	0		Often "undo" is easier to use to remove the selection.
+et		[^:]	kopeerin? sõna (.+)		copyStr	$1
+et		[^:]	kopeerin? kõik		copyAll
+et		[^:]	valin? kõik ja kopeerin?		copyAll
+et		[^:]	kopeerin?		copy
+et		[^:]	kopeerin? (.+)		copyStr	$1
+et		[^:]	valin? kõik ja kustutan?		deleteAll
+et		[^:]	valin? kõik ja lõikan?		cutAll
+et		[^:]	valin? kõik		selectAll
+en		[^:]	select (all|everything)		selectAll
+et		[^:]	valin? (.+) kuni (.+)		selectReBefore	$1.*?$2		untested, reluctant
+en		[^:]	select from (.+) to (.+)		selectReBefore	$1.*?$2		untested, reluctant
+et		[^:]	valin? (.).*algus ?täht		select	$1
+et		[^:]	valin? tühik		select	 
+et		[^:]	vali([,.?!])		select	$1		select a single glued char (e.g. comma)
+et		[^:]	valin? (.+)		select	$1
+e.		[^:]	otsi seda|search for this		select	@sel()
+et		[^:]	lõikan?		cut
+et		[^:]	kleebin?		paste
+et		[^:]	(kustuta?|eemaldan?) eelmine sõna		deleteLeftWord
+et		[^:]	kustutan? tühik		replace	 
+et		[^:]	kustutan? (.+)		replace	$1
+en		[^:]	delete (.+)		replace	$1
+et		[^:]	kustutan?		cut
+et		[^:]	panen? ?tühik		replaceSel	 
+et		[^:]	panen? ?rea ?vahetus		replaceSel	\n
+et		[^:]	võtt?an? tagasi		undo
+en		[^:]	undo that		undo
+et		[^:]	võtt?an? (\d+) sammu tagasi		undo	$1
+et		[^:]	võtt?an? (\d+) korda tagasi		undo	$1
+et		[^:]	mine üles|lähen üles		keyUp
+et		[^:]	mine alla|lähen alla		keyDown
+et		[^:]	mine vasakule|lähen vasakule		keyLeft
+et		[^:]	mine paremale|lähen paremale		keyRight
+et		[^:]	(hüppa|mine) (algus ?täht|esi ?täht|esimene ?täht)		selectReBefore	\\s([^\\s])		select non-space next to space
+et		[^:]	hüppan? (.+)		selectReBefore	$1()
+et		[^:]	(.*)\bmine	$1	imeActionGo
+et		[^:]	(.*)\botsin?	$1	imeActionSearch
+et	ee.*speak	google.*(talk|fireball)	(.*)\bsaadan? ära	$1	imeActionSend
+en	ee.*speak	google.*(talk|fireball)	(.*)\bsend (it )?off?\.?	$1	imeActionSend
+en	voicesearch	google.*(talk|fireball)	(.*)\bsend (it )?off?\.?	$1	imeActionSend
+et		[^:]	(.*)\b(lõpeta|tehtud)	$1	imeActionDone
+et		[^:]	klahv alfa		keyCodeStr	A
+et		[^:]	klahv suur a		keyCodeStr	A
+et		[^:]	klahv väike a		keyCodeStr	A
+et		[^:]	klahv number (\d+)		keyCode	$1
+et		[^:]	klahv enter		keyCodeStr	ENTER
+et		[^:]	klahv (tabulaat|tabulaadur|tabula rasa)		keyCodeStr	TAB
+et		[^:]	(klahv )?põgene		keyCodeStr	ESCAPE
+et		[^:]	panen? (.).*algus ?täht		replaceSel	$2
+et		[^:]	panen? (.).* 1\. ?täht		replaceSel	$2
+et		[^:]	panen? .(.).* 2\. ?täht		replaceSel	$2
+et		[^:]	(kordan?|rakendan?) (\d+) korda		apply	$2
+en		[^:]	apply (\d+) (times|x)		apply	$1
+en		[^:]	^apply|repeat$		apply	$1
+et		[^:]	kombineerin? (\d+)		combine	$1		untested
+en		[^:]	combine (\d+)		combine	$1		untested
+en		[^:]	select again		select	@sel()
+en		[^:]	select (.+)		select	$1		untested

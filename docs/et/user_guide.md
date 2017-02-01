@@ -331,7 +331,7 @@ siis püüab leida _Intent_'ile vastava rakenduse ning selle käivitada.
 #### Tekstitoimetuskäsud
 
 Tekstitoimetuskäsud on käsud, mida saab kasutada ainult koos Kõnele klaviatuuriga.
-Need võimaldavad toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil), nt kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `keyUp`, `imeActionNext`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Argumendid võivad viidata parasjagu aktiivse valiku sisule sümboliga `{}`. Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
+Need võimaldavad toimetada juba olemasolevat teksti käed vabalt (st ainult kõne abil), nt kursori liigutamist teksti sees ja väljade vahel (nt `selectReBefore`, `keyUp`, `imeActionNext`), sõnade/lausete valimist ja asendamist (nt `select`, `selectReAfter`, `replace`), operatsioone valikuga (nt `replaceSel`, `saveClip`), lõika/kleebi/kopeeri operatsioone, [Androidi IME käske](https://developer.android.com/reference/android/view/inputmethod/EditorInfo.html) (nt `imeActionSend`). Enamikku käskudest on võimalik tagasi võtta (`undo`), mitu korda rakendada (`apply`), ja isegi kombineerida (`combine`). Argumendid võivad viidata parasjagu aktiivse valiku sisule funktsiooniga `@sel()`. Kursoriliigutamiskäskude puhul, mille argumendiks on regulaaravaldis (`..Re..`), määrab selle esimene alamgrupp kursori uue asukoha.
 Vt ka [kõikide tekstitoimetuskäskude nimekiri](https://github.com/Kaljurand/speechutils/blob/master/app/src/main/java/ee/ioc/phon/android/speechutils/editor/CommandEditor.java).
 
 Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud. Muid sõnu väljundisse ei lisata, kuna __Replacement__ on tühisõne.
@@ -340,7 +340,7 @@ Näide. (Eestikeelne) kõnekäsk lisamaks valitud tekstilõigu ümber nurksulud.
 - __Utterance__ = `lisa ?klambrid`
 - __Replacement__ =
 - __Command__ = `replaceSel`
-- __Arg1__ = `[{}]`
+- __Arg1__ = `[@sel()]`
 
 Näide. (Eestikeelne) kõnekäsk "saatmisnupu" vajutamiseks Google'i rakendustes Hangouts (mille pakinimi sisaldab sõne "talk") ja Allo ("fireball"). Lausungimuster sisaldab suvalist teksti `.*`, mida eraldab käsust `saada ära` sõnapiir `\b`. Ennem käsu (`imeActionSend`) täitmist lisatakse tekst väljundisse.
 
@@ -376,13 +376,13 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 ### Näited
 
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU/edit?usp=sharing)] Ühest reeglist koosnev reeglistik, mis näitab, kuidas avada veebibrauseri asemel kaardirakendus.
-- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_examples.tsv), [Sheets](https://docs.google.com/spreadsheets/d/10g1ipeO4qMjUwZ_6AcnKdyujS2ukfQHy4a7Dg0olWng/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
+- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
-- [[Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
-- [[Sheets](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing)] Kõnekäsud Philips Hue valgustite kontrollimiseks näitab, kuidas teha Kõnele abil HTTP-päringuid.
-- [[Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
-- [[Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda
-- [[Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks)
+- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_send.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
+- [[TSV](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing)] Kõnekäsud Philips Hue valgustite kontrollimiseks näitab, kuidas teha Kõnele abil HTTP-päringuid.
+- [[TSV](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
+- [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda
+- [[TSV](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks)
 
 Olgugi, et ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomisel mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks oskama ise kõne tuvastada.
 

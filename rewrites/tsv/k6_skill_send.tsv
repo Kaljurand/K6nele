@@ -1,0 +1,49 @@
+Utterance	Replacement	Comment	Command	Arg1
+# A simple dialog system for sending a message. Demonstrates:
+# - using the rewrites tables as a simple programming language, with if-then sentences
+# - launching intents (Kõnele launches itself to complete the fields of the email; or launches an email app with the current email)
+# - rewriting utterances to intents
+# - keeping state
+
+# 1. The user starts by saying "send a message".
+# 2. Kõnele takes it from there, asking for the recipient, subject line, and message body.
+# 3. The user can say "send it off" any time to launch a messaging app with the data filled in so far.
+# 4. The user can say "read it back" any time to listen to the current message.
+
+# Other notes:
+# - callback rules have the form: (state, command) -> { utt: (.+); repl: newstate;\$1 }, i.e. a pair of current state and a command is rewritten to an intent which establishes a new state and captures a new command.
+# - however, in most rules Replacement is written in a shorthand which will be mapped to the intent only at the end of the table
+# - to avoid unwanted rewriting each handled state is tagged with an initial "o" (for "output")
+# - each state has the form <RECIPIENT><SUBJECT><MESSAGE>
+# - the rules fire under any language and service, so you can switch combos during the dialog (e.g. to have the subject and message in different languages)
+# - the angle brackets are used because Java regex has no special meaning for them that would need to be escaped
+# - note that Android does not support named groups http://stackoverflow.com/questions/27834463/android-java-regex-named-groups
+# - note that if $n does not refer to any group, then error condition is reached (at runtime)
+# - this document is public and comments are welcome (but directly editing is not allowed)
+# - this table must be given the name "Send" when saved as a rewrite table
+
+# Command that starts the application with some initial state
+^send a message to myself	o<kaljurand@gmail.com><><>give the subject and the message
+^(send a message|saada sõnum)	o<><><>give the recipient, subject and the message
+# Translation of Estonian phrases into application commands (recipient, subject, message). Note that state prefix must stay "i" to allow the following rules to fire.
+Kaarli aadress	kaljurand@gmail.com
+i<(.*?)><(.*?)><(.*?)>kirja ?saaja (.+)	i<$1><$2><$3>recipient $4
+i<(.*?)><(.*?)><(.*?)>(?:subjekt|pealkiri) (.+)	i<$1><$2><$3>subject $4
+i<(.*?)><(.*?)><(.*?)>sõnum (.+)	i<$1><$2><$3>message $4
+# State rules (a real application would have a special handling for 2^3=8 state combinations, each with ~10 possible commands, amounting to ~100 rules)
+# Updating an existing slot
+i<(.+?)><(.*?)><(.*?)>recipient (.+)	o<$4><$2><$3>recipient updated to $4
+i<(.*?)><(.+?)><(.*?)>subject (.+)	o<$1><$4><$3>subject updated to $4
+i<(.*?)><(.*?)><(.+?)>message (.+)	o<$1><$2><$4>message updated to $4
+i<(.*?)><(.*?)><(.*?)>additional message (.+)	o<$1><$2><$3 $4>message updated to $3 $4
+# Filling in an empty slot
+i<(.*?)><(.*?)><(.*?)>recipient (.+)	o<$4><$2><$3>recipient set to $4
+i<(.*?)><(.*?)><(.*?)>subject (.+)	o<$1><$4><$3>subject set to $4
+i<(.*?)><(.*?)><(.*?)>message (.+)	o<$1><$2><$4>message set to $4
+# Intents: SEND, READ BACK, ASK FOR MORE INFO, DEFAULT
+^i<(.*)><(.*)><(.*)>(send it off|saada ära)	{ "action": "android.intent.action.SEND", "type": "text/plain", "extras": {     "android.intent.extra.EMAIL": ["$1"],     "android.intent.extra.SUBJECT": "$2",     "android.intent.extra.TEXT": "$3"   } }	Note that EMAIL EXTRA is of type String[]. Doing list processing (i.e. adding and removing recipients) with regex is a little difficult, so this has not been implemented.
+^i<(.*)><(.*)><(.*)>(read it back|loe ette)	{ "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity", "extras": {     "ee.ioc.phon.android.extra.VOICE_PROMPT": "The recipient is $1, the subject is $2, and the message is $3.",     "android.speech.extra.PROMPT": "To: $1, Subject: $2, Message: $3",     "android.speech.extra.MAX_RESULTS": 1,     "ee.ioc.phon.android.extra.AUTO_START": False,     "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",     "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "i<$1><$2><$3>\$1",     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Send"]   } }	Note the 2 types of backreferences: one refers to the current utterance, the other will refer to the future utterance (and thus needs to be escaped).
+^o<(.*)><(.*)><(.*)>(.*)	{ "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity", "extras": {     "ee.ioc.phon.android.extra.VOICE_PROMPT": "OK $4. Add more info or say \\"read it back\\" or say \\"send it off\\".",     "android.speech.extra.PROMPT": "OK: $4",     "android.speech.extra.MAX_RESULTS": 1,     "ee.ioc.phon.android.extra.AUTO_START": True,     "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",     "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "i<$1><$2><$3>\$1",     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Send"]   } }	Note the 2 types of backreferences.
+^i<(.*)><(.*)><(.*)>(.*)	{ "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity", "extras": {     "ee.ioc.phon.android.extra.VOICE_PROMPT": "Unknown command: $4. Say for example \\"subject hello\\"",     "android.speech.extra.PROMPT": "Unknown command: $4. Say for example \\"subject hello\\"",     "android.speech.extra.MAX_RESULTS": 1,     "ee.ioc.phon.android.extra.AUTO_START": True,     "ee.ioc.phon.android.extra.RESULT_UTTERANCE": "(.+)",     "ee.ioc.phon.android.extra.RESULT_REPLACEMENT": "i<$1><$2><$3>\$1",     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Send"]   } }
+^([^{].+)	{ "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity", "extras": {     "ee.ioc.phon.android.extra.VOICE_PROMPT": "I did not understand $1. To start, say \\"send a message\\".",     "android.speech.extra.PROMPT": "I did not understand $1. To start, say \\"send a message\\".",     "android.speech.extra.MAX_RESULTS": 1,     "ee.ioc.phon.android.extra.AUTO_START": True,     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Send"]   } }	If no JSON (i.e. something that starts with the {-symbol) was generated, then ask again.
+^([{].+)			activity	$1
