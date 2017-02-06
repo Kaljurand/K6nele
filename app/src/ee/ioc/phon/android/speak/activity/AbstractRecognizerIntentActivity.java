@@ -83,7 +83,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     public static String HEADER_REWRITES_COL2 = "Utterance\tReplacement";
 
-    private UtteranceRewriter mUtteranceRewriter;
+    private Iterable<UtteranceRewriter> mRewriters;
 
     private static SparseIntArray mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
 
@@ -566,7 +566,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
     }
 
-    protected void setUtteranceRewriter(String language, ComponentName service) {
+    protected void setRewriters(String language, ComponentName service) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Bundle extras = getExtras();
         String[] rewrites = null;
@@ -578,7 +578,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 rewrites = new String[]{(String) rewritesAsObject};
             }
         }
-        mUtteranceRewriter = Utils.getUtteranceRewriter(prefs, getResources(), rewrites, language, service, getCallingActivity());
+        mRewriters = Utils.genRewriters(prefs, getResources(), rewrites, language, service, getCallingActivity());
     }
 
     /**
@@ -588,18 +588,24 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      */
     private List<String> rewriteResults(List<String> results) {
         List<String> newResults = rewriteResultsWithExtras(results);
-        if (mUtteranceRewriter == null) {
+        if (mRewriters == null) {
             return newResults;
         }
-        return mUtteranceRewriter.rewrite(newResults);
+        for (UtteranceRewriter ur : mRewriters) {
+            // Skip null, i.e. a case where a rewrites name did not resolve to a table.
+            if (ur != null) {
+                newResults = ur.rewrite(newResults);
+            }
+        }
+        return newResults;
     }
 
     private String rewriteResult(String result) {
         String newResult = IntentUtils.rewriteResultWithExtras(this, mExtras, result);
-        if (newResult == null || mUtteranceRewriter == null) {
+        if (newResult == null || mRewriters == null) {
             return newResult;
         }
-        return IntentUtils.launchIfIntent(this, mUtteranceRewriter, newResult);
+        return IntentUtils.launchIfIntent(this, mRewriters, newResult);
     }
 
     /**

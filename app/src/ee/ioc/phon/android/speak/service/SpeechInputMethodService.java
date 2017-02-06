@@ -253,13 +253,14 @@ public class SpeechInputMethodService extends InputMethodService {
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final String packageName) {
         return new AbstractSpeechInputViewListener() {
 
+            // TODO: quick hack to add app to the matcher, not sure if we can access the
+            // class name of the app
+            private ComponentName app = new ComponentName(packageName, packageName);
+
             @Override
             public void onComboChange(String language, ComponentName service) {
-                // TODO: quick hack to add app to the matcher, not sure if we can access the
-                // class name of the app
-                ComponentName app = new ComponentName(packageName, packageName);
                 // TODO: name of the rewrites table configurable
-                mCommandEditor.setUtteranceRewriter(Utils.getUtteranceRewriter(mPrefs, mRes, null, language, service, app));
+                mCommandEditor.setRewriters(Utils.makeList(Utils.genRewriters(mPrefs, mRes, null, language, service, app)));
             }
 
             @Override

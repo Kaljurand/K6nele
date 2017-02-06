@@ -183,7 +183,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
             @Override
             public void onComboChange(String language, ComponentName service) {
-                setUtteranceRewriter(language, service);
+                setRewriters(language, service);
             }
 
             @Override

@@ -48,6 +48,8 @@ import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Executable;
@@ -347,33 +349,66 @@ public final class Utils {
 
 
     /**
-     * TODO: improve this. Allow a list of rewrites. If empty then
-     * no rewriting is done. Currently we just take the first element of the list, or a default
-     * rewrite table, if the list is null or empty.
+     * Generates rewriters based on the list of names of rewrite tables.
+     * If a name does not resolve to a rewrite table then generates null.
+     * If the given list is null, then the default rewriter is returned (currently at most one).
+     * Passing an empty list effectively turns off rewriting.
      */
-    public static UtteranceRewriter getUtteranceRewriter(SharedPreferences prefs,
-                                                         Resources resources,
-                                                         String[] rewritesByName,
-                                                         String language,
-                                                         ComponentName service,
-                                                         ComponentName app) {
-
-        String name;
+    public static Iterable<UtteranceRewriter> genRewriters(final SharedPreferences prefs,
+                                                           final Resources resources,
+                                                           String[] rewritesByName,
+                                                           String language,
+                                                           ComponentName service,
+                                                           ComponentName app) {
+        final String[] names;
         if (rewritesByName == null) {
-            name = PreferenceUtils.getPrefString(prefs, resources, R.string.defaultRewritesName);
-        } else if (rewritesByName.length == 0) {
-            return null;
-        } else {
-            name = rewritesByName[0];
-        }
-        if (name != null) {
-            String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, resources, R.string.keyRewritesMap, name);
-            if (rewritesAsStr != null) {
-                CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
-                return new UtteranceRewriter(rewritesAsStr, commandMatcher);
+            // TODO: support multiple elements
+            String defaultRewrites = PreferenceUtils.getPrefString(prefs, resources, R.string.defaultRewritesName);
+            if (defaultRewrites == null) {
+                return Collections.EMPTY_LIST;
             }
+            names = new String[]{defaultRewrites};
+        } else {
+            names = rewritesByName;
         }
-        return null;
+
+        final int length = names.length;
+        if (length == 0) {
+            return Collections.EMPTY_LIST;
+        }
+        final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+
+        return new Iterable<UtteranceRewriter>() {
+            @Override
+            public Iterator<UtteranceRewriter> iterator() {
+                return new Iterator<UtteranceRewriter>() {
+
+                    private int mCurrent = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        return mCurrent < length;
+                    }
+
+                    @Override
+                    public UtteranceRewriter next() {
+                        String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, resources, R.string.keyRewritesMap, names[mCurrent++]);
+                        if (rewritesAsStr == null) {
+                            return null;
+                        }
+                        return new UtteranceRewriter(rewritesAsStr, commandMatcher);
+                    }
+                };
+            }
+        };
+    }
+
+    public static <E> List<E> makeList(Iterable<E> iter) {
+        List<E> list = new ArrayList<E>();
+        for (E item : iter) {
+            list.add(item);
+        }
+        return list;
     }
 
     public static Intent getRecognizerIntent(String action, CallerInfo callerInfo, String language) {
