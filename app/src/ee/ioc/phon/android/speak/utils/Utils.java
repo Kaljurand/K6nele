@@ -347,7 +347,6 @@ public final class Utils {
                 caller;
     }
 
-
     /**
      * Generates rewriters based on the list of names of rewrite tables.
      * If a name does not resolve to a rewrite table then generates null.

@@ -187,7 +187,9 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <!-- TODO: do not reparent -->
         <activity
             android:name=".activity.DetailsActivity"
-            android:label="@string/labelActivityDetails"
+            android:theme="@style/Theme.K6nele.Dialog"></activity>
+        <activity
+            android:name=".activity.RewritesErrorsActivity"
             android:theme="@style/Theme.K6nele.Dialog"></activity>
         <activity
             android:name=".activity.ComboSelectorActivity"

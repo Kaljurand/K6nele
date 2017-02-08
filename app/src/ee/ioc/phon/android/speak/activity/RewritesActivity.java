@@ -179,9 +179,9 @@ public class RewritesActivity extends Activity {
     }
 
     private void showErrors(String title, String[] errors) {
-        Intent searchIntent = new Intent(this, DetailsActivity.class);
-        searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, title);
-        searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, errors);
+        Intent searchIntent = new Intent(this, RewritesErrorsActivity.class);
+        searchIntent.putExtra(RewritesErrorsActivity.EXTRA_TITLE, title);
+        searchIntent.putExtra(RewritesErrorsActivity.EXTRA_STRING_ARRAY, errors);
         startActivity(searchIntent);
     }
 
