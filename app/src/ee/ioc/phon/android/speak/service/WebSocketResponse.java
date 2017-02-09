@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
+import ee.ioc.phon.android.speechutils.utils.TextUtils;
 
 
 /**
@@ -99,7 +99,7 @@ public class WebSocketResponse {
                 for (int i = 0; i < array.length() && i < maxHypotheses; i++) {
                     String transcript = array.getJSONObject(i).getString("transcript");
                     if (prettyPrint) {
-                        hypotheses.add(UtteranceRewriter.prettyPrint(transcript));
+                        hypotheses.add(TextUtils.prettyPrint(transcript));
                     } else {
                         hypotheses.add(transcript);
                     }

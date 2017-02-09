@@ -11,7 +11,6 @@
     <string name="labelActivityGrammarList">Grammatikad</string>
     <string name="labelActivityAbout">Info</string>
     <string name="labelActivityPreferences">Kõnele seaded</string>
-    <string name="labelActivityDetails">Detailid</string>
     <string name="labelActivityRewritesLoader">Kõnele ü.k.-reeglid</string>
     <string name="labelActivityRewritesSelector">Ümberkirjutusreeglid</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
@@ -87,72 +86,47 @@
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> on kõnetuvastusteenus Androidi rakendustele,
         mis võimaldab kõne abil sooritada infootsingut, kirjutada e-kirju ja märkmeid, anda käske jne.&lt;/p>
 
-		&lt;p>Paljudes Androidi rakendustes on väike mikrofonikujuline nupp,
-		millele vajutades eeldab rakendus kasutajalt mõnesekundilist
-		kõnejuppi,
-		mis automaatselt tekstiks teisendatakse.
-		Populaarsemad näited
-		sellistest rakendustest on&lt;/p>
+		&lt;p>Paljudes rakendustes (nt e-kirja ja lühisõnumirakendused, veebibrauser) on tekstikast või otsinguriba, millele
+        vajutades avaneb klaviatuurirakendus. Kõnele töötab kui klaviatuurirakendus, mis võimaldab teksti sisestada
+        ja toimetada kõne abil. Kõnele klaviatuuri on mõistlik kasutada vaheldumisi mõne tavaklaviatuuriga.
+        Paljudes rakendustes (nt navigatsiooni- ja tõlkerakendused, targad abilised) on väike mikrofonikujuline nupp,
+		millele vajutades eeldab rakendus kasutajalt mõnesekundilist kõnejuppi,
+        mis Androidi kõnetuvastusliidese abil tekstiks teisendatakse.
+        Kõnele sisaldab endas selle liidese implementatsiooni.&lt;/p>
 
-		&amp;nbsp;&amp;nbsp;&amp;bull; kaardi- ja navigatsioonirakendused;&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; märkmete ja meeldetuletuste rakendused (nt Google Keep);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; lühisõnumirakendused;&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; targad abilised (nt Arvutaja);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; kalkulaatorid (nt WolframAlpha);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull; sõnastiku- ja tõlketeenused (nt Google Translate);&lt;br/>
-		&amp;nbsp;&amp;nbsp;&amp;bull;
-		ja üldiselt kõik otsinguribaga rakendused (nt veebibrauserid, GMail, Google Drive, YouTube).
-
-        &lt;p>&lt;b>%1$s&lt;/b> töötab ka kui (ühe nupuga) klaviatuur, mida saab kasutada kõikide
-        tekstiväljade täitmiseks (väljaarvatud parooliväljad). Mikrofoninupule vajutamine
+        &lt;p>Kuidas töötab Kõnele klaviatuur? Mikrofoninupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
         Svaip vasakule kustutab kursorile eelneva sõna.
-        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku. Pikk vajutus valib kogu teksti.&lt;/p>
+        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku. Pikk vajutus valib kogu teksti.
+        Ümberkirjutusreeglite abil saab luua tekstiasendus- ja tekstitoimetuskäske.&lt;/p>
 
-        &lt;p>Tüüpiliselt kasutavad Android mobiilseadmed kõne tekstiks teisendamiseks teenusi,
-		mis ei toeta eestikeelset kõne. &lt;b>%1$s&lt;/b> võimaldab kasutada kõne
-		transkribeerimiseks kahte TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori
-		kõnetuvastusserverit, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
+        &lt;p>Kõnele toetab kõiki seadmes olevad tuvastusteenusi, mis on läbi Androidi avatud kõnetuvastusliidese
+        kasutatavad, ning lisab omalt poolt kaks teenust,
+        mis kasutavad kõne transkribeerimiseks vastavalt kahte veebiserverit.
+        Vaikimisi on nendeks TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori eesti keele
+		kõnetuvastusserverid, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.
+        Seega, Kõnele kasutamine eeldab üldiselt internetiühenduse olemasolu,
+        laadides serverisse umbes 1MB kõne poole minuti kohta.&lt;/p>
 
-        &lt;p>&lt;b>Grammatikatoega server&lt;/b> võimaldab (muuhulgas) rakendustele omistada grammatikaid,
-        et tõlkida tuvastustulemus rakenduse-spetsiifilisse
-		keelde. Nt
-		kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
+        &lt;p>&lt;b>Kiire tuvastusega teenus&lt;/b> väljastab tuvastustulemuse juba rääkimise ajal ja ei sea
+        kõnesisendi pikkusele mingit piirangut.&lt;/p>
+
+        &lt;p>&lt;b>Grammatikatoega teenus&lt;/b> võimaldab dikteerida korraga maksimaalselt 30 sekundit ning
+        väljastab tuvastustulemuse alles sisendi lõpus. Samas võimaldab ta rakendustele omistada grammatikaid,
+        et tõlkida tuvastustulemus rakenduse-spetsiifilisse keelde.
+        Nt kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
 		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
 		ning kaardirakendusele või bussiaegade rakendusele Eesti aadresside grammatika.
 		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
 		Vt ka
 		&lt;a
-		href="http://kaljurand.github.io/Grammars/">grammatikate
-		projekti
-		kodulehekülge&lt;/a>.&lt;/p>
-
-        &lt;p>&lt;b>Kiire tuvastusega server&lt;/b> tagastab tuvastustulemuse juba rääkimise ajal, on üldiselt
-        oluliselt täpsem, ning võimaldab
-        dikteerida kirjavahemärke (nt \"koma\", \"uus rida\").&lt;/p>
-
-        &lt;p>Kõnele sisselülitamiseks on vaja muuta Androidi seadeid menüüs \"Keeled ja sisestamine\" kahes kohas:
-        \"Klaviatuur ja sisestusmeetodid\" ning \"Kõne\". Samuti võib olla vaja kustutada rakenduse
-        \"Google\'i rakendus\" vaikeväärtused.&lt;/p>
-
-		&lt;p>Kuna &lt;b>%1$s&lt;/b>
-		kasutab kõne transkribeerimiseks veebiteenusi, siis peab olema
-		telefonis sisselülitatud internetiühendus.
-		Sõltuvalt
-		mobiilioperaatori
-		teenusepaketist võib interneti kasutamise hind
-		sõltuda andmemahtudest.
-		Seega tasub teada, et pooleminutise kõne
-		transkribeerimiseks
-		laaditakse
-		serverisse umbes 1MB jagu
-		andmeid (eeldusel, et kõne on salvestatud 16kHz sämplimissagedusega).&lt;/p>
+		href="http://kaljurand.github.io/Grammars/">grammatikate projekti kodulehekülge&lt;/a>.&lt;/p>
 
 		&lt;p>Põhjalikum
-		dokumentatsioon on
+		dokumentatsioon ja lähtekood on
 		&lt;a
 		href="http://kaljurand.github.io/K6nele/">%1$s veebilehel&lt;/a>.
-		Samuti on seal võimalik tutvuda rakenduse lähtekoodiga ning anda tagasisidet.&lt;/p></string>
+        Kasutajaandmete kaitse kohta lugege &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">siit&lt;/a>.&lt;/p>&lt;/p></string>
 
     <!-- List view -->
     <string name="emptylistApps">Siia ilmub automaatselt nimekiri rakendustest, kus
