@@ -46,9 +46,9 @@ import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
- * Loads the rewrites from the EXTRAs of an incoming SEND-intent, or if they are missing,
+ * Loads the rewrites from the EXTRAs of an incoming VIEW- or SEND-intent, or if they are missing,
  * then launches ACTION_GET_CONTENT to load the rewrites from its result data.
- * In case of an incoming SEND-intent we only accept "text/tab-separated-values".
+ * In case of an incoming VIEW/SEND-intent we only accept "text/tab-separated-values" (see the manifest).
  * However, if the user explicitly launches a file picker from Kõnele, then any "text/*" files
  * can be picked.
  */

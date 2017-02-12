@@ -7,7 +7,7 @@ Various documents, notes, examples
 
 [intents.dot](intents.dot) is a diagram showing how information can flow from Kõnele to external devices/apps and back.
 
-[Rewrite rule examples](http://kaljurand.github.io/K6nele/docs/et/user_guide.html#nited)
+[Rewrite rule examples](http://kaljurand.github.io/K6nele/docs/et/user_guide.html#näited)
 contains (mostly) Estonian rewrite rule tables (documented in English).
 A rewrite rule table contains the following tab-separated columns:
 
@@ -21,7 +21,7 @@ A rewrite rule table contains the following tab-separated columns:
 - Arg1. First argument of the command
 - Arg2. Second argument of the command
 
-The first line of the table is a header that names the columns. Only the Utterance and Replacement columns must be present.
+The first line of the table is a header that names the columns. The header is optional if the table contains a single column (interpreted as Utterance) or 2 columns (interpreted as Utterance and Replacement).
 Non-header lines can be commented out using an initial '#'.
 
 Rewriting is done by:
@@ -30,4 +30,4 @@ Rewriting is done by:
 
 The pre-defined commands cover cursor movement within the text and between fields, selection, replacement, copy/paste/cut,
 and the editor actions `search`, `send`, `go`, and `done`. Most of the commands can be repeated or undone multiple times.
-The arguments can reference expression groups by `$1`, `$2`, ... and the current selection by `{}`.
+The arguments can reference expression groups by `$1`, `$2`, ... and the current selection by `@sel()`.

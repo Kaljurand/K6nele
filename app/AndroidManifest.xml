@@ -137,14 +137,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             </intent-filter>
         </receiver>
 
-        <!--
-        The purpose of MAIN/DEFAULT/exported=true is to support the creation of "activity shortcut",
-        e.g. via Nova Launcher, i.e. the user can create an additional icon that launches directly
-        into the Preferences.
-        -->
+        <!-- Preferences are exported by default because they have intent filters.
+        But they should be not exported to avoid a security issue on older Androids (see lint check). -->
         <activity
             android:name=".activity.Preferences"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/labelActivityPreferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -207,8 +204,10 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".ServerListActivity"
             android:label="@string/labelActivityServerList"
             android:parentActivityName=".PreferencesRecognitionServiceHttp"></activity>
+        <!-- Exporting this to allow a shortcut to be created e.g. using Tasker. -->
         <activity
             android:name=".activity.RewritesSelectorActivity"
+            android:exported="true"
             android:label="@string/labelActivityRewritesSelector"
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
