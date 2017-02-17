@@ -74,7 +74,7 @@ edasi seadme veebibrauserile.
 <img title="Ekraanipilt: valik tuvastustulemusi" alt="Ekraanipilt: valik tuvastustulemusi." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img title="Ekraanipilt: tuvastustulemus veebiotsinguna" alt="Ekraanipilt: tuvastustulemus veebiotsinguna." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
-Ümberkirjutusreeglid (alates v1.6 beeta) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
+Ümberkirjutusreeglid (alates v1.6) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
 
 {% highlight sh %}
     Utterance<HT>Command<HT>Arg1<NL>
@@ -250,9 +250,12 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 ## Ümberkirjutusreeglid
 
-(_Alates v1.6 beeta_)
+(_Alates v1.6_)
 
-Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks. Sellised reeglid võimaldavad
+Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks.
+(Soovi korral vaata kohe [näitereegleid](#nited).)
+
+Ümberkirjutusreeglid võimaldavad
 
 - sisestada halvasti tuvastatavaid sõnu (nt pärisnimesid), ja parandada muid tuvastaja võimalikke puudujääke (autopunktsiooni puudumine, emotikonide toe puudumine, jms);
 - sisestada tekste, mis ei kipu meelde jääma, või mida ei taha tuvastajale avaldada (nt telefoninumbrid, aadressid, kontonumbrid);
@@ -373,9 +376,12 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 <img title="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse" alt="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse." src="{{ site.baseurl }}/images/et/Screenshot_20170115-154706.png">
 <img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri." src="{{ site.baseurl }}/images/et/Screenshot_20170115-160910.png">
 
+Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Korraga saab aktiivne olla ainult üks reeglifail.
+
 ### Näited
 
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU/edit?usp=sharing)] Ühest reeglist koosnev reeglistik, mis näitab, kuidas avada veebibrauseri asemel kaardirakendus.
+- [[TSV](https://docs.google.com/spreadsheets/d/1TC7hGq9SDrpiDmRjCxvFzfi6GJwOgKpQDQqTm086Xuk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1TC7hGq9SDrpiDmRjCxvFzfi6GJwOgKpQDQqTm086Xuk/edit?usp=sharing)] Tekstiasendusreeglid kirjavahemärkide lisamiseks (kommentaaridega)
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_send.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
