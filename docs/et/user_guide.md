@@ -253,7 +253,7 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 (_Alates v1.6_)
 
 Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks.
-(Soovi korral vaata kohe [näitereegleid](#nited).)
+(Soovi korral vaata kohe [näitereegleid](#näited).)
 
 Ümberkirjutusreeglid võimaldavad
 
