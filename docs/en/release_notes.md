@@ -13,7 +13,7 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
-### v1.6.xx (not released)
+### v1.6.46 (2017-02-19)
 
 This release introduces various small extensions and generalizations that collectively allow Kõnele to interact with external apps and devices, e.g. it is now relatively easy to use Kõnele as a voice interface to a third-party (text-only) chatbot, control your home lights with voice commands, or simply launch other apps on the device.
 
