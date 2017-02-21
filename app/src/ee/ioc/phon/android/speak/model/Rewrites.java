@@ -42,15 +42,18 @@ public class Rewrites {
     }
 
     public boolean isSelected() {
-        return mId.equals(PreferenceUtils.getPrefString(mPrefs, mRes, R.string.defaultRewritesName));
+        return getDefaults().contains(mId);
     }
 
     public boolean toggle() {
-        if (isSelected()) {
-            PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, null);
+        Set<String> set = new HashSet(getDefaults());
+        if (set.contains(mId)) {
+            set.remove(mId);
+            putDefaults(set);
             return false;
         }
-        PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, mId);
+        set.add(mId);
+        putDefaults(set);
         return true;
     }
 
@@ -92,9 +95,11 @@ public class Rewrites {
             String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
             delete();
             PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
-            String currentDefault = PreferenceUtils.getPrefString(mPrefs, mRes, R.string.defaultRewritesName);
-            if (mId.equals(currentDefault)) {
-                PreferenceUtils.putPrefString(mPrefs, mRes, R.string.defaultRewritesName, newName);
+            Set<String> defaults = new HashSet(getDefaults());
+            if (defaults.contains(mId)) {
+                defaults.remove(mId);
+                defaults.add(newName);
+                putDefaults(defaults);
             }
         }
     }
@@ -103,6 +108,14 @@ public class Rewrites {
         Set<String> deleteKeys = new HashSet<>();
         deleteKeys.add(mId);
         PreferenceUtils.clearPrefMap(mPrefs, mRes, R.string.keyRewritesMap, deleteKeys);
+    }
+
+    private Set<String> getDefaults() {
+        return PreferenceUtils.getPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables);
+    }
+
+    private void putDefaults(Set<String> set) {
+        PreferenceUtils.putPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables, set);
     }
 
     public static List<Rewrites> getTables(SharedPreferences prefs, Resources res) {

@@ -26,7 +26,7 @@
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
 
-    <string name="defaultRewritesName" translatable="false">defaultRewritesName</string>
+    <string name="defaultRewriteTables" translatable="false">defaultRewriteTables</string>
 
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
     // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status

@@ -51,6 +51,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
@@ -361,12 +362,13 @@ public final class Utils {
                                                            ComponentName app) {
         final String[] names;
         if (rewritesByName == null) {
-            // TODO: support multiple elements
-            String defaultRewrites = PreferenceUtils.getPrefString(prefs, resources, R.string.defaultRewritesName);
-            if (defaultRewrites == null) {
+            Set<String> defaults = PreferenceUtils.getPrefStringSet(prefs, resources, R.string.defaultRewriteTables);
+            if (defaults.isEmpty()) {
                 return Collections.EMPTY_LIST;
             }
-            names = new String[]{defaultRewrites};
+            names = defaults.toArray(new String[defaults.size()]);
+            // TODO: defaults should be a list (not a set that needs to be sorted)
+            Arrays.sort(names);
         } else {
             names = rewritesByName;
         }

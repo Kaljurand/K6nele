@@ -60,7 +60,7 @@
     <string name="summaryGrammarList">Nimekiri grammatikatest, mis tõlgivad
 		transkriptsiooni rakenduse-keelde</string>
     <string name="titleSelectRewrites">Ümberkirjutusreeglid</string>
-    <string name="summarySelectRewrites">Reeglistike lisamine, vaatamine, sisse/välja lülitamine, testimine, … Korraga saab olla sisselülitatud maksimaalselt üks reeglistik.</string>
+    <string name="summarySelectRewrites">Reeglistike lisamine, vaatamine, sisse/välja lülitamine, testimine, …</string>
     <string name="summarySimpleDemo">Transkribeerib kõne ja näitab tulemusi</string>
     <string name="summaryExtrasDemo">Transkribeerib kõne ja näitab tagastatud tulemusi (sh tehnilisi)</string>
     <string name="summaryHandsfreeDemo">Transkribeerib kõne, näitab parimaid tulemusi,

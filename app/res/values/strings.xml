@@ -10,7 +10,7 @@
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
-    <string name="labelIme">Kõnele speech keyboard</string>
+    <string name="labelIme">Kõnele speak &amp; swipe</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
     <string name="labelRecognitionServiceWs2">Kõnele (fast recognition 2)</string>
@@ -102,7 +102,7 @@
     <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
 
     <string name="titleSelectRewrites">Rewrites</string>
-    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. At most one table can be active at a time.</string>
+    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription.</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
