@@ -34,6 +34,7 @@ import ee.ioc.phon.android.speechutils.utils.IntentUtils;
  * <p>
  * TODO: handle latency, e.g. show progress in notification (but notifications are not available on Android Things)
  * TODO: add extras for various HTTP parameters and error handing (e.g. map 503 to a string)
+ * TODO: add user agent based on the calling app
  *
  * @author Kaarel Kaljurand
  */
