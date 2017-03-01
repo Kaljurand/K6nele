@@ -35,5 +35,5 @@ adb shell 'am start \
 -e ee.ioc.phon.android.extra.VOICE_PROMPT "Öelge laulu või muusiku nimi" \
 --ez ee.ioc.phon.android.extra.AUTO_START true \
 --ei android.speech.extra.MAX_RESULTS 1 \
--e ee.ioc.phon.android.extra.RESULT_UTTERANCE "(.+)" \
--e ee.ioc.phon.android.extra.RESULT_REPLACEMENT "'$intent'"'
+--ez ee.ioc.phon.android.extra.RESULT_LAUNCH_AS_ACTIVITY true \
+-e ee.ioc.phon.android.extra.RESULT_ARG1 "'$intent'"'

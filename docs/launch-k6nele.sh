@@ -4,6 +4,7 @@
 #
 # Usage:
 #
+# adb install /path/to/K6nele-x.y.zz.apk
 # launch-k6nele.sh RecognizerIntentActivity
 
 activity=SpeechActionActivity
