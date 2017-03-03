@@ -141,7 +141,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryDevel">
-        <!--
         <Preference
             android:summary="@string/summaryQuickSettings"
             android:title="@string/titleQuickSettings">
@@ -149,7 +148,6 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
-        -->
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">
@@ -174,7 +172,6 @@
                     android:targetClass="ee.ioc.phon.android.speak.demo.HandsfreeDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
-            <!--
             <Preference
                 android:summary="@string/summaryChatDemo"
                 android:title="@string/labelActivityChatDemo">
@@ -182,7 +179,6 @@
                     android:targetClass="ee.ioc.phon.android.speak.demo.ChatDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
-            -->
             <Preference
                 android:summary="@string/summaryVoiceSearchDemo"
                 android:title="@string/labelActivityVoiceSearchDemo">

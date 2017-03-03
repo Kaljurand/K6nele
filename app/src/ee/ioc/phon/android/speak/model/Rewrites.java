@@ -107,6 +107,7 @@ public class Rewrites {
     public void delete() {
         Set<String> deleteKeys = new HashSet<>();
         deleteKeys.add(mId);
+        // TODO: remove it from the defaults
         PreferenceUtils.clearPrefMap(mPrefs, mRes, R.string.keyRewritesMap, deleteKeys);
     }
 

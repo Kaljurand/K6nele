@@ -245,6 +245,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".activity.FetchUrlActivity"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <!-- Do not export in production -->
+        <activity
+            android:name=".activity.GetPutPreferenceActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name=".activity.QuickSettingsActivity"
             android:label="@string/labelActivityQuickSettings"
