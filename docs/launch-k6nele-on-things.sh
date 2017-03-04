@@ -6,16 +6,18 @@
 # see https://developer.android.com/things/hardware/raspberrypi.html
 #
 # Setting up Kõnele on the device:
-# 1. adb install /path/to/K6nele-x.y.zz.apk
-# 2. adb reboot (this grants the permissions)
-# 3. TODO: import some rewrite rules from a URL (needs extension to Kõnele)
+# 1. adb uninstall ee.ioc.phon.android.speak (if old version is installed)
+#    adb install /path/to/K6nele-x.y.zz.apk
+#    adb reboot (this grants the permissions)
+#    adb install -r -g /path/to/K6nele-x.y.zz.apk (reinstall and grant permissions, no reboot needed)
+# 2. TODO: import some rewrite rules from a URL (needs extension to Kõnele)
 #    (or use adb to write a rewrites table into the local storage)
-# 4. TODO: remove "Tap&Speak" + mic button (which do not make sense for a notouch device)
+# 3. TODO: remove "Tap&Speak" + mic button (which do not make sense for a notouch device)
 #    (using adb to modify the preferences + extending Kõnele not to refer to touch in the UI)
-# 5. ...
+#    adb-pref.sh keyHelpText --ez val false
+# 4. ...
 #
 # Usage:
-#
 # 1. Launch this script, i.e. launch-k6nele-on-things.sh
 # 2. Speak the name of a song/artist into the device
 # 3. (TODO) Some music player on the device starts playing the given song/artist
@@ -54,6 +56,8 @@ intent='{
 
 # TODO: AUDIO_CUES does not work
 
+# TODO: do not require this, instead reuse the existing task
+# (Currently results in Warning: Activity not started, its current task has been brought to the front)
 adb shell am force-stop ee.ioc.phon.android.speak;
 
 adb shell 'am start \
