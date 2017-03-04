@@ -92,23 +92,26 @@ public class Rewrites {
 
     public void rename(String newName) {
         if (!mId.equals(newName)) {
-            String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-            delete();
-            PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
+            if (newName != null) {
+                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
+            }
+            Set<String> deleteKeys = new HashSet<>();
+            deleteKeys.add(mId);
+            PreferenceUtils.clearPrefMap(mPrefs, mRes, R.string.keyRewritesMap, deleteKeys);
             Set<String> defaults = new HashSet(getDefaults());
             if (defaults.contains(mId)) {
                 defaults.remove(mId);
-                defaults.add(newName);
+                if (newName != null) {
+                    defaults.add(newName);
+                }
                 putDefaults(defaults);
             }
         }
     }
 
     public void delete() {
-        Set<String> deleteKeys = new HashSet<>();
-        deleteKeys.add(mId);
-        // TODO: remove it from the defaults
-        PreferenceUtils.clearPrefMap(mPrefs, mRes, R.string.keyRewritesMap, deleteKeys);
+        rename(null);
     }
 
     private Set<String> getDefaults() {
