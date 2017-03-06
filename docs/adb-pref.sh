@@ -9,7 +9,8 @@ then
     echo "adb-pref.sh keyHelpText"
     echo "adb-pref.sh keyHelpText --ez val true"
     echo "adb-pref.sh keyMaxResults -e val 10 # For some prefs, ints are passed as strings"
-    echo "adb-pref.sh defaultRewriteTables -e val [Base,Calc,Commands"
+    echo "adb-pref.sh defaultRewriteTables --esa val Base,ActivityCommands,ImeCommands"
+    echo "adb-pref.sh defaultRewriteTables --esn val # Setting to null"
     exit
 fi
 

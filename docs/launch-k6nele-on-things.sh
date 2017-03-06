@@ -10,12 +10,17 @@
 #    adb install /path/to/K6nele-x.y.zz.apk
 #    adb reboot (this grants the permissions)
 #    adb install -r -g /path/to/K6nele-x.y.zz.apk (reinstall and grant permissions, no reboot needed)
+#    adb shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO (granting permissions)
 # 2. TODO: import some rewrite rules from a URL (needs extension to Kõnele)
 #    (or use adb to write a rewrites table into the local storage)
 # 3. TODO: remove "Tap&Speak" + mic button (which do not make sense for a notouch device)
 #    (using adb to modify the preferences + extending Kõnele not to refer to touch in the UI)
 #    adb-pref.sh keyHelpText --ez val false
 # 4. ...
+# .. Look at some settings: adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+# .. adb shell am start -a com.android.settings.TTS_SETTINGS
+# .. press BACK: adb shell input keyevent 4
+# .. adb shell 'pm list packages'
 #
 # Usage:
 # 1. Launch this script, i.e. launch-k6nele-on-things.sh
@@ -27,6 +32,7 @@
 #
 # adb shell reboot -p
 
+activity="ee.ioc.phon.android.speak/.activity.SpeechActionActivity"
 component="ee.ioc.phon.android.speak/.service.WebSocketRecognitionService"
 
 language="et-EE"
@@ -61,7 +67,7 @@ intent='{
 adb shell am force-stop ee.ioc.phon.android.speak;
 
 adb shell 'am start \
--n ee.ioc.phon.android.speak/.activity.SpeechActionActivity \
+-n "'$activity'" \
 -e android.speech.extra.LANGUAGE_MODEL "free_form" \
 -e android.speech.extra.LANGUAGE "'$language'" \
 -e ee.ioc.phon.android.extra.SERVICE_COMPONENT "'$component'" \
