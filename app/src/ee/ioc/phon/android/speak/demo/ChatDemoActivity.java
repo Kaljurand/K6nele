@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2016-2017, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,18 @@
 
 package ee.ioc.phon.android.speak.demo;
 
-import android.content.Intent;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -32,35 +35,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
+import ee.ioc.phon.android.speak.view.SpeechInputView;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.JsonUtils;
 
-
 /**
- * Simple chat style interface.
+ * Simple chat style interface, which demonstrates how to use SpeechInputView.
  * <p>
  * TODO: each list item should have at least 3 components: spoken input,
  * pretty-printed output (JSON, or parts of it), formal output (JSON that can be executed)
  */
-public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
+public class ChatDemoActivity extends Activity {
 
     private final List<String> mMatches = new ArrayList<>();
 
-    private final Intent mIntent = createRecognizerIntent();
+    private SharedPreferences mPrefs;
+    private Resources mRes;
+    private SpeechInputView mView;
     private ListView mList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_demo);
-        Button startButton = (Button) findViewById(R.id.buttonStart);
-        startButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchRecognizerIntentSimple(mIntent);
-            }
-        });
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mRes = getResources();
+
+        mView = (SpeechInputView) findViewById(R.id.vSpeechInputView);
+        CallerInfo callerInfo = new CallerInfo(createExtras(), getCallingActivity());
+        // TODO: review this
+        mView.init(R.array.keysActivity, callerInfo);
+        mView.setListener(getSpeechInputViewListener());
+
         mList = (ListView) findViewById(R.id.list_matches);
 
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,37 +83,6 @@ public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
         });
     }
 
-
-    @Override
-    protected void onSuccess(Intent intent) {
-        // TODO: inputs is a list of matches before rewriting
-        ArrayList<String> inputs = intent.getStringArrayListExtra("TODO:inputs");
-        ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-        if (!matches.isEmpty()) {
-            String result = matches.get(0);
-            //String resultPp = "voice command (the raw utterance)\n\n" + result;
-            try {
-                String resultPp = "/* .... */\n" + JsonUtils.parseJson(result).toString(2);
-                mMatches.add(resultPp);
-            } catch (JSONException e) {
-                mMatches.add("ERROR: " + e.getLocalizedMessage());
-            }
-            // TODO: execute the result
-            updateListView(mMatches);
-        }
-    }
-
-    @Override
-    protected void onCancel() {
-        // Overriding the parent in order not to finish()
-    }
-
-    @Override
-    protected void onError(int errorCode) {
-        mMatches.add("* " + getErrorMessage(errorCode));
-        updateListView(mMatches);
-    }
-
     private void startActivity(String intentAsJson) {
         try {
             IntentUtils.startActivityIfAvailable(this, JsonUtils.createIntent(intentAsJson));
@@ -111,21 +91,57 @@ public class ChatDemoActivity extends AbstractRecognizerDemoActivity {
         }
     }
 
-    private static Intent createRecognizerIntent() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say command");
-        intent.putExtra(Extras.EXTRA_VOICE_PROMPT, "Say command");
-        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-        intent.putExtra(Extras.EXTRA_AUTO_START, true);
-        intent.putExtra(Extras.EXTRA_RETURN_ERRORS, true);
-        // TODO: load a specific rewrites file
-        return intent;
-    }
-
-
     private void updateListView(List<String> list) {
         mList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
+    }
+
+    private void toast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener() {
+        return new AbstractSpeechInputViewListener() {
+
+            private Iterable<UtteranceRewriter> mRewriters;
+
+            @Override
+            public void onComboChange(String language, ComponentName service) {
+                mRewriters = Utils.genRewriters(mPrefs, mRes, new String[]{"Base", "Commands"}, language, service, getComponentName());
+            }
+
+            @Override
+            public void onFinalResult(List<String> results, Bundle bundle) {
+                if (!results.isEmpty()) {
+                    String result = results.get(0);
+                    //String resultPp = "voice command (the raw utterance)\n\n" + result;
+                    mMatches.add(result);
+                    updateListView(mMatches);
+                    // TODO: store the JSON also in the list, so that it can be reexecuted later
+                    IntentUtils.launchIfIntent(ChatDemoActivity.this, mRewriters, result);
+                }
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+                // TODO
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                mMatches.add("* ERROR: " + errorCode);
+                updateListView(mMatches);
+            }
+
+            @Override
+            public void onStartListening() {
+                // stopTts();
+            }
+        };
+    }
+
+    private static Bundle createExtras() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        return bundle;
     }
 }

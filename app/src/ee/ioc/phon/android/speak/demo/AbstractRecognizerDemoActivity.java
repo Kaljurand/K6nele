@@ -149,10 +149,6 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 
-    protected void launchRecognizerIntentSimple(Intent intent) {
-        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
-    }
-
 
     protected void toast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();

@@ -273,7 +273,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".demo.ChatDemoActivity"
             android:exported="true"
-            android:label="@string/labelActivityChatDemo"></activity>
+            android:label="@string/labelActivityChatDemo"
+            android:theme="@style/Theme.K6nele.Light"></activity>
         <activity
             android:name=".demo.VoiceSearchDemo"
             android:label="@string/labelActivityVoiceSearchDemo"></activity>

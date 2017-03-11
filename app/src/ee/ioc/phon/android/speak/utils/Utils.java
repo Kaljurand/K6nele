@@ -414,7 +414,10 @@ public final class Utils {
 
     public static Intent getRecognizerIntent(String action, CallerInfo callerInfo, String language) {
         Intent intent = new Intent(action);
-        intent.putExtras(callerInfo.getExtras());
+        Bundle extras = callerInfo.getExtras();
+        if (extras != null) {
+            intent.putExtras(extras);
+        }
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, callerInfo.getPackageName());

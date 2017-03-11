@@ -181,10 +181,12 @@ public class SpeechInputView extends LinearLayout {
         int defaultHelpText = keysAsTypedArray.getResourceId(9, 0);
         keysAsTypedArray.recycle();
 
-        if (PreferenceUtils.getPrefBoolean(prefs, getResources(), keyHelpText, defaultHelpText)) {
-            mTvInstruction.setVisibility(View.VISIBLE);
-        } else {
-            mTvInstruction.setVisibility(View.GONE);
+        if (mTvInstruction != null) {
+            if (PreferenceUtils.getPrefBoolean(prefs, getResources(), keyHelpText, defaultHelpText)) {
+                mTvInstruction.setVisibility(View.VISIBLE);
+            } else {
+                mTvInstruction.setVisibility(View.GONE);
+            }
         }
 
         // This button can be pressed in any state.
@@ -256,26 +258,30 @@ public class SpeechInputView extends LinearLayout {
     }
 
     public void showMessage(CharSequence message) {
-        if (message == null || message.length() == 0) {
-            setText(mTvMessage, "");
-        } else {
-            mTvMessage.setEllipsize(TextUtils.TruncateAt.END);
-            mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG & ~Paint.UNDERLINE_TEXT_FLAG);
-            setText(mTvMessage, message);
+        if (mTvMessage != null) {
+            if (message == null || message.length() == 0) {
+                setText(mTvMessage, "");
+            } else {
+                mTvMessage.setEllipsize(TextUtils.TruncateAt.END);
+                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG & ~Paint.UNDERLINE_TEXT_FLAG);
+                setText(mTvMessage, message);
+            }
         }
     }
 
     public void showMessage(CharSequence message, boolean isSuccess) {
-        if (message == null || message.length() == 0) {
-            setText(mTvMessage, "");
-        } else {
-            mTvMessage.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-            if (isSuccess) {
-                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG) | Paint.UNDERLINE_TEXT_FLAG);
+        if (mTvMessage != null) {
+            if (message == null || message.length() == 0) {
+                setText(mTvMessage, "");
             } else {
-                mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG) | Paint.STRIKE_THRU_TEXT_FLAG);
+                mTvMessage.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                if (isSuccess) {
+                    mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG) | Paint.UNDERLINE_TEXT_FLAG);
+                } else {
+                    mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG) | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+                setText(mTvMessage, message);
             }
-            setText(mTvMessage, message);
         }
     }
 
