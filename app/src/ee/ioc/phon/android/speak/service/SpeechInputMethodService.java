@@ -223,10 +223,8 @@ public class SpeechInputMethodService extends InputMethodService {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     mInputMethodManager.switchToNextInputMethod(getToken(), false /* not onlyCurrentIme */);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    mInputMethodManager.switchToLastInputMethod(token);
                 } else {
-                    mInputMethodManager.showInputMethodPicker();
+                    mInputMethodManager.switchToLastInputMethod(token);
                 }
             } catch (NoSuchMethodError e) {
                 Log.e("IME switch failed", e);

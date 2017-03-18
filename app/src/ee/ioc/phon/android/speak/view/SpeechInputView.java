@@ -262,7 +262,7 @@ public class SpeechInputView extends LinearLayout {
             if (message == null || message.length() == 0) {
                 setText(mTvMessage, "");
             } else {
-                mTvMessage.setEllipsize(TextUtils.TruncateAt.END);
+                mTvMessage.setEllipsize(TextUtils.TruncateAt.START);
                 mTvMessage.setPaintFlags(mTvMessage.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG & ~Paint.UNDERLINE_TEXT_FLAG);
                 setText(mTvMessage, message);
             }

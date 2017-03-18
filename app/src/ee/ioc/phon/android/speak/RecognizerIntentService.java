@@ -434,10 +434,11 @@ public class RecognizerIntentService extends Service {
 		if (mRecSession != null && ! mRecSession.isFinished()) {
 			mRecSession.sendChunk(bytes, isLast);
 			mChunkCount++;
+			int len = bytes == null ? -1 : bytes.length;
 			if (isLast) {
-				Log.i(LOG_TAG, "sendChunk: FINAL: " + bytes.length);
+				Log.i(LOG_TAG, "sendChunk: FINAL: " + len);
 			} else {
-				Log.i(LOG_TAG, "sendChunk: " + bytes.length);
+				Log.i(LOG_TAG, "sendChunk: " + len);
 			}
 		} else {
 			Log.e(LOG_TAG, "sendChunk: recSession is not available");

@@ -51,7 +51,7 @@
             android:ellipsize="start"
             android:padding="@dimen/layoutMargin1"
             android:singleLine="true"
-            android:text="@string/testComboLabel"
+            android:text="@string/summaryEnableIme"
             android:textColor="@color/grey300"
             android:textSize="@dimen/textSize2" />
 
