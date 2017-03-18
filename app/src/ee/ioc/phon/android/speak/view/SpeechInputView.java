@@ -54,7 +54,17 @@ public class SpeechInputView extends LinearLayout {
 
         void onFinalResult(List<String> text, Bundle bundle);
 
+        /**
+         * Switch to the next IME or ask the user to choose the IME.
+         *
+         * @param isAskUser
+         */
         void onSwitchIme(boolean isAskUser);
+
+        /**
+         * Switch to the previous IME (the IME that launched this IME)
+         */
+        void onSwitchToLastIme();
 
         void onSearch();
 
@@ -109,6 +119,15 @@ public class SpeechInputView extends LinearLayout {
                 public void onClick(View v) {
                     cancelOrDestroy();
                     mListener.onSearch();
+                }
+            });
+
+            buttonSearch.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    cancelOrDestroy();
+                    mListener.onSwitchToLastIme();
+                    return true;
                 }
             });
         }

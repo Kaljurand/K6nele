@@ -3,10 +3,14 @@ package ee.ioc.phon.android.speak.demo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -24,6 +28,9 @@ import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 
 public class EncoderDemoActivity extends Activity {
+
+    private static final String VOICE_IME_SUBTYPE_MODE = "voice";
+    private static final String VOICE_IME_PACKAGE_PREFIX = "";
 
     private AudioRecorder mRecorder;
     private Handler mStopHandler = new Handler();
@@ -56,6 +63,18 @@ public class EncoderDemoActivity extends Activity {
                 List<String> info = new ArrayList<>();
                 info.add("FLAC encoders: " + AudioUtils.getEncoderNamesForType("audio/flac").toString());
                 info.addAll(AudioUtils.getAvailableEncoders(16000));
+                Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
+                details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, info.toArray(new String[info.size()]));
+                startActivity(details);
+            }
+        });
+
+        Button bTest3 = (Button) findViewById(R.id.buttonTest3);
+        bTest3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<String> info = getVoiceImeInputMethodInfo(getPackageManager(),
+                        (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE));
                 Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
                 details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, info.toArray(new String[info.size()]));
                 startActivity(details);
@@ -135,5 +154,21 @@ public class EncoderDemoActivity extends Activity {
         fos.write(recording);
         fos.close();
         return Uri.parse("content://" + FileContentProvider.AUTHORITY + "/" + filename);
+    }
+
+    private static List<String> getVoiceImeInputMethodInfo(PackageManager pm, InputMethodManager inputMethodManager)
+            throws SecurityException, IllegalArgumentException {
+        List<String> imeInfos = new ArrayList<>();
+        for (InputMethodInfo inputMethodInfo : inputMethodManager.getEnabledInputMethodList()) {
+            for (int i = 0; i < inputMethodInfo.getSubtypeCount(); i++) {
+                InputMethodSubtype subtype = inputMethodInfo.getSubtypeAt(i);
+                if (VOICE_IME_SUBTYPE_MODE.equals(subtype.getMode()) &&
+                        inputMethodInfo.getComponent().getPackageName().startsWith(VOICE_IME_PACKAGE_PREFIX)) {
+                    CharSequence label = inputMethodInfo.loadLabel(pm);
+                    imeInfos.add(label + "@" + inputMethodInfo.getComponent());
+                }
+            }
+        }
+        return imeInfos;
     }
 }

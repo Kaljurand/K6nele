@@ -2,4 +2,22 @@
 
 <input-method xmlns:android="http://schemas.android.com/apk/res/android"
     android:settingsActivity="ee.ioc.phon.android.speak.activity.Preferences"
-    android:supportsSwitchingToNextInputMethod="true" />
+    android:supportsSwitchingToNextInputMethod="true">
+
+    <subtype
+        android:imeSubtypeExtraValue="somePrivateOption=true"
+        android:imeSubtypeLocale=""
+        android:imeSubtypeMode="voice"
+        android:label="Speak &amp; swipe"
+        android:overridesImplicitlyEnabledSubtype="true" />
+    <!--
+    TODO: add a one-shot IME that shows a (user-configurable) keyboard for useful IME commands
+    (e.g. next/previous field, undo, arrows, delete, some emoticons)
+    <subtype
+        android:imeSubtypeExtraValue="foobar=30,someInternalOption=false"
+        android:imeSubtypeLocale=""
+        android:imeSubtypeMode="commands"
+        android:isAuxiliary="true"
+        android:label="Commands" />
+        -->
+</input-method>

@@ -18,7 +18,7 @@
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
-    <string name="labelActivityEncoderDemo">Audio demo</string>
+    <string name="labelActivityEncoderDemo">Muud testid/demod</string>
     <string name="labelActivityFormDemo">Form demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
@@ -69,7 +69,7 @@
     <string name="summaryChatDemo">Kõnekäskudega käivitatud rakenduste ajalugu</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
-    <string name="summaryEncoderDemo">Heli lindistamise ja kokkupakkimisega seotud testid ja demod</string>
+    <string name="summaryEncoderDemo">Muud testid ja demod (lindistamine, audio kokkupakkimine, jne)</string>
     <string name="summaryFormDemo">HTML vorm erinevat tüüpi väljadega, kõneklaviatuuri testimiseks</string>
 
     <!-- RecognizerIntent activity -->
@@ -286,7 +286,7 @@
     <string name="summaryImeCombo">Uuendan…</string>
     <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage siia.</string>
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
-    <string name="labelIme">Kõnele kõneklaviatuur</string>
+    <string name="labelIme">Kõnele kõne &amp; svaip</string>
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>

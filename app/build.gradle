@@ -15,7 +15,7 @@ dependencies {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION

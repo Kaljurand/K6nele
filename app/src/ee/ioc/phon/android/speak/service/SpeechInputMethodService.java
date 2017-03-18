@@ -84,7 +84,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 break;
             case InputType.TYPE_CLASS_DATETIME:
                 type = "DATETIME";
-                switchIme(false);
+                switchToLastIme();
                 break;
             case InputType.TYPE_CLASS_PHONE:
                 type = "PHONE";
@@ -96,7 +96,7 @@ public class SpeechInputMethodService extends InputMethodService {
                         variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     // We refuse to recognize passwords for privacy reasons.
                     type += "PASSWORD || VISIBLE_PASSWORD";
-                    switchIme(false);
+                    switchToLastIme();
                 } else if (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS ||
                         variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS) {
                     type += "EMAIL_ADDRESS";
@@ -186,7 +186,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
     @Override
     public void onCurrentInputMethodSubtypeChanged(InputMethodSubtype subtype) {
-        Log.i("onCurrentInputMethodSubtypeChanged: " + subtype);
+        Log.i("onCurrentInputMethodSubtypeChanged: " + subtype + ": " + subtype.getExtraValue());
         closeSession();
     }
 
@@ -209,9 +209,8 @@ public class SpeechInputMethodService extends InputMethodService {
     }
 
     /**
-     * Switching to another IME (ideally the previous one). Either when the user tries to edit
-     * a password, or explicitly presses the "switch IME" button.
-     * TODO: not sure it is the best way to do it
+     * Switch to another IME by selecting it from the list of all active IMEs (isAskUser==true), or
+     * by taking the next IME in the IME rotation (isAskUser==false on JELLY_BEAN).
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void switchIme(boolean isAskUser) {
@@ -222,7 +221,7 @@ public class SpeechInputMethodService extends InputMethodService {
             final IBinder token = getToken();
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    mInputMethodManager.switchToNextInputMethod(getToken(), false /* not onlyCurrentIme */);
+                    mInputMethodManager.switchToNextInputMethod(token, false /* not onlyCurrentIme */);
                 } else {
                     mInputMethodManager.switchToLastInputMethod(token);
                 }
@@ -230,6 +229,16 @@ public class SpeechInputMethodService extends InputMethodService {
                 Log.e("IME switch failed", e);
             }
         }
+    }
+
+    /**
+     * Switch to the previous IME, either when the user tries to edit an unsupported field (e.g. password),
+     * or when they explicitly want to be taken back to the previous IME e.g. in case of a one-shot
+     * speech input.
+     */
+    private void switchToLastIme() {
+        closeSession();
+        mInputMethodManager.switchToLastInputMethod(getToken());
     }
 
     private static String getText(List<String> results) {
@@ -279,6 +288,11 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onSwitchIme(boolean isAskUser) {
                 switchIme(isAskUser);
+            }
+
+            @Override
+            public void onSwitchToLastIme() {
+                switchToLastIme();
             }
 
             @Override

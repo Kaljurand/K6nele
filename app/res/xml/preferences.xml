@@ -28,13 +28,11 @@
                     android:value="@string/keyImeCombo" />
             </intent>
         </Preference>
-        <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeAutoStart"
             android:key="@string/keyImeAutoStart"
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
-        -->
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeShowPartialResults"
             android:key="@string/keyImeShowPartialResults"
@@ -187,17 +185,17 @@
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
             <Preference
-                android:summary="@string/summaryEncoderDemo"
-                android:title="@string/labelActivityEncoderDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-            <Preference
                 android:summary="@string/summaryFormDemo"
                 android:title="@string/labelActivityFormDemo">
                 <intent
                     android:targetClass="ee.ioc.phon.android.speak.demo.FormDemoActivity"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
+            <Preference
+                android:summary="@string/summaryEncoderDemo"
+                android:title="@string/labelActivityEncoderDemo">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
 

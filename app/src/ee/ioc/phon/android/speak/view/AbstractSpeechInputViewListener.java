@@ -20,6 +20,10 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
     }
 
     @Override
+    public void onSwitchToLastIme() {
+    }
+
+    @Override
     public void onSearch() {
     }
 
