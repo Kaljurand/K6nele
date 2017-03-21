@@ -25,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 1649
-        versionName '1.6.49'
+        versionCode 1650
+        versionName '1.6.50'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }
@@ -77,7 +77,7 @@ android {
     }
     lintOptions {
         //disable 'AppCompatResource','MissingPrefix','ResourceType'
-        disable 'ResourceType','IconLauncherFormat','GoogleAppIndexingWarning'
+        disable 'ResourceType', 'IconLauncherFormat', 'GoogleAppIndexingWarning'
     }
 }
 

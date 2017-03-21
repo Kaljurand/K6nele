@@ -55,7 +55,6 @@ public class ChatDemoActivity extends Activity {
 
     private SharedPreferences mPrefs;
     private Resources mRes;
-    private SpeechInputView mView;
     private ListView mList;
 
     @Override
@@ -66,11 +65,11 @@ public class ChatDemoActivity extends Activity {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRes = getResources();
 
-        mView = (SpeechInputView) findViewById(R.id.vSpeechInputView);
+        SpeechInputView siv = (SpeechInputView) findViewById(R.id.vSpeechInputView);
         CallerInfo callerInfo = new CallerInfo(createExtras(), getCallingActivity());
         // TODO: review this
-        mView.init(R.array.keysActivity, callerInfo);
-        mView.setListener(getSpeechInputViewListener());
+        siv.init(R.array.keysActivity, callerInfo);
+        siv.setListener(getSpeechInputViewListener());
 
         mList = (ListView) findViewById(R.id.list_matches);
 

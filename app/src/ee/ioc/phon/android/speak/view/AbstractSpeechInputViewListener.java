@@ -9,68 +9,83 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
 
     @Override
     public void onPartialResult(List<String> results) {
+        // empty
     }
 
     @Override
     public void onFinalResult(List<String> results, Bundle bundle) {
+        // empty
     }
 
     @Override
     public void onSwitchIme(boolean isAskUser) {
+        // empty
     }
 
     @Override
     public void onSwitchToLastIme() {
+        // empty
     }
 
     @Override
     public void onSearch() {
+        // empty
     }
 
     @Override
     public void onDeleteLastWord() {
+        // empty
     }
 
     @Override
     public void onAddNewline() {
+        // empty
     }
 
     @Override
     public void goUp() {
+        // empty
     }
 
     @Override
     public void goDown() {
+        // empty
     }
 
     @Override
     public void onAddSpace() {
+        // empty
     }
 
     @Override
     public void onBufferReceived(byte[] buffer) {
+        // empty
     }
 
     @Override
     public void onSelectAll() {
+        // empty
     }
 
     @Override
     public void onReset() {
+        // empty
     }
-
 
     @Override
     public void onStartListening() {
+        // empty
     }
 
     @Override
     public void onStopListening() {
+        // empty
     }
 
     // TODO: add onCancel()
 
     @Override
     public void onError(int errorCode) {
+        // empty
     }
 }

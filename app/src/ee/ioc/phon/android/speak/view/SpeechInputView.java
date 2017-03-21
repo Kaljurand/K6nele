@@ -102,14 +102,14 @@ public class SpeechInputView extends LinearLayout {
             mBImeKeyboard.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onSwitchIme(false);
+                    mListener.onSwitchToLastIme();
                 }
             });
 
             mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mListener.onSwitchIme(true);
+                    mListener.onSwitchIme(false);
                     return true;
                 }
             });
@@ -125,8 +125,7 @@ public class SpeechInputView extends LinearLayout {
             buttonSearch.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    cancelOrDestroy();
-                    mListener.onSwitchToLastIme();
+                    // TODO: do something interesting
                     return true;
                 }
             });
