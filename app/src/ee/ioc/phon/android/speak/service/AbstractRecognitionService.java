@@ -24,6 +24,7 @@ import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
+ * Performs audio recording and is meant for cloud services.
  * About RemoteException see
  * http://stackoverflow.com/questions/3156389/android-remoteexceptions-and-services
  */

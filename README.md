@@ -40,7 +40,11 @@ Point to the Android SDK directory by setting the environment variable
 
 Build the Kõnele app
 
-    ./gradlew assembleRelease
+    gradle assemble
+
+or
+
+    ./gradlew assemble
 
 
 If you have access to a release keystore then

@@ -123,6 +123,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- TODO: do we still need it, now that we support all services -->
             <meta-data
                 android:name="android.speech.DETAILS"
                 android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />

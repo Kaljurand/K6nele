@@ -62,8 +62,6 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(System.getenv("KEYSTORE"))
-            keyAlias System.getenv("KEY_ALIAS")
         }
     }
     buildTypes {
@@ -84,6 +82,8 @@ android {
 
 if (project.hasProperty('storePassword') &&
         project.hasProperty('keyPassword')) {
+    android.signingConfigs.release.storeFile = file(System.getenv("KEYSTORE"))
+    android.signingConfigs.release.keyAlias = System.getenv("KEY_ALIAS")
     android.signingConfigs.release.storePassword = storePassword
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
