@@ -21,9 +21,9 @@ et			sidekriips( |$)	-
 et			mõttekriips( |$)	 -- 
 et			uus lõik	\n\n
 en			dollar sign	\$				Dollar sign must be escaped.
-et			(\w) (aga|et|kuid|sest|siis|vaid)( |$)	$1, $2$3				autopunctuation. We optimize for precision by checking that the inserted comma is preceded by a word character, thus it only works within the utterance. Works incorrectly with <mis sa siis teed> etc.
+et			(\w) (aga|et|et mis|kuid|sest|siis|vaid)( |$)	$1, $2$3				autopunctuation. We optimize for precision by checking that the inserted comma is preceded by a word character, thus it only works within the utterance. Works incorrectly with <mis sa siis teed> etc.
 et			(\w) (mille|kelle)(l|le|lt|s|sse|st|ni|na|ks|ga|ta)( |$)	$1, $2$3$4				relcl pronoun
-et			(\w) (mi|ke)(s|da|lle)( |$)	$1, $2$3$4				relcl pronoun
+et			(\w) (mi|ke)(s|da)( |$)	$1, $2$3$4				relcl pronoun
 #et			\büks\b	1				number; "üks" is ambiguous	number
 et			\bkaks\b	2					number
 et			\bkolm\b	3					number
