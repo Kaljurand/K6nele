@@ -3,12 +3,38 @@
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
 
-    <!-- Used to set the alarm clock if the transcription resolves to an AlarmClock intent. -->
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-    <!-- Used to reach the speech recognition server. -->
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <!-- Used to record the speech input to be transcribed. -->
+    <!-- Permission RECORD_AUDIO.
+    Used to record the speech input to be transcribed.
+    This is an essential permission for Kõnele. Because it is also a "dangerous" permission,
+    then Kõnele requests it as soon as the user starts the audio recorder.
+    -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+
+    <!-- Permission INTERNET.
+    Used to reach the speech recognition server.
+    Non-dangerous permission, i.e. granted automatically at install time.
+    This is not needed when only using offline recognition services (e.g. wake up word triggers),
+    but unfortunately there is no way to enable/disable it at runtime.
+    -->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <!-- Permission READ_EXTERNAL_STORAGE is sometimes required when importing rewrite rules,
+    e.g. when opening rules via Firefox or Dropbox. (It is not needed via Chrome.)
+    This is a "dangerous" permission, i.e. it is not enabled by default. Kõnele currently does not
+    provide a UI to request it either, but listing it in the manifest makes it show up in the Apps settings,
+    i.e. the user can grant it, if needed. In Android versions before v6.0 (~50% of the users as of
+    2017-04-01) the permission is granted at install time, which is not nice, but this user base will
+    disappear over time.
+    -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- Permission SET_ALARM.
+    Used to set the alarm clock if the transcription resolves to an AlarmClock intent.
+    Non-dangerous permission, i.e. granted automatically at install time.
+    This is only used when a rewrite rule creates an AlarmClock intent, so most users would not
+    need it, but unfortunately there is no way to enable/disable it at runtime.
+    -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <!-- Some Chromebooks don't support touch. Although not essential,
      it's a good idea to explicitly include this declaration. -->

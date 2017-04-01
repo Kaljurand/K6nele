@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
@@ -117,9 +118,24 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     }
 
     @Override
+    public void onRestart() {
+        super.onRestart();
+        Log.i("onRestart");
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+        Log.i("onStart");
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("onResume");
+
+        // These steps are done in onResume, because when an activity that has been lanuched by Kõnele
+        // finishes, then Kõnele might not necessarily go through onStart.
         clearAudioBuffer();
         setUpExtras();
         registerPrompt(mTvPrompt);
@@ -150,7 +166,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
     }
 
-
     private void start() {
         if (isAutoStart()) {
             // TODO: test what happens if the view is started while TTS is running
@@ -167,6 +182,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     @Override
     public void onStop() {
         super.onStop();
+        Log.i("onStop");
         // We stop the service unless a configuration change causes onStop(),
         // i.e. the service is not stopped because of rotation, but is
         // stopped if BACK or HOME is pressed, or the Settings-activity is launched.
