@@ -244,7 +244,7 @@ Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab 
 kasutab vaikimisi määratud kõnetuvastusteenust. Seega saab Kõnele ja Google'i tõlkerakendusega
 teha kõnest-kõnesse tõlget eesti keelest paljudesse teistesse keeltesse.
 
-Android v6 on lisanud nn "Abirakenduse" mõiste, kuid kui abirakenduseks on valitud _Google'i rakendus_, siis valikut `Häälsisend` ei kuvata, ning Kõnele rakendust vaikimisi teenuseks seada ei saa. Üheks kahetsusväärseks tagajärjeks on see, et nüüd puudub võimalus korraga kasutada funktsionaalsust "Google Now on Tap" ja eestikeelset kõnesisendit rakenduses _Google Translate_.
+Android v6 on lisanud nn "Abirakenduse" mõiste, kuid kui abirakenduseks on valitud _Google'i rakendus_, siis valikut `Häälsisend` ei kuvata, ning Kõnele rakendust vaikimisi teenuseks seada ei saa. Üheks kahetsusväärseks tagajärjeks on see, et nüüd puudub võimalus korraga kasutada funktsionaalsust "Google Assistant" ja eestikeelset kõnesisendit rakenduses _Google Translate_.
 (Vt ka vearaporteid [200494](https://code.google.com/p/android/issues/detail?id=200494)
 ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
@@ -253,7 +253,7 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 (_Alates v1.6_)
 
 Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks.
-(Soovi korral vaata kohe [näitereegleid](#näited).)
+(Soovi korral vaata kohe [näiteid reeglitest](#näited).)
 
 Ümberkirjutusreeglid võimaldavad
 
@@ -265,7 +265,7 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist, nn TSV-failist, kus veerueraldajaks on tabulaator ja reaeraldajaks reavahetussümbol. Kõnele toetab järgmisi veerge (muid ignoreerib):
 
-- __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks (lausungimuster). Võib sisaldada alamgruppe (nn _capturing group_), mis on tähistatud sulgudega `()` ja viiteid nendele (tähistatud `\1`, `\2`, ...).
+- __Utterance__ Regulaaravaldis kõnesisendi tuvastamiseks, st lausungimuster, millele vastab üks või rohkem võimalikku kõnesisendit. Võib sisaldada alamgruppe (nn _capturing group_), mis on tähistatud sulgudega `()` ja viiteid nendele (tähistatud `\1`, `\2`, ...).
 - __Replacement__ Asendustekst. Võib sisaldada viiteid __Utterance__ gruppidele (tähistatud `$1`, `$2`, ...).
 - __Locale__ Regulaaravaldis keele/riigi (nn _locale_) kirjeldusega (nt `et`, `en-US`).
 - __Service__ Regulaaravaldis tuvastusteenuse Java klassi nime kirjeldusega.
@@ -283,7 +283,7 @@ Näide. Lihtne (eestikeelne) ümberkirjutusreegel. Küsimärk lausungimustris m�
 - __Utterance__ = `minu lemmik ?matemaatiku ?nimi`
 - __Replacement__ = `Srinivasa Ramanujan`
 
-Näide. Pikema teksti sisestamine. Märgid `^` ja `$` nõuavad, et lausung vastaks mustrile algusest lõpuni. Asendustekstis olevad `\n` märgid tähistavad reavahetust, ning nurksulud on lisatud selleks, et hiljem oleks lihtsam kirjas täitmist vajavate osade juurde navigeerida (nt käsuga "vali klambrid").
+Näide. Pikema teksti sisestamine. Märgid `^` ja `$` nõuavad, et lausung vastaks mustrile algusest lõpuni. Asendustekstis olevad `\n` märgid tähistavad reavahetust, ning nurksulud on lisatud selleks, et hiljem oleks lihtsam tekstis veel täitmist vajavate osade juurde navigeerida (nt käsuga "vali klambrid").
 
 - __Locale__ = `et`
 - __Utterance__ = `^vastuse vorm müügipakkumisele$`
@@ -366,7 +366,7 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 
 Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel TSV-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
 
-- Kõnele menüüvalik "Ümberkirjutusreeglid" avab nimekirja olemasolevatest reeglistikest. Seal on Lisa-nupp, mis avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida.
+- Kõnele menüüvalik "Ümberkirjutusreeglid" avab nimekirja olemasolevatest reeglistikest. Seal on Lisa-nupp (plussmärk ringi sees), mis avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida.
 - Tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili TSV-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
 <img title="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses" alt="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses." src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
@@ -388,6 +388,7 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Korraga saab aktiivne 
 - [[TSV](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing)] Kõnekäsud Philips Hue valgustite kontrollimiseks näitab, kuidas teha Kõnele abil HTTP-päringuid.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
 - [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda
+- [[TSV](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/edit?usp=sharing)] Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja etteantud fraasi nn _wake up phrase_ lausub), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub. (Lülititeenus pole veel avalik.)
 - [[TSV](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks)
 
 Olgugi, et ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomisel mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks oskama ise kõne tuvastada.
