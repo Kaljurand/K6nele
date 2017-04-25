@@ -473,6 +473,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
      */
     private void handleResultByLaunchIntent(String result) {
         String newResult = rewriteResult(result);
+        // TODO: require EXTRA_DEFAULT_ACTIVITY=search (default "search", but e.g. trigger can switch it off,
+        // e.g. it is not needed if there is no screen)
         if (newResult != null) {
             IntentUtils.startActivitySearch(this, newResult);
         }
