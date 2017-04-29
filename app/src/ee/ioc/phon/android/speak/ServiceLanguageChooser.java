@@ -6,16 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -26,7 +30,7 @@ public class ServiceLanguageChooser {
     private final SharedPreferences mPrefs;
     private final List<String> mCombosAsList;
     private final CallerInfo mCallerInfo;
-    private final int mKeyImeCurrentCombo;
+    private final int mKeyCurrentCombo;
     private int mIndex;
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mIntent;
@@ -39,28 +43,44 @@ public class ServiceLanguageChooser {
         mPrefs = prefs;
         mCallerInfo = callerInfo;
 
-        Resources res = context.getResources();
-
-        TypedArray keysAsTypedArray = res.obtainTypedArray(keys);
-        int keyImeCombo = keysAsTypedArray.getResourceId(0, 0);
-        mKeyImeCurrentCombo = keysAsTypedArray.getResourceId(1, 0);
-        int defaultImeCombos = keysAsTypedArray.getResourceId(2, 0);
-        keysAsTypedArray.recycle();
-
-        Set<String> mCombos = PreferenceUtils.getPrefStringSet(prefs, res, keyImeCombo);
-
-        if (mCombos == null || mCombos.isEmpty()) {
-            // If the user has chosen an empty set of combos
-            mCombosAsList = PreferenceUtils.getStringListFromStringArray(res, defaultImeCombos);
-        } else {
-            mCombosAsList = new ArrayList<>(mCombos);
+        // If SERVICE_COMPONENT is defined, we do not use the combos selected in the settings.
+        String comboOverride = null;
+        Bundle extras = callerInfo.getExtras();
+        if (extras.containsKey(Extras.EXTRA_SERVICE_COMPONENT)) {
+            comboOverride = extras.getString(Extras.EXTRA_SERVICE_COMPONENT);
+            if (extras.containsKey(RecognizerIntent.EXTRA_LANGUAGE)) {
+                comboOverride = RecognitionServiceManager.createComboString(comboOverride, extras.getString(RecognizerIntent.EXTRA_LANGUAGE));
+            }
         }
 
-        String currentCombo = PreferenceUtils.getPrefString(prefs, res, mKeyImeCurrentCombo);
-        mIndex = mCombosAsList.indexOf(currentCombo);
-        // If the current combo was not found among the choices then select the first combo.
-        if (mIndex == -1) {
-            incIndex(prefs, res);
+        if (comboOverride == null) {
+            Resources res = context.getResources();
+            TypedArray keysAsTypedArray = res.obtainTypedArray(keys);
+            int keyCombo = keysAsTypedArray.getResourceId(0, 0);
+            mKeyCurrentCombo = keysAsTypedArray.getResourceId(1, 0);
+            int defaultCombos = keysAsTypedArray.getResourceId(2, 0);
+            keysAsTypedArray.recycle();
+
+            Set<String> mCombos = PreferenceUtils.getPrefStringSet(prefs, res, keyCombo);
+
+            if (mCombos == null || mCombos.isEmpty()) {
+                // If the user has chosen an empty set of combos
+                mCombosAsList = PreferenceUtils.getStringListFromStringArray(res, defaultCombos);
+            } else {
+                mCombosAsList = new ArrayList<>(mCombos);
+            }
+
+            String currentCombo = PreferenceUtils.getPrefString(prefs, res, mKeyCurrentCombo);
+            mIndex = mCombosAsList.indexOf(currentCombo);
+            // If the current combo was not found among the choices then select the first combo.
+            if (mIndex == -1) {
+                mIndex = 0;
+                PreferenceUtils.putPrefString(prefs, res, mKeyCurrentCombo, mCombosAsList.get(0));
+            }
+        } else {
+            mCombosAsList = Collections.singletonList(comboOverride);
+            mIndex = 0;
+            mKeyCurrentCombo = -1;
         }
         update();
     }
@@ -78,8 +98,18 @@ public class ServiceLanguageChooser {
         return mIntent;
     }
 
+    /**
+     * Switch to the "next" combo and set it as default.
+     * Only done if there are more than 1 combos, meaning that defining SERVICE_COMPONENT (which
+     * creates a single-element combo list) does not change the default combo.
+     */
     public void next() {
-        incIndex(mPrefs, mContext.getResources());
+        if (size() > 1) {
+            if (++mIndex >= size()) {
+                mIndex = 0;
+            }
+            PreferenceUtils.putPrefString(mPrefs, mContext.getResources(), mKeyCurrentCombo, mCombosAsList.get(mIndex));
+        }
         update();
     }
 
@@ -115,16 +145,5 @@ public class ServiceLanguageChooser {
         // TODO: support other actions
         mIntent = Utils.getRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH, mCallerInfo, language);
         mLanguage = language;
-    }
-
-
-    /**
-     * If called with mIndex == -1 then mIndex is set to 0
-     */
-    private void incIndex(SharedPreferences prefs, Resources res) {
-        if (++mIndex >= mCombosAsList.size()) {
-            mIndex = 0;
-        }
-        PreferenceUtils.putPrefString(prefs, res, mKeyImeCurrentCombo, mCombosAsList.get(mIndex));
     }
 }

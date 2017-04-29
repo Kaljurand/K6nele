@@ -59,7 +59,6 @@ import ee.ioc.phon.android.speak.provider.FileContentProvider;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
-import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
@@ -196,14 +195,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         if (!mExtras.containsKey(RecognizerIntent.EXTRA_MAX_RESULTS)) {
             mExtras.putInt(RecognizerIntent.EXTRA_MAX_RESULTS,
                     PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
-        }
-
-        if (mExtras.containsKey(Extras.EXTRA_SERVICE_COMPONENT)) {
-            String combo = mExtras.getString(Extras.EXTRA_SERVICE_COMPONENT);
-            if (mExtras.containsKey(RecognizerIntent.EXTRA_LANGUAGE)) {
-                combo = RecognitionServiceManager.createComboString(combo, mExtras.getString(RecognizerIntent.EXTRA_LANGUAGE));
-            }
-            PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyCurrentCombo, combo);
         }
 
         if (!mExtras.isEmpty()) {
