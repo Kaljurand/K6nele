@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -16,15 +17,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.adapter.RewritesAdapter;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
+import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class RewritesSelectorActivity extends Activity {
 
@@ -76,6 +81,24 @@ public class RewritesSelectorActivity extends Activity {
             initAdapter();
             registerForContextMenu(getListView());
             setEmptyView(getString(R.string.emptylistRewrites));
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                Context context = getContext();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                Resources res = getResources();
+                List<Combo> selectedCombos = new ArrayList<>();
+                Set<String> selectedCombosAsStrings = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyCombo);
+                for (String combo : selectedCombosAsStrings) {
+                    selectedCombos.add(new Combo(context, combo));
+                }
+                Utils.publishShortcuts(getActivity().getApplicationContext(),
+                        selectedCombos,
+                        PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables));
+            }
         }
 
         @Override

@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -26,16 +27,20 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -57,7 +62,9 @@ import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.activity.SpeechActionActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
@@ -405,7 +412,7 @@ public final class Utils {
     }
 
     public static <E> List<E> makeList(Iterable<E> iter) {
-        List<E> list = new ArrayList<E>();
+        List<E> list = new ArrayList<>();
         for (E item : iter) {
             list.add(item);
         }
@@ -436,6 +443,51 @@ public final class Utils {
             intent.putExtra(Extras.EXTRA_ADDITIONAL_LANGUAGES, new String[]{});
         }
         return intent;
+    }
+
+    /**
+     * Constructs and publishes the list of app shortcuts, one for each combo that is selected for the
+     * search panel. The intent behind the shortcut sets AUTO_START=true and sets RESULTS_REWRITES
+     * to the list of default rewrites (at creation time), and PROMPT to the list of rewrite names.
+     * All other settings (e.g. MAX_RESULTS) depend on the settings at execution time.
+     */
+    @TargetApi(Build.VERSION_CODES.N_MR1)
+    public static void publishShortcuts(Context context, List<Combo> selectedCombos, Set<String> rewriteTables) {
+        ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+        List<ShortcutInfo> shortcuts = new ArrayList<>();
+        int maxShortcutCountPerActivity = shortcutManager.getMaxShortcutCountPerActivity();
+        int counter = 0;
+
+        // TODO: rewriteTables should be a list (not a set that needs to be sorted)
+        String[] names = rewriteTables.toArray(new String[rewriteTables.size()]);
+        Arrays.sort(names);
+        String rewritesId = TextUtils.join(", ", names);
+
+        for (Combo combo : selectedCombos) {
+            Intent intent = new Intent(context, SpeechActionActivity.class);
+            intent.setAction(RecognizerIntent.ACTION_WEB_SEARCH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, combo.getLocaleAsStr());
+            intent.putExtra(Extras.EXTRA_SERVICE_COMPONENT, combo.getServiceComponent().flattenToShortString());
+            if (names.length > 0) {
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, rewritesId);
+            }
+            intent.putExtra(Extras.EXTRA_RESULT_REWRITES, names);
+            intent.putExtra(Extras.EXTRA_AUTO_START, true);
+            // Launch the activity so that the existing Kõnele activities are not in the background stack.
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            shortcuts.add(new ShortcutInfo.Builder(context, combo.getId() + rewritesId)
+                    .setIntent(intent)
+                    .setShortLabel(combo.getShortLabel())
+                    .setLongLabel(combo.getLongLabel() + "; " + rewritesId)
+                    .setIcon(Icon.createWithResource(context, combo.getIcon(context)))
+                    .build());
+            counter++;
+            // We are only allowed a certain number (5) of shortcuts
+            if (counter >= maxShortcutCountPerActivity) {
+                break;
+            }
+        }
+        shortcutManager.setDynamicShortcuts(shortcuts);
     }
 
     private static Bundle toBundle(EditorInfo attribute) {

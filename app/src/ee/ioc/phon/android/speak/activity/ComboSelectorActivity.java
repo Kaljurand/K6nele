@@ -1,19 +1,11 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListFragment;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
-import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.speech.RecognizerIntent;
 import android.widget.ListAdapter;
 
 import java.util.ArrayList;
@@ -25,7 +17,7 @@ import java.util.Set;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.adapter.ComboAdapter;
 import ee.ioc.phon.android.speak.model.Combo;
-import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -74,7 +66,10 @@ public class ComboSelectorActivity extends Activity {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
                     // The app shortcuts correspond to the voice panel combo settings
                     if (mKey == R.string.keyCombo) {
-                        publishShortcuts(getActivity().getApplicationContext(), selectedCombos);
+                        Utils.publishShortcuts(getActivity().getApplicationContext(), selectedCombos, PreferenceUtils.getPrefStringSet(
+                                PreferenceManager.getDefaultSharedPreferences(getActivity()),
+                                getResources(),
+                                R.string.defaultRewriteTables));
                     }
                 }
             }
@@ -119,35 +114,6 @@ public class ComboSelectorActivity extends Activity {
 
         private Combo get(String id) {
             return new Combo(getActivity(), id);
-        }
-
-        @TargetApi(Build.VERSION_CODES.N_MR1)
-        private void publishShortcuts(Context context, List<Combo> selectedCombos) {
-            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
-            List<ShortcutInfo> shortcuts = new ArrayList<>();
-            int maxShortcutCountPerActivity = shortcutManager.getMaxShortcutCountPerActivity();
-            int counter = 0;
-            for (Combo combo : selectedCombos) {
-                Intent intent = new Intent(context, SpeechActionActivity.class);
-                intent.setAction(RecognizerIntent.ACTION_WEB_SEARCH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, combo.getLocaleAsStr());
-                intent.putExtra(Extras.EXTRA_SERVICE_COMPONENT, combo.getServiceComponent().flattenToShortString());
-                intent.putExtra(Extras.EXTRA_AUTO_START, true);
-                // Launch the activity so that the existing Kõnele activities are not in the background stack.
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                shortcuts.add(new ShortcutInfo.Builder(context, combo.getId())
-                        .setIntent(intent)
-                        .setShortLabel(combo.getShortLabel())
-                        .setLongLabel(combo.getLongLabel())
-                        .setIcon(Icon.createWithResource(context, combo.getIcon(context)))
-                        .build());
-                counter++;
-                // We are only allowed a certain number (5) of shortcuts
-                if (counter >= maxShortcutCountPerActivity) {
-                    break;
-                }
-            }
-            shortcutManager.setDynamicShortcuts(shortcuts);
         }
     }
 }
