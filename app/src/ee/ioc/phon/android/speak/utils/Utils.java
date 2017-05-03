@@ -34,6 +34,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
@@ -479,7 +481,7 @@ public final class Utils {
                     .setIntent(intent)
                     .setShortLabel(combo.getShortLabel())
                     .setLongLabel(combo.getLongLabel() + "; " + rewritesId)
-                    .setIcon(Icon.createWithResource(context, combo.getIcon(context)))
+                    .setIcon(Icon.createWithBitmap(drawableToBitmap(combo.getIcon(context))))
                     .build());
             counter++;
             // We are only allowed a certain number (5) of shortcuts
@@ -515,5 +517,34 @@ public final class Utils {
             return ss.subSequence(0, ss.length()).toString();
         }
         return o.toString();
+    }
+
+    /**
+     * This is needed to convert a Drawable to an Icon (we need to convert the Drawable first
+     * to Bitmap). Solution from
+     * http://stackoverflow.com/questions/3035692/how-to-convert-a-drawable-to-a-bitmap
+     * Starting with API 23, we might make combo.getIcon return Icon (instead of a Drawable), which
+     * will simplify things.
+     */
+    private static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

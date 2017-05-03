@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.model;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Pair;
 
 import java.util.Comparator;
@@ -65,7 +66,7 @@ public class Combo {
         return String.format(mFormatLabelComboItem, mServiceLabel, mLocaleLongLabel);
     }
 
-    public int getIcon(Context context) {
+    public Drawable getIcon(Context context) {
         return RecognitionServiceManager.getServiceIcon(context, mComponentName);
     }
 
