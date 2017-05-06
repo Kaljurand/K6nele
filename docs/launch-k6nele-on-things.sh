@@ -8,11 +8,12 @@
 # Setting up Kõnele on the device:
 # 1. adb uninstall ee.ioc.phon.android.speak (if old version is installed)
 #    adb install /path/to/K6nele-x.y.zz.apk
-#    adb reboot (this grants the permissions)
-#    adb install -r -g /path/to/K6nele-x.y.zz.apk (reinstall and grant permissions, no reboot needed)
-#    adb shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO (granting permissions)
-# 2. TODO: import some rewrite rules from a URL (needs extension to Kõnele)
-#    (or use adb to write a rewrites table into the local storage)
+#      adb shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO (granting permissions)
+#      or: adb reboot (this grants the permissions)
+#    or: adb install -r -g /path/to/K6nele-x.y.zz.apk (reinstall and grant permissions, no reboot needed)
+# 2. Import some rewrite rules from a URL
+#    Current solution: use adb to write a rewrites table into the local storage
+#    adb-pref.sh keyRewritesMap/Hue -e val "https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/export?format=tsv" --ez is_url true
 # 3. TODO: remove "Tap&Speak" + mic button (which do not make sense for a notouch device)
 #    (using adb to modify the preferences + extending Kõnele not to refer to touch in the UI)
 #    adb-pref.sh keyHelpText --ez val false

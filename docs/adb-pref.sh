@@ -11,6 +11,7 @@ then
     echo "adb-pref.sh keyMaxResults -e val 10 # For some prefs, ints are passed as strings"
     echo "adb-pref.sh defaultRewriteTables --esa val Base,ActivityCommands,ImeCommands"
     echo "adb-pref.sh defaultRewriteTables --esn val # Setting to null"
+    echo "adb-pref.sh keyRewritesMap/Hue -e val \"https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/export?format=tsv\" --ez is_url true"
     exit
 fi
 

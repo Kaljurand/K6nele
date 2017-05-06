@@ -19,12 +19,16 @@ package ee.ioc.phon.android.speak.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import ee.ioc.phon.android.speechutils.utils.HttpUtils;
 
 
 /**
@@ -39,6 +43,7 @@ public class GetPutPreferenceActivity extends Activity {
 
     public static final String EXTRA_KEY = "key";
     public static final String EXTRA_VAL = "val";
+    public static final String EXTRA_IS_URL = "is_url";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class GetPutPreferenceActivity extends Activity {
             return;
         }
 
-        String key = extras.getString(EXTRA_KEY);
+        final String key = extras.getString(EXTRA_KEY);
 
         if (key == null) {
             finish();
@@ -71,27 +76,59 @@ public class GetPutPreferenceActivity extends Activity {
         // if not then show the value of the key.
         if (extras.containsKey(EXTRA_VAL)) {
             Object val = extras.get(EXTRA_VAL);
-            SharedPreferences.Editor editor = prefs.edit();
+            final SharedPreferences.Editor editor = prefs.edit();
             if (val == null) {
                 // adb --esn
                 editor.remove(key);
+                editor.apply();
             } else {
                 if (val instanceof String) {
-                    editor.putString(key, (String) val);
+                    String valAsStr = (String) val;
+                    // In case is_url==true then interpret the value as a URL and instead
+                    // of setting the key to the value, set the key to the content behind the URL
+                    // (or an error message, if something goes wrong).
+                    // Note that this currently works only if the type of the value is String.
+                    if (extras.getBoolean(EXTRA_IS_URL, false)) {
+                        toast(key + " := fetchUrl(" + valAsStr + ")");
+                        new AsyncTask<String, Void, String>() {
+
+                            @Override
+                            protected String doInBackground(String... urls) {
+                                try {
+                                    return HttpUtils.getUrl(urls[0]);
+                                } catch (IOException e) {
+                                    return "ERROR: Unable to retrieve " + urls[0] + ": " + e.getLocalizedMessage();
+                                }
+                            }
+
+                            @Override
+                            protected void onPostExecute(String result) {
+                                editor.putString(key, result);
+                                editor.apply();
+                            }
+                        }.execute(valAsStr);
+                    } else {
+                        editor.putString(key, valAsStr);
+                        editor.apply();
+                    }
                 } else if (val instanceof String[]) {
                     // adb --esa
                     editor.putStringSet(key, new HashSet<>(Arrays.asList((String[]) val)));
+                    editor.apply();
                 } else if (val instanceof Boolean) {
                     editor.putBoolean(key, (Boolean) val);
+                    editor.apply();
                 } else if (val instanceof Integer) {
                     editor.putInt(key, (Integer) val);
+                    editor.apply();
                 } else if (val instanceof Float) {
                     editor.putFloat(key, (Float) val);
+                    editor.apply();
                 } else if (val instanceof Long) {
                     editor.putLong(key, (Long) val);
+                    editor.apply();
                 }
             }
-            editor.apply();
             toast(key + " := " + val);
         } else {
             toast(key + " == " + prefs.getAll().get(key));
