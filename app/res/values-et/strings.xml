@@ -35,7 +35,7 @@
 
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
-    <string name="titleCategoryIme">Kõneklaviatuur</string>
+    <string name="titleCategoryIme">Kõne &amp; svaip klaviatuur</string>
     <string name="titleCategoryApps">Rakendused, grammatikad, ümberkirjutusreeglid</string>
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleScreenDemos">Demod</string>
@@ -70,7 +70,7 @@
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
     <string name="summaryEncoderDemo">Muud testid ja demod (lindistamine, audio kokkupakkimine, jne)</string>
-    <string name="summaryFormDemo">HTML vorm erinevat tüüpi väljadega, kõneklaviatuuri testimiseks</string>
+    <string name="summaryFormDemo">HTML vorm erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
@@ -271,15 +271,15 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleWsServer">WebSocket-aadress</string>
-    <string name="titleEnableIme">Kõneklaviatuuri sisselülitamine</string>
-    <string name="summaryEnableIme">Kõnele klaviatuur võimaldab dikteerida kõikidesse tekstikastidesse, kõikides rakendustes. Vajutage siia, et see Androidi klaviatuuri ja sisestusmeetodite seadetes sisse lülitada.</string>
+    <string name="titleEnableIme">Kõnele klaviatuuri sisselülitamine</string>
+    <string name="summaryEnableIme">Kõnele klaviatuur võimaldab dikteerida kõikidesse tekstikastidesse, kõikides rakendustes, ja teksti paari svaipoperatsiooniga muuta. Vajutage siia, et see Androidi virtuaalklaviatuuriseadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
     <string name="titleReturnErrors">Tagasta veateated</string>
     <string name="summaryReturnErrors">Tagasta audio/võrgu/jne vigade teated kutsuvale rakendusele</string>
     <string name="titleImeShowPartialResults">Vahetulemused</string>
-    <string name="summaryImeShowPartialResults">Näita tekstiredaktori aknas kõnetuvastuse vahetulemusi</string>
-    <string name="summaryImeHelpText">Näita kõneklaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
+    <string name="summaryImeShowPartialResults">Näita tekstikastis kõnetuvastuse vahetulemusi</string>
+    <string name="summaryImeHelpText">Näita klaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
     <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>

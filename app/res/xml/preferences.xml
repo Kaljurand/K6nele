@@ -28,11 +28,13 @@
                     android:value="@string/keyImeCombo" />
             </intent>
         </Preference>
+        <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeAutoStart"
             android:key="@string/keyImeAutoStart"
             android:summary="@string/summaryAutoStart"
             android:title="@string/titleAutoStart" />
+        -->
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeShowPartialResults"
             android:key="@string/keyImeShowPartialResults"

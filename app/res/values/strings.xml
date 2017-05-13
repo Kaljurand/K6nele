@@ -50,7 +50,7 @@
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryApps">Apps, Grammars, Rewrites</string>
-    <string name="titleCategoryIme">Speech keyboard</string>
+    <string name="titleCategoryIme">Speak &amp; swipe keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>
     <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
@@ -66,7 +66,7 @@
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
     <string name="titleImeShowPartialResults">Partial results</string>
-    <string name="summaryImeShowPartialResults">Show partial recognition results in the editor window</string>
+    <string name="summaryImeShowPartialResults">Show partial recognition results in the text field</string>
     <string name="titleRespectLocale">Support device language</string>
     <string name="summaryRespectLocale">Assume that the input speech is in the device\'s default language,
         unless the app sets a different language</string>
@@ -83,10 +83,10 @@
     <string name="titleReturnErrors">Return errors</string>
     <string name="summaryReturnErrors">Return network/audio/etc. errors to the caller (useful if the caller does error handling)</string>
     <string name="titleImeHelpText">Help text</string>
-    <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the speech keyboard larger.</string>
+    <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the keyboard larger.</string>
     <string name="summaryImeCombo">Updating…</string>
-    <string name="titleEnableIme">Enable speech keyboard</string>
-    <string name="summaryEnableIme">The Kõnele speech keyboard allows you to dictate into any text field in any app. Tap here to enable it in the Android keyboard and input method settings.</string>
+    <string name="titleEnableIme">Enable Kõnele keyboard</string>
+    <string name="summaryEnableIme">The Kõnele keyboard allows you to dictate into any text field in any app, and modify the text with some swipe operations. Tap here to enable it in the Android virtual keyboard settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
@@ -130,22 +130,22 @@
 
     <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
         Many apps contain a text area or a text field (e.g. a search bar) that can be edited using the keyboard.
-        %1$s provides a &lt;b>speech keyboard&lt;/b>, which allows text to be entered and edited via speech.
+        %1$s provides a keyboard that allows text to be entered and edited via speech.
         Some apps (e.g. intelligent assistants, navigation apps) also contain a microphone button
         that is either linked to the &lt;b>standard Android speech recognition activity&lt;/b> or the
         &lt;b>standard Android speech recognition service&lt;/b>.
         %1$s implements both the activity and the service.&lt;/p>
 
-        &lt;p>How to use the speech keyboard?
+        &lt;p>How to use the Kõnele keyboard?
         Tap the big yellow button and start dictating, the words
         appear immediately in the text area.
         Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space,
-        long-press to select all text (e.g. to dictate over it). Rewrite rules allow one to define voice commands
+        long-press to select all text (e.g. to dictate over it). Rewrite rules allow you to define voice commands
         to edit an existing text.&lt;/p>
 
         &lt;p>How to use the voice search activity? Its user interface is similar to the speech keyboard
         but because the transcription is immediately executed (e.g. loaded into a web browser) or returned to the caller
-        (e.g. a navigation app), there is not support for editing commands (such as the swipe operations).&lt;/p>
+        (e.g. a navigation app), there is no support for editing commands (such as the swipe operations).&lt;/p>
 
 &lt;p>Kõnele can use any speech recognition service on the device, but it also comes with two services of its own.
         Each of these uses a separate cloud-based speech recognition server.
