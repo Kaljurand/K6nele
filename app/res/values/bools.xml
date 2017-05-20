@@ -9,6 +9,7 @@
     <bool name="defaultAutoStart">false</bool>
     <bool name="defaultHelpText">true</bool>
     <bool name="defaultReturnErrors">false</bool>
+    <bool name="defaultPip">false</bool>
 
     <!-- Defaults. HTTP-based service. -->
     <bool name="defaultAutoStopAfterPause">true</bool>

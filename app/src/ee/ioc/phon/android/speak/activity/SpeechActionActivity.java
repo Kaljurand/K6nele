@@ -107,13 +107,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: do not use the default dialog style when in multi window mode
-        /*
-        if (isInMultiWindowMode()) {
-            setTheme(R.style.Theme_K6nele_NoActionBar);
-        }
-        */
-        setUpActivity(R.layout.activity_recognizer);
+        setUpActivity(R.layout.activity_recognizer, R.layout.activity_recognizer_mw);
         mTvPrompt = (TextView) findViewById(R.id.tvPrompt);
     }
 
@@ -143,10 +137,10 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
         setUpSettingsButton();
 
-        mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
+        mView = findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
         // TODO: do we need to send the ComponentName of the calling activity instead
-        mView.init(R.array.keysActivity, callerInfo);
+        mView.init(R.array.keysActivity, callerInfo, false);
         mView.setListener(getSpeechInputViewListener());
 
         String[] results = getExtras().getStringArray(Extras.EXTRA_RESULT_RESULTS);

@@ -18,7 +18,10 @@ package ee.ioc.phon.android.speak;
 
 import java.util.List;
 
-public class Log {
+public final class Log {
+
+    private Log() {
+    }
 
     public static final boolean DEBUG = BuildConfig.DEBUG;
 

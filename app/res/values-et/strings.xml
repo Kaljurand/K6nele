@@ -291,6 +291,9 @@
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
 
+    <string name="titlePip">(Eksperimentaalne) Pilt-pildis</string>
+    <string name="summaryPip">Kuva paneel väiksesse muudetava asukohaga aknasse.</string>
+
     <string name="titleSystemVoiceInputSettings">Kõik kõnetuvastusteenused</string>
     <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>
 

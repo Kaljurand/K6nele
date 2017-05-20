@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 dependencies {
     compile project(':speechutils:app')
@@ -9,13 +10,16 @@ dependencies {
     //compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'com.koushikdutta.async:androidasync:2.1.8'
     compile 'com.android.support:support-v13:25.3.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     // Enable this when using the support library for the vector drawables
     //compile 'com.android.support:appcompat-v7:23.2.1'
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    //compileSdkVersion 25
+    //buildToolsVersion '25.0.2'
+    compileSdkVersion 'android-O'
+    buildToolsVersion '26.0.0-rc2'
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
@@ -24,9 +28,9 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 1656
-        versionName '1.6.56'
+        targetSdkVersion 'O'
+        versionCode 1657
+        versionName '1.6.57'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }
@@ -118,4 +122,16 @@ task(deploy) << {
 
     println "adb uninstall ee.ioc.phon.android.speak"
     println "adb install ${apk2}"
+}
+buildscript {
+    ext.kotlin_version = '1.1.2-4'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
 }

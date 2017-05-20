@@ -25,6 +25,7 @@
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
+    <string name="keyPip" translatable="false">keyPip</string>
 
     <string name="defaultRewriteTables" translatable="false">defaultRewriteTables</string>
 
@@ -36,6 +37,7 @@
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
     <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
+    <string name="keyCategoryAction" translatable="false">keyCategoryAction</string>
 
     <string name="keyCategoryServices" translatable="false">keyCategoryServices</string>
 

@@ -18,12 +18,15 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.PictureInPictureArgs;
+import android.app.RemoteAction;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -177,8 +180,28 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     protected void setUpActivity(int layout) {
+        setUpActivity(layout, layout);
+    }
+
+    protected void setUpActivity(int layoutNormal, int layoutMultiWindow) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (isInMultiWindowMode()) {
+                setTheme(R.style.Theme_K6nele_NoActionBar);
+                setContentView(layoutMultiWindow);
+            } else {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                if (PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyPip, R.bool.defaultPip)) {
+                    setTheme(R.style.Theme_K6nele_NoActionBar);
+                    setContentView(layoutMultiWindow);
+                    enterPictureInPictureMode(getPictureInPictureArgs());
+                } else {
+                    setContentView(layoutNormal);
+                }
+            }
+        } else {
+            setContentView(layoutNormal);
+        }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
@@ -269,11 +292,13 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     }
 
     public void setTvPrompt(String prompt) {
-        if (prompt == null || prompt.length() == 0) {
-            mTvPrompt.setVisibility(View.INVISIBLE);
-        } else {
-            mTvPrompt.setText(prompt);
-            mTvPrompt.setVisibility(View.VISIBLE);
+        if (mTvPrompt != null) {
+            if (prompt == null || prompt.length() == 0) {
+                mTvPrompt.setVisibility(View.INVISIBLE);
+            } else {
+                mTvPrompt.setText(prompt);
+                mTvPrompt.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -621,5 +646,33 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             results = utteranceRewriter.rewrite(results);
         }
         return results;
+    }
+
+    private PictureInPictureArgs getPictureInPictureArgs() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(Extras.EXTRA_AUTO_START, true);
+
+            ArrayList<RemoteAction> actions = new ArrayList<>();
+            // Action to start recognition
+            actions.add(new RemoteAction(
+                    Icon.createWithResource(this, R.drawable.ic_voice_search_api_material),
+                    "Recognize", "Tap & Speak",
+                    PendingIntent.getActivity(this, 10, intent, 0))
+            );
+
+            // Action to go to the settings
+            actions.add(new RemoteAction(
+                    Icon.createWithResource(this, R.drawable.ic_settings_24dp),
+                    "Settings", "Settings",
+                    PendingIntent.getActivity(this, 11,
+                            new Intent(getApplicationContext(), Preferences.class),
+                            0)));
+            PictureInPictureArgs mPictureInPictureArgs = new PictureInPictureArgs();
+            mPictureInPictureArgs.setActions(actions);
+            return mPictureInPictureArgs;
+        }
+        return null;
     }
 }

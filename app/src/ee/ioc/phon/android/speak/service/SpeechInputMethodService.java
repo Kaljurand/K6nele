@@ -133,7 +133,10 @@ public class SpeechInputMethodService extends InputMethodService {
         ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(getCurrentInputConnection());
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mRes = getResources();
-        mInputView.init(R.array.keysIme, new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()));
+        mInputView.init(
+                R.array.keysIme,
+                new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()),
+                true);
 
         // TODO: update this less often (in onStart)
         closeSession();

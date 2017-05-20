@@ -121,6 +121,16 @@ public class Preferences extends PreferenceActivity {
                 }
             }
 
+            // Remove possibility to switch on picture-in-picture, which is not available before O.
+            // TODO: use O here
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+                PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryAction));
+                Preference pref = category.findPreference(getString(R.string.keyPip));
+                if (pref != null) {
+                    category.removePreference(pref);
+                }
+            }
+
             // If the K6nele IME is enabled then we remove the link to the IME settings,
             // if not already removed.
             // If the IME is not enabled then we add the link. The position of the link seems

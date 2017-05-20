@@ -68,7 +68,7 @@ public class ChatDemoActivity extends Activity {
         SpeechInputView siv = (SpeechInputView) findViewById(R.id.vSpeechInputView);
         CallerInfo callerInfo = new CallerInfo(createExtras(), getCallingActivity());
         // TODO: review this
-        siv.init(R.array.keysActivity, callerInfo);
+        siv.init(R.array.keysActivity, callerInfo, false);
         siv.setListener(getSpeechInputViewListener());
 
         mList = (ListView) findViewById(R.id.list_matches);

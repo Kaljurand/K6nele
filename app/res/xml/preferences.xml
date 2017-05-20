@@ -49,7 +49,9 @@
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)
     // These settings are specific to the UI
-    <PreferenceCategory android:title="@string/titleCategoryUi">
+    <PreferenceCategory
+        android:key="@string/keyCategoryAction"
+        android:title="@string/titleCategoryUi">
         <Preference
             android:key="@string/keyCombo"
             android:summary="@string/summaryImeCombo"
@@ -73,6 +75,11 @@
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
             android:title="@string/titleHelpText" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultPip"
+            android:key="@string/keyPip"
+            android:summary="@string/summaryPip"
+            android:title="@string/titlePip" />
         <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultReturnErrors"
