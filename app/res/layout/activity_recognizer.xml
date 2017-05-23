@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/rectangle_gradient"
@@ -27,9 +28,9 @@
             android:layout_toStartOf="@+id/bSettings"
             android:ellipsize="end"
             android:lines="3"
-            android:text="@string/testComboLabel"
             android:textColor="@color/grey200"
-            android:textSize="@dimen/textSize2" />
+            android:textSize="@dimen/textSize2"
+            tools:text="@string/testComboLabel" />
 
         <!-- app:srcCompat ="@drawable/ic_settings_24dp" -->
         <ImageButton
@@ -42,6 +43,18 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdSettings"
             android:src="@drawable/ic_settings_24dp" />
+
+        <ImageButton
+            android:id="@+id/bEnterPip"
+            android:layout_width="@dimen/layoutMargin32"
+            android:layout_height="@dimen/layoutMargin32"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/bSettings"
+            android:background="@drawable/button_go"
+            android:contentDescription="Enter Picture-in-picture mode"
+            android:src="@drawable/ic_picture_in_picture"
+            tools:targetApi="O" />
     </RelativeLayout>
 
     <ee.ioc.phon.android.speak.view.SpeechInputView
@@ -67,9 +80,9 @@
                 android:ellipsize="start"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="@string/testComboLabel"
                 android:textColor="@color/grey300"
-                android:textSize="@dimen/textSize2" />
+                android:textSize="@dimen/textSize2"
+                tools:text="@string/testComboLabel" />
 
             <ee.ioc.phon.android.speechutils.view.MicButton
                 android:id="@+id/bImeStartStop"
@@ -92,9 +105,9 @@
                 android:layout_below="@+id/bImeStartStop"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/buttonImeStop"
                 android:textColor="@color/grey300"
-                android:textSize="@dimen/textSize3" />
+                android:textSize="@dimen/textSize3"
+                tools:text="@string/buttonImeStop" />
         </RelativeLayout>
 
         <Button
@@ -112,9 +125,9 @@
             android:minHeight="@dimen/layoutMargin3"
             android:minWidth="@dimen/layoutMargin3"
             android:singleLine="true"
-            android:text="@string/testComboLabels"
             android:textColor="@color/grey100"
-            android:textSize="@dimen/textSize10sp" />
+            android:textSize="@dimen/textSize10sp"
+            tools:text="@string/testComboLabels" />
 
     </ee.ioc.phon.android.speak.view.SpeechInputView>
 

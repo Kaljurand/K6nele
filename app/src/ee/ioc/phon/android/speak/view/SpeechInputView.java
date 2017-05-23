@@ -47,6 +47,9 @@ public class SpeechInputView extends LinearLayout {
 
     private MicButton.State mState;
 
+    // TODO: make it an attribute
+    private boolean mIsEnableSwipe = false;
+
     public interface SpeechInputViewListener {
         void onComboChange(String language, ComponentName service);
 
@@ -131,48 +134,51 @@ public class SpeechInputView extends LinearLayout {
             });
         }
 
+        if (mIsEnableSwipe) {
+            setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+                @Override
+                public void onSwipeLeft() {
+                    mListener.onDeleteLastWord();
+                }
 
-        setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeLeft() {
-                mListener.onDeleteLastWord();
-            }
+                @Override
+                public void onSwipeRight() {
+                    mListener.onAddNewline();
+                }
 
-            @Override
-            public void onSwipeRight() {
-                mListener.onAddNewline();
-            }
+                @Override
+                public void onSwipeUp() {
+                    mListener.goUp();
+                }
 
-            @Override
-            public void onSwipeUp() {
-                mListener.goUp();
-            }
+                @Override
+                public void onSwipeDown() {
+                    mListener.goDown();
+                }
 
-            @Override
-            public void onSwipeDown() {
-                mListener.goDown();
-            }
+                @Override
+                public void onSingleTapMotion() {
+                    mListener.onReset();
+                }
 
-            @Override
-            public void onSingleTapMotion() {
-                mListener.onReset();
-            }
+                @Override
+                public void onDoubleTapMotion() {
+                    mListener.onAddSpace();
+                }
 
-            @Override
-            public void onDoubleTapMotion() {
-                mListener.onAddSpace();
-            }
-
-            @Override
-            public void onLongPressMotion() {
-                mListener.onSelectAll();
-            }
-        });
+                @Override
+                public void onLongPressMotion() {
+                    mListener.onSelectAll();
+                }
+            });
+        }
 
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
     }
 
-    public void init(int keys, CallerInfo callerInfo) {
+    public void init(int keys, CallerInfo callerInfo, boolean isEnableSwipe) {
+        mIsEnableSwipe = isEnableSwipe;
+        // These controls are optional, except for mBImeStartStop (TODO: which should also be optional)
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
         mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
@@ -183,13 +189,17 @@ public class SpeechInputView extends LinearLayout {
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
         mSlc = new ServiceLanguageChooser(getContext(), prefs, keys, callerInfo);
-        if (mSlc.size() > 1) {
-            mBComboSelector.setVisibility(View.VISIBLE);
-        } else {
-            mBComboSelector.setVisibility(View.GONE);
+        if (mBComboSelector != null) {
+            if (mSlc.size() > 1) {
+                mBComboSelector.setVisibility(View.VISIBLE);
+            } else {
+                mBComboSelector.setVisibility(View.GONE);
+            }
         }
         updateServiceLanguage(mSlc.getSpeechRecognizer());
-        updateComboSelector(mSlc);
+        if (mBComboSelector != null) {
+            updateComboSelector(mSlc);
+        }
         showMessage("");
         setGuiInitState(0);
 
@@ -229,30 +239,32 @@ public class SpeechInputView extends LinearLayout {
             }
         });
 
-        mBComboSelector.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mState == MicButton.State.RECORDING) {
-                    stopListening();
+        if (mBComboSelector != null) {
+            mBComboSelector.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mState == MicButton.State.RECORDING) {
+                        stopListening();
+                    }
+                    mSlc.next();
+                    mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+                    updateComboSelector(mSlc);
                 }
-                mSlc.next();
-                mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
-                updateComboSelector(mSlc);
-            }
-        });
+            });
 
-        mBComboSelector.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                cancelOrDestroy();
-                Context context = getContext();
-                Intent intent = new Intent(context, ComboSelectorActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("key", context.getString(key));
-                IntentUtils.startActivityIfAvailable(context, intent);
-                return true;
-            }
-        });
+            mBComboSelector.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    cancelOrDestroy();
+                    Context context = getContext();
+                    Intent intent = new Intent(context, ComboSelectorActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("key", context.getString(key));
+                    IntentUtils.startActivityIfAvailable(context, intent);
+                    return true;
+                }
+            });
+        }
     }
 
     public void start() {

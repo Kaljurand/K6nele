@@ -16,14 +16,18 @@
 
 package ee.ioc.phon.android.speak.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.PictureInPictureArgs;
+import android.app.RemoteAction;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -174,6 +178,16 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                 return false;
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            ImageButton bPip = (ImageButton) findViewById(R.id.bEnterPip);
+            bPip.setOnClickListener(new View.OnClickListener() {
+                @TargetApi(26)
+                public void onClick(View v) {
+                    enterPictureInPictureMode(getPictureInPictureArgs());
+                }
+            });
+        }
     }
 
     protected void setUpActivity(int layout) {
@@ -216,6 +230,17 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
         mMessageHandler = new SimpleMessageHandler(this);
         mErrorMessages = createErrorMessages();
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
+        if (isInPictureInPictureMode) {
+            //setTheme(R.style.Theme_K6nele_NoActionBar);
+            //setContentView(R.layout.activity_recognizer_pip);
+        } else {
+            //setTheme(R.style.Theme_K6nele_Dialog);
+            //setContentView(R.layout.activity_recognizer);
+        }
     }
 
     @Override
@@ -621,5 +646,33 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             results = utteranceRewriter.rewrite(results);
         }
         return results;
+    }
+
+    @TargetApi(26)
+    private PictureInPictureArgs getPictureInPictureArgs() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+
+            Intent thisIntent = getIntent();
+            ArrayList<RemoteAction> actions = new ArrayList<>();
+            // Action to start recognition
+            actions.add(new RemoteAction(
+                    Icon.createWithResource(this, R.drawable.ic_voice_search_api_material),
+                    "Recognize", "Tap & Speak",
+                    PendingIntent.getActivity(this, 10, thisIntent, 0))
+            );
+
+            // Action to go to the settings
+            actions.add(new RemoteAction(
+                    Icon.createWithResource(this, R.drawable.ic_settings_24dp),
+                    "Settings", "Settings",
+                    PendingIntent.getActivity(this, 11,
+                            new Intent(getApplicationContext(), Preferences.class),
+                            0)));
+
+            PictureInPictureArgs mPictureInPictureArgs = new PictureInPictureArgs();
+            mPictureInPictureArgs.setActions(actions);
+            return mPictureInPictureArgs;
+        }
+        return null;
     }
 }

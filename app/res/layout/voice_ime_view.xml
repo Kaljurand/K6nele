@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ee.ioc.phon.android.speak.view.SpeechInputView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -40,9 +41,9 @@
             android:ellipsize="start"
             android:gravity="center"
             android:singleLine="true"
-            android:text="@string/summaryEnableIme"
             android:textColor="@color/grey300"
-            android:textSize="@dimen/textSize2" />
+            android:textSize="@dimen/textSize2"
+            tools:text="@string/summaryEnableIme" />
 
         <ImageButton
             android:id="@+id/bImeSearch"
@@ -74,9 +75,9 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/layoutMargin4dp"
         android:gravity="center"
-        android:text="@string/buttonImeSpeak"
         android:textColor="@color/grey200"
-        android:textSize="@dimen/textSize3" />
+        android:textSize="@dimen/textSize3"
+        tools:text="@string/buttonImeSpeak" />
 
     <Button
         android:id="@+id/tvComboSelector"
@@ -90,8 +91,8 @@
         android:minHeight="@dimen/layoutMargin3"
         android:minWidth="@dimen/layoutMargin3"
         android:singleLine="true"
-        android:text="@string/testComboLabel"
         android:textColor="@color/grey100"
-        android:textSize="@dimen/textSize10sp" />
+        android:textSize="@dimen/textSize10sp"
+        tools:text="@string/testComboLabel" />
 
 </ee.ioc.phon.android.speak.view.SpeechInputView>
