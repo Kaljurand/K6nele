@@ -89,6 +89,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <!--
 			android:finishOnTaskLaunch="true"
 			android:allowTaskReparenting="false"
+			android:resizeableActivity="true"
+			android:supportsPictureInPicture="true"
         -->
         <activity
             android:name=".activity.SpeechActionActivity"
@@ -96,8 +98,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:resizeableActivity="true"
-            android:supportsPictureInPicture="true"
             android:theme="@style/Theme.K6nele.Dialog">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />

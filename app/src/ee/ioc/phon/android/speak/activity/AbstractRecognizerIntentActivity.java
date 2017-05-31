@@ -16,18 +16,14 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.app.PictureInPictureArgs;
-import android.app.RemoteAction;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -162,36 +158,58 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected void setUpSettingsButton() {
         // Short click opens the settings
         ImageButton bSettings = (ImageButton) findViewById(R.id.bSettings);
-        bSettings.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Preferences.class));
-            }
-        });
-
-        // Long click shows some technical details (for developers)
-        bSettings.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
-                details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
-                startActivity(details);
-                return false;
-            }
-        });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            ImageButton bPip = (ImageButton) findViewById(R.id.bEnterPip);
-            bPip.setOnClickListener(new View.OnClickListener() {
-                @TargetApi(26)
+        if (bSettings != null) {
+            bSettings.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    enterPictureInPictureMode(getPictureInPictureArgs());
+                    startActivity(new Intent(getApplicationContext(), Preferences.class));
+                }
+            });
+
+            // Long click shows some technical details (for developers)
+            bSettings.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
+                    details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
+                    startActivity(details);
+                    return false;
                 }
             });
         }
+
+        /*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            ImageButton bPip = (ImageButton) findViewById(R.id.bEnterPip);
+            if (bPip != null) {
+                bPip.setOnClickListener(new View.OnClickListener() {
+                    @TargetApi(26)
+                    public void onClick(View v) {
+                        enterPictureInPictureMode(getPictureInPictureArgs());
+                    }
+                });
+            }
+        }
+        */
     }
+
+    /*
+    @TargetApi(26)
+    protected void setUpActivity(int layout) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && isInPictureInPictureMode()) {
+            setTheme(R.style.Theme_K6nele_NoActionBar);
+            setContentView(R.layout.activity_recognizer_pip);
+        } else {
+            setTheme(R.style.Theme_K6nele_Dialog);
+            setContentView(layout);
+        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    */
 
     protected void setUpActivity(int layout) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setTheme(R.style.Theme_K6nele_Dialog);
         setContentView(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -232,16 +250,14 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         mErrorMessages = createErrorMessages();
     }
 
+    /*
     @Override
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
         if (isInPictureInPictureMode) {
-            //setTheme(R.style.Theme_K6nele_NoActionBar);
-            //setContentView(R.layout.activity_recognizer_pip);
         } else {
-            //setTheme(R.style.Theme_K6nele_Dialog);
-            //setContentView(R.layout.activity_recognizer);
         }
     }
+    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -648,11 +664,13 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         return results;
     }
 
+    /*
     @TargetApi(26)
     private PictureInPictureArgs getPictureInPictureArgs() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-
             Intent thisIntent = getIntent();
+            thisIntent.putExtra(Extras.EXTRA_AUTO_START, true);
+
             ArrayList<RemoteAction> actions = new ArrayList<>();
             // Action to start recognition
             actions.add(new RemoteAction(
@@ -675,4 +693,5 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
         return null;
     }
+    */
 }

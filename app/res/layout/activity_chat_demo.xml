@@ -34,6 +34,7 @@
             android:background="@drawable/button_combo"
             android:clickable="true"
             android:ellipsize="end"
+            android:focusable="true"
             android:minHeight="@dimen/layoutMargin3"
             android:minWidth="@dimen/layoutMargin3"
             android:singleLine="true"

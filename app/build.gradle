@@ -14,7 +14,7 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 'android-O'
+    compileSdkVersion 25
     buildToolsVersion rootProject.buildToolsVersion
 
     // API level 3: some default button was not found, but we didn't explore it further.
@@ -24,9 +24,9 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
-        targetSdkVersion 'O'
-        versionCode 1657
-        versionName '1.6.57'
+        targetSdkVersion 25
+        versionCode 1658
+        versionName '1.6.58'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }

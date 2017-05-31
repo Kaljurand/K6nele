@@ -7,6 +7,7 @@
     android:layout_alignParentBottom="true"
     android:background="@drawable/rectangle_gradient"
     android:clickable="true"
+    android:focusable="true"
     android:gravity="center"
     android:keepScreenOn="true"
     android:orientation="vertical">
