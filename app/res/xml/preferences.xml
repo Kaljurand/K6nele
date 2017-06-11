@@ -73,13 +73,11 @@
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
             android:title="@string/titleHelpText" />
-        <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultReturnErrors"
             android:key="@string/keyReturnErrors"
             android:summary="@string/summaryReturnErrors"
             android:title="@string/titleReturnErrors" />
-        -->
         <ListPreference
             android:defaultValue="@string/defaultMaxResults"
             android:dialogTitle="@string/titleMaxResults"

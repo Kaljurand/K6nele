@@ -31,50 +31,38 @@ import ee.ioc.phon.android.speak.R;
  * <p>This is a simple activity that calls the RecognizerIntent.ACTION_WEB_SEARCH
  * and populates a list view with the returned extra (EXTRA_RESULTS)
  * (i.e. the words/phrases that alternatively match the input speech).</p>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class SimpleDemo extends AbstractRecognizerDemoActivity {
 
-	private ListView mList;
+    private ListView mList;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.simple_demo);
-		mList = (ListView) findViewById(R.id.list_matches);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.simple_demo);
+        mList = (ListView) findViewById(R.id.list_matches);
 
-		Intent intent = createRecognizerIntent();
+        Intent intent = createRecognizerIntent(RecognizerIntent.ACTION_WEB_SEARCH);
 
-		if (getRecognizers(intent).size() == 0) {
-			toast(getString(R.string.errorRecognizerNotPresent));
-			finish();
-		} else {
-			launchRecognizerIntent(intent);
-		}
-	}
+        if (getRecognizers(intent).size() == 0) {
+            toast(getString(R.string.errorRecognizerNotPresent));
+            finish();
+        } else {
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
+            launchRecognizerIntent(intent);
+        }
+    }
 
 
-	/**
-	 * <p>Show the results i.e. an ordered list of transcription candidates.</p>
-	 */
-	@Override
-	protected void onSuccess(Intent intent) {
+    /**
+     * <p>Show the results i.e. an ordered list of transcription candidates.</p>
+     */
+    @Override
+    protected void onSuccess(Intent intent) {
         ArrayList<String> matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-		mList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matches));
-	}
-
-
-	/**
-	 * <p>Constructing a very simple ACTION_WEB_SEARCH intent.
-	 * The only required extra is EXTRA_LANGUAGE_MODEL.</p>
-	 * 
-	 * @return ACTION_WEB_SEARCH-intent
-	 */
-	private static Intent createRecognizerIntent() {
-		Intent intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
-		return intent;
-	}
+        mList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matches));
+    }
 }

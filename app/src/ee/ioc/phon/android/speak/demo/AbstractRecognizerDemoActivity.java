@@ -78,6 +78,7 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
 
     protected void onError(int errorCode) {
         toast(getErrorMessage(errorCode));
+        finish();
     }
 
     protected String getErrorMessage(int errorCode) {
@@ -130,8 +131,8 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
         return pm.queryIntentActivities(intent, 0);
     }
 
-
-    protected void launchRecognizerIntent(Intent intent) {
+    protected Intent createRecognizerIntent(String action) {
+        Intent intent = new Intent(action);
         String prompt;
         if (mGrammarId == 0) {
             String[] phrasesDemo = getResources().getStringArray(R.array.phrasesDemo);
@@ -146,9 +147,12 @@ public abstract class AbstractRecognizerDemoActivity extends Activity {
         }
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, prompt);
         intent.putExtra(Extras.EXTRA_VOICE_PROMPT, prompt);
-        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+        return intent;
     }
 
+    protected void launchRecognizerIntent(Intent intent) {
+        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+    }
 
     protected void toast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
