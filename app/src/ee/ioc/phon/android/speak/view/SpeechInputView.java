@@ -336,9 +336,6 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
-        if (mBImeKeyboard != null) {
-            setVisibility(mBImeKeyboard, View.VISIBLE);
-        }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
 
@@ -451,9 +448,6 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.LISTENING);
             setText(mTvInstruction, R.string.buttonImeStop);
             showMessage("");
-            if (mBImeKeyboard != null) {
-                setVisibility(mBImeKeyboard, View.INVISIBLE);
-            }
         }
 
         @Override

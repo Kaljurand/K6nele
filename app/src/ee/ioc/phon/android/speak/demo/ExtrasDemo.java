@@ -39,7 +39,6 @@ public class ExtrasDemo extends AbstractRecognizerDemoActivity {
             toast(getString(R.string.errorRecognizerNotPresent));
             finish();
         } else {
-            intent.putExtra(Extras.EXTRA_VOICE_PROMPT, (String) null);
             intent.putExtra(Extras.EXTRA_RETURN_ERRORS, true);
             intent.putExtra(Extras.EXTRA_GET_AUDIO, true);
             intent.putExtra(Extras.EXTRA_GET_AUDIO_FORMAT, (String) null);
