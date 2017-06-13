@@ -237,7 +237,7 @@ Selline on olukord paljude klaviatuurirakendustega, milles oleva mikrofoninupu v
 käivitab Google'i kõnetuvastusteenuse, ning seda muuta pole võimalik. Üheks erandiks
 on _SlideIT Keyboard_, mida saab konfigureerida Kõnelet kasutama.
 Hea ülevaade parimatest klaviatuurirakendustest (eesti keeles kirjutamise
-seisukohast) on ajakirjas [[digi] 5/2014](http://www.digi.ee/arhiiv/ajakiri-digi-05-2014).
+seisukohast) on ajakirjas [[digi] 5/2014](http://www.digi.ee/2014/05/arhiiv/).
 
 Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab kõnetuvastuseks
 üldiselt Google'i tuvastajat, kuid keelte jaoks, mida see ei toeta (nt eesti keel)
