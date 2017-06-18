@@ -180,9 +180,9 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.i("onStop");
+    public void onPause() {
+        super.onPause();
+        Log.i("onPause");
         // We stop the service unless a configuration change causes onStop(),
         // i.e. the service is not stopped because of rotation, but is
         // stopped if BACK or HOME is pressed, or the Settings-activity is launched.

@@ -578,16 +578,14 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                     Locale locale = mTts.chooseLanguage(lang);
                     if (locale == null) {
                         toast(String.format(getString(R.string.errorTtsLangNotAvailable), lang));
+                        if (listener != null) listener.onDone();
                     } else {
                         mTts.setLanguage(locale);
-                    }
-                    if (listener == null) {
-                        mTts.say(prompt);
-                    } else {
                         mTts.say(prompt, listener);
                     }
                 } else {
                     toast(getString(R.string.errorTtsInitError));
+                    if (listener != null) listener.onDone();
                 }
             }
         });

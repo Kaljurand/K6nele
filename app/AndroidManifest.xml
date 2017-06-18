@@ -22,8 +22,9 @@
     e.g. when opening rules via Firefox or Dropbox. (It is not needed via Chrome.)
     This is a "dangerous" permission, i.e. it is not enabled by default. Kõnele currently does not
     provide a UI to request it either, but listing it in the manifest makes it show up in the Apps settings,
-    i.e. the user can grant it, if needed. In Android versions before v6.0 (~50% of the users as of
-    2017-04-01) the permission is granted at install time, which is not nice, but this user base will
+    i.e. the user can grant it, if needed.
+    In Android versions before v6.0 (~35% of the users as of 2017-06-18)
+    the permission is granted at install time, which is not nice, but this user base will
     disappear over time.
     -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
