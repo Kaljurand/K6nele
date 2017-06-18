@@ -5,8 +5,8 @@ permalink: /about/
 ---
 
 Kõnele is an Android app that offers speech-to-text services to other apps.
-Many apps have a text area or a text field (e.g. a search bar) that can be edited using
-the keyboard. Kõnele provides a __speech keyboard__, which allows speech to be converted to text.
+Many apps contain a text area or a text field (e.g. a search bar) that can be edited using
+the keyboard. Kõnele provides a __speech keyboard__, which allows text to be created via speaking.
 Many apps (e.g. intelligent assistants, keyboard apps, navigation apps) also contain a microphone button that
 is linked to either the __standard Android speech recognition activity__
 or the __standard Android speech recognition service__.
@@ -20,8 +20,8 @@ are based on a fully open-source stack that makes them easy to deploy and custom
 languages.
 
 The main goals of the Kõnele project are to provide Estonian speech recognition on the
-Android platform, and to provide grammar-based speech recognition for highly accurate voice command applications.
-Kõnele is an open, configurable and powerful alternative to speech recognition services
+Android platform, and to provide grammar-based speech recognition for voice command applications.
+Kõnele is an open, configurable and powerful alternative to the speech recognition apps and services
 currently available on Android.
 
 <table>
@@ -37,28 +37,25 @@ currently available on Android.
 
 ## Features
 
-__For the end-user, Kõnele__
+Kõnele provides two user interface components that can use any speech recognition service/language available on the device:
 
-  - provides a simple speech recognition activity, that opens from the Kõnele launcher icon, and that is also callable from other Android apps;
-  - provides a speech keyboard that can be used to dictate into any text field (apart from password fields) in any app using any speech recognition service/language available on the device;
-  - provides two speech recognition services that are pre-configured to use Estonian speech recognition;
-  - provides a grammar-based speech recognition service for English and Estonian voice actions applications (e.g. alarm clock, unit converter, address search), for the list of existing grammars see <http://kaljurand.github.io/Grammars/>, for a client app of grammar-based recognition see [Arvutaja](http://kaljurand.github.io/Arvutaja/);
-  - provides a way to change the transcription result using custom rewrite rules;
-  - provides a way to launch an Android activity based on the (rewritten) transcription;
-  - requires only two permissions (to access the microphone and the internet);
-  - comes with two user interface languages: English, Estonian.
+  - the voice search panel is callable from other apps (typically by pressing a microphone button); in case it is opened via the Kõnele launcher icon, custom rewrite rules allow one to define which app is launched to show the transcription results (by default the web browser is used);
+  - the speech keyboard can be used to dictate into any text field in any app, edit the result with swipe commands, and execute user-defined editor commands (select, copy, paste, replace etc.)
 
-See more in the [User Guide]({{ site.baseurl }}/docs/et/user_guide.html) (only in Estonian).
+Kõnele also provides two speech recognition services that are pre-configured to use Estonian speech recognition:
 
-__For the app developer, Kõnele__
+  - a continuous full-duplex service supports audio input of unlimited length where dictation results are returned already while dictating;
+  - a grammar-based speech recognition service supports English and Estonian voice actions (e.g. alarm clock, unit converter, address search), for the list of existing grammars see <http://kaljurand.github.io/Grammars/>.
 
-  - implements the [android.speech.RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) actions `ACTION_RECOGNIZE_SPEECH` and `ACTION_WEB_SEARCH`, and supports most of its EXTRAs;
-  - implements [android.speech.RecognitionService](http://developer.android.com/reference/android/speech/RecognitionService.html), backed by two open servers:
-    - <http://github.com/alumae/kaldi-gstreamer-server> (continuous full-duplex server),
-    - <http://github.com/alumae/ruby-pocketsphinx-server> (grammar-supporting server);
-  - is open and configurable, supporting many input EXTRAs and allowing the output to be changed by regex-based rewrite rules.
+The services can be used via Kõnele's own user interface components or by external apps like [Arvutaja](http://kaljurand.github.io/Arvutaja/).
 
-See more in the [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
+Kõnele requires very few permissions (only the access to the microphone is essential), see the details in the [manifest](https://github.com/Kaljurand/K6nele/blob/master/app/AndroidManifest.xml).
+
+See also:
+
+- [User Guide]({{ site.baseurl }}/docs/et/user_guide.html) (only in Estonian);
+- [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html);
+- [various notes](https://github.com/Kaljurand/K6nele/tree/master/docs).
 
 ## Availability
 
@@ -66,14 +63,9 @@ Kõnele is free and open source software.
 Visit the [Kõnele GitHub page][k6nele-github] for the source code, bug reporting, etc.
 The information and downloadable APK-packages for all the released versions are on the [Releases page][k6nele-releases].
 
-A recent stable version is available on [Google Play][k6nele-play]
-and on [F-Droid][k6nele-fdroid].
-The latest testing version is available on Google Play after joining
-[the testing program][k6nele-beta-link]. (Alternatively, you can also join
-[this Google+ community][k6nele-beta] and click on "Signup for Kõnele".)
-
-[![]({{ site.baseurl }}/images/en/google-play-badge.png)][k6nele-play]
-[![]({{ site.baseurl }}/images/en/f-droid-badge.png)][k6nele-fdroid]
+A recent stable version is also available on [Google Play][k6nele-play], and
+the latest testing version is available on Google Play after joining
+[the testing program][k6nele-beta-link].
 
 ## Other
 
@@ -85,9 +77,6 @@ See more [here](http://plus.google.com/+KaarelKaljurand/posts/QMArF5Yvegs).
 
 
 [k6nele-play]:          http://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak
-[k6nele-beta]:          http://plus.google.com/communities/116163027457318257829
 [k6nele-beta-link]:     https://play.google.com/apps/testing/ee.ioc.phon.android.speak
 [k6nele-github]:        http://github.com/Kaljurand/K6nele
 [k6nele-releases]:      http://github.com/Kaljurand/K6nele/releases
-[k6nele-releases-old]:  http://code.google.com/p/recognizer-intent/downloads/list
-[k6nele-fdroid]:        https://f-droid.org/repository/browse/?fdid=ee.ioc.phon.android.speak
