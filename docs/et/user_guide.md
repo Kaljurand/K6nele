@@ -74,7 +74,7 @@ edasi seadme veebibrauserile.
 <img title="Ekraanipilt: valik tuvastustulemusi" alt="Ekraanipilt: valik tuvastustulemusi." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-35.png">
 <img title="Ekraanipilt: tuvastustulemus veebiotsinguna" alt="Ekraanipilt: tuvastustulemus veebiotsinguna." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-23-09-02-48.png">
 
-Ümberkirjutusreeglid (alates v1.6) võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
+Ümberkirjutusreeglid võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
 
 {% highlight sh %}
     Utterance<HT>Command<HT>Arg1<NL>
@@ -250,8 +250,6 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 ## Ümberkirjutusreeglid
 
-(_Alates v1.6_)
-
 Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks.
 (Soovi korral vaata kohe [näiteid reeglitest](#näited).)
 
@@ -385,11 +383,15 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Korraga saab aktiivne 
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_send.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
-- [[TSV](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/edit?usp=sharing)] Kõnekäsud Philips Hue valgustite kontrollimiseks näitab, kuidas teha Kõnele abil HTTP-päringuid.
+- (_vajalik Kõnele v1.6.50+_) [[TSV](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/edit?usp=sharing)] Kõnekäsud valgustite juhtimiseks näitab, kuidas loomulikus keeles sisend viia lihtsamale ja keelest sõltumatule kujule (nt "pane elutoa lamp põlema heledusega kaks sada" -> ``<lights><1><on><200>``), mida alljärgnevad reeglistikud edasi teistendavad ning lõpuks käivitavad.
+  - [[TSV](https://docs.google.com/spreadsheets/d/1owXRMDRIGvi4Ya0lP6_LXsbZXs-sslwhzEye5pGAXbo/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1owXRMDRIGvi4Ya0lP6_LXsbZXs-sslwhzEye5pGAXbo/edit?usp=sharing)] Käivitab formaalsel kujul käske otse Philips Hue silla kaudu, näidates, kuidas Kõnele abil HTTP-päringuid teha.
+  - [[TSV](https://docs.google.com/spreadsheets/d/1lxvkGerd_WMljca0dsgxViw_5cnOEgDzneBL-uXI-xI/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1lxvkGerd_WMljca0dsgxViw_5cnOEgDzneBL-uXI-xI/edit?usp=sharing)] Käivitab formaalsel kujul käske [Home Assistant](https://home-assistant.io/) abil. Home Assistant toetab nii Philips Hue, kui ka teiste tootjate valgusteid, samuti palju muid targa kodu seadmeid, tehes need kättesaadavaks lihtsa HTTP-liidese kaudu.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
-- [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda
-- [[TSV](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/edit?usp=sharing)] Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja lausub etteantud fraasi nn _wake up phrase_), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub. (Lülititeenus pole veel avalik.)
-- [[TSV](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks)
+- [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda.
+- (_vajalik rakendus ee.ioc.phon.android.speechtrigger, mis pole veel avalik_) [[TSV](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/edit?usp=sharing)] Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja lausub etteantud fraasi nn _wake up phrase_), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub.
+- [[TSV](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks).
+
+### Reeglid kui liides dialoogisüsteemile
 
 Olgugi, et ümberkirjutusreeglite abil saab luua lihtsamaid dialoogisüsteeme, on reaalsete süsteemide (allpool "robot") loomisel mõtekam kasutada siiski võimsamaid vahendeid loomuliku keele töötluseks ning suhtluseks teiste seadmetega. Sellisel juhul oleks Kõnele lihtsalt transkriptsiooniteenuse pakkuja, st robot ei peaks oskama ise kõne tuvastada.
 
