@@ -27,10 +27,15 @@ currently available on Android.
 <table>
 <tr>
 <td class="logo">
-<img class="logo" title="Screenshot: address search with the Kõnele speech keyboard" src="{{ site.baseurl }}/images/en/screenshot_portrait_framed_20150712_resize20.png">
+<img class="logo" title="Screenshot: address search with the Kõnele speech keyboard" src="{{ site.baseurl }}/images/en/screenshot_portrait_1_framed_20170702_resize20.png">
 </td>
 <td class="logo">
-<img class="logo" title="Screenshot: composing an email with the Kõnele speech keyboard" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20150712_resize20.png">
+<img class="logo" title="Screenshot: directions search with the Kõnele voice search panel in split screen mode" src="{{ site.baseurl }}/images/en/screenshot_portrait_framed_20170702_resize20.png">
+</td>
+</tr>
+<tr>
+<td class="logo" colspan="2" align="center">
+<img class="logo" title="Screenshot: composing an email with the Kõnele speech keyboard in landscape mode" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20170702_resize20.png">
 </td>
 </tr>
 </table>
@@ -39,8 +44,8 @@ currently available on Android.
 
 Kõnele provides two user interface components that can use any speech recognition service/language available on the device:
 
-  - the voice search panel is callable from other apps (typically by pressing a microphone button); in case it is opened via the Kõnele launcher icon, custom rewrite rules allow one to define which app is launched to show the transcription results (by default the web browser is used);
-  - the speech keyboard can be used to dictate into any text field in any app, edit the result with swipe commands, and execute user-defined editor commands (select, copy, paste, replace etc.)
+  - the voice search panel can be called from other apps (typically by pressing a microphone button), and returns the recognition results to the app; in case the panel is opened via the Kõnele launcher icon, custom rewrite rules allow one to define which app is launched to interpret the recognition results (by default, the results are used to perform a web search using the default browser);
+  - the speech keyboard can be used to dictate into any text field in any app, edit the result with swipe commands, and execute user-defined editor commands (select, copy, replace, undo, move cursor to next regex match etc.)
 
 Kõnele also provides two speech recognition services that are pre-configured to use Estonian speech recognition:
 
@@ -53,7 +58,7 @@ Kõnele requires very few permissions (only the access to the microphone is esse
 
 See also:
 
-- [User Guide]({{ site.baseurl }}/docs/et/user_guide.html) (only in Estonian);
+- [User Guide]({{ site.baseurl }}/docs/et/user_guide.html) (in Estonian);
 - [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html);
 - [various notes](https://github.com/Kaljurand/K6nele/tree/master/docs).
 
