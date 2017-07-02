@@ -52,6 +52,7 @@ import ee.ioc.phon.android.speak.RecognizerIntentService.RecognizerBinder;
 import ee.ioc.phon.android.speak.RecognizerIntentService.State;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.AudioCue;
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
@@ -236,7 +237,7 @@ public class RecognizerIntentActivity extends AbstractRecognizerIntentActivity {
         info.add("Selected target lang: " + getRecSessionBuilder().getGrammarTargetLang());
         info.add("Selected server: " + getRecSessionBuilder().getServerUrl());
         info.add("Intent action: " + getIntent().getAction());
-        info.addAll(Utils.ppBundle(getExtras()));
+        info.addAll(BundleUtils.ppBundle(getExtras()));
         return info.toArray(new String[info.size()]);
     }
 

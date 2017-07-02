@@ -20,7 +20,7 @@ import android.app.PendingIntent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
-import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 
 /**
  * <p>Description of the caller that receives the transcription.
@@ -100,7 +100,7 @@ public class Caller {
 	 * @return package name possibly hidden deep into the given bundle
 	 */
 	private static String getPackageName(Bundle bundle) {
-		Object obj = Utils.getBundleValue(bundle, KEY_PACKAGE_NAME);
+		Object obj = BundleUtils.getBundleValue(bundle, KEY_PACKAGE_NAME);
 		if (obj instanceof String) {
 			return (String) obj;
 		}

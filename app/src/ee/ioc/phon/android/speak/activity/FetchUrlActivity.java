@@ -25,7 +25,9 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Map;
 
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 import ee.ioc.phon.android.speechutils.utils.HttpUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 
@@ -33,8 +35,7 @@ import ee.ioc.phon.android.speechutils.utils.IntentUtils;
  * Queries the given URL and rewrites the response. Toasts the result unless it was executed as a command.
  * <p>
  * TODO: handle latency, e.g. show progress in notification (but notifications are not available on Android Things)
- * TODO: add extras for various HTTP parameters and error handing (e.g. map 503 to a string)
- * TODO: add user agent based on the calling app
+ * TODO: add extras for error handing (e.g. map 503 to a string)
  *
  * @author Kaarel Kaljurand
  */
@@ -42,6 +43,7 @@ public class FetchUrlActivity extends Activity {
 
     public static final String EXTRA_HTTP_METHOD = "ee.ioc.phon.android.extra.HTTP_METHOD";
     public static final String EXTRA_HTTP_BODY = "ee.ioc.phon.android.extra.HTTP_BODY";
+    public static final String EXTRA_HTTP_HEADER = "ee.ioc.phon.android.extra.HTTP_HEADER";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,19 +74,23 @@ public class FetchUrlActivity extends Activity {
         private final Bundle mBundle;
         private final String mHttpMethod;
         private final String mHttpBody;
+        private final Map<String, String> mHttpHeader;
 
         private HttpTask(@NonNull Bundle bundle) {
             mBundle = bundle;
             mHttpMethod = bundle.getString(EXTRA_HTTP_METHOD, "GET");
             mHttpBody = bundle.getString(EXTRA_HTTP_BODY);
+            // Mapping HTTP_HEADER bundle to a Map<String, String>,
+            // assuming that all its elements are strings.
+            mHttpHeader = BundleUtils.getBundleAsMapOfString(bundle.getBundle(EXTRA_HTTP_HEADER));
         }
 
         @Override
         protected String doInBackground(String... urls) {
             try {
-                return HttpUtils.fetchUrl(urls[0], mHttpMethod, mHttpBody);
+                return HttpUtils.fetchUrl(urls[0], mHttpMethod, mHttpBody, mHttpHeader);
             } catch (IOException e) {
-                return "Unable to retrieve " + urls[0] + " " + e.getLocalizedMessage();
+                return "Unable to retrieve " + urls[0] + ": " + e.getLocalizedMessage();
             }
         }
 

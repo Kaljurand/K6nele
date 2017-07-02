@@ -32,6 +32,7 @@ import android.speech.RecognizerIntent;
 
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
@@ -87,7 +88,7 @@ public class ChunkedWebRecSessionBuilder {
             extras = new Bundle();
         }
 
-		if (Log.DEBUG) Log.i(Utils.ppBundle(extras));
+		if (Log.DEBUG) Log.i(BundleUtils.ppBundle(extras));
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mDeviceId = PreferenceUtils.getUniqueId(prefs);
@@ -305,7 +306,7 @@ public class ChunkedWebRecSessionBuilder {
 
 		// If EXTRA_LANGUAGE is not set but the bundle contains "selectedLanguage" (as is the case with some IMEs)
 		// then use a value from the latter.
-		Object selectedLanguage = Utils.getBundleValue(extras, "selectedLanguage");
+		Object selectedLanguage = BundleUtils.getBundleValue(extras, "selectedLanguage");
 		if (selectedLanguage != null) {
 			return selectedLanguage.toString();
 		}

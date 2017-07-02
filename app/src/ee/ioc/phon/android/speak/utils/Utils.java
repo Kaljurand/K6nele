@@ -294,61 +294,6 @@ public final class Utils {
     }
 
 
-    public static List<String> ppBundle(Bundle bundle) {
-        return ppBundle("/", bundle);
-    }
-
-
-    private static List<String> ppBundle(String bundleName, Bundle bundle) {
-        List<String> strings = new ArrayList<>();
-        if (bundle == null) {
-            return strings;
-        }
-        for (String key : bundle.keySet()) {
-            Object value = bundle.get(key);
-            String name = bundleName + key;
-            if (value instanceof Bundle) {
-                strings.addAll(ppBundle(name + "/", (Bundle) value));
-            } else {
-                if (value instanceof Object[]) {
-                    strings.add(name + ": " + Arrays.toString((Object[]) value));
-                } else if (value instanceof float[]) {
-                    strings.add(name + ": " + Arrays.toString((float[]) value));
-                } else {
-                    strings.add(name + ": " + value);
-                }
-            }
-        }
-        return strings;
-    }
-
-
-    /**
-     * <p>Traverses the given bundle looking for the given key. The search also
-     * looks into embedded bundles and thus differs from {@code Bundle.get(String)}.
-     * Returns the first found entry as an object. If the given bundle does not
-     * contain the given key then returns {@code null}.</p>
-     *
-     * @param bundle bundle (e.g. intent extras)
-     * @param key    key of a bundle entry (possibly in an embedded bundle)
-     * @return first matching key's value
-     */
-    public static Object getBundleValue(Bundle bundle, String key) {
-        for (String k : bundle.keySet()) {
-            Object value = bundle.get(k);
-            if (value instanceof Bundle) {
-                Object deepValue = getBundleValue((Bundle) value, key);
-                if (deepValue != null) {
-                    return deepValue;
-                }
-            } else if (key.equals(k)) {
-                return value;
-            }
-        }
-        return null;
-    }
-
-
     public static String makeUserAgentComment(String tag, String versionName, String caller) {
         return tag + "/" + versionName + "; " +
                 Build.MANUFACTURER + "/" +

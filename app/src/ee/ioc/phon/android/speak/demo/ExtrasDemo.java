@@ -24,8 +24,8 @@ import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.DetailsActivity;
-import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 
 public class ExtrasDemo extends AbstractRecognizerDemoActivity {
 
@@ -52,7 +52,7 @@ public class ExtrasDemo extends AbstractRecognizerDemoActivity {
      */
     @Override
     protected void onSuccess(Intent intent) {
-        List<String> list = Utils.ppBundle(intent.getExtras());
+        List<String> list = BundleUtils.ppBundle(intent.getExtras());
         Intent details = new Intent(this, DetailsActivity.class);
         details.setData(intent.getData());
         details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, list.toArray(new String[list.size()]));

@@ -15,11 +15,11 @@ import java.util.List;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.CallerInfo;
-import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.TtsProvider;
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -99,7 +99,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         //info.add("Selected target lang: " + getRecSessionBuilder().getGrammarTargetLang());
         //info.add("Selected server: " + getRecSessionBuilder().getServerUrl());
         info.add("Intent action: " + getIntent().getAction());
-        info.addAll(Utils.ppBundle(getExtras()));
+        info.addAll(BundleUtils.ppBundle(getExtras()));
         return info.toArray(new String[info.size()]);
     }
 

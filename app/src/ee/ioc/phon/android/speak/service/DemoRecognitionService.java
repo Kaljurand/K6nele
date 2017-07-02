@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 
 /**
  * Sends a growing number every few milliseconds for 3 seconds, finally sends
@@ -19,7 +19,7 @@ public class DemoRecognitionService extends AbstractRecognitionService {
     @Override
     void configure(Intent recognizerIntent) {
         mIntentAsString = TextUtils.join("\n",
-                Utils.ppBundle(recognizerIntent.getExtras()));
+                BundleUtils.ppBundle(recognizerIntent.getExtras()));
     }
 
     @Override
