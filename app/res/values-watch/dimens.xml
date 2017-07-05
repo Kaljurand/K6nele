@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textSize10sp">10sp</dimen>
+    <dimen name="textSize1">10sp</dimen>
+    <dimen name="textSize2">12sp</dimen>
+    <dimen name="textSize3">14sp</dimen>
+    <dimen name="layoutHeightButtonMicrophone">56dp</dimen>
+    <dimen name="layoutMargin4dp">2dp</dimen>
+    <dimen name="layoutMargin1">8dp</dimen>
+    <dimen name="layoutMargin2">16dp</dimen>
+    <dimen name="layoutMargin3">24dp</dimen>
+    <dimen name="layoutMargin32">32dp</dimen>
+</resources>

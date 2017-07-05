@@ -44,9 +44,8 @@ public class EncoderDemoActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.encoder_demo);
-        mBTest1 = (Button) findViewById(R.id.buttonTest1);
-        Button bTest2 = (Button) findViewById(R.id.buttonTest2);
-        mBTest1.setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.buttonTest1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mBTest1.setText(R.string.buttonImeStopByPause);
@@ -57,7 +56,7 @@ public class EncoderDemoActivity extends Activity {
                 }
             }
         });
-        bTest2.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buttonTest2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<String> info = new ArrayList<>();
@@ -69,8 +68,7 @@ public class EncoderDemoActivity extends Activity {
             }
         });
 
-        Button bTest3 = (Button) findViewById(R.id.buttonTest3);
-        bTest3.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buttonTest3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<String> info = getVoiceImeInputMethodInfo(getPackageManager(),
