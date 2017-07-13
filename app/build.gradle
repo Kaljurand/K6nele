@@ -79,7 +79,7 @@ android {
         }
     }
     lintOptions {
-        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines'
+        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry'
     }
 }
 

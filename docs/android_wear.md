@@ -21,17 +21,43 @@ Install Android Debug Bridge (adb), which is part of the
 
 Connect to the watch as detailed in [Debugging an Android Wear App](https://developer.android.com/training/wearables/apps/debugging.html).
 
-Some (optional) commands:
 
-    # Look at the installed packages.
-    $ adb shell pm list packages
+### Installing Kõnele
+
+In case the Wear-compatible version of Kõnele is not available on Google Play, then install it using adb:
+
+    # use install -r for reinstallations
+    adb install K6nele-1.6.62.apk
+
+    # (Optional) Verify that the package was installed
+    adb shell pm list packages | fgrep "ee.ioc.phon.android.speak"
+
+Configuring
+-----------
+
+### Global settings
 
     # Look at settings
-    $ adb shell am start -a android.settings.SETTINGS
+    adb shell am start -a android.settings.SETTINGS
 
-    # Look at the current voice input settings.
+    # The standard Android voice input settings are not present on Wear.
     # Expected result: Activity not started, unable to resolve Intent.
-    $ adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+    adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+
+The menu `Settings -> Personalization -> Customize hardwear buttons` lets
+you launch an app (e.g. Kõnele) when pressing a hardwear button.
+
+### Kõnele UI configuration
+
+Suggestions:
+
+- enable "Auto start"
+- disable "Help text"
+
+### Kõnele services configuration
+
+- enable IME
+- keep the raw encoding (FLAC is not supported on Wear)
 
 ### Importing and configuring rewrite rules
 
@@ -39,15 +65,26 @@ There is no browser on the watch, which is used by default to show the transcrip
 
 Import a rules table from a URL and give it a name ("Test" in the example below):
 
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Test -e val "http://kaljurand.github.io/K6nele/rewrites/tsv/k6_various.tsv" --ez is_url true
+    adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Test -e val "http://kaljurand.github.io/K6nele/rewrites/tsv/k6_various.tsv" --ez is_url true
 
 Set the table to be the default. Note that there can be multiple defaults.
 
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key defaultRewriteTables --esa val Test
+    adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key defaultRewriteTables --esa val Test
 
 (Optional) Add the table to the list of rewrite rule tables in the Kõnele settings. This is not needed for the rules to work, but needed if one wants to browse the rules via Kõnele settings.
 
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap --esa val Test
+    adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap --esa val Test
+
+### Notes about rewrite rules
+
+- voice prompts use Google's text-to-speech engine by default, which does not support Estonian, so Kõnele falls back to Finnish.
+  This triggers the downloading of Finnish TTS data when first used, which lasts a while.
+  In general TTS is very slow on Wear (e.g. Finnish takes 20 sec to warm up), so consider designing your rewrite rules to use no voice prompts.
+
+### Apps to install
+
+- TODO: something that supports `WEB_SEARCH`
+- another TTS engine
 
 Examples
 --------
@@ -67,16 +104,16 @@ editor but instead over the input mode selection GUI).
 TODO
 ----
 
-- assign a custom button to K6nele, that would not override Google Assistant
+- do not declare support for ASSISTANT (only on wear), because it overrides Google Assistant
 
-- FetchUrl (as in the Hue use case) does not seem to work
+- FetchUrlActivity does not work with some (local?) URLs: connect timed out
 
 - watch does not have menus (e.g. Action bar)
 
-- some intents are not available: web search, all rec services
+- some intents are not available: VIEW?, web search, all voice services
 
-- no audio encoders on the watch?
+- (Google's) TTS is very slow on Wear
 
-- TTS is very slow
+- try installing EKI TTS, or any other TTS engine and see if one can swich away from Google
 
-- IME could support swipe commands and show a small editor line
+- IME could support swipe commands and show a small editor line which reflects rewritten text and editing results
