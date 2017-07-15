@@ -1,4 +1,4 @@
-://github.com/Kaljurand/speech-trigger/releases/download/v0.1.21/SpeechTrigger-0.1.21.apkree hands-free light switch or something else
+Free hands-free light switch or something else
 ==============================================
 
 _Work in progress_
