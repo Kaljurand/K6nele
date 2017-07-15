@@ -1,0 +1,206 @@
+://github.com/Kaljurand/speech-trigger/releases/download/v0.1.21/SpeechTrigger-0.1.21.apkree hands-free light switch or something else
+==============================================
+
+_Work in progress_
+
+Introduction
+------------
+
+Step-by-step instructions on how to build an Amazon Echo style voice assistant for Estonian using free software.
+
+Steps
+-----
+
+Note that the steps of downloading, installing and configuring of APKs can be executed by executing the script `setup-k6nele-on-things.sh`,
+which downloads the needed APKs (using `wget`), installs them to the current device (using `adb`),
+and configures them (using `adb`). The configuring consists of permission assignment (which is not needed if the device is
+going to be rebooted anyway), and running Kõnele's `GetPutPreferenceActivity` to change the Kõnele settings (which should be
+manually redone do change to the user's own preferences, e.g. the rewrite tables).
+
+### Pi
+
+Set up a Raspberry Pi 3 with a microphone, a battery, a (USB?) loud speaker, and (optionally) a GPIO board with a button and lamp.
+Power it on. A monitor is not required by the application but can be helpful during installation for getting visual feedback.
+A mouse is not required but can be helpful during installation and testing. Some of the configuration steps in the instructions below are easier done with a mouse.
+
+Install Android Things and set up wifi. (Internet is required but wifi is optional.)
+Tested with `androidthings_rpi3_devpreview_4_1.zip`.
+
+Install Android Debug Bridge (adb), which is part of the
+[SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools.html).
+
+Connect to Pi.
+
+    $ adb connect Android.local
+
+(Optional) Look at the installed packages.
+
+    $ adb shell pm list packages
+
+(Optional) Look at settings
+
+    $ adb shell am start -a android.settings.SETTINGS
+
+(Optional) Look at the current voice input settings. There shouldn't be any voice input providers.
+
+    $ adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+    $ adb shell input keyevent 4
+
+### Kõnele
+
+Install Kõnele and grant the audio recording permission.
+
+    $ ver=1.6.62
+    $ wget https://github.com/Kaljurand/K6nele/releases/download/v$ver/K6nele-$ver.apk
+    $ adb install K6nele-$ver.apk
+    $ adb shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO
+
+Configure Kõnele, e.g. import for some rewrite tables (which define what the application does).
+
+    # The Lights and Lights.Hue tables can be used to control Hue lights (the 2nd table needs to be customized with the the local IP and the Hue ID).
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Lights -e val "https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/export?format=tsv" --ez is_url true
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Lights.Hue -e val "https://docs.google.com/spreadsheets/d/1owXRMDRIGvi4Ya0lP6_LXsbZXs-sslwhzEye5pGAXbo/export?format=tsv" --ez is_url true
+
+    # (Optional) Set the tables to be the default
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key defaultRewriteTables --esa val Lights,Lights.Hue
+    # (Optional) Add the tables to the list of rewrite rule tables (useful if you want to browse to them with a mouse to look at the rules)
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap --esa val Lights,Lights.Hue
+
+    # To configure using the mouse, start the main activity.
+    # Note that the rewrite rules cannot be installed this way because the required apps
+    # (file browser, web browser, etc.) are not available on Things.
+    $ adb shell 'am start -n "ee.ioc.phon.android.speak/.activity.SpeechActionActivity"'
+
+### Speech trigger
+
+Install speech-trigger and grant the permissions.
+speech-trigger is an Android speech recognition service that returns once it hears a given phrase.
+
+    $ adb install SpeechTrigger-0.1.21.apk
+    # Recording permission
+    $ adb shell pm grant ee.ioc.phon.android.speechtrigger android.permission.RECORD_AUDIO
+    # Storage permission
+    $ adb shell pm grant ee.ioc.phon.android.speechtrigger android.permission.WRITE_EXTERNAL_STORAGE
+
+    # (Optional) Launch
+    $ adb shell 'am start -n "ee.ioc.phon.android.speechtrigger/.MainActivity"'
+
+### TTS
+
+Android Things comes with Google's TTS.
+For Estonian support install EKI TTS. Used for voice prompts.
+Configure the system to use EKI TTS by default.
+
+    # (Optional) Look at the current TTS settings and go BACK.
+    $ adb shell am start -a com.android.settings.TTS_SETTINGS
+    $ adb shell input keyevent 4
+
+    # (TODO: maybe not needed) Uninstall/disable Google's TTS
+    $ adb root
+    $ adb connect Android.local
+    $ adb uninstall com.google.android.tts
+    $ adb shell 'pm disable com.google.android.tts'
+
+    $ adb install EKISpeak-1.1.02.apk
+
+TODO: don't know how to change the default TTS using adb. Connect a USB mouse, launch the `TTS_SETTINGS`
+and use the mouse the change the default TTS engine.
+
+### IoT launcher
+
+Install an app of category `IOT_LAUNCHER`. This app is launched after Pi has finished booting up.
+It should either immediately launch Kõnele (with the speech-trigger service) or do that when a GPIO button
+is pressed. The intent to launch Kõnele would look something like this:
+
+    // locale1: trigger locale (e.g. "en-US")
+    // phrase1: trigger phrase (e.g. "hey wake up")
+    // locale2: locale of the main command (e.g. "et-EE")
+    // prompt2: voice prompt before listening for the main command (e.g. "öelge lambikäsk")
+    // service2: service on the main command (e.g. "ee.ioc.phon.android.speak/.service.WebSocketRecognitionService")
+    private static Intent createRecognizerIntent(String locale1, String phrase1,
+                                                 String locale2, String prompt2, String service2) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
+        intent.setComponent(ComponentName.unflattenFromString("ee.ioc.phon.android.speak/.activity.SpeechActionActivity"));
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        intent.putExtra(Extras.EXTRA_VOICE_PROMPT, "Say the trigger phrase " + phrase1);
+        intent.putExtra(Extras.EXTRA_SERVICE_COMPONENT, "ee.ioc.phon.android.speechtrigger/.TriggerService");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale1);
+        intent.putExtra(Extras.EXTRA_AUTO_START, true);
+        intent.putExtra(Extras.EXTRA_RETURN_ERRORS, true);
+        intent.putExtra(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT, false);
+        intent.putExtra(Extras.EXTRA_PHRASE, phrase1);
+        intent.putExtra(Extras.EXTRA_RESULT_UTTERANCE, ".+");
+        intent.putExtra(Extras.EXTRA_RESULT_COMMAND, "activity");
+        intent.putExtra(Extras.EXTRA_RESULT_ARG1,
+                "{\"component\": \"ee.ioc.phon.android.speak/.activity.SpeechActionActivity\"," +
+                        "\"extras\":{" +
+                        "\"ee.ioc.phon.android.extra.SERVICE_COMPONENT\":\"" + service2 + "\"," +
+                        "\"android.speech.extra.MAX_RESULTS\":1," +
+                        "\"android.speech.extra.LANGUAGE\":\"" + locale2 + "\"," +
+                        "\"ee.ioc.phon.android.extra.AUTO_START\":True," +
+                        "\"ee.ioc.phon.android.extra.VOICE_PROMPT\":\"" + prompt2 + "\"," +
+                        "\"ee.ioc.phon.android.extra.FINISH_AFTER_LAUNCH_INTENT\": True," +
+                        "\"ee.ioc.phon.android.extra.RETURN_ERRORS\": True," +
+                        "\"ee.ioc.phon.android.extra.RESULT_REWRITES\": [\"Lights\", \"Lights.Hue\"]}}");
+        return intent;
+    }
+
+An example is https://github.com/Kaljurand/things-k6nelelauncher
+
+### Use
+
+Reboot Pi and wait for the voice prompt (e.g. "Say the trigger phrase hey wake up").
+
+    $ adb shell reboot
+
+Alternatively launch it using adb.
+
+    # Start recognition automatically.
+    $ adb shell am start -n ee.ioc.phon.android.things.k6nelelauncher/.ActivityLauncherActivity
+
+    # Start recognition when BCM4 is pressed.
+    $ adb shell am start -n ee.ioc.phon.android.things.k6nelelauncher/.ActivityLauncherActivity --ez auto_start false -e gpio_button BCM4
+
+Say "hey wake up" and wait for the next prompt (e.g. "öelge lambikäsk"), or repeat "hey wake up" if no prompt followed.
+
+The rest of the dialog is defined by the triggered rewrite rules (e.g. "Lights" and "Lights.Hue").
+Once the dialog and its launched activities finish, the trigger service continues with the prompt e.g. "Say the trigger phrase hey wake up").
+
+(Optional) Stopping apps:
+
+    $ adb shell am force-stop ee.ioc.phon.android.speechtrigger
+
+Alternative way
+---------------
+
+Based on <https://developer.android.com/things/console/app_bundle.html>.
+
+1. Install this image: TODO. It contains the latest Androidn Things + a bundle created like this:
+
+    zip -j bundle.zip $APK/K6nele-1.6.62.apk $APK/SpeechTrigger-0.1.21.apk $APK/EKISpeak-1.1.04.apk $APK/app-debug.apk
+
+2. Configure the Kõnele rewrite rules using GetPutPreferenceActivity
+
+3. Reboot
+
+Future updates (to step 1) will come as over-the-air (OTA) updates.
+
+Guidelines for rewrite rules
+----------------------------
+
+- All activities started by the rules must finish immediately, e.g. switch on the lights and then finish.
+  This way the control is given back to the trigger service. I.e. the rules should not start a web browser,
+  which would stay on top of the activity stack.
+
+
+Issues
+------
+
+- compile EKI TTS without the storage permission, it does not seem to be using it
+- Google's TTS very slow to start up (before every utterance): 25 sec
+- EKI TTS does not support English. TODO: this could be added to be able to test the speed.
+  Could also try some other TTS engine.
+- Make sure there is no other app using the GPIO BCM4.
+- analog audio/TTS does not work. TODO: Use a USB speaker.
+- how to change the default TTS provider using adb
