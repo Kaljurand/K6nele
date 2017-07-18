@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="@dimen/layoutMargin4dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buttonApplyDeveloperDefaults"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/buttonApplyDeveloperDefaults"
-        android:text="@string/buttonApplyDeveloperDefaults" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/layoutMargin4dp">
 
-    <Button
-        android:id="@+id/buttonApplyWsServerGlobalWs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WebSocket server global (ws)" />
+        <Button
+            android:id="@+id/buttonApplyDeveloperDefaults"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/buttonApplyDeveloperDefaults"
+            android:text="@string/buttonApplyDeveloperDefaults" />
 
-    <Button
-        android:id="@+id/buttonApplyWsServerGlobalWss"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WebSocket server global (wss)" />
+        <Button
+            android:id="@+id/buttonApplyWsServerGlobalWs"
+            style="?android:attr/buttonBarButtonStyle"
 
-    <Button
-        android:id="@+id/buttonApplyWsServerLocal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WebSocket server local" />
-</LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WebSocket server global (ws)" />
+
+        <Button
+            android:id="@+id/buttonApplyWsServerGlobalWss"
+            style="?android:attr/buttonBarButtonStyle"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WebSocket server global (wss)" />
+
+        <Button
+            android:id="@+id/buttonApplyWsServerLocal"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WebSocket server local" />
+    </LinearLayout>
+</ScrollView>

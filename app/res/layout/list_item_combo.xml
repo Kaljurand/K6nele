@@ -35,7 +35,9 @@
         android:layout_below="@+id/language"
         android:layout_toEndOf="@+id/serviceIcon"
         android:layout_toRightOf="@+id/serviceIcon"
+        android:paddingEnd="@dimen/layoutMargin4dp"
         android:paddingLeft="@dimen/layoutMargin4dp"
+        android:paddingRight="@dimen/layoutMargin4dp"
         android:paddingStart="@dimen/layoutMargin4dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary" />
