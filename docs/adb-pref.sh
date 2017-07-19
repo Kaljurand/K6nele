@@ -15,5 +15,11 @@ then
     exit
 fi
 
+# adb shell pm grant ee.ioc.phon.android.speak ee.ioc.phon.android.speak.permission.GET_PUT_SETTING
+# Operation not allowed: java.lang.SecurityException: Permission ee.ioc.phon.android.speak.permission.GET_PUT_SETTING is not a changeable permission type
+
+
 echo "adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key $1 ${@:2}"
-adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key $1 ${@:2}
+#adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key $1 ${@:2}
+#adb exec-out run-as ee.ioc.phon.android.speak am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key $1 ${@:2}
+adb exec-out am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key $1 ${@:2}

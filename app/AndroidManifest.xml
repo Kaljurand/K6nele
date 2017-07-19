@@ -37,6 +37,27 @@
     -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
+    <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
+    <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" />
+
+    <!-- Custom permission required by FetchUrlActivity to be able to fetch data from a given URL
+    and interpret and execute its corresponding activity. -->
+    <uses-permission android:name="ee.ioc.phon.android.speak.permission.FETCH_URL" />
+
+    <permission
+        android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING"
+        android:description="@string/descriptionPermissionGetPutSetting"
+        android:label="@string/labelPermissionGetPutSetting"
+        android:permissionGroup="android.permission-group.CHANGE_SETTINGS"
+        android:protectionLevel="dangerous" />
+
+    <permission
+        android:name="ee.ioc.phon.android.speak.permission.FETCH_URL"
+        android:description="@string/descriptionPermissionFetchUrl"
+        android:label="@string/labelPermissionFetchUrl"
+        android:permissionGroup="android.permission-group.RUN_ACTIVITY"
+        android:protectionLevel="dangerous" />
+
     <!-- Some Chromebooks don't support touch. Although not essential,
      it's a good idea to explicitly include this declaration. -->
     <uses-feature
@@ -274,8 +295,9 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.FetchUrlActivity"
             android:exported="true"
+            android:permission="ee.ioc.phon.android.speak.permission.FETCH_URL"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
-        <!-- Do not export in production -->
+        <!-- TODO: require: ee.ioc.phon.android.speak.permission.GET_PUT_SETTING -->
         <activity
             android:name=".activity.GetPutPreferenceActivity"
             android:exported="true"

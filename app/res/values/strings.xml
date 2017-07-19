@@ -188,6 +188,11 @@
         <item quantity="other">%d tables</item>
     </plurals>
 
+    <string name="labelPermissionGetPutSetting">change Kõnele settings</string>
+    <string name="descriptionPermissionGetPutSetting">Allows the app to change Kõnele settings without your intervention by calling (the visually transparent) GetPutPreferenceActivity.</string>
+    <string name="labelPermissionFetchUrl">fetch URL and run its content</string>
+    <string name="descriptionPermissionFetchUrl">Allows the app to download data from the internet and execute it as an activity by calling (the visually transparent) FetchUrlActivity.</string>
+
     <!-- Error messages used in exceptions and toasts -->
     <string name="exceptionMalformedUrl">ERROR: Malformed URL</string>
     <string name="errorFailedLaunchApp">ERROR: App cannot be launched or is not installed (anymore): %1$s</string>
