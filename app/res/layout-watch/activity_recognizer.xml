@@ -5,119 +5,115 @@
     android:layout_height="match_parent"
     android:padding="1dp">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="1dp"
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
         app:layout_box="all">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvPrompt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
                 android:layout_margin="@dimen/layoutMargin4dp"
-                android:layout_toLeftOf="@+id/bSettings"
-                android:layout_toStartOf="@+id/bSettings"
                 android:ellipsize="end"
-                android:lines="1"
+                android:gravity="center"
+                android:lines="3"
                 android:textColor="@color/grey200"
                 android:textSize="@dimen/textSize2"
                 tools:text="@string/testComboLabel" />
 
-            <!-- TODO: instead of this button, the settings should be displayed when swiping up -->
+            <ee.ioc.phon.android.speak.view.SpeechInputView
+                android:id="@+id/vVoiceImeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:keepScreenOn="true"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/layoutMargin1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:ellipsize="start"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="@color/grey300"
+                        android:textSize="@dimen/textSize2"
+                        tools:text="@string/testComboLabel" />
+
+                    <ee.ioc.phon.android.speechutils.view.MicButton
+                        android:id="@+id/bImeStartStop"
+                        android:layout_width="@dimen/layoutHeightButtonMicrophone"
+                        android:layout_height="@dimen/layoutHeightButtonMicrophone"
+                        android:layout_below="@+id/tvMessage"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/layoutMargin4dp"
+                        android:background="@drawable/button_mic"
+                        android:contentDescription="@string/cdMicrophone"
+                        android:gravity="center"
+                        android:src="@drawable/ic_voice_search_api_material" />
+
+                    <TextView
+                        android:id="@+id/tvInstruction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bImeStartStop"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/grey300"
+                        android:textSize="@dimen/textSize2"
+                        tools:text="@string/buttonImeStop" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/tvComboSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/layoutMargin2"
+                    android:layout_marginTop="@dimen/layoutMargin2"
+                    android:background="@drawable/button_combo"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:minHeight="@dimen/layoutMargin3"
+                    android:minWidth="@dimen/layoutMargin3"
+                    android:singleLine="true"
+                    android:textColor="@color/grey100"
+                    android:textSize="@dimen/textSize10sp"
+                    tools:text="@string/testComboLabels" />
+
+            </ee.ioc.phon.android.speak.view.SpeechInputView>
+
             <ImageButton
                 android:id="@+id/bSettings"
                 android:layout_width="@dimen/layoutMargin32"
                 android:layout_height="@dimen/layoutMargin32"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
                 android:background="@drawable/button_go"
                 android:contentDescription="@string/cdSettings"
                 android:src="@drawable/ic_settings_24dp" />
-        </RelativeLayout>
 
-        <ee.ioc.phon.android.speak.view.SpeechInputView
-            android:id="@+id/vVoiceImeView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:keepScreenOn="true"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/layoutMargin1"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerVertical="true"
-                    android:ellipsize="start"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textColor="@color/grey300"
-                    android:textSize="@dimen/textSize2"
-                    tools:text="@string/testComboLabel" />
-
-                <ee.ioc.phon.android.speechutils.view.MicButton
-                    android:id="@+id/bImeStartStop"
-                    android:layout_width="@dimen/layoutHeightButtonMicrophone"
-                    android:layout_height="@dimen/layoutHeightButtonMicrophone"
-                    android:layout_below="@+id/tvMessage"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/layoutMargin4dp"
-                    android:background="@drawable/button_mic"
-                    android:contentDescription="@string/cdMicrophone"
-                    android:gravity="center"
-                    android:src="@drawable/ic_voice_search_api_material" />
-
-                <TextView
-                    android:id="@+id/tvInstruction"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/bImeStartStop"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/grey300"
-                    android:textSize="@dimen/textSize2"
-                    tools:text="@string/buttonImeStop" />
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/tvComboSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/layoutMargin4dp"
-                android:background="@drawable/button_combo"
-                android:clickable="true"
-                android:ellipsize="end"
-                android:focusable="true"
-                android:gravity="center"
-                android:minHeight="@dimen/layoutMargin3"
-                android:minWidth="@dimen/layoutMargin3"
-                android:singleLine="true"
-                android:textColor="@color/grey100"
-                android:textSize="@dimen/textSize10sp"
-                tools:text="@string/testComboLabels" />
-
-        </ee.ioc.phon.android.speak.view.SpeechInputView>
-
-    </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 </android.support.wearable.view.BoxInsetLayout>
