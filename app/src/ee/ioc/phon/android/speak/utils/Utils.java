@@ -232,6 +232,24 @@ public final class Utils {
         return builder.create();
     }
 
+    public static AlertDialog getYesNoDialog(Context context, String confirmationMessage, final Executable ex1, final Executable ex2) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog);
+        builder
+                .setMessage(confirmationMessage)
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ex1.execute();
+                    }
+                })
+                .setNegativeButton(context.getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        ex2.execute();
+                    }
+                });
+        return builder.create();
+    }
 
     public static AlertDialog getTextEntryDialog(Context context, String title, String initialText, final ExecutableString ex) {
         final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_url_entry, null);
