@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -41,6 +42,8 @@ import ee.ioc.phon.android.speechutils.utils.HttpUtils;
  * TODO: maybe implement it instead as a service or broadcast receiver
  * TODO: allow GUI to be skipped with EXTRA SKIP_UI but then require a custom dangerous permission
  * TODO: set val as a return value instead of toasting it
+ * TODO: add a String EXTRA "OP". If defined then the given operation is used to combine the existing
+ * value with the new value. The operation can be set add, list append, arithmetical add, Boolean XOR, etc.
  */
 public class GetPutPreferenceActivity extends Activity {
 
@@ -82,8 +85,7 @@ public class GetPutPreferenceActivity extends Activity {
             Object val = extras.get(EXTRA_VAL);
             if (val == null) {
                 // adb --esn
-                // TODO: improve message
-                execute(String.format(getString(R.string.confirmDeleteEntry), key),
+                execute(String.format(getString(R.string.taskPrefRemove), key),
                         createExecutableRemove(prefs, key));
             } else {
                 if (val instanceof String) {
@@ -93,18 +95,20 @@ public class GetPutPreferenceActivity extends Activity {
                     // (or an error message, if something goes wrong).
                     // Note that this currently works only if the type of the value is String.
                     if (extras.getBoolean(EXTRA_IS_URL, false)) {
-                        // TODO: improve message
-                        // String.format(getString(R.string.confirmDeleteEntry), key)
-                        execute(key + " := fetchUrl(" + valAsStr + ")",
+                        execute(String.format(getString(R.string.taskPrefPutUrl), key, valAsStr),
                                 createExecutablePutUrl(prefs, key, valAsStr));
                     } else {
-                        // TODO: improve message
-                        execute(key + " := " + val,
+                        execute(String.format(getString(R.string.taskPrefPut), key, val),
                                 createExecutablePut(prefs, key, valAsStr));
                     }
                 } else {
-                    // TODO: improve message
-                    execute(key + " := " + val,
+                    String valAsStr;
+                    if (val instanceof String[]) {
+                        valAsStr = TextUtils.join(",", (String[]) val);
+                    } else {
+                        valAsStr = val.toString();
+                    }
+                    execute(String.format(getString(R.string.taskPrefPut), key, valAsStr),
                             createExecutablePut(prefs, key, val));
                 }
             }

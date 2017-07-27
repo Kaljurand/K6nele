@@ -223,6 +223,10 @@
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>
     <string name="confirmRename">Rename</string>
     <string name="confirmDelete">Are you sure you want to delete \"%1$s\"?</string>
+    <!-- These are phrased as declarations, because they can be done without confirmation. -->
+    <string name="taskPrefRemove">Removing preference \"%1$s\"</string>
+    <string name="taskPrefPut">Changing preference \"%1$s\" to \"%2$s\"</string>
+    <string name="taskPrefPutUrl">Changing preference \"%1$s\" to the content of the URL \"%2$s\"</string>
     <string name="dialogTitleChangeGrammarName">Change the name</string>
     <string name="dialogTitleChangeGrammarLang">Change the target language</string>
     <string name="dialogTitleChangeGrammarUrl">Change the grammar</string>

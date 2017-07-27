@@ -237,12 +237,12 @@ public final class Utils {
         builder
                 .setMessage(confirmationMessage)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
+                .setPositiveButton(context.getString(R.string.buttonOk), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ex1.execute();
                     }
                 })
-                .setNegativeButton(context.getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
+                .setNegativeButton(context.getString(R.string.buttonCancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         ex2.execute();
