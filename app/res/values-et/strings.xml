@@ -174,9 +174,9 @@
 		serveriga?</string>
     <string name="confirmRename">Muuda nimi</string>
     <string name="confirmDelete">Kustutan \"%1$s\"?</string>
-    <string name="taskPrefRemove">Kustutan seade \"%1$s\"</string>
-    <string name="taskPrefPut">Panen seade \"%1$s\" väärtuseks \"%2$s\"</string>
-    <string name="taskPrefPutUrl">Panen seade \"%1$s\" väärtuseks veebiaadressi \"%2$s\" sisu</string>
+    <string name="taskPrefRemove">Kustutan Kõnele seade \"%1$s\"</string>
+    <string name="taskPrefPut">Panen Kõnele seade \"%1$s\" väärtuseks \"%2$s\"</string>
+    <string name="taskPrefPutUrl">Panen Kõnele seade \"%1$s\" väärtuseks veebiaadressi \"%2$s\" sisu</string>
     <string name="dialogTitleChangeGrammarName">Muuda grammatika nimi</string>
     <string name="dialogTitleChangeGrammarLang">Muuda grammatika keel</string>
     <string name="dialogTitleChangeGrammarUrl">Muuda grammatika URL</string>
@@ -293,6 +293,14 @@
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
+
+    <string name="titleGetPutPrefSkipUi">Käivita GetPutPreference ilma kasutaja kinnituseta</string>
+    <string name="summaryGetPutPrefSkipUi">Luba alamrakendusel GetPutPreference muuta Kõnele seadeid
+        ilma kasutajapoolse kinnituseta. See võimaldab ümberkirjutusreeglitel, ADB skriptidel, ja kolmanda osapoole
+        rakendusel muuta Kõnele seadeid ilma, et Kõnele selleks kasutaja kinnitust küsiks.</string>
+
+    <string name="labelPermissionFetchUrl">laadi URL ja käivita selle sisu</string>
+    <string name="descriptionPermissionFetchUrl">Lubab rakendusel laadida etteantud URL, interpreteerida selle sisu kui rakenduse nime ja sisendparameetreid, ning vastav rakendus vastavate sisendparameetritega käivitada.</string>
 
     <string name="titleSystemVoiceInputSettings">Kõik kõnetuvastusteenused</string>
     <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>

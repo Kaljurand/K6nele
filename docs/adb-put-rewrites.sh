@@ -9,7 +9,8 @@
 # 1. Enable developer options on the device and connect to the device via adb.
 #    See: https://developer.android.com/studio/command-line/adb.html
 #    For Wear, see: https://developer.android.com/training/wearables/apps/debugging.html
-# 2. Run this script. The progress is printed on the console and shown as "toasts" on the device
+# 2. Run this script. You are first required to enable automatic preference changes in the Kõnele settings.
+#    The progress is printed on the console and shown as "toasts" on the device
 # 3. Review the rewrite rules on the device, e.g. by running
 #    adb shell am start -n ee.ioc.phon.android.speak/.activity.RewritesSelectorActivity
 
@@ -31,6 +32,13 @@ function make_default {
     echo "Making default: $1"
     adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key defaultRewriteTables --esa val $1
 }
+
+echo "Enable the Kõnele setting \"Run GetPutPreference without confirmation\" and then press Enter."
+echo "To enable this setting via ADB, run:"
+echo "adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyGetPutPrefSkipUi --ez val true"
+echo "and press OK on the device."
+echo "It is recommended to disable this setting again after this script has finished."
+read
 
 # Downloading and naming several rewrite tables
 # add <name of the table> <url of the table>

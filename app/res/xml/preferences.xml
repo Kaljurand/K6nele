@@ -146,6 +146,11 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
+        <CheckBoxPreference
+            android:defaultValue="@bool/defaultGetPutPrefSkipUi"
+            android:key="@string/keyGetPutPrefSkipUi"
+            android:summary="@string/summaryGetPutPrefSkipUi"
+            android:title="@string/titleGetPutPrefSkipUi" />
         <PreferenceScreen
             android:summary="@string/summaryScreenDemos"
             android:title="@string/titleScreenDemos">

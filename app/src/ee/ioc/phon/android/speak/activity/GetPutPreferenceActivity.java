@@ -33,6 +33,7 @@ import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.utils.HttpUtils;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
 /**
@@ -47,7 +48,6 @@ import ee.ioc.phon.android.speechutils.utils.HttpUtils;
  */
 public class GetPutPreferenceActivity extends Activity {
 
-    public static final boolean DEFAULT_SKIP_UI = false;
     public static final String EXTRA_KEY = "key";
     public static final String EXTRA_VAL = "val";
     public static final String EXTRA_IS_URL = "is_url";
@@ -78,6 +78,7 @@ public class GetPutPreferenceActivity extends Activity {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(GetPutPreferenceActivity.this);
+        boolean skipUi = PreferenceUtils.getPrefBoolean(prefs, getResources(), R.string.keyGetPutPrefSkipUi, R.bool.defaultGetPutPrefSkipUi);
 
         // If EXTRA_VAL is provided then change the value of the key,
         // if not then show the value of the key.
@@ -86,7 +87,7 @@ public class GetPutPreferenceActivity extends Activity {
             if (val == null) {
                 // adb --esn
                 execute(String.format(getString(R.string.taskPrefRemove), key),
-                        createExecutableRemove(prefs, key));
+                        createExecutableRemove(prefs, key), skipUi);
             } else {
                 if (val instanceof String) {
                     String valAsStr = (String) val;
@@ -96,10 +97,10 @@ public class GetPutPreferenceActivity extends Activity {
                     // Note that this currently works only if the type of the value is String.
                     if (extras.getBoolean(EXTRA_IS_URL, false)) {
                         execute(String.format(getString(R.string.taskPrefPutUrl), key, valAsStr),
-                                createExecutablePutUrl(prefs, key, valAsStr));
+                                createExecutablePutUrl(prefs, key, valAsStr), skipUi);
                     } else {
                         execute(String.format(getString(R.string.taskPrefPut), key, val),
-                                createExecutablePut(prefs, key, valAsStr));
+                                createExecutablePut(prefs, key, valAsStr), skipUi);
                     }
                 } else {
                     String valAsStr;
@@ -109,7 +110,7 @@ public class GetPutPreferenceActivity extends Activity {
                         valAsStr = val.toString();
                     }
                     execute(String.format(getString(R.string.taskPrefPut), key, valAsStr),
-                            createExecutablePut(prefs, key, val));
+                            createExecutablePut(prefs, key, val), skipUi);
                 }
             }
         } else {
@@ -122,8 +123,8 @@ public class GetPutPreferenceActivity extends Activity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void execute(final String message, final Executable ex) {
-        if (DEFAULT_SKIP_UI) {
+    private void execute(final String message, final Executable ex, boolean skipUi) {
+        if (skipUi) {
             ex.execute();
             toast(message);
             finish();

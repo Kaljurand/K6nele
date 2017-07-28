@@ -44,13 +44,14 @@
     and interpret and execute its corresponding activity. -->
     <uses-permission android:name="ee.ioc.phon.android.speak.permission.FETCH_URL" />
 
+    <!--
     <permission
         android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING"
         android:description="@string/descriptionPermissionGetPutSetting"
         android:label="@string/labelPermissionGetPutSetting"
         android:permissionGroup="android.permission-group.CHANGE_SETTINGS"
         android:protectionLevel="dangerous" />
-
+    -->
     <permission
         android:name="ee.ioc.phon.android.speak.permission.FETCH_URL"
         android:description="@string/descriptionPermissionFetchUrl"

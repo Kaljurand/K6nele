@@ -107,6 +107,11 @@
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
 
+    <string name="titleGetPutPrefSkipUi">Run GetPutPreference without confirmation</string>
+    <string name="summaryGetPutPrefSkipUi">Allow GetPutPreference to change preferences without user confirmation.
+    This allows rewrite rules, or ADB scripts, or 3rd party apps to change multiple Kõnele settings without
+        the user having to confirm each change. Do not enable this setting, unless you know what you are doing.</string>
+
     <string name="titleMaxResults">Recognition hypotheses</string>
 
     <plurals name="summaryMaxResults">
@@ -188,8 +193,6 @@
         <item quantity="other">%d tables</item>
     </plurals>
 
-    <string name="labelPermissionGetPutSetting">change Kõnele settings</string>
-    <string name="descriptionPermissionGetPutSetting">Allows the app to change Kõnele settings without your intervention by calling (the visually transparent) GetPutPreferenceActivity.</string>
     <string name="labelPermissionFetchUrl">fetch URL and run its content</string>
     <string name="descriptionPermissionFetchUrl">Allows the app to download data from the internet and execute it as an activity by calling (the visually transparent) FetchUrlActivity.</string>
 
@@ -224,9 +227,9 @@
     <string name="confirmRename">Rename</string>
     <string name="confirmDelete">Are you sure you want to delete \"%1$s\"?</string>
     <!-- These are phrased as declarations, because they can be done without confirmation. -->
-    <string name="taskPrefRemove">Removing preference \"%1$s\"</string>
-    <string name="taskPrefPut">Changing preference \"%1$s\" to \"%2$s\"</string>
-    <string name="taskPrefPutUrl">Changing preference \"%1$s\" to the content of the URL \"%2$s\"</string>
+    <string name="taskPrefRemove">Removing Kõnele preference \"%1$s\"</string>
+    <string name="taskPrefPut">Changing Kõnele preference \"%1$s\" to \"%2$s\"</string>
+    <string name="taskPrefPutUrl">Changing Kõnele preference \"%1$s\" to the content of the URL \"%2$s\"</string>
     <string name="dialogTitleChangeGrammarName">Change the name</string>
     <string name="dialogTitleChangeGrammarLang">Change the target language</string>
     <string name="dialogTitleChangeGrammarUrl">Change the grammar</string>

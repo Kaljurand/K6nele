@@ -24,6 +24,7 @@
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
+    <string name="keyGetPutPrefSkipUi" translatable="false">keyGetPutPrefSkipUi</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
 
     <string name="defaultRewriteTables" translatable="false">defaultRewriteTables</string>
