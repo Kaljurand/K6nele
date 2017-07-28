@@ -53,12 +53,12 @@
     <string name="titleCategoryIme">Speak &amp; swipe keyboard</string>
     <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>
+    <string name="titleCategoryDemos">Demos, tests, etc.</string>
     <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>
     <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server.</string>
-    <string name="titleScreenDemos">Demos</string>
-    <string name="summaryScreenDemos">Demo apps that show different ways of using speech input</string>
+    <string name="titleScreenDevel">Developer settings, demos, tools</string>
     <string name="titleAutoStart">Auto start</string>
     <string name="summaryAutoStart">Start recording automatically</string>
     <string name="titleAutoStopAfterPause">Auto stop after pause</string>

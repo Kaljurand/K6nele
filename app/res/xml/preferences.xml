@@ -139,71 +139,70 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/titleCategoryDevel">
-        <Preference
-            android:summary="@string/summaryQuickSettings"
-            android:title="@string/titleQuickSettings">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
-                android:targetPackage="ee.ioc.phon.android.speak" />
-        </Preference>
-        <CheckBoxPreference
-            android:defaultValue="@bool/defaultGetPutPrefSkipUi"
-            android:key="@string/keyGetPutPrefSkipUi"
-            android:summary="@string/summaryGetPutPrefSkipUi"
-            android:title="@string/titleGetPutPrefSkipUi" />
-        <PreferenceScreen
-            android:summary="@string/summaryScreenDemos"
-            android:title="@string/titleScreenDemos">
+        <PreferenceScreen android:title="@string/titleScreenDevel">
             <Preference
-                android:summary="@string/summarySimpleDemo"
-                android:title="@string/labelActivitySimpleDemo">
+                android:summary="@string/summaryQuickSettings"
+                android:title="@string/titleQuickSettings">
                 <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.SimpleDemo"
+                    android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
                     android:targetPackage="ee.ioc.phon.android.speak" />
             </Preference>
-            <Preference
-                android:summary="@string/summaryExtrasDemo"
-                android:title="@string/labelActivityExtrasDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.ExtrasDemo"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-            <Preference
-                android:summary="@string/summaryHandsfreeDemo"
-                android:title="@string/labelActivityHandsfreeDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.HandsfreeDemoActivity"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-            <Preference
-                android:summary="@string/summaryChatDemo"
-                android:title="@string/labelActivityChatDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.ChatDemoActivity"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-            <Preference
-                android:summary="@string/summaryVoiceSearchDemo"
-                android:title="@string/labelActivityVoiceSearchDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.VoiceSearchDemo"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-            <Preference
-                android:summary="@string/summaryFormDemo"
-                android:title="@string/labelActivityFormDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.FormDemoActivity"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-            <Preference
-                android:summary="@string/summaryEncoderDemo"
-                android:title="@string/labelActivityEncoderDemo">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
-
+            <CheckBoxPreference
+                android:defaultValue="@bool/defaultGetPutPrefSkipUi"
+                android:key="@string/keyGetPutPrefSkipUi"
+                android:summary="@string/summaryGetPutPrefSkipUi"
+                android:title="@string/titleGetPutPrefSkipUi" />
+            <PreferenceCategory android:title="@string/titleCategoryDemos">
+                <Preference
+                    android:summary="@string/summarySimpleDemo"
+                    android:title="@string/labelActivitySimpleDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.SimpleDemo"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+                <Preference
+                    android:summary="@string/summaryExtrasDemo"
+                    android:title="@string/labelActivityExtrasDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.ExtrasDemo"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+                <Preference
+                    android:summary="@string/summaryHandsfreeDemo"
+                    android:title="@string/labelActivityHandsfreeDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.HandsfreeDemoActivity"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+                <Preference
+                    android:summary="@string/summaryChatDemo"
+                    android:title="@string/labelActivityChatDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.ChatDemoActivity"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+                <Preference
+                    android:summary="@string/summaryVoiceSearchDemo"
+                    android:title="@string/labelActivityVoiceSearchDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.VoiceSearchDemo"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+                <Preference
+                    android:summary="@string/summaryFormDemo"
+                    android:title="@string/labelActivityFormDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.FormDemoActivity"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+                <Preference
+                    android:summary="@string/summaryEncoderDemo"
+                    android:title="@string/labelActivityEncoderDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
 

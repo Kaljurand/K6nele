@@ -38,9 +38,8 @@
     <string name="titleCategoryIme">Kõne &amp; svaip klaviatuur</string>
     <string name="titleCategoryApps">Rakendused, grammatikad, ümberkirjutusreeglid</string>
     <string name="titleCategoryDevel">Arendajatele</string>
-    <string name="titleScreenDemos">Demod</string>
-    <string name="summaryScreenDemos">Demorakendused, mis näitavad erinevaid viise
-		kõnesisendi kasutamiseks</string>
+    <string name="titleCategoryDemos">Demod, testid, jne</string>
+    <string name="titleScreenDevel">Arendaja seaded, demod, jne</string>
     <string name="titleAutoStart">Autostart</string>
     <string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
     <string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
