@@ -1,0 +1,52 @@
+#
+# IME
+#
+- key: keyImeCombo
+  val:
+    - ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE
+    - com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService;en-US
+
+- key: keyImeHelpText
+  val: false
+
+- key: keyImeAutoStart
+  val: false
+
+#
+# Voice search panel
+#
+- key: keyCombo
+  val:
+    - ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE
+    - ee.ioc.phon.android.speak/.service.HttpRecognitionService;et-EE
+
+- key: keyHelpText
+  val: false
+
+- key: keyAutoStart
+  val: false
+
+# Note that the integer value needs to be passed as string
+- key: keyMaxResults
+  val: '4'
+
+#
+# HTTP service
+#
+- key: keyAudioFormat
+  val: audio/x-flac
+
+- key: keyAudioCues
+  val: false
+
+- key: keyAutoStopAfterTime
+  val: "10"
+
+#
+# WebSocket service
+#
+- key: keyImeAudioFormat
+  val: audio/x-flac
+
+- key: keyImeAudioCues
+  val: false
