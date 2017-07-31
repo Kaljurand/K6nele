@@ -49,25 +49,32 @@ def get_args():
 
 def create_adb(pref):
     """Return the preference as an ADB call"""
-    def escape(text):
+    def escape_esa(text):
         """Escape for sh.
         TODO: incomplete + should escape for adb as well (e.g. the comma)
         """
         return re.sub(';', '\\;', text)
+    def escape_s(text):
+        """Escape for sh.
+        TODO: incomplete + should escape for adb as well (e.g. the comma)
+        """
+        text = re.sub('\n', '\\\n', text)
+        text = re.sub(' ', '\\ ', text)
+        return text
 
-    key = pref['key']
+    key = escape_s(pref['key'])
     val = pref.get('val')
     if val is None:
         val_str = '--esn val'
     elif type(val) is list:
-        val_str = '--esa val "{}"'.format(','.join([escape(text) for text in val]))
+        val_str = '--esa val "{}"'.format(','.join([escape_esa(text) for text in val]))
     elif type(val) is bool:
         val_str = '--ez val {}'.format(val)
     else:
-        val_str = '-e val {}'.format(val)
+        val_str = '-e val "{}"'.format(escape_s(val))
         if pref.get('is_url'):
             val_str += ' --ez is_url true'
-    return 'adb {0} am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key {1} {2}'.format(DEFAULT_ADB_COMMAND, key, val_str)
+    return 'adb {0} am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key "{1}" {2}'.format(DEFAULT_ADB_COMMAND, key, val_str)
 
 
 def process(prefs):

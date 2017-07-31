@@ -1,0 +1,10 @@
+# Clipboard entries accessible using the IME command loadClip
+- key: 'keyClipboardMap/pikk jutt'
+  val: põdral maja metsa sees
+
+- key: 'keyClipboardMap/pikem jutt'
+  val: |
+    Elas metsas mutionu,
+    keset kuuski noori vanu
+    kadakpõõsa juure all,
+    eluruum tal sügaval.
