@@ -38,7 +38,9 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
+    <!--
     <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" />
+    -->
 
     <!-- Custom permission required by FetchUrlActivity to be able to fetch data from a given URL
     and interpret and execute its corresponding activity. -->
@@ -65,9 +67,7 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
-    <uses-feature
-        android:name="android.hardware.type.watch"
-        android:required="false" />
+    <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
 
     <application
         android:allowBackup="true"
@@ -152,17 +152,28 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <!-- Input: EXTRA_ASSIST_PACKAGE, EXTRA_ASSIST_CONTEXT. Output: nothing. -->
-            <!-- API 16 -->
-            <!-- "Search assistant" on CM10.2, which can be mapped to various buttons -->
-            <!-- TODO: temporarily commented out for Wear experiments -->
             <!--
-            <intent-filter>
+            Action ASSIST (API 16)
+            Input: EXTRA_ASSIST_PACKAGE, EXTRA_ASSIST_CONTEXT. Output: nothing.
+
+            * "Search assistant" on CM10.2, which can be mapped to various buttons.
+            * Long press on the HOME button on Nexus 5X.
+            * Upper physical button on Huawei Watch 2.
+
+            The default ASSIST app is user-configurable on the phone but not on Wear,
+            i.e. on the phone the user can choose which app is started, e.g. when long-pressing
+            on the HOME button, and the filter priority plays no role. On Wear the choice
+            is based only on the priority.
+            We set it to lower than default to let the other guy win. This is probably
+            specific to Huawei Watch 2 with its weird setup,
+            where the upper button launches ASSIST (and this cannot be
+            changed) and the lower button can open any app (other than Google Assist).
+            -->
+            <intent-filter android:priority="-10">
                 <action android:name="android.intent.action.ASSIST" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            -->
             <!-- input/output: Nothing -->
             <!-- API 3 -->
             <!-- "Voice search" on CM10.2, which can be mapped to various buttons -->

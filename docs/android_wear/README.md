@@ -75,7 +75,12 @@ Set the table to be the default. Note that there can be multiple defaults.
 
     adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap --esa val Test
 
-There is a script <https://github.com/Kaljurand/K6nele/blob/master/docs/adb-put-rewrites.sh> that makes this configuration step simpler.
+There is a script <https://github.com/Kaljurand/K6nele/blob/master/docs/adb-pref.py> that makes this configuration step simpler:
+
+1. Enable `Run GetPutPreference without confirmation` in Kõnele's `Developer settings, demos, tools`
+2. Run `adb-pref.py` with the settings overrides specified in YAML files, e.g.:
+
+    adb-pref.py prefs_developer.yml prefs_user_guide_rewrites.yml prefs_wear.yml prefs_private.yml | sh
 
 ### Notes about rewrite rules
 
@@ -111,8 +116,6 @@ editor but instead over the input mode selection GUI).
 TODO
 ----
 
-- do not declare support for ASSISTANT (only on Wear), because it overrides Google Assistant
-
 - FetchUrlActivity does not work with some (local?) URLs: connect timed out.
   The solution seems to be to disable Bluetooth and enable Wifi on the watch.
 
@@ -122,7 +125,10 @@ TODO
 
 - the providers of `RECOGNIZE_SPEECH` and `ASSIST` are not configurable.
   On Huawei Watch 2 by default, Google's responds to these actions, but once Kõnele is installed, it overrides Google.
+  We have set the `ASSIST` intent filter priorty to -10 to let Google win for the `ASSIST` action.
 
 - (Google's) TTS is very slow on Wear
 
 - IME could support swipe commands and show a small editor line which reflects rewritten text and editing results
+
+- Android Wear does not support the Estonian UI

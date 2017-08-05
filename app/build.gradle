@@ -14,8 +14,8 @@ dependencies {
 
     // TODO: maybe do not use (will blow up APK size)
     //compile 'com.android.support:wear:' + rootProject.supportLibVersion
-    compile 'com.google.android.support:wearable:2.0.3'
-    provided 'com.google.android.wearable:wearable:2.0.3'
+    compile 'com.google.android.support:wearable:2.0.4'
+    provided 'com.google.android.wearable:wearable:2.0.4'
 }
 
 android {

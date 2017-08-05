@@ -1,0 +1,33 @@
+# Some Wear-specific overrides.
+# Apply these after all the other settings.
+#
+# IME
+#
+- key: keyImeCombo
+  val:
+    - ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE
+
+- key: keyImeAutoStart
+  val: false
+
+#
+# Voice search panel
+#
+- key: keyCombo
+  val:
+    - ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE
+    - ee.ioc.phon.android.speak/.service.HttpRecognitionService;et-EE
+    - ee.ioc.phon.android.speak/.service.HttpRecognitionService;en-US
+
+#
+# HTTP service
+#
+- key: keyAudioFormat
+  val: audio/x-raw
+
+#
+# WebSocket service
+#
+- key: keyImeAudioFormat
+  val: audio/x-raw
+
