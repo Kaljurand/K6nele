@@ -59,6 +59,7 @@ def create_adb(pref):
         TODO: incomplete + should escape for adb as well (e.g. the comma)
         """
         text = re.sub('\n', '\\\n', text)
+        text = re.sub('\t', '\\\t', text)
         text = re.sub(' ', '\\ ', text)
         return text
 

@@ -40,7 +40,7 @@
   val: false
 
 - key: keyAutoStopAfterTime
-  val: "10"
+  val: '10'
 
 #
 # WebSocket service
