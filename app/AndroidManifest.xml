@@ -65,6 +65,10 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <uses-feature
+        android:name="android.hardware.type.watch"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:description="@string/descriptionApp"
@@ -73,6 +77,14 @@
         android:label="@string/labelApp"
         android:supportsRtl="true"
         android:theme="@style/Theme.K6nele">
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
 
         <!-- RecognizerIntentActivity does not have any intent-filters and is thus not findable
         by the OS, but it can still be called directly by the class name. -->
@@ -143,11 +155,14 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             <!-- Input: EXTRA_ASSIST_PACKAGE, EXTRA_ASSIST_CONTEXT. Output: nothing. -->
             <!-- API 16 -->
             <!-- "Search assistant" on CM10.2, which can be mapped to various buttons -->
+            <!-- TODO: temporarily commented out for Wear experiments -->
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            -->
             <!-- input/output: Nothing -->
             <!-- API 3 -->
             <!-- "Voice search" on CM10.2, which can be mapped to various buttons -->

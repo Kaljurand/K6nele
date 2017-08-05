@@ -11,6 +11,11 @@ dependencies {
     compile 'com.android.support:support-v13:' + rootProject.supportLibVersion
     // Enable this when using the support library for the vector drawables
     //compile 'com.android.support:appcompat-v7:23.2.1'
+
+    // TODO: maybe do not use (will blow up APK size)
+    //compile 'com.android.support:wear:' + rootProject.supportLibVersion
+    compile 'com.google.android.support:wearable:2.0.3'
+    provided 'com.google.android.wearable:wearable:2.0.3'
 }
 
 android {
@@ -74,7 +79,7 @@ android {
         }
     }
     lintOptions {
-        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines'
+        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry'
     }
 }
 

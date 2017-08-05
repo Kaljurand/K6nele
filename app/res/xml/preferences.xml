@@ -130,6 +130,7 @@
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <!-- This intent requires API 21+, and can crash on older versions. -->
+        <!-- TODO: hide this on Wear, which does not offer this intent -->
         <Preference
             android:key="@string/keySystemVoiceInputSettings"
             android:summary="@string/summarySystemVoiceInputSettings"

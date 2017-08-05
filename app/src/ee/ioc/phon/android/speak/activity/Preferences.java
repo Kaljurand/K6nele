@@ -112,7 +112,8 @@ public class Preferences extends PreferenceActivity {
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
             // Remove the shortcut to the system-wide recognizer settings which does not
-            // exist pre Android v5
+            // exist pre Android v5.
+            // TODO: also remove it on Wear
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryServices));
                 Preference pref = category.findPreference(getString(R.string.keySystemVoiceInputSettings));
