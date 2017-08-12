@@ -29,7 +29,6 @@ import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
@@ -260,7 +259,7 @@ public class SpeechInputView extends LinearLayout {
                     Intent intent = new Intent(context, ComboSelectorActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("key", context.getString(key));
-                    IntentUtils.startActivityIfAvailable(context, intent);
+                    context.startActivity(intent);
                     return true;
                 }
             });
