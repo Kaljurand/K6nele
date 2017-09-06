@@ -27,8 +27,6 @@ echo "Installing Kõnele..."
 cp $fakedir/K6nele-${ver_k6nele}.apk $basedir
 $cmd install $basedir/K6nele-${ver_k6nele}.apk
 $cmd shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO
-$cmd shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Hue -e val "https://docs.google.com/spreadsheets/d/1x8FkaMoJ4_gJbg6w1vhir0gkWmqHuXDiB7otNr56Yb4/export?format=tsv" --ez is_url true
-$cmd shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap --esa val Hue
 
 echo "Installing Speech Trigger..."
 download https://github.com/Kaljurand/speech-trigger/releases/download/v${ver_trigger}/SpeechTrigger-${ver_trigger}.apk

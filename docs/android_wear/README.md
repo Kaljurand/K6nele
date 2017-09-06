@@ -44,7 +44,7 @@ Configuring
     # Expected result: Activity not started, unable to resolve Intent.
     adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
 
-The menu `Settings -> Personalization -> Customize hardwear buttons` lets
+The menu `Settings -> Personalization -> Customize hardware buttons` lets
 you define an app to be launched (e.g. Kõnele) when pressing a hardware button.
 
 ### Kõnele UI configuration
@@ -113,8 +113,8 @@ Kõnele opens from the microphone icon and is available in the IME rotation. The
 editing on Wear (swipe commands do not work and edits are not visible because the IME is not drawn over the
 editor but instead over the input mode selection GUI).
 
-TODO
-----
+Known issues
+------------
 
 - FetchUrlActivity does not work with some (local?) URLs: connect timed out.
   The solution seems to be to disable Bluetooth and enable Wifi on the watch.
@@ -125,7 +125,7 @@ TODO
 
 - the providers of `RECOGNIZE_SPEECH` and `ASSIST` are not configurable.
   On Huawei Watch 2 by default, Google's responds to these actions, but once Kõnele is installed, it overrides Google.
-  We have set the `ASSIST` intent filter priorty to -10 to let Google win for the `ASSIST` action.
+  Kõnele sets the `ASSIST` intent filter priorty to -10 to let Google win for the `ASSIST` action.
 
 - (Google's) TTS is very slow on Wear
 

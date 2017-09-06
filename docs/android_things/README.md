@@ -14,8 +14,8 @@ Steps
 Note that the steps of downloading, installing and configuring of APKs can be executed by executing the script `setup-k6nele-on-things.sh`,
 which downloads the needed APKs (using `wget`), installs them to the current device (using `adb`),
 and configures them (using `adb`). The configuring consists of permission assignment (which is not needed if the device is
-going to be rebooted anyway), and running Kõnele's `GetPutPreferenceActivity` to change the Kõnele settings (which should be
-manually redone do change to the user's own preferences, e.g. the rewrite tables).
+going to be rebooted anyway), and running Kõnele's `GetPutPreferenceActivity` to change the Kõnele settings
+(e.g. installing rewrite tables).
 
 ### Pi
 
@@ -24,7 +24,7 @@ Power it on. A monitor is not required by the application but can be helpful dur
 A mouse is not required but can be helpful during installation and testing. Some of the configuration steps in the instructions below are easier done with a mouse.
 
 Install Android Things and set up wifi. (Internet is required but wifi is optional.)
-Tested with `androidthings_rpi3_devpreview_4_1.zip`.
+Tested with `0.5.1-devpreview` on rpi3.
 
 Install Android Debug Bridge (adb), which is part of the
 [SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools.html).
@@ -44,32 +44,38 @@ Connect to Pi.
 (Optional) Look at the current voice input settings. There shouldn't be any voice input providers.
 
     $ adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+
+You can press BACK to finish the windows.
+
     $ adb shell input keyevent 4
 
 ### Kõnele
 
 Install Kõnele and grant the audio recording permission.
 
-    $ ver=1.6.62
-    $ wget https://github.com/Kaljurand/K6nele/releases/download/v$ver/K6nele-$ver.apk
-    $ adb install K6nele-$ver.apk
+    $ adb install K6nele-1.6.64.apk
     $ adb shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO
 
-Configure Kõnele, e.g. import for some rewrite tables (which define what the application does).
+Configure Kõnele, e.g. import some rewrite tables (which define what the application does).
 
-    # The Lights and Lights.Hue tables can be used to control Hue lights (the 2nd table needs to be customized with the the local IP and the Hue ID).
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Lights -e val "https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/export?format=tsv" --ez is_url true
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap/Lights.Hue -e val "https://docs.google.com/spreadsheets/d/1owXRMDRIGvi4Ya0lP6_LXsbZXs-sslwhzEye5pGAXbo/export?format=tsv" --ez is_url true
+    # Make sure Kõnele is not running (and is not being restarted)
+    adb shell am force-stop ee.ioc.phon.android.things.k6nelelauncher
+    adb shell am force-stop ee.ioc.phon.android.speak
 
-    # (Optional) Set the tables to be the default
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key defaultRewriteTables --esa val Lights,Lights.Hue
-    # (Optional) Add the tables to the list of rewrite rule tables (useful if you want to browse to them with a mouse to look at the rules)
-    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.GetPutPreferenceActivity -e key keyRewritesMap --esa val Lights,Lights.Hue
+    # Disable the confirmation dialog. This way multiple settings can be changed
+    # without having to confirm them.
+    # If the confirmation dialog is currently enabled, then it pops up.
+    # You need e.g. a mouse to press OK to disable it.
+    # If the dialog is already disabled then the above command has no effect.
+    adb-pref.py --disable-confirmation | sh
 
-    # To configure using the mouse, start the main activity.
-    # Note that the rewrite rules cannot be installed this way because the required apps
-    # (file browser, web browser, etc.) are not available on Things.
-    $ adb shell 'am start -n "ee.ioc.phon.android.speak/.activity.SpeechActionActivity"'
+    # Install the desired rewrite rules, e.g.
+    adb-pref.py prefs_user_guide_rewrites.yml | sh
+
+(Optional) Start Kõnele to test it.
+
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.SpeechActionActivity
+
 
 ### Speech trigger
 
@@ -178,7 +184,7 @@ Based on <https://developer.android.com/things/console/app_bundle.html>.
 
 1. Install this image: TODO. It contains the latest Androidn Things + a bundle created like this:
 
-    zip -j bundle.zip $APK/K6nele-1.6.62.apk $APK/SpeechTrigger-0.1.21.apk $APK/EKISpeak-1.1.04.apk $APK/app-debug.apk
+    zip -j bundle.zip $APK/K6nele-1.6.64.apk $APK/SpeechTrigger-0.1.21.apk $APK/EKISpeak-1.1.04.apk $APK/app-debug.apk
 
 2. Configure the Kõnele rewrite rules using GetPutPreferenceActivity
 
@@ -200,7 +206,7 @@ Issues
 - compile EKI TTS without the storage permission, it does not seem to be using it
 - Google's TTS very slow to start up (before every utterance): 25 sec
 - EKI TTS does not support English. TODO: this could be added to be able to test the speed.
-  Could also try some other TTS engine.
-- Make sure there is no other app using the GPIO BCM4.
+- try also some other TTS engine
+- make sure there is no other app using the GPIO BCM4
 - analog audio/TTS does not work. TODO: Use a USB speaker.
 - how to change the default TTS provider using adb

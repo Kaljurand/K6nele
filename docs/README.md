@@ -1,6 +1,10 @@
 Various documents, notes, examples
 ----------------------------------
 
+[android_things/](android_things/) documents how to use Kõnele on Android Things.
+
+[android_wear/](android_wear/) documents how to use Kõnele on Android Wear.
+
 [launch-k6nele.sh](launch-k6nele.sh) is an example of launching Kõnele using `adb shell am`.
 
 [components.dot](components.dot) is a diagram of Kõnele components among Android APIs and apps.
