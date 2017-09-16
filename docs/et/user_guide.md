@@ -40,8 +40,7 @@ transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
 on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
-Android v5 (Lollipop) kuni v7 (Nougat) seadmes. Teistes Androidi seadmetes on menüüde nimed ja struktuur natuke
-teistsugune, kuid mitte oluliselt.
+Android v5 (Lollipop) ja uuemates seadmetes. Androidi kasutajaliidese tõlge ja struktuur on seadmeti ja versiooniti mõnevõrra erinev, kuid mitte oluliselt.
 
 ## Demovideo
 
@@ -86,23 +85,20 @@ Antud juhul on reeglil kolm komponenti: regulaaravaldis, mis vastab lausungile (
 
 ## Kõnele seadistamine
 
+<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2017-09-13-23-06-39.jpg">
+
 Sama mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
-Need seaded võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
+Need võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
 
 - milliseid tuvastusteenusi ja -keeli kasutatakse;
 - kui palju tuvastushüpoteese serverilt paluda;
 - kas lindistamine algab automaatselt või peale nupule vajutamist;
 - kas lindistamine lõpeb kui sisendkõnesse tekib paus, või alles siis, kui nupule on vajutatud;
-- kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga.
+- kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga;
+- kas/kuidas rakendada tuvastustulemusele tõlkegrammatikaid ja ümberkirjutusreegleid (vt allpool).
 
-Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest ning
+Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest (st klaviatuuri ja otsingupaneeli) ning
 seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
-
-<img title="Ekraanipilt: seadistamine 1" alt="Ekraanipilt: seadistamine 1." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-23.png">
-<img title="Ekraanipilt: seadistamine 2" alt="Ekraanipilt: seadistamine 2." src="{{ site.baseurl }}/images/et/Screenshot_2015-09-24-20-02-53.png">
-
-Samuti on võimalik vaadata, läbi milliste rakenduste on kõnetuvastust kasutatud ning
-omistada erinevatele rakendustele erinevaid grammatikaid (vt allpool).
 
 Kõnele toetab kahte erinevat kõnetuvastusteenust:
 
@@ -114,11 +110,11 @@ Kõnele toetab kahte erinevat kõnetuvastusteenust:
 
 Mõlema teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku.
 
-Otsingupaneel kasutab vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
+Kõnele kasutajaliidesed kasutavad vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
 lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
 keeli (nt Kõnele "grammatikatoega" teenus ja Google'i teenus),
 muutes vastavat seadet.
-Kui valitud on mitu keelt/teenust, siis on paneelil lisaks veel keele/teenuse vahetamise nupp:
+Kui valitud on mitu keelt/teenust, siis on Kõnele mikrofoninupu juures lisaks keele/teenuse vahetamise nupp:
 
 - lühike vajus lülitab järgmisele keelele/teenusele,
 - pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta.
@@ -161,6 +157,10 @@ seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
 <img title="Ekraanipilt: klaviatuuri sisselülitamine" alt="Ekraanipilt: klaviatuuri sisselülitamine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-00.png">
 <img title="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks" alt="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-24.png">
 
+Androidi uuemates versioonides on vastav menüü sügavamal, nt: `Seaded -> Täpsemad seaded -> Keel ja klahvistik -> Virtuaalne klaviatuur`. Kõnele seadetes on ka otselink sellesse menüüsse.
+
+<img title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/IMG_20170916_113335.png">
+
 Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuur järgmisi operatsioone:
 
@@ -168,12 +168,12 @@ klaviatuur järgmisi operatsioone:
 - svaip paremale lisab reavahetuse,
 - topeltvajutus lisab tühiku,
 - pikk vajutus valib kogu teksti (mugav viis kogu transkriptsiooni üledikteerimiseks),
-- vajutus klaviatuuriikoonile vahetab klaviatuuri,
-- pikk vajutus klaviatuuriikoonile avab klaviatuurivahetusmenüü,
+- vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile (alates v1.6.60: eelmisele klaviatuurile),
+- pikk vajutus klaviatuuriikoonile avab klaviatuurivahetusmenüü (alatest v1.6.60: vahetab järgmisele klaviatuurile),
 - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal).
 
 Kõneklaviatuuri on mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
-(nt _Google Keyboard_, _Swype_, _SwiftKey_, _SlideIT_).
+(nt _Gboard_, _Swype_, _SwiftKey_, _SlideIT_).
 Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
 kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
 Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
@@ -181,10 +181,10 @@ ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi.
 Muudes olukordades võib ümber lülitada teisele klaviatuurile.
 Android v5+ seadmetes on lihtne teksti kirjutamise ajal klaviatuure
 vahetada, sest seadme põhinuppude (_Back_, _Home_, _Recent apps_) kõrvale ilmub teksti kirjutamise
-ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Google Keyboard_ ja _Kõnele_ ise)
+ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Gboard_ ja _Kõnele_ ise)
 võimaldavad lisaks klaviatuurivahetust ainult ühe nupuvajutusega. Nt, vajutades maakera-ikooni
-_Google Keyboard_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
-_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Google Keyboard_ klaviatuurile.
+_Gboard_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
+_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
@@ -388,7 +388,7 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Korraga saab aktiivne 
   - [[TSV](https://docs.google.com/spreadsheets/d/1lxvkGerd_WMljca0dsgxViw_5cnOEgDzneBL-uXI-xI/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1lxvkGerd_WMljca0dsgxViw_5cnOEgDzneBL-uXI-xI/edit?usp=sharing)] Käivitab formaalsel kujul käske [Home Assistant](https://home-assistant.io/) abil. Home Assistant toetab nii Philips Hue, kui ka teiste tootjate valgusteid, samuti palju muid targa kodu seadmeid, tehes need kättesaadavaks lihtsa HTTP-liidese kaudu.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
 - [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda.
-- (_vajalik rakendus ee.ioc.phon.android.speechtrigger, mis pole veel avalik_) [[TSV](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/edit?usp=sharing)] Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja lausub etteantud fraasi nn _wake up phrase_), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub.
+- (_vajalik rakendus [ee.ioc.phon.android.speechtrigger](https://github.com/Kaljurand/speech-trigger)_) [[TSV](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/edit?usp=sharing)] Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja lausub etteantud fraasi nn _wake up phrase_), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks).
 
 ### Reeglid kui liides dialoogisüsteemile
