@@ -35,3 +35,10 @@ Rewriting is done by:
 The pre-defined commands cover cursor movement within the text and between fields, selection, replacement, copy/paste/cut,
 and the editor actions `search`, `send`, `go`, and `done`. Most of the commands can be repeated or undone multiple times.
 The arguments can reference expression groups by `$1`, `$2`, ... and the current selection by `@sel()`.
+
+
+### Changing preferences
+
+    ./adb-pref.py --disable-confirmation | sh
+    read
+    ./adb-pref.py prefs_{clips,developer,user_guide_rewrites,private}.yml | sh

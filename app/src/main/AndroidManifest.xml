@@ -78,6 +78,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K6nele">
 
+        <!--
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -85,6 +86,7 @@
         <uses-library
             android:name="com.google.android.wearable"
             android:required="false" />
+        -->
 
         <!-- RecognizerIntentActivity does not have any intent-filters and is thus not findable
         by the OS, but it can still be called directly by the class name. -->
