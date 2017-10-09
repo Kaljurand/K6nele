@@ -45,7 +45,8 @@ public class EncoderDemoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.encoder_demo);
 
-        findViewById(R.id.buttonTest1).setOnClickListener(new View.OnClickListener() {
+        mBTest1 = findViewById(R.id.buttonTest1);
+        mBTest1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mBTest1.setText(R.string.buttonImeStopByPause);
