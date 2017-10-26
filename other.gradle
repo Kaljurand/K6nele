@@ -1,23 +1,23 @@
 task(makeIcons) << {
     description 'Converts the SVG launcher icon to multiple resolution PNGs'
 
-    def dir_res = 'app/res/'
+    def dir_res = 'app/src/main/res/'
     def dir_svg = 'images/'
 
     def launcher_fn_svg = 'ic_launcher.svg'
     def launcher_fn_png = 'ic_launcher.png'
 
     def sizeLogo = 512
-    def sizeMap = [ 'mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192 ]
+    def sizeMap = ['mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192]
 
     def convertSvg = {
         size, dir_in, dir_out ->
             println "Converting launcher icon into ${dir_out} ..."
-            def output1 = exec {
+            exec {
                 commandLine 'mkdir', '-p', dir_out
             }
-            def output2 = exec {
-                //convert -background none -size 512x512 ic_launcher.svg noh.png
+
+            exec {
                 // 16-bit/color RGBA, non-interlaced (TODO: we need 32)
                 commandLine 'rsvg-convert', '-f', 'png', '-w', size, '-h', size, '-o', dir_out + launcher_fn_png, dir_in + launcher_fn_svg
             }
@@ -36,14 +36,14 @@ task(makeDiagrams) << {
     def dir = 'docs/'
 
     def convertDot = {
-        format,fn ->
+        format, fn ->
             println "Converting ${fn} to ${format} ..."
-            def output = exec {
+            exec {
                 commandLine 'dot', '-O', '-T' + format, fn + '.dot'
             }
     }
 
-    def diagrams = ['RecognizerService', 'components', 'intents' ]
+    def diagrams = ['RecognizerService', 'components', 'intents']
     diagrams.each {
         dia -> convertDot('svg', dir + dia)
     }

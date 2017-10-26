@@ -11,11 +11,6 @@ dependencies {
     compile 'com.android.support:support-v13:' + rootProject.supportLibVersion
     // Enable this when using the support library for the vector drawables
     //compile 'com.android.support:appcompat-v7:23.2.1'
-
-    // TODO: maybe do not use (will blow up APK size)
-    //compile 'com.android.support:wear:' + rootProject.supportLibVersion
-    //compile 'com.google.android.support:wearable:2.0.5'
-    //provided 'com.google.android.wearable:wearable:2.0.5'
 }
 
 android {
@@ -30,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1664
-        versionName '1.6.64'
+        versionCode 1668
+        versionName '1.6.68'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }
@@ -85,15 +80,15 @@ task(deploy) << {
     def mapping1 = outputs + 'mapping/release/mapping.txt'
     def mapping2 = "${deploy_dir}K6nele-mapping-${version}.txt"
 
-    def output1 = exec {
+    exec {
         commandLine 'cp', '--verbose', apk1, apk2
     }
 
-    def output2 = exec {
+    exec {
         commandLine 'cp', '--verbose', mapping1, mapping2
     }
 
-    def output3 = exec {
+    exec {
         commandLine 'ls', '-l', deploy_dir
     }
 
