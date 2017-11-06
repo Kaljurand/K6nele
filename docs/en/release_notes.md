@@ -13,6 +13,22 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
+### v1.6.68 (2017-10-26)
+
+New in this release:
+
+- support multiple default rewrite rule tables
+- new IME behavior: single tap on the keyboard button switches to the previous keyboard, while long press switches to the next keyboard; the button is not hidden anymore during recognition
+- make IME discoverable when querying for IMEs with voice subtype
+- improve and document usage on Android Things
+- improve and document usage on Android Wear
+- small UI improvements for service icons, app shortcuts, UI labels
+- support permission ``READ_EXTERNAL_STORAGE``, required when opening downloaded rewrite rules on some devices from some apps (needs to be enabled via the general Android settings if needed, i.e. Kõnele provides no permission requesting dialog for this permission)
+- support setting HTTP headers in``FetchUrlActivity``
+- add ``GetPutPreferenceActivity`` that simplifies changing multiple preferences
+- add the Voice search panel setting "Return errors", and more developer settings
+- update dependencies
+
 ### v1.6.46 (2017-02-19)
 
 This release introduces various small extensions and generalizations that collectively allow Kõnele to interact with external apps and devices, e.g. it is now relatively easy to use Kõnele as a voice interface to a third-party (text-only) chatbot, control your home lights with voice commands, or simply launch other apps on the device.
