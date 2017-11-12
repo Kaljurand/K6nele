@@ -281,6 +281,7 @@
     <string name="cdChangeInputMethod">Change input method</string>
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
+    <string name="cdImeDelete">Delete previous word</string>
 
     <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,
         please reconsider granting this permission.</string>

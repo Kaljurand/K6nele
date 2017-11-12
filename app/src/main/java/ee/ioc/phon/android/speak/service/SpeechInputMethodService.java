@@ -68,6 +68,12 @@ public class SpeechInputMethodService extends InputMethodService {
         return mInputView;
     }
 
+    @Override
+    public boolean onEvaluateFullscreenMode() {
+        // Returning true only if Wear
+        return getResources().getBoolean(R.bool.isWatch);
+    }
+
     /**
      * We check the type of editor control and if we probably cannot handle it (e.g. dates)
      * or do not want to (e.g. passwords) then we hand the editing over to another keyboard.
@@ -308,6 +314,10 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onDeleteLastWord() {
                 mCommandEditor.runOp(mCommandEditor.deleteLeftWord());
+                // Show all of the current text. (Only on Watch.)
+                if (getResources().getBoolean(R.bool.isWatch)) {
+                    mInputView.showMessage(mCommandEditor.getText());
+                }
             }
 
             @Override

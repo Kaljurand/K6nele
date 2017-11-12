@@ -1,37 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/layoutMargin4dp">
 
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etTest0"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/layoutMargin4dp">
+        android:imeOptions="actionSearch"
+        android:inputType="text" />
 
-        <Button
-            android:id="@+id/buttonTest1"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/buttonImeSpeak"
-            android:text="@string/buttonImeSpeak" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/buttonTest2"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/buttonDemoShowEncoders"
-            android:text="@string/buttonDemoShowEncoders" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/layoutMargin4dp">
 
-        <Button
-            android:id="@+id/buttonTest3"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/buttonDemoShowVoiceImes" />
-    </LinearLayout>
-</ScrollView>
+            <Button
+                android:id="@+id/buttonTest1"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/buttonImeSpeak"
+                android:text="@string/buttonImeSpeak" />
+
+            <Button
+                android:id="@+id/buttonTest2"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/buttonDemoShowEncoders"
+                android:text="@string/buttonDemoShowEncoders" />
+
+            <Button
+                android:id="@+id/buttonTest3"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/buttonDemoShowVoiceImes" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

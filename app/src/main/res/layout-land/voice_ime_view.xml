@@ -86,8 +86,8 @@
 
         <ee.ioc.phon.android.speechutils.view.MicButton
             android:id="@+id/bImeStartStop"
-            android:layout_width="@dimen/layoutHeightButtonMicrophone"
-            android:layout_height="@dimen/layoutHeightButtonMicrophone"
+            android:layout_width="@dimen/layoutHeightButtonMicrophoneIme"
+            android:layout_height="@dimen/layoutHeightButtonMicrophoneIme"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/bImeSearch"
             android:layout_toStartOf="@+id/bImeSearch"

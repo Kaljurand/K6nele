@@ -26,8 +26,9 @@ Connect to the watch as detailed in [Debugging an Android Wear App](https://deve
 
 In case the Wear-compatible version of Kõnele is not available on Google Play, then install it using adb:
 
-    # use install -r for reinstallations
+    # Installation command examples
     adb install K6nele-1.6.62.apk
+    adb -s 192.168.0.29:5555 install -r K6nele-1.6.62.apk
 
     # (Optional) Verify that the package was installed
     adb shell pm list packages | fgrep "ee.ioc.phon.android.speak"

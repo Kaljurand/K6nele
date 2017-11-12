@@ -99,7 +99,8 @@ public class SpeechInputView extends LinearLayout {
 
     public void setListener(final SpeechInputViewListener listener) {
         mListener = listener;
-        ImageButton buttonSearch = (ImageButton) findViewById(R.id.bImeSearch);
+        ImageButton buttonSearch = findViewById(R.id.bImeSearch);
+        ImageButton buttonDelete = findViewById(R.id.bImeDelete);
         if (mBImeKeyboard != null && buttonSearch != null) {
             mBImeKeyboard.setOnClickListener(new OnClickListener() {
                 @Override
@@ -129,6 +130,15 @@ public class SpeechInputView extends LinearLayout {
                 public boolean onLongClick(View v) {
                     // TODO: do something interesting
                     return true;
+                }
+            });
+        }
+
+        if (buttonDelete != null) {
+            buttonDelete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onDeleteLastWord();
                 }
             });
         }

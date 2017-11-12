@@ -28,4 +28,6 @@ thus, when using Google's service, the user would want to have the beep off anyw
     <bool name="defaultImeAudioCues">false</bool>
 
     <bool name="defaultGetPutPrefSkipUi">false</bool>
+
+    <bool name="isWatch">false</bool>
 </resources>
