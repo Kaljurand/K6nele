@@ -35,6 +35,7 @@ import ee.ioc.phon.android.speak.utils.QueryUtils;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
 import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.service.AbstractRecognitionService;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
@@ -75,7 +76,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     private int mNumBytesSent;
 
     @Override
-    void configure(Intent recognizerIntent) throws IOException {
+    protected void configure(Intent recognizerIntent) throws IOException {
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
         mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
                 + getAudioRecorder().getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
@@ -86,12 +87,12 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    void connect() {
+    protected void connect() {
         startSocket(mUrl);
     }
 
     @Override
-    void disconnect() {
+    protected void disconnect() {
         if (mSendHandler != null) mSendHandler.removeCallbacks(mSendRunnable);
         if (mSendLooper != null) {
             mSendLooper.quit();
@@ -106,17 +107,17 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    String getEncoderType() {
+    protected String getEncoderType() {
         return PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
                 R.string.keyImeAudioFormat, R.string.defaultAudioFormat);
     }
 
     @Override
-    boolean isAudioCues() {
+    protected boolean isAudioCues() {
         return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyImeAudioCues, R.bool.defaultImeAudioCues);
     }
 
-    void configureHandler(boolean isUnlimitedDuration, boolean isPartialResults) {
+    protected void configureHandler(boolean isUnlimitedDuration, boolean isPartialResults) {
         mMyHandler = new MyHandler(this, isUnlimitedDuration, isPartialResults);
     }
 

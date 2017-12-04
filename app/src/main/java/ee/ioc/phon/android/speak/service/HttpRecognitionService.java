@@ -38,6 +38,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speechutils.AudioRecorder;
 import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.service.AbstractRecognitionService;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
@@ -66,13 +67,13 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     private ChunkedWebRecSession mRecSession;
 
     @Override
-    String getEncoderType() {
+    protected String getEncoderType() {
         return PreferenceUtils.getPrefString(getSharedPreferences(), getResources(),
                 R.string.keyAudioFormat, R.string.defaultAudioFormat);
     }
 
     @Override
-    void configure(Intent recognizerIntent) throws IOException {
+    protected void configure(Intent recognizerIntent) throws IOException {
         ChunkedWebRecSessionBuilder mRecSessionBuilder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
 
         mRecSessionBuilder.setContentType(getEncoderType(), getSampleRate());
@@ -89,7 +90,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    void connect() {
+    protected void connect() {
         HandlerThread thread = new HandlerThread("HttpSendHandlerThread", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         mSendLooper = thread.getLooper();
@@ -119,22 +120,22 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    void disconnect() {
+    protected void disconnect() {
         releaseResources();
     }
 
     @Override
-    boolean isAudioCues() {
+    protected boolean isAudioCues() {
         return PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(), R.string.keyAudioCues, R.bool.defaultAudioCues);
     }
 
     @Override
-    int getSampleRate() {
+    protected int getSampleRate() {
         return PreferenceUtils.getPrefInt(getSharedPreferences(), getResources(), R.string.keyRecordingRate, R.string.defaultRecordingRate);
     }
 
     @Override
-    int getAutoStopAfterMillis() {
+    protected int getAutoStopAfterMillis() {
         return 1000 * Integer.parseInt(
                 getSharedPreferences().getString(
                         getString(R.string.keyAutoStopAfterTime),
@@ -142,7 +143,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     }
 
     @Override
-    boolean isAutoStopAfterPause() {
+    protected boolean isAutoStopAfterPause() {
         // If the caller does not specify this extra, then we set it based on the settings.
         // TODO: in general, we could have 3-valued settings: true, false, use caller
         if (getExtras().containsKey(Extras.EXTRA_UNLIMITED_DURATION)) {
@@ -165,7 +166,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
 
 
     @Override
-    void afterRecording(byte[] recording) {
+    protected void afterRecording(byte[] recording) {
         stopTasks();
         transcribeAndFinishInBackground(recording);
     }
