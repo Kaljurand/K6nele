@@ -31,6 +31,7 @@ import android.speech.RecognizerIntent;
 
 import java.io.IOException;
 
+import ee.ioc.phon.android.speechutils.AudioPauser;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.netspeechapi.recsession.NotAvailableException;
