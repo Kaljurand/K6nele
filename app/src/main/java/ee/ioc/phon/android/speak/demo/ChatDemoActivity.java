@@ -68,7 +68,7 @@ public class ChatDemoActivity extends Activity {
         SpeechInputView siv = (SpeechInputView) findViewById(R.id.vSpeechInputView);
         CallerInfo callerInfo = new CallerInfo(createExtras(), getCallingActivity());
         // TODO: review this
-        siv.init(R.array.keysActivity, callerInfo, false);
+        siv.init(R.array.keysActivity, callerInfo, 0);
         siv.setListener(getSpeechInputViewListener());
 
         mList = (ListView) findViewById(R.id.list_matches);
@@ -118,11 +118,6 @@ public class ChatDemoActivity extends Activity {
                     // TODO: store the JSON also in the list, so that it can be reexecuted later
                     IntentUtils.launchIfIntent(ChatDemoActivity.this, mRewriters, result);
                 }
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-                // TODO
             }
 
             @Override

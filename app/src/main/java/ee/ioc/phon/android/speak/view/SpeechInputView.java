@@ -47,7 +47,7 @@ public class SpeechInputView extends LinearLayout {
     private MicButton.State mState;
 
     // TODO: make it an attribute
-    private boolean mIsEnableSwipe = false;
+    private int mSwipeType = 0;
 
     public interface SpeechInputViewListener {
         void onComboChange(String language, ComponentName service);
@@ -75,6 +75,8 @@ public class SpeechInputView extends LinearLayout {
         void goUp();
 
         void goDown();
+
+        void moveRel(int numOfChars);
 
         void onAddNewline();
 
@@ -143,7 +145,7 @@ public class SpeechInputView extends LinearLayout {
             });
         }
 
-        if (mIsEnableSwipe) {
+        if (mSwipeType == 1) {
             setOnTouchListener(new OnSwipeTouchListener(getContext()) {
                 @Override
                 public void onSwipeLeft() {
@@ -180,13 +182,45 @@ public class SpeechInputView extends LinearLayout {
                     mListener.onSelectAll();
                 }
             });
+        } else if (mSwipeType == 2) {
+            setOnTouchListener(new OnCursorTouchListener(getContext()) {
+                @Override
+                public void onMove(int numOfChars) {
+                    mListener.moveRel(numOfChars);
+                }
+
+                // TODO: wont need, have a button for that
+                // public void onSwipeLeft()
+
+                // TODO: need to find a better solution
+                @Override
+                public void onSwipeRight() {
+                    mListener.onAddNewline();
+                }
+
+                @Override
+                public void onSingleTapMotion() {
+                    mListener.onReset();
+                }
+
+                @Override
+                public void onDoubleTapMotion() {
+                    mListener.onAddSpace();
+                }
+
+                @Override
+                public void onLongPressMotion() {
+                    mListener.onSelectAll();
+                }
+
+            });
         }
 
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
     }
 
-    public void init(int keys, CallerInfo callerInfo, boolean isEnableSwipe) {
-        mIsEnableSwipe = isEnableSwipe;
+    public void init(int keys, CallerInfo callerInfo, int swipeType) {
+        mSwipeType = swipeType;
         // These controls are optional, except for mBImeStartStop (TODO: which should also be optional)
         mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
         mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);

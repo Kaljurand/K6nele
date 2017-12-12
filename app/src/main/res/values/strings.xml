@@ -65,6 +65,8 @@
     <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
+    <string name="titleImeMode">IME swiping mode</string>
+    <string name="summaryImeMode">Change how swiping behaves on the Speak &amp; swipe keyboard</string>
     <string name="titleImeShowPartialResults">Partial results</string>
     <string name="summaryImeShowPartialResults">Show partial recognition results in the text field</string>
     <string name="titleRespectLocale">Support device language</string>
@@ -376,6 +378,22 @@
     </string-array>
 
     <string name="defaultMaxResults" translatable="false">1</string>
+
+    <string-array name="entriesImeMode" translatable="false">
+        <item>No swipe</item>
+        <item>Swipe to delete</item>
+        <item>Swipe to move cursor</item>
+    </string-array>
+
+    <!-- TODO: convert to integer -->
+    <string name="defaultImeMode" translatable="false">1</string>
+
+    <!-- TODO: convert to integer-array -->
+    <string-array name="valuesImeMode" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>

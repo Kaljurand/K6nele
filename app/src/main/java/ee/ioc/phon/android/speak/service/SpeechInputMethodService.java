@@ -142,7 +142,7 @@ public class SpeechInputMethodService extends InputMethodService {
         mInputView.init(
                 R.array.keysIme,
                 new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()),
-                true);
+                PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyImeMode, R.string.defaultImeMode));
 
         // TODO: update this less often (in onStart)
         closeSession();
@@ -333,6 +333,11 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void goDown() {
                 mCommandEditor.runOp(mCommandEditor.keyDown());
+            }
+
+            @Override
+            public void moveRel(int numOfChars) {
+                mCommandEditor.runOp(mCommandEditor.moveRel(numOfChars));
             }
 
             @Override

@@ -153,6 +153,13 @@
                 android:key="@string/keyGetPutPrefSkipUi"
                 android:summary="@string/summaryGetPutPrefSkipUi"
                 android:title="@string/titleGetPutPrefSkipUi" />
+            <ListPreference
+                android:defaultValue="@string/defaultImeMode"
+                android:entries="@array/entriesImeMode"
+                android:entryValues="@array/valuesImeMode"
+                android:key="@string/keyImeMode"
+                android:summary="@string/summaryImeMode"
+                android:title="@string/titleImeMode" />
             <PreferenceCategory android:title="@string/titleCategoryDemos">
                 <Preference
                     android:summary="@string/summarySimpleDemo"

@@ -53,6 +53,11 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
     }
 
     @Override
+    public void moveRel(int numOfSteps) {
+        // empty
+    }
+
+    @Override
     public void onAddSpace() {
         // empty
     }
