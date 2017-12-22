@@ -312,6 +312,11 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
+            public void onDeleteLeftChar() {
+                mCommandEditor.runOp(mCommandEditor.deleteLeftChars(1));
+            }
+
+            @Override
             public void onDeleteLastWord() {
                 mCommandEditor.runOp(mCommandEditor.deleteLeftWord());
                 // Show all of the current text. (Only on Watch.)
@@ -338,6 +343,11 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void moveRel(int numOfChars) {
                 mCommandEditor.runOp(mCommandEditor.moveRel(numOfChars));
+            }
+
+            @Override
+            public void moveRelSel(int numOfChars, int type) {
+                mCommandEditor.runOp(mCommandEditor.moveRelSel(numOfChars, type));
             }
 
             @Override

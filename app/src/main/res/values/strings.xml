@@ -65,8 +65,8 @@
     <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
-    <string name="titleImeMode">IME swiping mode</string>
-    <string name="summaryImeMode">Change how swiping behaves on the Speak &amp; swipe keyboard</string>
+    <string name="titleImeMode">Swiping mode</string>
+    <string name="summaryImeMode">Chose how swipes behave</string>
     <string name="titleImeShowPartialResults">Partial results</string>
     <string name="summaryImeShowPartialResults">Show partial recognition results in the text field</string>
     <string name="titleRespectLocale">Support device language</string>

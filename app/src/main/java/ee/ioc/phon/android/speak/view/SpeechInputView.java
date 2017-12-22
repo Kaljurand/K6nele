@@ -70,6 +70,8 @@ public class SpeechInputView extends LinearLayout {
 
         void onSearch();
 
+        void onDeleteLeftChar();
+
         void onDeleteLastWord();
 
         void goUp();
@@ -77,6 +79,8 @@ public class SpeechInputView extends LinearLayout {
         void goDown();
 
         void moveRel(int numOfChars);
+
+        void moveRelSel(int numOfChars, int type);
 
         void onAddNewline();
 
@@ -140,7 +144,7 @@ public class SpeechInputView extends LinearLayout {
             buttonDelete.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onDeleteLastWord();
+                    mListener.onDeleteLeftChar();
                 }
             });
         }
@@ -186,17 +190,23 @@ public class SpeechInputView extends LinearLayout {
             setOnTouchListener(new OnCursorTouchListener(getContext()) {
                 @Override
                 public void onMove(int numOfChars) {
+                    appendMessage(", " + numOfChars);
                     mListener.moveRel(numOfChars);
+                }
+
+                @Override
+                public void onMoveSel(int numOfChars, int type) {
+                    appendMessage(", " + type + "/" + numOfChars);
+                    mListener.moveRelSel(numOfChars, type);
                 }
 
                 // TODO: wont need, have a button for that
                 // public void onSwipeLeft()
 
                 // TODO: need to find a better solution
-                @Override
-                public void onSwipeRight() {
-                    mListener.onAddNewline();
-                }
+                //public void onSwipeRight() {
+                //    mListener.onAddNewline();
+                //}
 
                 @Override
                 public void onSingleTapMotion() {
@@ -209,10 +219,22 @@ public class SpeechInputView extends LinearLayout {
                 }
 
                 @Override
-                public void onLongPressMotion() {
-                    mListener.onSelectAll();
+                public void onDown() {
+                    // TODO: improve this, make sure that none of the components are null
+                    // TODO: maybe add a blurring effect instead
+                    mBImeStartStop.setVisibility(View.INVISIBLE);
+                    mBImeKeyboard.setVisibility(View.INVISIBLE);
+                    mBComboSelector.setVisibility(View.INVISIBLE);
+                    showMessage("");
                 }
 
+                @Override
+                public void onUp() {
+                    showMessage("");
+                    mBImeStartStop.setVisibility(View.VISIBLE);
+                    mBImeKeyboard.setVisibility(View.VISIBLE);
+                    mBComboSelector.setVisibility(View.VISIBLE);
+                }
             });
         }
 
@@ -328,6 +350,14 @@ public class SpeechInputView extends LinearLayout {
     public void cancel() {
         cancelOrDestroy();
         setGuiInitState(0);
+    }
+
+    public void appendMessage(CharSequence message) {
+        if (mTvMessage != null) {
+            if (message != null && message.length() > 0) {
+                setText(mTvMessage, mTvMessage.getText().toString() + message);
+            }
+        }
     }
 
     public void showMessage(CharSequence message) {

@@ -6,7 +6,6 @@ import android.view.View;
 
 import ee.ioc.phon.android.speak.Log;
 
-//
 // TODO:
 // - single tap
 // - double tap
@@ -19,6 +18,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private float mStartX = 0;
     private float mStartY = 0;
 
+    private boolean isLongPress;
+
+    private int cursorType = -1;
+
     public OnCursorTouchListener(Context context) {
     }
 
@@ -26,11 +29,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         // intentionally empty
     }
 
-    public void onSwipeLeft() {
-        // intentionally empty
-    }
-
-    public void onSwipeRight() {
+    public void onMoveSel(int numOfChars, int type) {
         // intentionally empty
     }
 
@@ -42,13 +41,15 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         // intentionally empty
     }
 
-    public void onLongPressMotion() {
+    public void onDown() {
+        // intentionally empty
+    }
+
+    public void onUp() {
         // intentionally empty
     }
 
     public boolean onTouch(View v, MotionEvent event) {
-        //return mGestureDetector.onTouchEvent(event);
-
         int action = event.getActionMasked();
 
         float newX = event.getX();
@@ -56,8 +57,11 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                onDown();
                 mStartX = newX;
                 mStartY = newY;
+                cursorType = -1;
+                isLongPress = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
@@ -67,11 +71,17 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 if (numOfChars > 0) {
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
                     if (atan2 > -0.4 && atan2 < 1.97) {
+                        if (cursorType == -1) {
+                            cursorType = 0;
+                        }
                         // Swiping left up, allowing +/- 0.4 error
-                        onMove(-1 * numOfChars);
+                        onMoveAux(-1 * numOfChars, cursorType);
                     } else if (atan2 > 2.74 || atan2 < -1.17) {
+                        if (cursorType == -1) {
+                            cursorType = 1;
+                        }
                         // Swiping right down
-                        onMove(numOfChars);
+                        onMoveAux(numOfChars, cursorType);
                     }
                     mStartX = newX;
                     mStartY = newY;
@@ -79,9 +89,20 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                onUp();
+                cursorType = -1;
+                isLongPress = false;
                 break;
         }
         return true;
+    }
+
+    private void onMoveAux(int numOfChars, int type) {
+        if (isLongPress) {
+            onMoveSel(numOfChars, type);
+        } else {
+            onMove(numOfChars);
+        }
     }
 
     private float getDistance(float startX, float startY, MotionEvent ev) {
