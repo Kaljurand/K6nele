@@ -3,6 +3,7 @@ package ee.ioc.phon.android.speak.view;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import ee.ioc.phon.android.speak.Log;
 
@@ -18,7 +19,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private float mStartX = 0;
     private float mStartY = 0;
 
-    private boolean isLongPress;
+    private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
+
+    private boolean mIsLongPress;
+    private boolean mIsMoving;
 
     private int cursorType = -1;
 
@@ -61,7 +65,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 mStartX = newX;
                 mStartY = newY;
                 cursorType = -1;
-                isLongPress = false;
+                mIsLongPress = false;
+                mIsMoving = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
@@ -69,6 +74,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 int numOfChars = Math.round(distance / 25);
                 Log.i("distance: " + numOfChars + " " + distance);
                 if (numOfChars > 0) {
+                    mIsMoving = true;
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
                     if (atan2 > -0.4 && atan2 < 1.97) {
                         if (cursorType == -1) {
@@ -85,20 +91,23 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     }
                     mStartX = newX;
                     mStartY = newY;
+                } else if (!mIsMoving && (event.getEventTime() - event.getDownTime()) > LONGPRESS_TIMEOUT) {
+                    mIsLongPress = true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 onUp();
                 cursorType = -1;
-                isLongPress = false;
+                mIsLongPress = false;
+                mIsMoving = false;
                 break;
         }
         return true;
     }
 
     private void onMoveAux(int numOfChars, int type) {
-        if (isLongPress) {
+        if (mIsLongPress) {
             onMoveSel(numOfChars, type);
         } else {
             onMove(numOfChars);
