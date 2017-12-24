@@ -252,7 +252,7 @@
     <string name="cdChangeInputMethod">Vahetage sisestusmeetodit</string>
     <string name="cdGo">Käivitage otsing</string>
     <string name="cdSettings">Kõnele seaded</string>
-    <string name="cdImeDelete">Kustuta eelnev sõna</string>
+    <string name="cdImeDelete">Kustuta eelnev sümbol</string>
 
     <string name="promptPermissionRationale">Heli salvestamise õigus on Kõnele jaoks hädavajalik,
         palun andke see õigus.</string>

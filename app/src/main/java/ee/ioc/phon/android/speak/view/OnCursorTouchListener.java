@@ -19,6 +19,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private float mStartX = 0;
     private float mStartY = 0;
 
+    private static final float VERTICAL_SPEED = 3.5f;
     private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
 
     private boolean mIsLongPress;
@@ -50,6 +51,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     }
 
     public void onUp() {
+        // intentionally empty
+    }
+
+    public void onLongPress() {
         // intentionally empty
     }
 
@@ -93,9 +98,13 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     mStartY = newY;
                 } else if (!mIsMoving && (event.getEventTime() - event.getDownTime()) > LONGPRESS_TIMEOUT) {
                     mIsLongPress = true;
+                    onLongPress();
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                if (!mIsMoving) {
+                    onSingleTapMotion();
+                }
             case MotionEvent.ACTION_CANCEL:
                 onUp();
                 cursorType = -1;
@@ -117,14 +126,13 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private float getDistance(float startX, float startY, MotionEvent ev) {
         float distanceSum = 0;
         final int historySize = ev.getHistorySize();
-        Log.i("distance: historySize: " + historySize);
         for (int h = 0; h < historySize; h++) {
             // historical point
             float hx = ev.getHistoricalX(0, h);
             float hy = ev.getHistoricalY(0, h);
             // distance between startX,startY and historical point
             float dx = (hx - startX);
-            float dy = 3 * (hy - startY);
+            float dy = VERTICAL_SPEED * (hy - startY);
             distanceSum += Math.sqrt(dx * dx + dy * dy);
             // make historical point the start point for next loop iteration
             startX = hx;
@@ -132,7 +140,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         }
         // add distance from last historical point to event's point
         float dx = (ev.getX(0) - startX);
-        float dy = 3 * (ev.getY(0) - startY);
+        float dy = VERTICAL_SPEED * (ev.getY(0) - startY);
         distanceSum += Math.sqrt(dx * dx + dy * dy);
         return distanceSum;
     }

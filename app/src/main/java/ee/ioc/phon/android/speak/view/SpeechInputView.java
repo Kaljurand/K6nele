@@ -12,6 +12,7 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -106,7 +107,6 @@ public class SpeechInputView extends LinearLayout {
     public void setListener(final SpeechInputViewListener listener) {
         mListener = listener;
         ImageButton buttonSearch = findViewById(R.id.bImeSearch);
-        ImageButton buttonDelete = findViewById(R.id.bImeDelete);
         if (mBImeKeyboard != null && buttonSearch != null) {
             mBImeKeyboard.setOnClickListener(new OnClickListener() {
                 @Override
@@ -140,11 +140,32 @@ public class SpeechInputView extends LinearLayout {
             });
         }
 
+        Button buttonDelete = findViewById(R.id.bImeDelete);
         if (buttonDelete != null) {
             buttonDelete.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onDeleteLeftChar();
+                }
+            });
+        }
+
+        Button buttonNewline = findViewById(R.id.bImeNewline);
+        if (buttonNewline != null) {
+            buttonNewline.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onAddNewline();
+                }
+            });
+        }
+
+        Button buttonSpace = findViewById(R.id.bImeSpace);
+        if (buttonSpace != null) {
+            buttonSpace.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onAddSpace();
                 }
             });
         }
@@ -209,6 +230,15 @@ public class SpeechInputView extends LinearLayout {
                 //}
 
                 @Override
+                public void onLongPress() {
+                    // TODO: select current word (later the selection can be changed, e.g. include
+                    // punctuation)
+                    setBackgroundResource(R.drawable.rectangle_gradient_light);
+                    // TODO: does not seem to work
+                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                @Override
                 public void onSingleTapMotion() {
                     mListener.onReset();
                 }
@@ -234,6 +264,7 @@ public class SpeechInputView extends LinearLayout {
                     mBImeStartStop.setVisibility(View.VISIBLE);
                     mBImeKeyboard.setVisibility(View.VISIBLE);
                     mBComboSelector.setVisibility(View.VISIBLE);
+                    setBackgroundResource(R.drawable.rectangle_gradient);
                 }
             });
         }
