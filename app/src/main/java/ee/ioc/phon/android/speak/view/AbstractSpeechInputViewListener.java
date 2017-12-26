@@ -33,6 +33,16 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
     }
 
     @Override
+    public void onActionPrevious() {
+        // empty
+    }
+
+    @Override
+    public void onActionNext() {
+        // empty
+    }
+
+    @Override
     public void onDeleteLeftChar() {
         // empty
     }
@@ -64,6 +74,11 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
 
     @Override
     public void moveRelSel(int numOfSteps, int type) {
+        // empty
+    }
+
+    @Override
+    public void onExtendSel(String regex) {
         // empty
     }
 

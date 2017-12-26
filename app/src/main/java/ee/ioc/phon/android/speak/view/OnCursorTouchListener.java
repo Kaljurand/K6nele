@@ -58,6 +58,14 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         // intentionally empty
     }
 
+    public void onSwipeUp() {
+        // intentionally empty
+    }
+
+    public void onSwipeDown() {
+        // intentionally empty
+    }
+
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getActionMasked();
 
@@ -75,7 +83,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
-                // TODO: scale by size of the panel
+                // TODO: scale by size of the panel / font size?
                 int numOfChars = Math.round(distance / 25);
                 Log.i("distance: " + numOfChars + " " + distance);
                 if (numOfChars > 0) {
@@ -93,6 +101,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                         }
                         // Swiping right down
                         onMoveAux(numOfChars, cursorType);
+                    } else if (atan2 > 2) {
+                        onSwipeUp();
+                    } else if (atan2 < -0.4) {
+                        onSwipeDown();
                     }
                     mStartX = newX;
                     mStartY = newY;
@@ -102,7 +114,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (!mIsMoving) {
+                if (!mIsMoving && !mIsLongPress) {
                     onSingleTapMotion();
                 }
             case MotionEvent.ACTION_CANCEL:

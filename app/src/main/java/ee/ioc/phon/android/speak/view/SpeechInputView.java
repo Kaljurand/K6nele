@@ -49,8 +49,10 @@ public class SpeechInputView extends LinearLayout {
 
     // TODO: make it an attribute
     private int mSwipeType = 0;
+    private final static String ARROW = "--------------------";
 
     public interface SpeechInputViewListener {
+
         void onComboChange(String language, ComponentName service);
 
         void onPartialResult(List<String> text);
@@ -71,6 +73,10 @@ public class SpeechInputView extends LinearLayout {
 
         void onSearch();
 
+        void onActionPrevious();
+
+        void onActionNext();
+
         void onDeleteLeftChar();
 
         void onDeleteLastWord();
@@ -82,6 +88,8 @@ public class SpeechInputView extends LinearLayout {
         void moveRel(int numOfChars);
 
         void moveRelSel(int numOfChars, int type);
+
+        void onExtendSel(String regex);
 
         void onAddNewline();
 
@@ -211,13 +219,21 @@ public class SpeechInputView extends LinearLayout {
             setOnTouchListener(new OnCursorTouchListener(getContext()) {
                 @Override
                 public void onMove(int numOfChars) {
-                    appendMessage(", " + numOfChars);
+                    if (numOfChars < 0) {
+                        showMessage("<" + ARROW.substring(0, -1 * numOfChars));
+                    } else {
+                        showMessage(ARROW.substring(0, numOfChars) + ">");
+                    }
                     mListener.moveRel(numOfChars);
                 }
 
                 @Override
                 public void onMoveSel(int numOfChars, int type) {
-                    appendMessage(", " + type + "/" + numOfChars);
+                    if (numOfChars < 0) {
+                        showMessage("<<" + ARROW.substring(0, -1 * numOfChars));
+                    } else {
+                        showMessage(ARROW.substring(0, numOfChars) + ">>");
+                    }
                     mListener.moveRelSel(numOfChars, type);
                 }
 
@@ -231,8 +247,9 @@ public class SpeechInputView extends LinearLayout {
 
                 @Override
                 public void onLongPress() {
-                    // TODO: select current word (later the selection can be changed, e.g. include
-                    // punctuation)
+                    // Selects current word.
+                    // The selection can be later changed, e.g. include punctuation.
+                    mListener.onExtendSel("\\w+");
                     setBackgroundResource(R.drawable.rectangle_gradient_light);
                     // TODO: does not seem to work
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
@@ -255,6 +272,7 @@ public class SpeechInputView extends LinearLayout {
                     mBImeStartStop.setVisibility(View.INVISIBLE);
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
                     mBComboSelector.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.rlKeyButtons).setVisibility(View.INVISIBLE);
                     showMessage("");
                 }
 
@@ -264,7 +282,18 @@ public class SpeechInputView extends LinearLayout {
                     mBImeStartStop.setVisibility(View.VISIBLE);
                     mBImeKeyboard.setVisibility(View.VISIBLE);
                     mBComboSelector.setVisibility(View.VISIBLE);
+                    findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
                     setBackgroundResource(R.drawable.rectangle_gradient);
+                }
+
+                @Override
+                public void onSwipeUp() {
+                    mListener.onActionPrevious();
+                }
+
+                @Override
+                public void onSwipeDown() {
+                    mListener.onActionNext();
                 }
             });
         }

@@ -312,6 +312,18 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
+            public void onActionPrevious() {
+                // TODO: do action only if the previous field exists
+                //mCommandEditor.runOp(mCommandEditor.imeActionPrevious());
+            }
+
+            @Override
+            public void onActionNext() {
+                // TODO: do action only if the next field exists
+                //mCommandEditor.runOp(mCommandEditor.imeActionNext());
+            }
+
+            @Override
             public void onDeleteLeftChar() {
                 mCommandEditor.runOp(mCommandEditor.deleteLeftChars(1));
             }
@@ -348,6 +360,11 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void moveRelSel(int numOfChars, int type) {
                 mCommandEditor.runOp(mCommandEditor.moveRelSel(numOfChars, type));
+            }
+
+            @Override
+            public void onExtendSel(String regex) {
+                mCommandEditor.runOp(mCommandEditor.selectRe(regex));
             }
 
             @Override
