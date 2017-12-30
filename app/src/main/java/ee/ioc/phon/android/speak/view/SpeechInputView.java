@@ -150,9 +150,9 @@ public class SpeechInputView extends LinearLayout {
 
         Button buttonDelete = findViewById(R.id.bImeDelete);
         if (buttonDelete != null) {
-            buttonDelete.setOnClickListener(new OnClickListener() {
+            buttonDelete.setOnTouchListener(new OnPressAndHoldListener() {
                 @Override
-                public void onClick(View v) {
+                public void onAction() {
                     mListener.onDeleteLeftChar();
                 }
             });

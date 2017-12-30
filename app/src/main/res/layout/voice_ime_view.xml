@@ -59,20 +59,23 @@
             android:src="@drawable/ic_search_api_holo_dark" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/rlKeyButtons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
 
             <Button
                 android:id="@+id/bImeSpace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/bImeNewline"
+                android:layout_toRightOf="@id/bImeNewline"
                 android:background="@drawable/button_go"
                 android:contentDescription="string/cdImeSpace"
                 android:text="_"
@@ -83,8 +86,6 @@
                 android:id="@+id/bImeNewline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/bImeSpace"
-                android:layout_toRightOf="@id/bImeSpace"
                 android:background="@drawable/button_go"
                 android:contentDescription="string/cdImeNewline"
                 android:text="↲"
@@ -107,12 +108,14 @@
             android:id="@+id/bImeStartStop"
             android:layout_width="@dimen/layoutHeightButtonMicrophone"
             android:layout_height="@dimen/layoutHeightButtonMicrophone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:background="@drawable/button_mic"
             android:contentDescription="@string/cdMicrophone"
+            android:gravity="center"
             android:src="@drawable/ic_voice_search_api_material" />
-    </LinearLayout>
-
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tvInstruction"

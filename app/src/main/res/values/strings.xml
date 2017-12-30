@@ -65,8 +65,7 @@
     <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
-    <string name="titleImeMode">Swiping mode</string>
-    <string name="summaryImeMode">Chose how swipes behave</string>
+    <string name="titleImeMode">Taps and swiping</string>
     <string name="titleImeShowPartialResults">Partial results</string>
     <string name="summaryImeShowPartialResults">Show partial recognition results in the text field</string>
     <string name="titleRespectLocale">Support device language</string>
@@ -379,7 +378,7 @@
 
     <string name="defaultMaxResults" translatable="false">1</string>
 
-    <string-array name="entriesImeMode" translatable="false">
+    <string-array name="entriesImeMode">
         <item>No swipe</item>
         <item>Swipe to delete</item>
         <item>Swipe to move cursor</item>

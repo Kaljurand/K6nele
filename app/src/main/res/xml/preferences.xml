@@ -45,7 +45,6 @@
             android:entries="@array/entriesImeMode"
             android:entryValues="@array/valuesImeMode"
             android:key="@string/keyImeMode"
-            android:summary="@string/summaryImeMode"
             android:title="@string/titleImeMode" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
