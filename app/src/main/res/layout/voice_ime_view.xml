@@ -92,16 +92,17 @@
                 android:textColor="@color/grey200"
                 android:textSize="@dimen/textSize3" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/bImeDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/bImeNewline"
+                android:layout_marginLeft="@dimen/layoutMargin2"
+                android:layout_marginStart="@dimen/layoutMargin2"
                 android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
-                android:text="⇐"
-                android:textColor="@color/grey200"
-                android:textSize="@dimen/textSize3" />
+                android:padding="@dimen/layoutMargin1"
+                android:src="@drawable/sym_keyboard_delete" />
         </RelativeLayout>
 
         <ee.ioc.phon.android.speechutils.view.MicButton

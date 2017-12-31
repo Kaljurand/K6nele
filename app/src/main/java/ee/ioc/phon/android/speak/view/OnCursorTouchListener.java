@@ -8,9 +8,7 @@ import android.view.ViewConfiguration;
 import ee.ioc.phon.android.speak.Log;
 
 // TODO:
-// - single tap
 // - double tap
-// - long press
 // - add newline swipe (?)
 // Maybe reuse some code from
 // https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/GestureDetector.java
@@ -21,6 +19,9 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private static final float VERTICAL_SPEED = 3.5f;
     private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
+
+    // TODO: calculate dynamically
+    private static final int EDGE = 100;
 
     private boolean mIsLongPress;
     private boolean mIsMoving;
@@ -85,8 +86,13 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 float distance = getDistance(mStartX, mStartY, event);
                 // TODO: scale by size of the panel / font size?
                 int numOfChars = Math.round(distance / 25);
-                Log.i("distance: " + numOfChars + " " + distance);
-                if (numOfChars > 0) {
+                Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
+                // TODO: do this after a certain time interval
+                if (newX < EDGE) {
+                    onMoveAux(-1, 0);
+                } else if (newX > v.getWidth() - EDGE) {
+                    onMoveAux(1, 1);
+                } else if (numOfChars > 0) {
                     mIsMoving = true;
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
                     if (atan2 > -0.4 && atan2 < 1.97) {

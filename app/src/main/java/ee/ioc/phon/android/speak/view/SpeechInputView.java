@@ -148,7 +148,7 @@ public class SpeechInputView extends LinearLayout {
             });
         }
 
-        Button buttonDelete = findViewById(R.id.bImeDelete);
+        ImageButton buttonDelete = findViewById(R.id.bImeDelete);
         if (buttonDelete != null) {
             buttonDelete.setOnTouchListener(new OnPressAndHoldListener() {
                 @Override
