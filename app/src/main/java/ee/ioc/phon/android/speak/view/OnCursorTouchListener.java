@@ -19,6 +19,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private static final float VERTICAL_SPEED = 3.5f;
     private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
+    private static final int DOUBLETAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
 
     // TODO: calculate dynamically
     private static final int EDGE = 100;
@@ -27,6 +28,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private boolean mIsMoving;
 
     private int cursorType = -1;
+    private int mDoubleTapState = -1;
+    private long mFirstTapTime = 0;
 
     public OnCursorTouchListener(Context context) {
     }
@@ -81,6 +84,14 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 cursorType = -1;
                 mIsLongPress = false;
                 mIsMoving = false;
+                if (mDoubleTapState == -1 || mDoubleTapState == 1) {
+                    mDoubleTapState++;
+                } else {
+                    mDoubleTapState = -1;
+                }
+                if (mDoubleTapState <= 0) {
+                    mFirstTapTime = event.getEventTime();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
@@ -114,7 +125,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     }
                     mStartX = newX;
                     mStartY = newY;
-                } else if (!mIsMoving && (event.getEventTime() - event.getDownTime()) > LONGPRESS_TIMEOUT) {
+                } else if (!mIsLongPress && !mIsMoving && (event.getEventTime() - event.getDownTime()) > LONGPRESS_TIMEOUT) {
                     mIsLongPress = true;
                     onLongPress();
                 }
@@ -122,6 +133,14 @@ public class OnCursorTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_UP:
                 if (!mIsMoving && !mIsLongPress) {
                     onSingleTapMotion();
+                }
+                if (mDoubleTapState == 2 && (event.getEventTime() - mFirstTapTime) < DOUBLETAP_TIMEOUT) {
+                    mDoubleTapState = -1;
+                    onDoubleTapMotion();
+                } else if (mDoubleTapState == 0) {
+                    mDoubleTapState++;
+                } else {
+                    mDoubleTapState = -1;
                 }
             case MotionEvent.ACTION_CANCEL:
                 onUp();

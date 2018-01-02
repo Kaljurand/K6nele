@@ -49,7 +49,9 @@ public class SpeechInputView extends LinearLayout {
 
     // TODO: make it an attribute
     private int mSwipeType = 0;
-    private final static String ARROW = "--------------------";
+    private final static String DASH_CUR = "--------------------";
+    private final static String DASH_SEL = "====================";
+    private final static int DASH_LENGTH = DASH_CUR.length();
 
     public interface SpeechInputViewListener {
 
@@ -168,16 +170,6 @@ public class SpeechInputView extends LinearLayout {
             });
         }
 
-        Button buttonSpace = findViewById(R.id.bImeSpace);
-        if (buttonSpace != null) {
-            buttonSpace.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onAddSpace();
-                }
-            });
-        }
-
         if (mSwipeType == 1) {
             setOnTouchListener(new OnSwipeTouchListener(getContext()) {
                 @Override
@@ -216,34 +208,20 @@ public class SpeechInputView extends LinearLayout {
                 }
             });
         } else if (mSwipeType == 2) {
+            findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
+
             setOnTouchListener(new OnCursorTouchListener(getContext()) {
                 @Override
                 public void onMove(int numOfChars) {
-                    if (numOfChars < 0) {
-                        showMessage("<" + ARROW.substring(0, -1 * numOfChars));
-                    } else {
-                        showMessage(ARROW.substring(0, numOfChars) + ">");
-                    }
+                    showMessageArrow(numOfChars, DASH_CUR);
                     mListener.moveRel(numOfChars);
                 }
 
                 @Override
                 public void onMoveSel(int numOfChars, int type) {
-                    if (numOfChars < 0) {
-                        showMessage("<<" + ARROW.substring(0, -1 * numOfChars));
-                    } else {
-                        showMessage(ARROW.substring(0, numOfChars) + ">>");
-                    }
+                    showMessageArrow(numOfChars, DASH_SEL);
                     mListener.moveRelSel(numOfChars, type);
                 }
-
-                // TODO: wont need, have a button for that
-                // public void onSwipeLeft()
-
-                // TODO: need to find a better solution
-                //public void onSwipeRight() {
-                //    mListener.onAddNewline();
-                //}
 
                 @Override
                 public void onLongPress() {
@@ -251,7 +229,6 @@ public class SpeechInputView extends LinearLayout {
                     // The selection can be later changed, e.g. include punctuation.
                     mListener.onExtendSel("\\w+");
                     setBackgroundResource(R.drawable.rectangle_gradient_light);
-                    // TODO: does not seem to work
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 }
 
@@ -271,7 +248,7 @@ public class SpeechInputView extends LinearLayout {
                     // TODO: maybe add a blurring effect instead
                     mBImeStartStop.setVisibility(View.INVISIBLE);
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
-                    mBComboSelector.setVisibility(View.INVISIBLE);
+                    //mBComboSelector.setVisibility(View.INVISIBLE);
                     findViewById(R.id.rlKeyButtons).setVisibility(View.INVISIBLE);
                     showMessage("");
                 }
@@ -281,7 +258,7 @@ public class SpeechInputView extends LinearLayout {
                     showMessage("");
                     mBImeStartStop.setVisibility(View.VISIBLE);
                     mBImeKeyboard.setVisibility(View.VISIBLE);
-                    mBComboSelector.setVisibility(View.VISIBLE);
+                    //mBComboSelector.setVisibility(View.VISIBLE);
                     findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
                     setBackgroundResource(R.drawable.rectangle_gradient);
                 }
@@ -412,14 +389,6 @@ public class SpeechInputView extends LinearLayout {
         setGuiInitState(0);
     }
 
-    public void appendMessage(CharSequence message) {
-        if (mTvMessage != null) {
-            if (message != null && message.length() > 0) {
-                setText(mTvMessage, mTvMessage.getText().toString() + message);
-            }
-        }
-    }
-
     public void showMessage(CharSequence message) {
         if (mTvMessage != null) {
             if (message == null || message.length() == 0) {
@@ -445,6 +414,17 @@ public class SpeechInputView extends LinearLayout {
                 }
                 setText(mTvMessage, message);
             }
+        }
+    }
+
+    private void showMessageArrow(int numOfChars, String dash) {
+        if (numOfChars < 0) {
+            int num = -1 * numOfChars;
+            if (DASH_LENGTH > num) {
+                showMessage("<" + dash.substring(0, num));
+            }
+        } else if (DASH_LENGTH > numOfChars) {
+            showMessage(dash.substring(0, numOfChars) + ">");
         }
     }
 
