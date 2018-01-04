@@ -129,7 +129,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (mDoubleTapState == 1) {
+                if (!mIsMoving && mDoubleTapState == 1) {
                     mFirstTapUpTime = event.getEventTime();
                     mDoubleTapState = 2;
                 } else {

@@ -40,7 +40,7 @@
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleCategoryDemos">Demod, testid, jne</string>
     <string name="titleScreenDevel">Arendaja seaded, demod, jne</string>
-    <string name="titleImeMode">Klikid ja svaipimine</string>
+    <string name="titleImeMode">Svaipimine</string>
     <string name="titleAutoStart">Autostart</string>
     <string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
     <string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
@@ -254,6 +254,7 @@
     <string name="cdGo">Käivitage otsing</string>
     <string name="cdSettings">Kõnele seaded</string>
     <string name="cdImeDelete">Kustuta eelnev sümbol</string>
+    <string name="cdImeNewline">Lisa reavahetus</string>
 
     <string name="promptPermissionRationale">Heli salvestamise õigus on Kõnele jaoks hädavajalik,
         palun andke see õigus.</string>
@@ -267,8 +268,7 @@
     </string-array>
 
     <string-array name="entriesImeMode">
-        <item>Svaipimine ei tee midagi</item>
-        <item>Vasakule svaip kustutab, paremale svaip lisab uue rea</item>
+        <item>Svaip vasakule kustutab eelneva sõna, svaip paremale lisab uue rea</item>
         <item>Svaipimine liigutab kursorit</item>
     </string-array>
 

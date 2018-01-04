@@ -65,7 +65,7 @@
     <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
-    <string name="titleImeMode">Taps and swiping</string>
+    <string name="titleImeMode">Swiping</string>
     <string name="titleImeShowPartialResults">Partial results</string>
     <string name="summaryImeShowPartialResults">Show partial recognition results in the text field</string>
     <string name="titleRespectLocale">Support device language</string>
@@ -283,6 +283,7 @@
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
     <string name="cdImeDelete">Delete previous character</string>
+    <string name="cdImeNewline">Insert a newline</string>
 
     <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,
         please reconsider granting this permission.</string>
@@ -379,9 +380,8 @@
     <string name="defaultMaxResults" translatable="false">1</string>
 
     <string-array name="entriesImeMode">
-        <item>No swipe</item>
-        <item>Swipe to delete</item>
-        <item>Swipe to move cursor</item>
+        <item>Left swipe deletes, right swipe adds newline</item>
+        <item>Swiping moves cursor</item>
     </string-array>
 
     <!-- TODO: convert to integer -->
@@ -389,7 +389,6 @@
 
     <!-- TODO: convert to integer-array -->
     <string-array name="valuesImeMode" translatable="false">
-        <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>

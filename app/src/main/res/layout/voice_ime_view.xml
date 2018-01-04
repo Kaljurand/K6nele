@@ -49,7 +49,7 @@
 
         <LinearLayout
             android:id="@+id/rlKeyButtons"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_go"
-                android:contentDescription="string/cdImeNewline"
+                android:contentDescription="@string/cdImeNewline"
                 android:text="↲"
                 android:textColor="@color/grey100"
                 android:textSize="@dimen/textSize3" />

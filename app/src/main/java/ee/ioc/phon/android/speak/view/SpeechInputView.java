@@ -249,7 +249,7 @@ public class SpeechInputView extends LinearLayout {
                     mBImeStartStop.setVisibility(View.INVISIBLE);
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
                     //mBComboSelector.setVisibility(View.INVISIBLE);
-                    findViewById(R.id.rlKeyButtons).setVisibility(View.INVISIBLE);
+                    setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                     showMessage("");
                 }
 
@@ -259,7 +259,7 @@ public class SpeechInputView extends LinearLayout {
                     mBImeStartStop.setVisibility(View.VISIBLE);
                     mBImeKeyboard.setVisibility(View.VISIBLE);
                     //mBComboSelector.setVisibility(View.VISIBLE);
-                    findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
+                    setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
                     setBackgroundResource(R.drawable.rectangle_gradient);
                 }
 
@@ -442,9 +442,8 @@ public class SpeechInputView extends LinearLayout {
 
     private void setGuiInitState(int message) {
         if (message == 0) {
-            // Do not clear a possible error message
-            //showMessage("");
             setGuiState(MicButton.State.INIT);
+            setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
         } else {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
@@ -539,6 +538,7 @@ public class SpeechInputView extends LinearLayout {
         updateServiceLanguage(slc.getSpeechRecognizer());
         mRecognizer.startListening(slc.getIntent());
         mListener.onStartListening();
+        setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
     }
 
     /**

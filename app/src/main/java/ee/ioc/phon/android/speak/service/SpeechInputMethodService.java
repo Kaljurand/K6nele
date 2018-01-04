@@ -32,6 +32,7 @@ import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
+import ee.ioc.phon.android.speechutils.editor.Op;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
@@ -273,6 +274,10 @@ public class SpeechInputMethodService extends InputMethodService {
             // class name of the app
             private ComponentName app = new ComponentName(packageName, packageName);
 
+            private void runOp(Op op) {
+                mCommandEditor.runOp(op, false);
+            }
+
             @Override
             public void onComboChange(String language, ComponentName service) {
                 // TODO: name of the rewrites table configurable
@@ -307,30 +312,30 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onSearch() {
                 closeSession();
-                mCommandEditor.runOp(mCommandEditor.imeActionSearch());
+                runOp(mCommandEditor.imeActionSearch());
                 requestHideSelf(0);
             }
 
             @Override
             public void onActionPrevious() {
                 // TODO: do action only if the previous field exists
-                //mCommandEditor.runOp(mCommandEditor.imeActionPrevious());
+                //runOp(mCommandEditor.imeActionPrevious());
             }
 
             @Override
             public void onActionNext() {
                 // TODO: do action only if the next field exists
-                //mCommandEditor.runOp(mCommandEditor.imeActionNext());
+                //runOp(mCommandEditor.imeActionNext());
             }
 
             @Override
             public void onDeleteLeftChar() {
-                mCommandEditor.runOp(mCommandEditor.deleteLeftChars(1));
+                runOp(mCommandEditor.deleteLeftChars(1));
             }
 
             @Override
             public void onDeleteLastWord() {
-                mCommandEditor.runOp(mCommandEditor.deleteLeftWord());
+                runOp(mCommandEditor.deleteLeftWord());
                 // Show all of the current text. (Only on Watch.)
                 if (getResources().getBoolean(R.bool.isWatch)) {
                     mInputView.showMessage(mCommandEditor.getText());
@@ -339,49 +344,49 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onAddNewline() {
-                mCommandEditor.runOp(mCommandEditor.replaceSel("\n"));
+                runOp(mCommandEditor.replaceSel("\n"));
             }
 
             @Override
             public void goUp() {
-                mCommandEditor.runOp(mCommandEditor.keyUp());
+                runOp(mCommandEditor.keyUp());
             }
 
             @Override
             public void goDown() {
-                mCommandEditor.runOp(mCommandEditor.keyDown());
+                runOp(mCommandEditor.keyDown());
             }
 
             @Override
             public void moveRel(int numOfChars) {
-                mCommandEditor.runOp(mCommandEditor.moveRel(numOfChars));
+                runOp(mCommandEditor.moveRel(numOfChars));
             }
 
             @Override
             public void moveRelSel(int numOfChars, int type) {
-                mCommandEditor.runOp(mCommandEditor.moveRelSel(numOfChars, type));
+                runOp(mCommandEditor.moveRelSel(numOfChars, type));
             }
 
             @Override
             public void onExtendSel(String regex) {
-                mCommandEditor.runOp(mCommandEditor.selectRe(regex));
+                runOp(mCommandEditor.selectRe(regex, false));
             }
 
             @Override
             public void onAddSpace() {
-                mCommandEditor.runOp(mCommandEditor.replaceSel(" "));
+                runOp(mCommandEditor.replaceSel(" "));
             }
 
             @Override
             public void onSelectAll() {
                 // TODO: show ContextMenu
-                mCommandEditor.runOp(mCommandEditor.selectAll());
+                runOp(mCommandEditor.selectAll());
             }
 
             @Override
             public void onReset() {
                 // TODO: hide ContextMenu (if visible)
-                mCommandEditor.runOp(mCommandEditor.moveRel(0));
+                runOp(mCommandEditor.moveRel(0));
             }
 
             @Override
