@@ -8,28 +8,26 @@ import android.view.ViewConfiguration;
 import ee.ioc.phon.android.speak.Log;
 
 // TODO:
-// - double tap
-// - add newline swipe (?)
 // Maybe reuse some code from
 // https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/GestureDetector.java
 public class OnCursorTouchListener implements View.OnTouchListener {
 
-    private float mStartX = 0;
-    private float mStartY = 0;
-
-    private static final float VERTICAL_SPEED = 3.5f;
     private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
     private static final int DOUBLETAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
 
     // TODO: calculate dynamically
     private static final int EDGE = 100;
+    private static final float VERTICAL_SPEED = 3.5f;
+    private static final float DISTANCE_SCALE = 0.04f;
 
     private boolean mIsLongPress;
     private boolean mIsMoving;
 
-    private int cursorType = -1;
-    private int mDoubleTapState = -1;
-    private long mFirstTapTime = 0;
+    private float mStartX = 0;
+    private float mStartY = 0;
+    private int mCursorType = -1;
+    private int mDoubleTapState = 0;
+    private long mFirstTapUpTime = 0;
 
     public OnCursorTouchListener(Context context) {
     }
@@ -78,25 +76,25 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                onDown();
                 mStartX = newX;
                 mStartY = newY;
-                cursorType = -1;
+                mCursorType = -1;
                 mIsLongPress = false;
                 mIsMoving = false;
-                if (mDoubleTapState == -1 || mDoubleTapState == 1) {
-                    mDoubleTapState++;
+                if (mDoubleTapState == 0) {
+                    mDoubleTapState = 1;
                 } else {
-                    mDoubleTapState = -1;
+                    if (mDoubleTapState == 2 && (event.getEventTime() - mFirstTapUpTime) < DOUBLETAP_TIMEOUT) {
+                        onDoubleTapMotion();
+                    }
+                    mDoubleTapState = 0;
                 }
-                if (mDoubleTapState <= 0) {
-                    mFirstTapTime = event.getEventTime();
-                }
+                onDown();
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
                 // TODO: scale by size of the panel / font size?
-                int numOfChars = Math.round(distance / 25);
+                int numOfChars = Math.round(DISTANCE_SCALE * distance);
                 Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
                 // TODO: do this after a certain time interval
                 if (newX < EDGE) {
@@ -107,17 +105,17 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     mIsMoving = true;
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
                     if (atan2 > -0.4 && atan2 < 1.97) {
-                        if (cursorType == -1) {
-                            cursorType = 0;
+                        if (mCursorType == -1) {
+                            mCursorType = 0;
                         }
                         // Swiping left up, allowing +/- 0.4 error
-                        onMoveAux(-1 * numOfChars, cursorType);
+                        onMoveAux(-1 * numOfChars, mCursorType);
                     } else if (atan2 > 2.74 || atan2 < -1.17) {
-                        if (cursorType == -1) {
-                            cursorType = 1;
+                        if (mCursorType == -1) {
+                            mCursorType = 1;
                         }
                         // Swiping right down
-                        onMoveAux(numOfChars, cursorType);
+                        onMoveAux(numOfChars, mCursorType);
                     } else if (atan2 > 2) {
                         onSwipeUp();
                     } else if (atan2 < -0.4) {
@@ -131,20 +129,18 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                if (mDoubleTapState == 1) {
+                    mFirstTapUpTime = event.getEventTime();
+                    mDoubleTapState = 2;
+                } else {
+                    mDoubleTapState = 0;
+                }
                 if (!mIsMoving && !mIsLongPress) {
                     onSingleTapMotion();
                 }
-                if (mDoubleTapState == 2 && (event.getEventTime() - mFirstTapTime) < DOUBLETAP_TIMEOUT) {
-                    mDoubleTapState = -1;
-                    onDoubleTapMotion();
-                } else if (mDoubleTapState == 0) {
-                    mDoubleTapState++;
-                } else {
-                    mDoubleTapState = -1;
-                }
-            case MotionEvent.ACTION_CANCEL:
                 onUp();
-                cursorType = -1;
+            case MotionEvent.ACTION_CANCEL:
+                mCursorType = -1;
                 mIsLongPress = false;
                 mIsMoving = false;
                 break;
