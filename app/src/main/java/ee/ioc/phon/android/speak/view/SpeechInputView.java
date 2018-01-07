@@ -210,17 +210,17 @@ public class SpeechInputView extends LinearLayout {
         } else if (mSwipeType == 2) {
             findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
 
-            setOnTouchListener(new OnCursorTouchListener(getContext()) {
+            setOnTouchListener(new OnCursorTouchListener() {
                 @Override
                 public void onMove(int numOfChars) {
-                    showMessageArrow(numOfChars, DASH_CUR);
                     mListener.moveRel(numOfChars);
+                    showMessageArrow(numOfChars, DASH_CUR);
                 }
 
                 @Override
                 public void onMoveSel(int numOfChars, int type) {
-                    showMessageArrow(numOfChars, DASH_SEL);
                     mListener.moveRelSel(numOfChars, type);
+                    showMessageArrow(numOfChars, DASH_SEL);
                 }
 
                 @Override
@@ -443,6 +443,7 @@ public class SpeechInputView extends LinearLayout {
     private void setGuiInitState(int message) {
         if (message == 0) {
             setGuiState(MicButton.State.INIT);
+            showMessage("");
             setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
         } else {
             setGuiState(MicButton.State.ERROR);

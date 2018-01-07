@@ -1,20 +1,21 @@
 package ee.ioc.phon.android.speak.view;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Process;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-/**
- * Fires an action upon movement, provided that certain amount of time has passed.
- * TODO: fires less actions if there is less movement, which is a little confusing.
- */
 public abstract class OnPressAndHoldListener implements View.OnTouchListener {
 
     private static final int TIMEOUT = ViewConfiguration.getKeyRepeatTimeout();
     private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
 
-    private boolean mIsTimeout;
-    private long mActionTime = 0;
+    private volatile Looper mLooper;
+    private volatile Handler mHandler;
+    private Runnable mTask;
 
     abstract void onAction();
 
@@ -22,23 +23,22 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
         int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mIsTimeout = false;
-                mActionTime = 0;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                long time = event.getEventTime() - event.getDownTime();
-                if (mIsTimeout) {
-                    if (time - mActionTime > DELAY) {
+                HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
+                thread.start();
+                mLooper = thread.getLooper();
+                mHandler = new Handler(mLooper);
+                mTask = new Runnable() {
+                    public void run() {
                         onAction();
-                        mActionTime = time;
+                        mHandler.postDelayed(this, DELAY);
                     }
-                } else if (time > TIMEOUT) {
-                    mIsTimeout = true;
-                }
+                };
+                mHandler.postDelayed(mTask, TIMEOUT);
+                onAction();
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                onAction();
+                if (mHandler != null) mHandler.removeCallbacks(mTask);
                 break;
         }
         return true;

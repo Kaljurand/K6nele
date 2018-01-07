@@ -1,6 +1,9 @@
 package ee.ioc.phon.android.speak.view;
 
-import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Process;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -14,6 +17,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
     private static final int DOUBLETAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
+    private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
 
     // TODO: calculate dynamically
     private static final int EDGE = 100;
@@ -22,15 +26,17 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private boolean mIsLongPress;
     private boolean mIsMoving;
+    private boolean mIsEdge;
 
     private float mStartX = 0;
     private float mStartY = 0;
     private int mCursorType = -1;
     private int mDoubleTapState = 0;
     private long mFirstTapUpTime = 0;
+    private volatile Looper mLooper;
+    private volatile Handler mHandler;
+    private Runnable mTask;
 
-    public OnCursorTouchListener(Context context) {
-    }
 
     public void onMove(int numOfChars) {
         // intentionally empty
@@ -76,6 +82,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                cancelEdge();
                 mStartX = newX;
                 mStartY = newY;
                 mCursorType = -1;
@@ -96,12 +103,38 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 // TODO: scale by size of the panel / font size?
                 int numOfChars = Math.round(DISTANCE_SCALE * distance);
                 Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
-                // TODO: do this after a certain time interval
                 if (newX < EDGE) {
-                    onMoveAux(-1, 0);
+                    if (!mIsEdge) {
+                        mIsEdge = true;
+                        HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
+                        thread.start();
+                        mLooper = thread.getLooper();
+                        mHandler = new Handler(mLooper);
+                        mTask = new Runnable() {
+                            public void run() {
+                                onMoveAux(-1, 0);
+                                mHandler.postDelayed(this, DELAY);
+                            }
+                        };
+                        mHandler.post(mTask);
+                    }
                 } else if (newX > v.getWidth() - EDGE) {
-                    onMoveAux(1, 1);
+                    if (!mIsEdge) {
+                        mIsEdge = true;
+                        HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
+                        thread.start();
+                        mLooper = thread.getLooper();
+                        mHandler = new Handler(mLooper);
+                        mTask = new Runnable() {
+                            public void run() {
+                                onMoveAux(1, 1);
+                                mHandler.postDelayed(this, DELAY);
+                            }
+                        };
+                        mHandler.post(mTask);
+                    }
                 } else if (numOfChars > 0) {
+                    cancelEdge();
                     mIsMoving = true;
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
                     if (atan2 > -0.4 && atan2 < 1.97) {
@@ -124,28 +157,40 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     mStartX = newX;
                     mStartY = newY;
                 } else if (!mIsLongPress && !mIsMoving && (event.getEventTime() - event.getDownTime()) > LONGPRESS_TIMEOUT) {
+                    cancelEdge();
                     mIsLongPress = true;
                     onLongPress();
+                } else {
+                    cancelEdge();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (!mIsMoving && mDoubleTapState == 1) {
-                    mFirstTapUpTime = event.getEventTime();
-                    mDoubleTapState = 2;
-                } else {
+                cancelEdge();
+                if (mIsMoving || mIsLongPress) {
                     mDoubleTapState = 0;
-                }
-                if (!mIsMoving && !mIsLongPress) {
+                } else {
+                    if (mDoubleTapState == 1) {
+                        mFirstTapUpTime = event.getEventTime();
+                        mDoubleTapState = 2;
+                    } else {
+                        mDoubleTapState = 0;
+                    }
                     onSingleTapMotion();
                 }
                 onUp();
             case MotionEvent.ACTION_CANCEL:
+                cancelEdge();
                 mCursorType = -1;
                 mIsLongPress = false;
                 mIsMoving = false;
                 break;
         }
         return true;
+    }
+
+    void cancelEdge() {
+        if (mHandler != null) mHandler.removeCallbacks(mTask);
+        mIsEdge = false;
     }
 
     private void onMoveAux(int numOfChars, int type) {
