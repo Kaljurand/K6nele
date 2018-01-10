@@ -164,13 +164,25 @@ Androidi uuemates versioonides on vastav menüü sügavamal, nt: `Seaded -> Täp
 Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuur järgmisi operatsioone:
 
-- svaip vasakule kustutab kursorist vasakul asuva sõna,
-- svaip paremale lisab reavahetuse,
-- topeltvajutus lisab tühiku,
-- pikk vajutus valib kogu teksti (mugav viis kogu transkriptsiooni üledikteerimiseks),
-- vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile (alates v1.6.60: eelmisele klaviatuurile),
-- pikk vajutus klaviatuuriikoonile avab klaviatuurivahetusmenüü (alatest v1.6.60: vahetab järgmisele klaviatuurile),
-- vajutus otsinguikoonile käivitab otsingu (ainult otsingureal).
+- vajutus klaviatuuriikoonile vahetab eelmisele klaviatuurile;
+- pikk vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile;
+- vajutus otsinguikoonile käivitab otsingu (ainult otsingureal);
+- topeltvajutus lisab tühiku;
+- variant 1:
+
+  - svaip vasakule kustutab kursorist vasakul asuva sõna,
+  - svaip paremale lisab reavahetuse,
+  - pikk vajutus valib kogu teksti;
+
+- variant 2 (valikuline alates v1.6.73 beeta):
+
+  - kustutamise ikoon kustutab kursorist vasakul oleva sümboli,
+  - reavahetuse ikoon lisab reavahetuse,
+  - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
+  - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
+  - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
+  - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
+  - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
 Kõneklaviatuuri on mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
 (nt _Gboard_, _Swype_, _SwiftKey_, _SlideIT_).
@@ -383,7 +395,7 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Korraga saab aktiivne 
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_send.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
-- (_vajalik Kõnele v1.6.50+_) [[TSV](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/edit?usp=sharing)] Kõnekäsud valgustite juhtimiseks näitab, kuidas loomulikus keeles sisend viia lihtsamale ja keelest sõltumatule kujule (nt "pane elutoa lamp põlema heledusega kaks sada" -> ``<lights><1><on><200>``), mida alljärgnevad reeglistikud edasi teistendavad ning lõpuks käivitavad.
+- [[TSV](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/edit?usp=sharing)] Kõnekäsud valgustite juhtimiseks näitab, kuidas loomulikus keeles sisend viia lihtsamale ja keelest sõltumatule kujule (nt "pane elutoa lamp põlema heledusega kaks sada" -> ``<lights><1><on><200>``), mida alljärgnevad reeglistikud edasi teistendavad ning lõpuks käivitavad.
   - [[TSV](https://docs.google.com/spreadsheets/d/1owXRMDRIGvi4Ya0lP6_LXsbZXs-sslwhzEye5pGAXbo/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1owXRMDRIGvi4Ya0lP6_LXsbZXs-sslwhzEye5pGAXbo/edit?usp=sharing)] Käivitab formaalsel kujul käske otse Philips Hue silla kaudu, näidates, kuidas Kõnele abil HTTP-päringuid teha.
   - [[TSV](https://docs.google.com/spreadsheets/d/1lxvkGerd_WMljca0dsgxViw_5cnOEgDzneBL-uXI-xI/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1lxvkGerd_WMljca0dsgxViw_5cnOEgDzneBL-uXI-xI/edit?usp=sharing)] Käivitab formaalsel kujul käske [Home Assistant](https://home-assistant.io/) abil. Home Assistant toetab nii Philips Hue, kui ka teiste tootjate valgusteid, samuti palju muid targa kodu seadmeid, tehes need kättesaadavaks lihtsa HTTP-liidese kaudu.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
