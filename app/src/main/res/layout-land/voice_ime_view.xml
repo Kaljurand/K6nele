@@ -71,15 +71,14 @@
             android:gravity="center"
             android:visibility="gone">
 
-            <Button
+            <ImageButton
                 android:id="@+id/bImeNewline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeNewline"
-                android:text="↲"
-                android:textColor="@color/grey100"
-                android:textSize="@dimen/textSize3" />
+                android:padding="@dimen/layoutMargin1"
+                android:src="@drawable/ic_newline" />
 
             <ImageButton
                 android:id="@+id/bImeDelete"
@@ -88,7 +87,7 @@
                 android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
                 android:padding="@dimen/layoutMargin1"
-                android:src="@drawable/sym_keyboard_delete" />
+                android:src="@drawable/ic_backspace" />
         </LinearLayout>
 
         <TextView

@@ -3,6 +3,7 @@ package ee.ioc.phon.android.speak.view;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.os.Process;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
     private static final int DOUBLETAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
     private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
+
+    // constants for Message.what used by GestureHandler below
+    private static final int LONG_PRESS = 2;
+    private final Handler mHandlerPress = new GestureHandler();
 
     // TODO: calculate dynamically
     private static final int EDGE = 100;
@@ -88,6 +93,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 mCursorType = -1;
                 mIsLongPress = false;
                 mIsMoving = false;
+                mHandlerPress.removeMessages(LONG_PRESS);
+                mHandlerPress.sendEmptyMessageAtTime(LONG_PRESS, event.getDownTime() + LONGPRESS_TIMEOUT);
                 if (mDoubleTapState == 0) {
                     mDoubleTapState = 1;
                 } else {
@@ -104,6 +111,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 int numOfChars = Math.round(DISTANCE_SCALE * distance);
                 Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
                 if (newX < EDGE) {
+                    mHandlerPress.removeMessages(LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
                         HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
@@ -119,6 +127,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                         mHandler.post(mTask);
                     }
                 } else if (newX > v.getWidth() - EDGE) {
+                    mHandlerPress.removeMessages(LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
                         HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
@@ -134,6 +143,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                         mHandler.post(mTask);
                     }
                 } else if (numOfChars > 0) {
+                    mHandlerPress.removeMessages(LONG_PRESS);
                     cancelEdge();
                     mIsMoving = true;
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
@@ -150,21 +160,18 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                         // Swiping right down
                         onMoveAux(numOfChars, mCursorType);
                     } else if (atan2 > 2) {
-                        onSwipeUp();
+                        //onSwipeUp();
                     } else if (atan2 < -0.4) {
-                        onSwipeDown();
+                        //onSwipeDown();
                     }
                     mStartX = newX;
                     mStartY = newY;
-                } else if (!mIsLongPress && !mIsMoving && (event.getEventTime() - event.getDownTime()) > LONGPRESS_TIMEOUT) {
-                    cancelEdge();
-                    mIsLongPress = true;
-                    onLongPress();
                 } else {
                     cancelEdge();
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                mHandlerPress.removeMessages(LONG_PRESS);
                 cancelEdge();
                 if (mIsMoving || mIsLongPress) {
                     mDoubleTapState = 0;
@@ -179,6 +186,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 }
                 onUp();
             case MotionEvent.ACTION_CANCEL:
+                mHandlerPress.removeMessages(LONG_PRESS);
                 cancelEdge();
                 mCursorType = -1;
                 mIsLongPress = false;
@@ -221,5 +229,24 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         float dy = VERTICAL_SPEED * (ev.getY(0) - startY);
         distanceSum += Math.sqrt(dx * dx + dy * dy);
         return distanceSum;
+    }
+
+    private class GestureHandler extends Handler {
+        GestureHandler() {
+            super();
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case LONG_PRESS:
+                    cancelEdge();
+                    mIsLongPress = true;
+                    onLongPress();
+                    break;
+                default:
+                    throw new RuntimeException("Unknown message " + msg); //never
+            }
+        }
     }
 }

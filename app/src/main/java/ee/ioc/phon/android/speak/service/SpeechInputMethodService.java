@@ -319,13 +319,13 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onActionPrevious() {
                 // TODO: do action only if the previous field exists
-                //runOp(mCommandEditor.imeActionPrevious());
+                runOp(mCommandEditor.imeActionPrevious());
             }
 
             @Override
             public void onActionNext() {
                 // TODO: do action only if the next field exists
-                //runOp(mCommandEditor.imeActionNext());
+                runOp(mCommandEditor.imeActionNext());
             }
 
             @Override

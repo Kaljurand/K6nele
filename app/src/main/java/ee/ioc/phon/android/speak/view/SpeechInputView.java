@@ -160,12 +160,19 @@ public class SpeechInputView extends LinearLayout {
             });
         }
 
-        Button buttonNewline = findViewById(R.id.bImeNewline);
+        ImageButton buttonNewline = findViewById(R.id.bImeNewline);
         if (buttonNewline != null) {
             buttonNewline.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onAddNewline();
+                }
+            });
+            buttonNewline.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onActionNext();
+                    return true;
                 }
             });
         }

@@ -84,7 +84,7 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdImeDelete"
             android:padding="@dimen/layoutMargin1"
-            android:src="@drawable/sym_keyboard_delete" />
+            android:src="@drawable/ic_backspace" />
     </LinearLayout>
 
     <TextView
