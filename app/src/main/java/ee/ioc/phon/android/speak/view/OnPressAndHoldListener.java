@@ -1,9 +1,6 @@
 package ee.ioc.phon.android.speak.view;
 
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Process;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -13,9 +10,13 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
     private static final int TIMEOUT = ViewConfiguration.getKeyRepeatTimeout();
     private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
 
-    private volatile Looper mLooper;
-    private volatile Handler mHandler;
-    private Runnable mTask;
+    private Handler mHandler = new Handler();
+    private Runnable mTask = new Runnable() {
+        public void run() {
+            onAction();
+            mHandler.postDelayed(this, DELAY);
+        }
+    };
 
     abstract void onAction();
 
@@ -23,22 +24,15 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
         int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
-                thread.start();
-                mLooper = thread.getLooper();
-                mHandler = new Handler(mLooper);
-                mTask = new Runnable() {
-                    public void run() {
-                        onAction();
-                        mHandler.postDelayed(this, DELAY);
-                    }
-                };
                 mHandler.postDelayed(mTask, TIMEOUT);
                 onAction();
+                v.setPressed(true);
                 break;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_OUTSIDE:
             case MotionEvent.ACTION_CANCEL:
                 if (mHandler != null) mHandler.removeCallbacks(mTask);
+                v.setPressed(false);
                 break;
         }
         return true;

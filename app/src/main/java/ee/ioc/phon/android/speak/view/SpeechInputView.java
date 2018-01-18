@@ -168,6 +168,7 @@ public class SpeechInputView extends LinearLayout {
                     mListener.onAddNewline();
                 }
             });
+            /*
             buttonNewline.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -175,6 +176,7 @@ public class SpeechInputView extends LinearLayout {
                     return true;
                 }
             });
+            */
         }
 
         if (mSwipeType == 1) {
@@ -215,6 +217,7 @@ public class SpeechInputView extends LinearLayout {
                 }
             });
         } else if (mSwipeType == 2) {
+            // Turning from GONE to VISIBLE
             findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
 
             setOnTouchListener(new OnCursorTouchListener() {

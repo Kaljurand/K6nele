@@ -1,10 +1,7 @@
 package ee.ioc.phon.android.speak.view;
 
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
-import android.os.Process;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -38,9 +35,20 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private int mCursorType = -1;
     private int mDoubleTapState = 0;
     private long mFirstTapUpTime = 0;
-    private volatile Looper mLooper;
-    private volatile Handler mHandler;
-    private Runnable mTask;
+
+    private Handler mHandler = new Handler();
+    private Runnable mTask1 = new Runnable() {
+        public void run() {
+            onMoveAux(-1, 0);
+            mHandler.postDelayed(this, DELAY);
+        }
+    };
+    private Runnable mTask2 = new Runnable() {
+        public void run() {
+            onMoveAux(1, 1);
+            mHandler.postDelayed(this, DELAY);
+        }
+    };
 
 
     public void onMove(int numOfChars) {
@@ -114,33 +122,13 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     mHandlerPress.removeMessages(LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
-                        HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
-                        thread.start();
-                        mLooper = thread.getLooper();
-                        mHandler = new Handler(mLooper);
-                        mTask = new Runnable() {
-                            public void run() {
-                                onMoveAux(-1, 0);
-                                mHandler.postDelayed(this, DELAY);
-                            }
-                        };
-                        mHandler.post(mTask);
+                        mHandler.post(mTask1);
                     }
                 } else if (newX > v.getWidth() - EDGE) {
                     mHandlerPress.removeMessages(LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
-                        HandlerThread thread = new HandlerThread("Thread", Process.THREAD_PRIORITY_BACKGROUND);
-                        thread.start();
-                        mLooper = thread.getLooper();
-                        mHandler = new Handler(mLooper);
-                        mTask = new Runnable() {
-                            public void run() {
-                                onMoveAux(1, 1);
-                                mHandler.postDelayed(this, DELAY);
-                            }
-                        };
-                        mHandler.post(mTask);
+                        mHandler.post(mTask2);
                     }
                 } else if (numOfChars > 0) {
                     mHandlerPress.removeMessages(LONG_PRESS);
@@ -182,6 +170,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                     } else {
                         mDoubleTapState = 0;
                     }
+                    // TODO: do not fire this if double tap follows
                     onSingleTapMotion();
                 }
                 onUp();
@@ -197,7 +186,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     }
 
     void cancelEdge() {
-        if (mHandler != null) mHandler.removeCallbacks(mTask);
+        if (mHandler != null) mHandler.removeCallbacks(mTask1);
+        if (mHandler != null) mHandler.removeCallbacks(mTask2);
         mIsEdge = false;
     }
 

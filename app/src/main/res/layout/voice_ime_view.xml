@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/layoutMargin2"
                 android:layout_marginRight="@dimen/layoutMargin2"
-                android:background="@drawable/button_go"
+                android:background="@drawable/button_combo"
                 android:contentDescription="@string/cdImeNewline"
                 android:padding="@dimen/layoutMargin1"
                 android:src="@drawable/ic_newline" />
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layoutMargin2"
                 android:layout_marginStart="@dimen/layoutMargin2"
-                android:background="@drawable/button_go"
+                android:background="@drawable/button_combo"
                 android:contentDescription="@string/cdImeDelete"
                 android:padding="@dimen/layoutMargin1"
                 android:src="@drawable/ic_backspace" />
