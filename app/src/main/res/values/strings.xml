@@ -384,9 +384,6 @@
         <item>Swiping moves cursor</item>
     </string-array>
 
-    <!-- TODO: convert to integer -->
-    <string name="defaultImeMode" translatable="false">1</string>
-
     <!-- TODO: convert to integer-array -->
     <string-array name="valuesImeMode" translatable="false">
         <item>1</item>

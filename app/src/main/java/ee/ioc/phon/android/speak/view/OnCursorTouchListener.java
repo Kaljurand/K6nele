@@ -6,6 +6,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import java.lang.ref.WeakReference;
+
 import ee.ioc.phon.android.speak.Log;
 
 // TODO:
@@ -19,7 +21,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     // constants for Message.what used by GestureHandler below
     private static final int LONG_PRESS = 2;
-    private final Handler mHandlerPress = new GestureHandler();
+    private final Handler mHandlerPress = new GestureHandler(this);
 
     // TODO: calculate dynamically
     private static final int EDGE = 100;
@@ -221,21 +223,30 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         return distanceSum;
     }
 
-    private class GestureHandler extends Handler {
-        GestureHandler() {
-            super();
+    private void setIsLongPress(boolean b) {
+        mIsLongPress = b;
+        cancelEdge();
+        onLongPress();
+    }
+
+    private static class GestureHandler extends Handler {
+        private final WeakReference<OnCursorTouchListener> mRef;
+
+        public GestureHandler(OnCursorTouchListener c) {
+            mRef = new WeakReference<>(c);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case LONG_PRESS:
-                    cancelEdge();
-                    mIsLongPress = true;
-                    onLongPress();
-                    break;
-                default:
-                    throw new RuntimeException("Unknown message " + msg); //never
+            OnCursorTouchListener outerClass = mRef.get();
+            if (outerClass != null) {
+                switch (msg.what) {
+                    case LONG_PRESS:
+                        outerClass.setIsLongPress(true);
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown message " + msg); //never
+                }
             }
         }
     }

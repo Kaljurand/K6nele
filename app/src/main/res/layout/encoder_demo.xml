@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:imeOptions="actionSearch"
-        android:inputType="text" />
+        android:inputType="textMultiLine" />
 
     <ScrollView
         android:layout_width="match_parent"
