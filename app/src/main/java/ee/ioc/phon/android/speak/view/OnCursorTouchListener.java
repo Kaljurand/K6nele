@@ -15,12 +15,15 @@ import ee.ioc.phon.android.speak.Log;
 // https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/GestureDetector.java
 public class OnCursorTouchListener implements View.OnTouchListener {
 
-    private static final int LONGPRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
-    private static final int DOUBLETAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
+    private static final int LONG_PRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
+    private static final int DOUBLE_TAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
+    private static final int TAP_TIMEOUT = ViewConfiguration.getTapTimeout();
     private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
 
     // constants for Message.what used by GestureHandler below
     private static final int LONG_PRESS = 2;
+    private static final int DOUBLE_TAP = 3;
+
     private final Handler mHandlerPress = new GestureHandler(this);
 
     // TODO: calculate dynamically
@@ -30,13 +33,13 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private boolean mIsLongPress;
     private boolean mIsMoving;
+    private boolean mIsFirstMove;
     private boolean mIsEdge;
 
     private float mStartX = 0;
     private float mStartY = 0;
     private int mCursorType = -1;
     private int mDoubleTapState = 0;
-    private long mFirstTapUpTime = 0;
 
     private Handler mHandler = new Handler();
     private Runnable mTask1 = new Runnable() {
@@ -103,17 +106,16 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 mCursorType = -1;
                 mIsLongPress = false;
                 mIsMoving = false;
+                mIsFirstMove = true;
                 mHandlerPress.removeMessages(LONG_PRESS);
-                mHandlerPress.sendEmptyMessageAtTime(LONG_PRESS, event.getDownTime() + LONGPRESS_TIMEOUT);
+                mHandlerPress.sendEmptyMessageAtTime(LONG_PRESS, event.getDownTime() + LONG_PRESS_TIMEOUT);
                 if (mDoubleTapState == 0) {
                     mDoubleTapState = 1;
+                } else if (mDoubleTapState == 2) {
+                    mDoubleTapState = 3;
                 } else {
-                    if (mDoubleTapState == 2 && (event.getEventTime() - mFirstTapUpTime) < DOUBLETAP_TIMEOUT) {
-                        onDoubleTapMotion();
-                    }
                     mDoubleTapState = 0;
                 }
-                onDown();
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
@@ -159,21 +161,20 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 } else {
                     cancelEdge();
                 }
+                if (mIsFirstMove && mIsMoving) {
+                    mIsFirstMove = false;
+                    onDown();
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 mHandlerPress.removeMessages(LONG_PRESS);
                 cancelEdge();
-                if (mIsMoving || mIsLongPress) {
-                    mDoubleTapState = 0;
+                if (mDoubleTapState == 1) {
+                    mDoubleTapState = 2;
+                    mHandlerPress.sendEmptyMessageAtTime(DOUBLE_TAP, event.getEventTime() + DOUBLE_TAP_TIMEOUT);
+                } else if (mDoubleTapState == 3) {
                 } else {
-                    if (mDoubleTapState == 1) {
-                        mFirstTapUpTime = event.getEventTime();
-                        mDoubleTapState = 2;
-                    } else {
-                        mDoubleTapState = 0;
-                    }
-                    // TODO: do not fire this if double tap follows
-                    onSingleTapMotion();
+                    mDoubleTapState = 0;
                 }
                 onUp();
             case MotionEvent.ACTION_CANCEL:
@@ -229,6 +230,16 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         onLongPress();
     }
 
+    private void fireDoubleTap() {
+        if (!mIsMoving) {
+            if (mDoubleTapState == 3) {
+                onDoubleTapMotion();
+            } else if (mDoubleTapState == 2) {
+                onSingleTapMotion();
+            }
+        }
+    }
+
     private static class GestureHandler extends Handler {
         private final WeakReference<OnCursorTouchListener> mRef;
 
@@ -241,6 +252,9 @@ public class OnCursorTouchListener implements View.OnTouchListener {
             OnCursorTouchListener outerClass = mRef.get();
             if (outerClass != null) {
                 switch (msg.what) {
+                    case DOUBLE_TAP:
+                        outerClass.fireDoubleTap();
+                        break;
                     case LONG_PRESS:
                         outerClass.setIsLongPress(true);
                         break;
