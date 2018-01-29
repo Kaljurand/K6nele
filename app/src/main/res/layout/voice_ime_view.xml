@@ -17,6 +17,19 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:id="@+id/bImeCollapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/button_go"
+            android:contentDescription="string/cdCollapse"
+            android:padding="@dimen/layoutMargin1"
+            android:src="@drawable/ic_arrow_downward_black_24dp"
+            android:visibility="invisible" />
+
+        <ImageButton
             android:id="@+id/bImeKeyboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

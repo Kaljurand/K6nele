@@ -179,6 +179,26 @@ public class SpeechInputView extends LinearLayout {
             */
         }
 
+        final ImageButton buttonCollapse = findViewById(R.id.bImeCollapse);
+        if (buttonCollapse != null) {
+            buttonCollapse.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageButton b1 = findViewById(R.id.bImeStartStop);
+                    Button b2 = findViewById(R.id.tvComboSelector);
+                    if (b1 != null && b1.getVisibility() == View.GONE) {
+                        b1.setVisibility(View.VISIBLE);
+                        b2.setVisibility(View.VISIBLE);
+                        buttonCollapse.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
+                    } else {
+                        b1.setVisibility(View.GONE);
+                        b2.setVisibility(View.GONE);
+                        buttonCollapse.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
+                    }
+                }
+            });
+        }
+
         if (mSwipeType == 1) {
             setOnTouchListener(new OnSwipeTouchListener(getContext()) {
                 @Override
@@ -455,6 +475,8 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.INIT);
             showMessage("");
             setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
+            setVisibility(findViewById(R.id.bImeKeyboard), View.VISIBLE);
+            setVisibility(findViewById(R.id.bImeCollapse), View.INVISIBLE);
         } else {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
@@ -550,6 +572,8 @@ public class SpeechInputView extends LinearLayout {
         mRecognizer.startListening(slc.getIntent());
         mListener.onStartListening();
         setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+        setVisibility(findViewById(R.id.bImeKeyboard), View.INVISIBLE);
+        setVisibility(findViewById(R.id.bImeCollapse), View.VISIBLE);
     }
 
     /**
