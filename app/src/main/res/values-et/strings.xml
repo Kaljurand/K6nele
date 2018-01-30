@@ -44,7 +44,7 @@
     <string name="titleAutoStart">Autostart</string>
     <string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
     <string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
-    <string name="summaryAutoStopAfterPause">Lõpeta lindistamine pärast pikemat pausi</string>
+    <string name="summaryAutoStopAfterPause">Lõpeta lindistamine pärast paarisekundist pausi</string>
     <string name="titleAutoStopAfterTime">Lindistuse maks. kestus</string>
     <string name="summaryAutoStopAfterTime">Lõpeta lindistamine pärast %1$s sekundit</string>
     <string name="titleRespectLocale">Kasuta telefoni keelt</string>

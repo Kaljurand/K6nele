@@ -62,7 +62,7 @@
     <string name="titleAutoStart">Auto start</string>
     <string name="summaryAutoStart">Start recording automatically</string>
     <string name="titleAutoStopAfterPause">Auto stop after pause</string>
-    <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
+    <string name="summaryAutoStopAfterPause">Stop recording after a few seconds of pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
     <string name="titleImeMode">Swiping</string>

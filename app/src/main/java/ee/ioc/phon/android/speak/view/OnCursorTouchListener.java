@@ -8,8 +8,6 @@ import android.view.ViewConfiguration;
 
 import java.lang.ref.WeakReference;
 
-import ee.ioc.phon.android.speak.Log;
-
 // TODO:
 // Maybe reuse some code from
 // https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/GestureDetector.java
@@ -17,12 +15,11 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private static final int LONG_PRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
     private static final int DOUBLE_TAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
-    private static final int TAP_TIMEOUT = ViewConfiguration.getTapTimeout();
     private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
 
     // constants for Message.what used by GestureHandler below
-    private static final int LONG_PRESS = 2;
-    private static final int DOUBLE_TAP = 3;
+    private static final int MSG_LONG_PRESS = 1;
+    private static final int MSG_DOUBLE_TAP = 2;
 
     private final Handler mHandlerPress = new GestureHandler(this);
 
@@ -32,14 +29,13 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private static final float DISTANCE_SCALE = 0.04f;
 
     private boolean mIsLongPress;
-    private boolean mIsMoving;
     private boolean mIsFirstMove;
     private boolean mIsEdge;
 
     private float mStartX = 0;
     private float mStartY = 0;
     private int mCursorType = -1;
-    private int mDoubleTapState = 0;
+    private int mTapCounter = 0;
 
     private Handler mHandler = new Handler();
     private Runnable mTask1 = new Runnable() {
@@ -105,39 +101,38 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 mStartY = newY;
                 mCursorType = -1;
                 mIsLongPress = false;
-                mIsMoving = false;
                 mIsFirstMove = true;
-                mHandlerPress.removeMessages(LONG_PRESS);
-                mHandlerPress.sendEmptyMessageAtTime(LONG_PRESS, event.getDownTime() + LONG_PRESS_TIMEOUT);
-                if (mDoubleTapState == 0) {
-                    mDoubleTapState = 1;
-                } else if (mDoubleTapState == 2) {
-                    mDoubleTapState = 3;
+                mHandlerPress.removeMessages(MSG_LONG_PRESS);
+                mHandlerPress.sendEmptyMessageAtTime(MSG_LONG_PRESS, event.getEventTime() + LONG_PRESS_TIMEOUT);
+                if (mTapCounter == 2) {
+                    mTapCounter = 3;
                 } else {
-                    mDoubleTapState = 0;
+                    mTapCounter = 1;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distance = getDistance(mStartX, mStartY, event);
                 // TODO: scale by size of the panel / font size?
                 int numOfChars = Math.round(DISTANCE_SCALE * distance);
-                Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
+                //Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
                 if (newX < EDGE) {
-                    mHandlerPress.removeMessages(LONG_PRESS);
+                    mTapCounter = 0;
+                    mHandlerPress.removeMessages(MSG_LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
                         mHandler.post(mTask1);
                     }
                 } else if (newX > v.getWidth() - EDGE) {
-                    mHandlerPress.removeMessages(LONG_PRESS);
+                    mTapCounter = 0;
+                    mHandlerPress.removeMessages(MSG_LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
                         mHandler.post(mTask2);
                     }
                 } else if (numOfChars > 0) {
-                    mHandlerPress.removeMessages(LONG_PRESS);
+                    mHandlerPress.removeMessages(MSG_LONG_PRESS);
                     cancelEdge();
-                    mIsMoving = true;
+                    mTapCounter = 0;
                     double atan2 = Math.atan2(mStartY - newY, mStartX - newX);
                     if (atan2 > -0.4 && atan2 < 1.97) {
                         if (mCursorType == -1) {
@@ -161,28 +156,32 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 } else {
                     cancelEdge();
                 }
-                if (mIsFirstMove && mIsMoving) {
+                if (mIsFirstMove && mTapCounter == 0) {
                     mIsFirstMove = false;
                     onDown();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                mHandlerPress.removeMessages(LONG_PRESS);
+                mHandlerPress.removeMessages(MSG_LONG_PRESS);
                 cancelEdge();
-                if (mDoubleTapState == 1) {
-                    mDoubleTapState = 2;
-                    mHandlerPress.sendEmptyMessageAtTime(DOUBLE_TAP, event.getEventTime() + DOUBLE_TAP_TIMEOUT);
-                } else if (mDoubleTapState == 3) {
+                if (mTapCounter == 1) {
+                    mTapCounter = 2;
+                    mHandlerPress.removeMessages(MSG_DOUBLE_TAP);
+                    mHandlerPress.sendEmptyMessageAtTime(MSG_DOUBLE_TAP, event.getEventTime() + DOUBLE_TAP_TIMEOUT);
+                } else if (mTapCounter == 3) {
                 } else {
-                    mDoubleTapState = 0;
+                    mTapCounter = 0;
                 }
+                mCursorType = -1;
                 onUp();
+                break;
             case MotionEvent.ACTION_CANCEL:
-                mHandlerPress.removeMessages(LONG_PRESS);
+                // TODO: not sure when this is called
+                mHandlerPress.removeMessages(MSG_DOUBLE_TAP);
+                mHandlerPress.removeMessages(MSG_LONG_PRESS);
                 cancelEdge();
                 mCursorType = -1;
                 mIsLongPress = false;
-                mIsMoving = false;
                 break;
         }
         return true;
@@ -225,19 +224,21 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     }
 
     private void setIsLongPress(boolean b) {
+        mHandlerPress.removeMessages(MSG_DOUBLE_TAP);
         mIsLongPress = b;
         cancelEdge();
         onLongPress();
     }
 
-    private void fireDoubleTap() {
-        if (!mIsMoving) {
-            if (mDoubleTapState == 3) {
+    private void fireTap() {
+        if (!mIsLongPress) {
+            if (mTapCounter == 3) {
                 onDoubleTapMotion();
-            } else if (mDoubleTapState == 2) {
+            } else if (mTapCounter == 2) {
                 onSingleTapMotion();
             }
         }
+        mTapCounter = 0;
     }
 
     private static class GestureHandler extends Handler {
@@ -252,10 +253,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
             OnCursorTouchListener outerClass = mRef.get();
             if (outerClass != null) {
                 switch (msg.what) {
-                    case DOUBLE_TAP:
-                        outerClass.fireDoubleTap();
+                    case MSG_DOUBLE_TAP:
+                        outerClass.fireTap();
                         break;
-                    case LONG_PRESS:
+                    case MSG_LONG_PRESS:
                         outerClass.setIsLongPress(true);
                         break;
                     default:
