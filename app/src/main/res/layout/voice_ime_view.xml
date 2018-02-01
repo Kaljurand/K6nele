@@ -17,19 +17,6 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/bImeCollapse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/button_go"
-            android:contentDescription="string/cdCollapse"
-            android:padding="@dimen/layoutMargin1"
-            android:src="@drawable/ic_arrow_downward_black_24dp"
-            android:visibility="invisible" />
-
-        <ImageButton
             android:id="@+id/bImeKeyboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,9 +67,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/layoutMargin2"
                 android:layout_marginRight="@dimen/layoutMargin2"
-                android:background="@drawable/button_combo"
+                android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeNewline"
                 android:padding="@dimen/layoutMargin1"
+                android:paddingLeft="@dimen/layoutMargin12dp"
+                android:paddingStart="@dimen/layoutMargin12dp"
                 android:src="@drawable/ic_newline" />
 
             <ImageButton
@@ -91,9 +80,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layoutMargin2"
                 android:layout_marginStart="@dimen/layoutMargin2"
-                android:background="@drawable/button_combo"
+                android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
                 android:padding="@dimen/layoutMargin1"
+                android:paddingEnd="@dimen/layoutMargin12dp"
+                android:paddingRight="@dimen/layoutMargin12dp"
                 android:src="@drawable/ic_backspace" />
         </LinearLayout>
 

@@ -75,7 +75,7 @@
                 android:id="@+id/bImeNewline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_combo"
+                android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeNewline"
                 android:padding="@dimen/layoutMargin1"
                 android:src="@drawable/ic_newline" />
@@ -84,7 +84,7 @@
                 android:id="@+id/bImeDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_combo"
+                android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
                 android:padding="@dimen/layoutMargin1"
                 android:src="@drawable/ic_backspace" />

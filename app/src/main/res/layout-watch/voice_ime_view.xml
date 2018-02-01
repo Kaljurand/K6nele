@@ -78,17 +78,17 @@
             android:id="@+id/rlKeyButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom"
             android:visibility="gone">
 
             <ImageButton
                 android:id="@+id/bImeDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="@dimen/layoutMargin1"
                 android:layout_marginStart="@dimen/layoutMargin1"
-                android:background="@drawable/button_combo"
+                android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
                 android:padding="@dimen/layoutMargin1"
                 android:src="@drawable/ic_backspace" />

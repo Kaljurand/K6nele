@@ -47,10 +47,12 @@ public class SpeechInputView extends LinearLayout {
 
     private MicButton.State mState;
 
+    private boolean mUiIsMinimized = false;
+
     // TODO: make it an attribute
     private int mSwipeType = 0;
-    private final static String DASH_CUR = "--------------------";
-    private final static String DASH_SEL = "====================";
+    private final static String DASH_CUR = "――――――――――――――――――――";
+    private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
 
     public interface SpeechInputViewListener {
@@ -117,22 +119,7 @@ public class SpeechInputView extends LinearLayout {
     public void setListener(final SpeechInputViewListener listener) {
         mListener = listener;
         ImageButton buttonSearch = findViewById(R.id.bImeSearch);
-        if (mBImeKeyboard != null && buttonSearch != null) {
-            mBImeKeyboard.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onSwitchToLastIme();
-                }
-            });
-
-            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onSwitchIme(false);
-                    return true;
-                }
-            });
-
+        if (buttonSearch != null) {
             buttonSearch.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -177,26 +164,6 @@ public class SpeechInputView extends LinearLayout {
                 }
             });
             */
-        }
-
-        final ImageButton buttonCollapse = findViewById(R.id.bImeCollapse);
-        if (buttonCollapse != null) {
-            buttonCollapse.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ImageButton b1 = findViewById(R.id.bImeStartStop);
-                    Button b2 = findViewById(R.id.tvComboSelector);
-                    if (b1 != null && b1.getVisibility() == View.GONE) {
-                        b1.setVisibility(View.VISIBLE);
-                        b2.setVisibility(View.VISIBLE);
-                        buttonCollapse.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
-                    } else {
-                        b1.setVisibility(View.GONE);
-                        b2.setVisibility(View.GONE);
-                        buttonCollapse.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
-                    }
-                }
-            });
         }
 
         if (mSwipeType == 1) {
@@ -278,7 +245,9 @@ public class SpeechInputView extends LinearLayout {
                     // TODO: maybe add a blurring effect instead
                     mBImeStartStop.setVisibility(View.INVISIBLE);
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
-                    //mBComboSelector.setVisibility(View.INVISIBLE);
+                    if (mBComboSelector != null) {
+                        mBComboSelector.setVisibility(View.INVISIBLE);
+                    }
                     setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                     showMessage("");
                 }
@@ -288,7 +257,9 @@ public class SpeechInputView extends LinearLayout {
                     showMessage("");
                     mBImeStartStop.setVisibility(View.VISIBLE);
                     mBImeKeyboard.setVisibility(View.VISIBLE);
-                    //mBComboSelector.setVisibility(View.VISIBLE);
+                    if (mBComboSelector != null) {
+                        mBComboSelector.setVisibility(View.VISIBLE);
+                    }
                     setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
                     setBackgroundResource(R.drawable.rectangle_gradient);
                 }
@@ -311,11 +282,11 @@ public class SpeechInputView extends LinearLayout {
     public void init(int keys, CallerInfo callerInfo, int swipeType) {
         mSwipeType = swipeType;
         // These controls are optional, except for mBImeStartStop (TODO: which should also be optional)
-        mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
-        mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
-        mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
-        mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
-        mTvMessage = (TextView) findViewById(R.id.tvMessage);
+        mBImeStartStop = findViewById(R.id.bImeStartStop);
+        mBImeKeyboard = findViewById(R.id.bImeKeyboard);
+        mBComboSelector = findViewById(R.id.tvComboSelector);
+        mTvInstruction = findViewById(R.id.tvInstruction);
+        mTvMessage = findViewById(R.id.tvMessage);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -326,6 +297,7 @@ public class SpeechInputView extends LinearLayout {
                 mBComboSelector.setVisibility(View.VISIBLE);
             } else {
                 mBComboSelector.setVisibility(View.GONE);
+                mBComboSelector = null;
             }
         }
         updateServiceLanguage(mSlc.getSpeechRecognizer());
@@ -447,14 +419,70 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
+    private void toggleUi() {
+        if (mUiIsMinimized) {
+            maximizeUi();
+        } else {
+            minimizeUi();
+        }
+    }
+
+    private void minimizeUi() {
+        mUiIsMinimized = true;
+        mBImeStartStop.setVisibility(View.GONE);
+        if (mBComboSelector != null) {
+            mBComboSelector.setVisibility(View.GONE);
+        }
+        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
+        mBImeKeyboard.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleUi();
+            }
+        });
+    }
+
+    private void maximizeUi() {
+        mUiIsMinimized = false;
+        mBImeStartStop.setVisibility(View.VISIBLE);
+        if (mBComboSelector != null) {
+            mBComboSelector.setVisibility(View.VISIBLE);
+        }
+        if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
+            mBImeKeyboard.setImageResource(R.drawable.ic_notification_ime_default);
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onSwitchToLastIme();
+                }
+            });
+
+            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onSwitchIme(false);
+                    return true;
+                }
+            });
+        } else {
+            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleUi();
+                }
+            });
+        }
+    }
+
     private void showMessageArrow(int numOfChars, String dash) {
         if (numOfChars < 0) {
             int num = -1 * numOfChars;
             if (DASH_LENGTH > num) {
-                showMessage("<" + dash.substring(0, num));
+                showMessage("◄" + dash.substring(0, num));
             }
         } else if (DASH_LENGTH > numOfChars) {
-            showMessage(dash.substring(0, numOfChars) + ">");
+            showMessage(dash.substring(0, numOfChars) + "►");
         }
     }
 
@@ -475,11 +503,12 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.INIT);
             showMessage("");
             setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
-            setVisibility(findViewById(R.id.bImeKeyboard), View.VISIBLE);
-            setVisibility(findViewById(R.id.bImeCollapse), View.INVISIBLE);
         } else {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
+        }
+        if (mBImeKeyboard != null) {
+            maximizeUi();
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -501,7 +530,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private static void setText(final TextView textView, final CharSequence text) {
-        if (textView != null) {
+        if (textView != null && textView.getVisibility() != View.GONE) {
             textView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -512,7 +541,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private static void setText(final TextView textView, final int text) {
-        if (textView != null) {
+        if (textView != null && textView.getVisibility() != View.GONE) {
             textView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -572,8 +601,9 @@ public class SpeechInputView extends LinearLayout {
         mRecognizer.startListening(slc.getIntent());
         mListener.onStartListening();
         setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
-        setVisibility(findViewById(R.id.bImeKeyboard), View.INVISIBLE);
-        setVisibility(findViewById(R.id.bImeCollapse), View.VISIBLE);
+        if (mBImeKeyboard != null) {
+            maximizeUi();
+        }
     }
 
     /**
