@@ -495,6 +495,20 @@ ning nende registreerimine ja kasutamine grammatikatoega serveris on kirjeldatud
 <http://bark.phon.ioc.ee/speech-api/v1>.
 Vt ka rakendust [Arvutaja](http://kaljurand.github.io/Arvutaja/), mis kasutab Kõnelet grammatikatoega kõnetuvastajana.
 
+## Kõnele nutikellal
+
+Kõnele toimib peaaegu kogu oma võimaluste ulatuses ka nutikellal, kuigi selle kasutajaliidest
+pole nutikella väiksele ekraanile veel kohandatud. Paigaldamist, seadistamist ja peamiseid
+kasutusnäiteid on kirjeldatud (inglise keeles) siin:
+<https://github.com/Kaljurand/K6nele/tree/master/docs/android_wear>.
+(Hetkel pole võimalik Kõnelet otse Google Play poest kellale paigalda, selleks tuleb
+kasutada ADB programmi.)
+
+## Kõnele ja Android Things
+
+Kõnele toimib eksperimentaalselt ka Android Things platvormil, vt
+<https://github.com/Kaljurand/K6nele/tree/master/docs/android_things>.
+
 ## Veaolukorrad
 
 Kõnele kasutamine ebaõnnestub järgmistes olukordades:
