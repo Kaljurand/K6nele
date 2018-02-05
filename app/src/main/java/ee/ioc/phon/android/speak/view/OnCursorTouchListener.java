@@ -223,9 +223,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         return distanceSum;
     }
 
-    private void setIsLongPress(boolean b) {
+    private void fireLongPress() {
         mHandlerPress.removeMessages(MSG_DOUBLE_TAP);
-        mIsLongPress = b;
+        mIsLongPress = true;
+        mTapCounter = 0;
         cancelEdge();
         onLongPress();
     }
@@ -257,7 +258,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                         outerClass.fireTap();
                         break;
                     case MSG_LONG_PRESS:
-                        outerClass.setIsLongPress(true);
+                        outerClass.fireLongPress();
                         break;
                     default:
                         throw new RuntimeException("Unknown message " + msg); //never

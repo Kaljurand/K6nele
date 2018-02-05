@@ -45,6 +45,9 @@ public class SpeechInputView extends LinearLayout {
     private SpeechRecognizer mRecognizer;
     private ServiceLanguageChooser mSlc;
 
+    private OnSwipeTouchListener mOstl;
+    private OnCursorTouchListener mOctl;
+
     private MicButton.State mState;
 
     private boolean mUiIsMinimized = false;
@@ -166,122 +169,116 @@ public class SpeechInputView extends LinearLayout {
             */
         }
 
-        if (mSwipeType == 1) {
-            setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-                @Override
-                public void onSwipeLeft() {
-                    mListener.onDeleteLastWord();
-                }
+        mOstl = new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.onDeleteLastWord();
+            }
 
-                @Override
-                public void onSwipeRight() {
-                    mListener.onAddNewline();
-                }
+            @Override
+            public void onSwipeRight() {
+                mListener.onAddNewline();
+            }
 
-                @Override
-                public void onSwipeUp() {
-                    mListener.goUp();
-                }
+            @Override
+            public void onSwipeUp() {
+                mListener.goUp();
+            }
 
-                @Override
-                public void onSwipeDown() {
-                    mListener.goDown();
-                }
+            @Override
+            public void onSwipeDown() {
+                mListener.goDown();
+            }
 
-                @Override
-                public void onSingleTapMotion() {
-                    mListener.onReset();
-                }
+            @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
 
-                @Override
-                public void onDoubleTapMotion() {
-                    mListener.onAddSpace();
-                }
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
 
-                @Override
-                public void onLongPressMotion() {
-                    mListener.onSelectAll();
-                }
-            });
-        } else if (mSwipeType == 2) {
-            // Turning from GONE to VISIBLE
-            findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
+            @Override
+            public void onLongPressMotion() {
+                mListener.onSelectAll();
+            }
+        };
 
-            setOnTouchListener(new OnCursorTouchListener() {
-                @Override
-                public void onMove(int numOfChars) {
-                    mListener.moveRel(numOfChars);
-                    showMessageArrow(numOfChars, DASH_CUR);
-                }
+        mOctl = new OnCursorTouchListener() {
+            @Override
+            public void onMove(int numOfChars) {
+                mListener.moveRel(numOfChars);
+                showMessageArrow(numOfChars, DASH_CUR);
+            }
 
-                @Override
-                public void onMoveSel(int numOfChars, int type) {
-                    mListener.moveRelSel(numOfChars, type);
-                    showMessageArrow(numOfChars, DASH_SEL);
-                }
+            @Override
+            public void onMoveSel(int numOfChars, int type) {
+                mListener.moveRelSel(numOfChars, type);
+                showMessageArrow(numOfChars, DASH_SEL);
+            }
 
-                @Override
-                public void onLongPress() {
-                    // Selects current word.
-                    // The selection can be later changed, e.g. include punctuation.
-                    mListener.onExtendSel("\\w+");
-                    setBackgroundResource(R.drawable.rectangle_gradient_light);
-                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
+            @Override
+            public void onLongPress() {
+                // Selects current word.
+                // The selection can be later changed, e.g. include punctuation.
+                mListener.onExtendSel("\\w+");
+                setBackgroundResource(R.drawable.rectangle_gradient_light);
+                performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            }
 
-                @Override
-                public void onSingleTapMotion() {
-                    mListener.onReset();
-                }
+            @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
 
-                @Override
-                public void onDoubleTapMotion() {
-                    mListener.onAddSpace();
-                }
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
 
-                @Override
-                public void onDown() {
-                    // TODO: improve this, make sure that none of the components are null
-                    // TODO: maybe add a blurring effect instead
-                    mBImeStartStop.setVisibility(View.INVISIBLE);
-                    mBImeKeyboard.setVisibility(View.INVISIBLE);
-                    if (mBComboSelector != null) {
-                        mBComboSelector.setVisibility(View.INVISIBLE);
-                    }
-                    setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
-                    showMessage("");
+            @Override
+            public void onDown() {
+                mBImeStartStop.setVisibility(View.INVISIBLE);
+                mBImeKeyboard.setVisibility(View.INVISIBLE);
+                if (mBComboSelector != null) {
+                    mBComboSelector.setVisibility(View.INVISIBLE);
                 }
+                setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+                showMessage("");
+            }
 
-                @Override
-                public void onUp() {
-                    showMessage("");
-                    mBImeStartStop.setVisibility(View.VISIBLE);
-                    mBImeKeyboard.setVisibility(View.VISIBLE);
-                    if (mBComboSelector != null) {
-                        mBComboSelector.setVisibility(View.VISIBLE);
-                    }
-                    setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
-                    setBackgroundResource(R.drawable.rectangle_gradient);
+            @Override
+            public void onUp() {
+                showMessage("");
+                mBImeStartStop.setVisibility(View.VISIBLE);
+                mBImeKeyboard.setVisibility(View.VISIBLE);
+                if (mBComboSelector != null) {
+                    mBComboSelector.setVisibility(View.VISIBLE);
                 }
+                setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
+                setBackgroundResource(R.drawable.rectangle_gradient);
+            }
 
-                @Override
-                public void onSwipeUp() {
-                    mListener.onActionPrevious();
-                }
+            @Override
+            public void onSwipeUp() {
+                mListener.onActionPrevious();
+            }
 
-                @Override
-                public void onSwipeDown() {
-                    mListener.onActionNext();
-                }
-            });
-        }
-
+            @Override
+            public void onSwipeDown() {
+                mListener.onActionNext();
+            }
+        };
+        setGuiInitState(0);
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
     }
 
     public void init(int keys, CallerInfo callerInfo, int swipeType) {
         mSwipeType = swipeType;
-        // These controls are optional, except for mBImeStartStop (TODO: which should also be optional)
+        // These controls are optional (i.e. can be null),
+        // except for mBImeStartStop (TODO: which should also be optional)
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBComboSelector = findViewById(R.id.tvComboSelector);
@@ -305,7 +302,6 @@ public class SpeechInputView extends LinearLayout {
             updateComboSelector(mSlc);
         }
         showMessage("");
-        setGuiInitState(0);
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
         final int key = keysAsTypedArray.getResourceId(0, 0);
@@ -507,6 +503,13 @@ public class SpeechInputView extends LinearLayout {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
+        if (mSwipeType == 1) {
+            setOnTouchListener(mOstl);
+        } else if (mSwipeType == 2) {
+            // Turning from GONE to VISIBLE
+            findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
+            setOnTouchListener(mOctl);
+        }
         if (mBImeKeyboard != null) {
             maximizeUi();
         }
@@ -604,6 +607,7 @@ public class SpeechInputView extends LinearLayout {
         if (mBImeKeyboard != null) {
             maximizeUi();
         }
+        setOnTouchListener(mOstl);
     }
 
     /**
