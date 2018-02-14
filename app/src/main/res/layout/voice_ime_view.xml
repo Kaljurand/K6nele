@@ -47,47 +47,6 @@
             android:visibility="visible"
             tools:text="@string/summaryEnableIme" />
 
-        <LinearLayout
-            android:id="@+id/rlKeyButtons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/bImeKeyboard"
-            android:layout_toLeftOf="@+id/bImeSearch"
-            android:layout_toRightOf="@+id/bImeKeyboard"
-            android:layout_toStartOf="@+id/bImeSearch"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <ImageButton
-                android:id="@+id/bImeNewline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/layoutMargin2"
-                android:layout_marginRight="@dimen/layoutMargin2"
-                android:background="@drawable/button_go"
-                android:contentDescription="@string/cdImeNewline"
-                android:padding="@dimen/layoutMargin1"
-                android:paddingLeft="@dimen/layoutMargin12dp"
-                android:paddingStart="@dimen/layoutMargin12dp"
-                android:src="@drawable/ic_newline" />
-
-            <ImageButton
-                android:id="@+id/bImeDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/layoutMargin2"
-                android:layout_marginStart="@dimen/layoutMargin2"
-                android:background="@drawable/button_go"
-                android:contentDescription="@string/cdImeDelete"
-                android:padding="@dimen/layoutMargin1"
-                android:paddingEnd="@dimen/layoutMargin12dp"
-                android:paddingRight="@dimen/layoutMargin12dp"
-                android:src="@drawable/ic_backspace" />
-        </LinearLayout>
-
         <ImageButton
             android:id="@+id/bImeSearch"
             android:layout_width="wrap_content"
@@ -102,8 +61,11 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/centralButtons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
 
         <ee.ioc.phon.android.speechutils.view.MicButton
             android:id="@+id/bImeStartStop"
@@ -116,6 +78,40 @@
             android:contentDescription="@string/cdMicrophone"
             android:gravity="center"
             android:src="@drawable/ic_voice_search_api_material" />
+
+        <LinearLayout
+            android:id="@+id/rlKeyButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/layoutMargin1"
+            android:layout_marginStart="@dimen/layoutMargin1"
+            android:layout_toEndOf="@+id/bImeStartStop"
+            android:layout_toRightOf="@+id/bImeStartStop"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/bImeNewline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_go"
+                android:contentDescription="@string/cdImeNewline"
+                android:padding="@dimen/layoutMargin1"
+                android:src="@drawable/ic_newline" />
+
+            <ImageButton
+                android:id="@+id/bImeDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_go"
+                android:contentDescription="@string/cdImeDelete"
+                android:padding="@dimen/layoutMargin1"
+                android:src="@drawable/ic_backspace" />
+        </LinearLayout>
     </RelativeLayout>
 
     <TextView

@@ -35,6 +35,7 @@ import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayout {
 
+    private View mCentralButtons;
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
     private Button mBComboSelector;
@@ -163,6 +164,7 @@ public class SpeechInputView extends LinearLayout {
                 @Override
                 public boolean onLongClick(View v) {
                     mListener.onActionNext();
+                    // open a menu with various punctuation symbols
                     return true;
                 }
             });
@@ -279,6 +281,7 @@ public class SpeechInputView extends LinearLayout {
         mSwipeType = swipeType;
         // These controls are optional (i.e. can be null),
         // except for mBImeStartStop (TODO: which should also be optional)
+        mCentralButtons = findViewById(R.id.centralButtons);
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBComboSelector = findViewById(R.id.tvComboSelector);
@@ -425,7 +428,7 @@ public class SpeechInputView extends LinearLayout {
 
     private void minimizeUi() {
         mUiIsMinimized = true;
-        mBImeStartStop.setVisibility(View.GONE);
+        mCentralButtons.setVisibility(View.GONE);
         if (mBComboSelector != null) {
             mBComboSelector.setVisibility(View.GONE);
         }
@@ -440,7 +443,7 @@ public class SpeechInputView extends LinearLayout {
 
     private void maximizeUi() {
         mUiIsMinimized = false;
-        mBImeStartStop.setVisibility(View.VISIBLE);
+        mCentralButtons.setVisibility(View.VISIBLE);
         if (mBComboSelector != null) {
             mBComboSelector.setVisibility(View.VISIBLE);
         }
@@ -496,8 +499,9 @@ public class SpeechInputView extends LinearLayout {
 
     private void setGuiInitState(int message) {
         if (message == 0) {
+            // Do not clear a possible error message
+            //showMessage("");
             setGuiState(MicButton.State.INIT);
-            showMessage("");
             setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
         } else {
             setGuiState(MicButton.State.ERROR);

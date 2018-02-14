@@ -203,6 +203,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
 
     private float getDistance(float startX, float startY, MotionEvent ev) {
         float distanceSum = 0;
+        /*
         final int historySize = ev.getHistorySize();
         for (int h = 0; h < historySize; h++) {
             // historical point
@@ -217,6 +218,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
             startY = hy;
         }
         // add distance from last historical point to event's point
+        */
         float dx = (ev.getX(0) - startX);
         float dy = VERTICAL_SPEED * (ev.getY(0) - startY);
         distanceSum += Math.sqrt(dx * dx + dy * dy);
