@@ -33,7 +33,7 @@
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Other tests/demos</string>
-    <string name="labelActivityFormDemo">Form demo</string>
+    <string name="labelActivityFormDemo">HTML form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
     <string name="labelRewritesName">Save the rewrites table as:</string>

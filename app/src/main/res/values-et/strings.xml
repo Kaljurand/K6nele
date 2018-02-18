@@ -19,7 +19,7 @@
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
     <string name="labelActivityEncoderDemo">Muud testid/demod</string>
-    <string name="labelActivityFormDemo">Form demo</string>
+    <string name="labelActivityFormDemo">HTML-vormi demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
 
@@ -70,7 +70,7 @@
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
     <string name="summaryEncoderDemo">Muud testid ja demod (lindistamine, audio kokkupakkimine, jne)</string>
-    <string name="summaryFormDemo">HTML vorm erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
+    <string name="summaryFormDemo">HTML-vorm erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
