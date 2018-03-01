@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -120,25 +121,51 @@ public class SpeechInputView extends LinearLayout {
         super(context, attrs);
     }
 
-    public void setListener(final SpeechInputViewListener listener) {
+    // TODO: change the content description when the button changes
+    //buttonAction.setContentDescription(context.getString(R.string.cdImeNewline));
+    public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
-        ImageButton buttonSearch = findViewById(R.id.bImeSearch);
-        if (buttonSearch != null) {
-            buttonSearch.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cancelOrDestroy();
-                    mListener.onSearch();
-                }
-            });
-
-            buttonSearch.setOnLongClickListener(new OnLongClickListener() {
+        ImageButton buttonAction = findViewById(R.id.bImeSearch);
+        if (buttonAction != null && editorInfo != null) {
+            boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
+            int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
+            if (overrideEnter && (imeAction == EditorInfo.IME_ACTION_SEARCH || imeAction == EditorInfo.IME_ACTION_GO)) {
+                buttonAction.setImageResource(R.drawable.ic_search_api_holo_dark);
+                buttonAction.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cancelOrDestroy();
+                        mListener.onSearch();
+                    }
+                });
+            } else if (overrideEnter && imeAction == EditorInfo.IME_ACTION_NEXT) {
+                buttonAction.setImageResource(R.drawable.ic_next);
+                buttonAction.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onActionNext();
+                    }
+                });
+            } else {
+                buttonAction.setImageResource(R.drawable.ic_newline);
+                buttonAction.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onAddNewline();
+                    }
+                });
+            }
+            /*
+            // TODO: do something interesting on long press
+            buttonAction.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    // TODO: do something interesting
+                    mListener.onActionNext();
+                    // open a menu with various punctuation symbols
                     return true;
                 }
             });
+            */
         }
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
@@ -149,26 +176,6 @@ public class SpeechInputView extends LinearLayout {
                     mListener.onDeleteLeftChar();
                 }
             });
-        }
-
-        ImageButton buttonNewline = findViewById(R.id.bImeNewline);
-        if (buttonNewline != null) {
-            buttonNewline.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onAddNewline();
-                }
-            });
-            /*
-            buttonNewline.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onActionNext();
-                    // open a menu with various punctuation symbols
-                    return true;
-                }
-            });
-            */
         }
 
         mOstl = new OnSwipeTouchListener(getContext()) {

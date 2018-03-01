@@ -143,11 +143,11 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
         setUpSettingsButton();
 
-        mView = (SpeechInputView) findViewById(R.id.vVoiceImeView);
+        mView = findViewById(R.id.vVoiceImeView);
         CallerInfo callerInfo = new CallerInfo(getExtras(), getCallingActivity());
         // TODO: do we need to send the ComponentName of the calling activity instead
         mView.init(R.array.keysActivity, callerInfo, 0);
-        mView.setListener(getSpeechInputViewListener());
+        mView.setListener(getSpeechInputViewListener(), null);
 
         String[] results = getExtras().getStringArray(Extras.EXTRA_RESULT_RESULTS);
         if (results == null) {

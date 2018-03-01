@@ -152,7 +152,7 @@ public class SpeechInputMethodService extends InputMethodService {
             return;
         }
 
-        mInputView.setListener(getSpeechInputViewListener(editorInfo.packageName));
+        mInputView.setListener(getSpeechInputViewListener(editorInfo.packageName), editorInfo);
         mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)

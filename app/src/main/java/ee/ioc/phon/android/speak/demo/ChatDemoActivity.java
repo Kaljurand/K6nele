@@ -69,7 +69,7 @@ public class ChatDemoActivity extends Activity {
         CallerInfo callerInfo = new CallerInfo(createExtras(), getCallingActivity());
         // TODO: review this
         siv.init(R.array.keysActivity, callerInfo, 0);
-        siv.setListener(getSpeechInputViewListener());
+        siv.setListener(getSpeechInputViewListener(), null);
 
         mList = (ListView) findViewById(R.id.list_matches);
 
