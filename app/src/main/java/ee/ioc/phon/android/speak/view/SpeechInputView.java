@@ -76,15 +76,17 @@ public class SpeechInputView extends LinearLayout {
         void onSwitchIme(boolean isAskUser);
 
         /**
-         * Switch to the previous IME (the IME that launched this IME)
+         * Switch to the previous IME (the IME that launched this IME).
          */
         void onSwitchToLastIme();
 
-        void onSearch();
-
-        void onActionPrevious();
-
-        void onActionNext();
+        /**
+         * Perform an editor action (GO, NEXT, ...).
+         *
+         * @param actionId Action ID
+         * @param hide     hide the IME after performing the action, iff true
+         */
+        void onAction(int actionId, boolean hide);
 
         void onDeleteLeftChar();
 
@@ -125,17 +127,23 @@ public class SpeechInputView extends LinearLayout {
     //buttonAction.setContentDescription(context.getString(R.string.cdImeNewline));
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
-        ImageButton buttonAction = findViewById(R.id.bImeSearch);
+        ImageButton buttonAction = findViewById(R.id.bImeAction);
         if (buttonAction != null && editorInfo != null) {
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
-            int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
-            if (overrideEnter && (imeAction == EditorInfo.IME_ACTION_SEARCH || imeAction == EditorInfo.IME_ACTION_GO)) {
-                buttonAction.setImageResource(R.drawable.ic_search_api_holo_dark);
+            final int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
+            if (overrideEnter &&
+                    (
+                            imeAction == EditorInfo.IME_ACTION_SEARCH ||
+                                    imeAction == EditorInfo.IME_ACTION_GO ||
+                                    imeAction == EditorInfo.IME_ACTION_DONE ||
+                                    imeAction == EditorInfo.IME_ACTION_SEND
+                    )) {
+                buttonAction.setImageResource(R.drawable.ic_search);
                 buttonAction.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         cancelOrDestroy();
-                        mListener.onSearch();
+                        mListener.onAction(imeAction, true);
                     }
                 });
             } else if (overrideEnter && imeAction == EditorInfo.IME_ACTION_NEXT) {
@@ -143,7 +151,7 @@ public class SpeechInputView extends LinearLayout {
                 buttonAction.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.onActionNext();
+                        mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
                     }
                 });
             } else {
@@ -272,12 +280,12 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onSwipeUp() {
-                mListener.onActionPrevious();
+                mListener.onAction(EditorInfo.IME_ACTION_PREVIOUS, false);
             }
 
             @Override
             public void onSwipeDown() {
-                mListener.onActionNext();
+                mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
             }
         };
         setGuiInitState(0);

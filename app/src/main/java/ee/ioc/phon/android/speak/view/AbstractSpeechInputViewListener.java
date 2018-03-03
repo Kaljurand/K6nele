@@ -28,17 +28,7 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
     }
 
     @Override
-    public void onSearch() {
-        // empty
-    }
-
-    @Override
-    public void onActionPrevious() {
-        // empty
-    }
-
-    @Override
-    public void onActionNext() {
+    public void onAction(int actionId, boolean hide) {
         // empty
     }
 

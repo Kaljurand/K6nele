@@ -310,22 +310,14 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
-            public void onSearch() {
-                closeSession();
-                runOp(mCommandEditor.imeActionSearch());
-                requestHideSelf(0);
-            }
-
-            @Override
-            public void onActionPrevious() {
-                // TODO: do action only if the previous field exists
-                runOp(mCommandEditor.imeActionPrevious());
-            }
-
-            @Override
-            public void onActionNext() {
-                // TODO: do action only if the next field exists
-                runOp(mCommandEditor.imeActionNext());
+            public void onAction(int editorAction, boolean hide) {
+                if (hide) {
+                    closeSession();
+                }
+                runOp(mCommandEditor.imeAction(editorAction));
+                if (hide) {
+                    requestHideSelf(0);
+                }
             }
 
             @Override

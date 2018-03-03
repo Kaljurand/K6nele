@@ -30,7 +30,7 @@
             android:src="@drawable/ic_notification_ime_default" />
 
         <ImageButton
-            android:id="@+id/bImeSearch"
+            android:id="@+id/bImeAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -39,7 +39,7 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
-            android:src="@drawable/ic_search_api_holo_dark" />
+            android:src="@drawable/ic_search" />
 
         <TextView
             android:id="@+id/tvMessage"
@@ -89,8 +89,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_toLeftOf="@+id/bImeSearch"
-            android:layout_toStartOf="@+id/bImeSearch"
+            android:layout_toLeftOf="@+id/bImeAction"
+            android:layout_toStartOf="@+id/bImeAction"
             android:gravity="right">
 
             <ee.ioc.phon.android.speechutils.view.MicButton
