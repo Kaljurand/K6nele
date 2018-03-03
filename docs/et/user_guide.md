@@ -166,7 +166,9 @@ klaviatuur järgmisi operatsioone:
 
 - vajutus klaviatuuriikoonile vahetab eelmisele klaviatuurile;
 - pikk vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile;
-- vajutus otsinguikoonile käivitab otsingu (ainult otsingureal);
+- vajutus otsinguikoonile käivitab otsingu (ainult otsingureal),
+  (alates v1.6.78 beeta on otsinguikooni asemel tekstiväljast sõltuva funktsiooni ja ikooniga nupp, mis
+  sooritab otsingu, lisab reavahetuse, või liigutab kursori järgmisele väljale);
 - topeltvajutus lisab tühiku;
 - variant 1:
 
@@ -174,10 +176,9 @@ klaviatuur järgmisi operatsioone:
   - svaip paremale lisab reavahetuse,
   - pikk vajutus valib kogu teksti;
 
-- variant 2 (valikuline alates v1.6.73 beeta):
+- variant 2 (valikuline alates v1.6.78 beeta):
 
-  - kustutamise ikoon kustutab kursorist vasakul oleva sümboli,
-  - reavahetuse ikoon lisab reavahetuse,
+  - kustutamise ikoon kustutab kursorist vasakul oleva sümboli või praeguse valiku,
   - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
   - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
   - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
@@ -203,7 +204,9 @@ kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 <img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
 
 
-## Kõnele kutsumine teistest rakendustest (koos kasutajaliidesega)
+## Kõnele kutsumine teistest rakendustest
+
+### Koos kasutajaliidesega
 
 Mõnes rakenduses (nt _Google Keep_) on mikrofoninupp, millele vajutades kutsutakse välja kõnetuvastusteenust
 pakkuv rakendus, koos oma kasutajaliidesega (nn _RecognizerIntent_).
@@ -229,7 +232,7 @@ määratud vaikimisi tuvastajaks. Sellise vaikeväärtuse saab eemaldad nõnda:
   - Otsige nimekirjast üles "Google'i rakendus"
   - Vajutage nupule `Kustuta vaikeväärtused`
 
-## Kõnele kutsumine teistest rakendustest (taustateenusena)
+### Taustateenusena
 
 Androidi rakendused võivad kõnetuvastusteenuse välja kutsuda ka taustateenusena, st ilma kasutajaliideseta.
 Nõnda toimivad paljud mikrofoninupuga klaviatuurirakendused ning intelligentsed abilised,
