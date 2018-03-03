@@ -29,6 +29,22 @@
             android:padding="@dimen/layoutMargin1"
             android:src="@drawable/ic_notification_ime_default" />
 
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/bImeKeyboard"
+            android:layout_toLeftOf="@+id/bImeAction"
+            android:layout_toRightOf="@+id/bImeKeyboard"
+            android:layout_toStartOf="@+id/bImeAction"
+            android:ellipsize="start"
+            android:padding="@dimen/layoutMargin1"
+            android:singleLine="true"
+            android:textColor="@color/grey300"
+            android:textSize="@dimen/textSize2"
+            tools:text="@string/summaryEnableIme" />
+
         <ImageButton
             android:id="@+id/bImeAction"
             android:layout_width="wrap_content"
@@ -40,22 +56,6 @@
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
             android:src="@drawable/ic_search" />
-
-        <TextView
-            android:id="@+id/tvMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/bImeKeyboard"
-            android:layout_toLeftOf="@+id/centralButtons"
-            android:layout_toRightOf="@+id/bImeKeyboard"
-            android:layout_toStartOf="@+id/centralButtons"
-            android:ellipsize="start"
-            android:padding="@dimen/layoutMargin1"
-            android:singleLine="true"
-            android:textColor="@color/grey300"
-            android:textSize="@dimen/textSize2"
-            tools:text="@string/summaryEnableIme" />
 
         <TextView
             android:id="@+id/tvInstruction"

@@ -39,6 +39,7 @@ public class SpeechInputView extends LinearLayout {
     private View mCentralButtons;
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
+    private ImageButton mBImeAction;
     private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
@@ -127,8 +128,7 @@ public class SpeechInputView extends LinearLayout {
     //buttonAction.setContentDescription(context.getString(R.string.cdImeNewline));
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
-        ImageButton buttonAction = findViewById(R.id.bImeAction);
-        if (buttonAction != null && editorInfo != null) {
+        if (mBImeAction != null && editorInfo != null) {
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
             final int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
             if (overrideEnter &&
@@ -138,8 +138,8 @@ public class SpeechInputView extends LinearLayout {
                                     imeAction == EditorInfo.IME_ACTION_DONE ||
                                     imeAction == EditorInfo.IME_ACTION_SEND
                     )) {
-                buttonAction.setImageResource(R.drawable.ic_search);
-                buttonAction.setOnClickListener(new OnClickListener() {
+                mBImeAction.setImageResource(R.drawable.ic_search);
+                mBImeAction.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         cancelOrDestroy();
@@ -147,29 +147,29 @@ public class SpeechInputView extends LinearLayout {
                     }
                 });
             } else if (overrideEnter && imeAction == EditorInfo.IME_ACTION_NEXT) {
-                buttonAction.setImageResource(R.drawable.ic_next);
-                buttonAction.setOnClickListener(new OnClickListener() {
+                mBImeAction.setImageResource(R.drawable.ic_next);
+                mBImeAction.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
                     }
                 });
             } else {
-                buttonAction.setImageResource(R.drawable.ic_newline);
-                buttonAction.setOnClickListener(new OnClickListener() {
+                mBImeAction.setImageResource(R.drawable.ic_newline);
+                mBImeAction.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onAddNewline();
                     }
                 });
             }
+            // TODO: do something interesting on long press,
+            // e.g. open a menu with arrows, or other actions, or various punctuation symbols
             /*
-            // TODO: do something interesting on long press
-            buttonAction.setOnLongClickListener(new OnLongClickListener() {
+            mBImeAction.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mListener.onActionNext();
-                    // open a menu with various punctuation symbols
+                    mListener.onAction(EditorInfo.IME_ACTION_SEND, false);
                     return true;
                 }
             });
@@ -259,6 +259,8 @@ public class SpeechInputView extends LinearLayout {
             public void onDown() {
                 mBImeStartStop.setVisibility(View.INVISIBLE);
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
+                mBImeAction.setVisibility(View.INVISIBLE);
+                setVisibility(mTvInstruction, View.INVISIBLE);
                 if (mBComboSelector != null) {
                     mBComboSelector.setVisibility(View.INVISIBLE);
                 }
@@ -271,6 +273,8 @@ public class SpeechInputView extends LinearLayout {
                 showMessage("");
                 mBImeStartStop.setVisibility(View.VISIBLE);
                 mBImeKeyboard.setVisibility(View.VISIBLE);
+                mBImeAction.setVisibility(View.VISIBLE);
+                setVisibility(mTvInstruction, View.VISIBLE);
                 if (mBComboSelector != null) {
                     mBComboSelector.setVisibility(View.VISIBLE);
                 }
@@ -299,6 +303,7 @@ public class SpeechInputView extends LinearLayout {
         mCentralButtons = findViewById(R.id.centralButtons);
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
+        mBImeAction = findViewById(R.id.bImeAction);
         mBComboSelector = findViewById(R.id.tvComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
