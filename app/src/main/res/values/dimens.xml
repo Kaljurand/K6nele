@@ -9,6 +9,7 @@
     <dimen name="layoutHeightButtonMicrophoneIme">72dp</dimen>
     <dimen name="layoutMargin4dp">4dp</dimen>
     <dimen name="layoutMargin1">8dp</dimen>
+    <dimen name="layoutMargin12dp">12dp</dimen>
     <dimen name="layoutMargin2">16dp</dimen>
     <dimen name="layoutMargin3">24dp</dimen>
     <dimen name="layoutMargin32">32dp</dimen>

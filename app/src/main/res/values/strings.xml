@@ -33,7 +33,7 @@
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
     <string name="labelActivityEncoderDemo">Other tests/demos</string>
-    <string name="labelActivityFormDemo">Form demo</string>
+    <string name="labelActivityFormDemo">HTML form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
     <string name="labelRewritesName">Save the rewrites table as:</string>
@@ -62,9 +62,10 @@
     <string name="titleAutoStart">Auto start</string>
     <string name="summaryAutoStart">Start recording automatically</string>
     <string name="titleAutoStopAfterPause">Auto stop after pause</string>
-    <string name="summaryAutoStopAfterPause">Stop recording after a longer pause</string>
+    <string name="summaryAutoStopAfterPause">Stop recording after a few seconds of pause</string>
     <string name="titleAutoStopAfterTime">Max recording time</string>
     <string name="summaryAutoStopAfterTime">Stop recording after %1$s seconds</string>
+    <string name="titleImeMode">Swiping</string>
     <string name="titleImeShowPartialResults">Partial results</string>
     <string name="summaryImeShowPartialResults">Show partial recognition results in the text field</string>
     <string name="titleRespectLocale">Support device language</string>
@@ -281,7 +282,8 @@
     <string name="cdChangeInputMethod">Change input method</string>
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
-    <string name="cdImeDelete">Delete previous word</string>
+    <string name="cdImeDelete">Delete previous character</string>
+    <string name="cdImeNewline">Insert a newline</string>
 
     <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,
         please reconsider granting this permission.</string>
@@ -376,6 +378,17 @@
     </string-array>
 
     <string name="defaultMaxResults" translatable="false">1</string>
+
+    <string-array name="entriesImeMode">
+        <item>Left swipe deletes, right swipe adds newline</item>
+        <item>Swiping moves cursor</item>
+    </string-array>
+
+    <!-- TODO: convert to integer-array -->
+    <string-array name="valuesImeMode" translatable="false">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <!-- Just for testing, won't appear in the product. -->
     <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>

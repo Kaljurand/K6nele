@@ -19,7 +19,7 @@
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
     <string name="labelActivityEncoderDemo">Muud testid/demod</string>
-    <string name="labelActivityFormDemo">Form demo</string>
+    <string name="labelActivityFormDemo">HTML-vormi demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
 
@@ -40,10 +40,11 @@
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleCategoryDemos">Demod, testid, jne</string>
     <string name="titleScreenDevel">Arendaja seaded, demod, jne</string>
+    <string name="titleImeMode">Svaipimine</string>
     <string name="titleAutoStart">Autostart</string>
     <string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
     <string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
-    <string name="summaryAutoStopAfterPause">Lõpeta lindistamine pärast pikemat pausi</string>
+    <string name="summaryAutoStopAfterPause">Lõpeta lindistamine pärast paarisekundist pausi</string>
     <string name="titleAutoStopAfterTime">Lindistuse maks. kestus</string>
     <string name="summaryAutoStopAfterTime">Lõpeta lindistamine pärast %1$s sekundit</string>
     <string name="titleRespectLocale">Kasuta telefoni keelt</string>
@@ -69,7 +70,7 @@
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
     <string name="summaryEncoderDemo">Muud testid ja demod (lindistamine, audio kokkupakkimine, jne)</string>
-    <string name="summaryFormDemo">HTML vorm erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
+    <string name="summaryFormDemo">HTML-vorm erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Lindista!</string>
@@ -252,7 +253,8 @@
     <string name="cdChangeInputMethod">Vahetage sisestusmeetodit</string>
     <string name="cdGo">Käivitage otsing</string>
     <string name="cdSettings">Kõnele seaded</string>
-    <string name="cdImeDelete">Kustuta eelnev sõna</string>
+    <string name="cdImeDelete">Kustuta eelnev sümbol</string>
+    <string name="cdImeNewline">Lisa reavahetus</string>
 
     <string name="promptPermissionRationale">Heli salvestamise õigus on Kõnele jaoks hädavajalik,
         palun andke see õigus.</string>
@@ -263,6 +265,11 @@
         <item>10 sek</item>
         <item>20 sek</item>
         <item>30 sek</item>
+    </string-array>
+
+    <string-array name="entriesImeMode">
+        <item>Svaip vasakule kustutab eelneva sõna, svaip paremale lisab uue rea</item>
+        <item>Svaipimine liigutab kursorit</item>
     </string-array>
 
     <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>

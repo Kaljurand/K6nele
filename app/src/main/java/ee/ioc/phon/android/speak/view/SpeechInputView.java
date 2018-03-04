@@ -12,7 +12,9 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -34,8 +36,10 @@ import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayout {
 
+    private View mCentralButtons;
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
+    private ImageButton mBImeAction;
     private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
@@ -44,12 +48,21 @@ public class SpeechInputView extends LinearLayout {
     private SpeechRecognizer mRecognizer;
     private ServiceLanguageChooser mSlc;
 
+    private OnSwipeTouchListener mOstl;
+    private OnCursorTouchListener mOctl;
+
     private MicButton.State mState;
 
+    private boolean mUiIsMinimized = false;
+
     // TODO: make it an attribute
-    private boolean mIsEnableSwipe = false;
+    private int mSwipeType = 0;
+    private final static String DASH_CUR = "――――――――――――――――――――";
+    private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
+    private final static int DASH_LENGTH = DASH_CUR.length();
 
     public interface SpeechInputViewListener {
+
         void onComboChange(String language, ComponentName service);
 
         void onPartialResult(List<String> text);
@@ -64,17 +77,31 @@ public class SpeechInputView extends LinearLayout {
         void onSwitchIme(boolean isAskUser);
 
         /**
-         * Switch to the previous IME (the IME that launched this IME)
+         * Switch to the previous IME (the IME that launched this IME).
          */
         void onSwitchToLastIme();
 
-        void onSearch();
+        /**
+         * Perform an editor action (GO, NEXT, ...).
+         *
+         * @param actionId Action ID
+         * @param hide     hide the IME after performing the action, iff true
+         */
+        void onAction(int actionId, boolean hide);
+
+        void onDeleteLeftChar();
 
         void onDeleteLastWord();
 
         void goUp();
 
         void goDown();
+
+        void moveRel(int numOfChars);
+
+        void moveRelSel(int numOfChars, int type);
+
+        void onExtendSel(String regex);
 
         void onAddNewline();
 
@@ -97,102 +124,189 @@ public class SpeechInputView extends LinearLayout {
         super(context, attrs);
     }
 
-    public void setListener(final SpeechInputViewListener listener) {
+    // TODO: change the content description when the button changes
+    //buttonAction.setContentDescription(context.getString(R.string.cdImeNewline));
+    public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
-        ImageButton buttonSearch = findViewById(R.id.bImeSearch);
+        if (mBImeAction != null && editorInfo != null) {
+            boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
+            final int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
+            if (overrideEnter &&
+                    (
+                            imeAction == EditorInfo.IME_ACTION_SEARCH ||
+                                    imeAction == EditorInfo.IME_ACTION_GO ||
+                                    imeAction == EditorInfo.IME_ACTION_DONE ||
+                                    imeAction == EditorInfo.IME_ACTION_SEND
+                    )) {
+                mBImeAction.setImageResource(R.drawable.ic_search);
+                mBImeAction.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cancelOrDestroy();
+                        mListener.onAction(imeAction, true);
+                    }
+                });
+            } else if (overrideEnter && imeAction == EditorInfo.IME_ACTION_NEXT) {
+                mBImeAction.setImageResource(R.drawable.ic_next);
+                mBImeAction.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
+                    }
+                });
+            } else {
+                mBImeAction.setImageResource(R.drawable.ic_newline);
+                mBImeAction.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onAddNewline();
+                    }
+                });
+            }
+            // TODO: do something interesting on long press,
+            // e.g. open a menu with arrows, or other actions, or various punctuation symbols
+            /*
+            mBImeAction.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onAction(EditorInfo.IME_ACTION_SEND, false);
+                    return true;
+                }
+            });
+            */
+        }
+
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
-        if (mBImeKeyboard != null && buttonSearch != null) {
-            mBImeKeyboard.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onSwitchToLastIme();
-                }
-            });
-
-            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onSwitchIme(false);
-                    return true;
-                }
-            });
-
-            buttonSearch.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cancelOrDestroy();
-                    mListener.onSearch();
-                }
-            });
-
-            buttonSearch.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    // TODO: do something interesting
-                    return true;
-                }
-            });
-        }
-
         if (buttonDelete != null) {
-            buttonDelete.setOnClickListener(new OnClickListener() {
+            buttonDelete.setOnTouchListener(new OnPressAndHoldListener() {
                 @Override
-                public void onClick(View v) {
-                    mListener.onDeleteLastWord();
+                public void onAction() {
+                    mListener.onDeleteLeftChar();
                 }
             });
         }
 
-        if (mIsEnableSwipe) {
-            setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-                @Override
-                public void onSwipeLeft() {
-                    mListener.onDeleteLastWord();
-                }
+        mOstl = new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.onDeleteLastWord();
+            }
 
-                @Override
-                public void onSwipeRight() {
-                    mListener.onAddNewline();
-                }
+            @Override
+            public void onSwipeRight() {
+                mListener.onAddNewline();
+            }
 
-                @Override
-                public void onSwipeUp() {
-                    mListener.goUp();
-                }
+            @Override
+            public void onSwipeUp() {
+                mListener.goUp();
+            }
 
-                @Override
-                public void onSwipeDown() {
-                    mListener.goDown();
-                }
+            @Override
+            public void onSwipeDown() {
+                mListener.goDown();
+            }
 
-                @Override
-                public void onSingleTapMotion() {
-                    mListener.onReset();
-                }
+            @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
 
-                @Override
-                public void onDoubleTapMotion() {
-                    mListener.onAddSpace();
-                }
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
 
-                @Override
-                public void onLongPressMotion() {
-                    mListener.onSelectAll();
-                }
-            });
-        }
+            @Override
+            public void onLongPressMotion() {
+                mListener.onSelectAll();
+            }
+        };
 
+        mOctl = new OnCursorTouchListener() {
+            @Override
+            public void onMove(int numOfChars) {
+                mListener.moveRel(numOfChars);
+                showMessageArrow(numOfChars, DASH_CUR);
+            }
+
+            @Override
+            public void onMoveSel(int numOfChars, int type) {
+                mListener.moveRelSel(numOfChars, type);
+                showMessageArrow(numOfChars, DASH_SEL);
+            }
+
+            @Override
+            public void onLongPress() {
+                // Selects current word.
+                // The selection can be later changed, e.g. include punctuation.
+                mListener.onExtendSel("\\w+");
+                setBackgroundResource(R.drawable.rectangle_gradient_light);
+                performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            }
+
+            @Override
+            public void onSingleTapMotion() {
+                mListener.onReset();
+            }
+
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
+
+            @Override
+            public void onDown() {
+                mBImeStartStop.setVisibility(View.INVISIBLE);
+                mBImeKeyboard.setVisibility(View.INVISIBLE);
+                mBImeAction.setVisibility(View.INVISIBLE);
+                setVisibility(mTvInstruction, View.INVISIBLE);
+                if (mBComboSelector != null) {
+                    mBComboSelector.setVisibility(View.INVISIBLE);
+                }
+                setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+                showMessage("");
+            }
+
+            @Override
+            public void onUp() {
+                showMessage("");
+                mBImeStartStop.setVisibility(View.VISIBLE);
+                mBImeKeyboard.setVisibility(View.VISIBLE);
+                mBImeAction.setVisibility(View.VISIBLE);
+                setVisibility(mTvInstruction, View.VISIBLE);
+                if (mBComboSelector != null) {
+                    mBComboSelector.setVisibility(View.VISIBLE);
+                }
+                setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
+                setBackgroundResource(R.drawable.rectangle_gradient);
+            }
+
+            @Override
+            public void onSwipeUp() {
+                mListener.onAction(EditorInfo.IME_ACTION_PREVIOUS, false);
+            }
+
+            @Override
+            public void onSwipeDown() {
+                mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
+            }
+        };
+        setGuiInitState(0);
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
     }
 
-    public void init(int keys, CallerInfo callerInfo, boolean isEnableSwipe) {
-        mIsEnableSwipe = isEnableSwipe;
-        // These controls are optional, except for mBImeStartStop (TODO: which should also be optional)
-        mBImeStartStop = (MicButton) findViewById(R.id.bImeStartStop);
-        mBImeKeyboard = (ImageButton) findViewById(R.id.bImeKeyboard);
-        mBComboSelector = (Button) findViewById(R.id.tvComboSelector);
-        mTvInstruction = (TextView) findViewById(R.id.tvInstruction);
-        mTvMessage = (TextView) findViewById(R.id.tvMessage);
+    public void init(int keys, CallerInfo callerInfo, int swipeType) {
+        mSwipeType = swipeType;
+        // These controls are optional (i.e. can be null),
+        // except for mBImeStartStop (TODO: which should also be optional)
+        mCentralButtons = findViewById(R.id.centralButtons);
+        mBImeStartStop = findViewById(R.id.bImeStartStop);
+        mBImeKeyboard = findViewById(R.id.bImeKeyboard);
+        mBImeAction = findViewById(R.id.bImeAction);
+        mBComboSelector = findViewById(R.id.tvComboSelector);
+        mTvInstruction = findViewById(R.id.tvInstruction);
+        mTvMessage = findViewById(R.id.tvMessage);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -203,6 +317,7 @@ public class SpeechInputView extends LinearLayout {
                 mBComboSelector.setVisibility(View.VISIBLE);
             } else {
                 mBComboSelector.setVisibility(View.GONE);
+                mBComboSelector = null;
             }
         }
         updateServiceLanguage(mSlc.getSpeechRecognizer());
@@ -210,7 +325,6 @@ public class SpeechInputView extends LinearLayout {
             updateComboSelector(mSlc);
         }
         showMessage("");
-        setGuiInitState(0);
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
         final int key = keysAsTypedArray.getResourceId(0, 0);
@@ -324,6 +438,73 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
+    private void toggleUi() {
+        if (mUiIsMinimized) {
+            maximizeUi();
+        } else {
+            minimizeUi();
+        }
+    }
+
+    private void minimizeUi() {
+        mUiIsMinimized = true;
+        mCentralButtons.setVisibility(View.GONE);
+        if (mBComboSelector != null) {
+            mBComboSelector.setVisibility(View.GONE);
+        }
+        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
+        mBImeKeyboard.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleUi();
+            }
+        });
+    }
+
+    private void maximizeUi() {
+        mUiIsMinimized = false;
+        mCentralButtons.setVisibility(View.VISIBLE);
+        if (mBComboSelector != null) {
+            mBComboSelector.setVisibility(View.VISIBLE);
+        }
+        if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
+            mBImeKeyboard.setImageResource(R.drawable.ic_notification_ime_default);
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onSwitchToLastIme();
+                }
+            });
+
+            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mListener.onSwitchIme(false);
+                    return true;
+                }
+            });
+        } else {
+            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
+            mBImeKeyboard.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleUi();
+                }
+            });
+        }
+    }
+
+    private void showMessageArrow(int numOfChars, String dash) {
+        if (numOfChars < 0) {
+            int num = -1 * numOfChars;
+            if (DASH_LENGTH > num) {
+                showMessage("◄" + dash.substring(0, num));
+            }
+        } else if (DASH_LENGTH > numOfChars) {
+            showMessage(dash.substring(0, numOfChars) + "►");
+        }
+    }
+
     private static String selectFirstResult(List<String> results) {
         if (results == null || results.size() < 1) {
             return null;
@@ -341,9 +522,20 @@ public class SpeechInputView extends LinearLayout {
             // Do not clear a possible error message
             //showMessage("");
             setGuiState(MicButton.State.INIT);
+            setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
         } else {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
+        }
+        if (mSwipeType == 1) {
+            setOnTouchListener(mOstl);
+        } else if (mSwipeType == 2) {
+            // Turning from GONE to VISIBLE
+            findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
+            setOnTouchListener(mOctl);
+        }
+        if (mBImeKeyboard != null) {
+            maximizeUi();
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -365,7 +557,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private static void setText(final TextView textView, final CharSequence text) {
-        if (textView != null) {
+        if (textView != null && textView.getVisibility() != View.GONE) {
             textView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -376,7 +568,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     private static void setText(final TextView textView, final int text) {
-        if (textView != null) {
+        if (textView != null && textView.getVisibility() != View.GONE) {
             textView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -435,6 +627,11 @@ public class SpeechInputView extends LinearLayout {
         updateServiceLanguage(slc.getSpeechRecognizer());
         mRecognizer.startListening(slc.getIntent());
         mListener.onStartListening();
+        setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+        if (mBImeKeyboard != null) {
+            maximizeUi();
+        }
+        setOnTouchListener(mOstl);
     }
 
     /**

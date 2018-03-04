@@ -21,26 +21,18 @@
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
     <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
     <string name="keyImeAudioFormat" translatable="false">keyImeAudioFormat</string>
+    <string name="keyImeMode" translatable="false">keyImeMode</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
     <string name="keyMaxResults" translatable="false">keyMaxResults</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keyGetPutPrefSkipUi" translatable="false">keyGetPutPrefSkipUi</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>
 
-    <string name="defaultRewriteTables" translatable="false">defaultRewriteTables</string>
-
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
-    <string name="defaultWsServer" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech</string>
-
-    <string name="defaultHttpServer" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
     <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
 
     <string name="keyCategoryServices" translatable="false">keyCategoryServices</string>
-
-    <string name="defaultAutoStopAfterTime" translatable="false">20</string>
 
     <!-- TODO: convert to integer-array -->
     <string-array name="valuesAutoStopAfterTime" translatable="false">

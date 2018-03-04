@@ -53,12 +53,11 @@ public class EncoderDemoActivity extends Activity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     toast(v.getText().toString());
-                    handled = true;
+                    return true;
                 }
-                return handled;
+                return false;
             }
         });
 
