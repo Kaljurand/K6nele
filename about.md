@@ -54,7 +54,7 @@ Kõnele also provides two speech recognition services that are pre-configured to
 
 The services can be used via Kõnele's own user interface components or by external apps like [Arvutaja](http://kaljurand.github.io/Arvutaja/).
 
-Kõnele requires very few permissions (only the access to the microphone is essential), see the details in the [manifest](https://github.com/Kaljurand/K6nele/blob/master/app/AndroidManifest.xml).
+Kõnele requires very few permissions (only the access to the microphone is essential), see the details in the [manifest](https://github.com/Kaljurand/K6nele/blob/master/app/src/main/AndroidManifest.xml).
 
 See also:
 

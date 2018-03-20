@@ -167,7 +167,7 @@ klaviatuur järgmisi operatsioone:
 - vajutus klaviatuuriikoonile vahetab eelmisele klaviatuurile;
 - pikk vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile;
 - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal),
-  (alates v1.6.78 beeta on otsinguikooni asemel tekstiväljast sõltuva funktsiooni ja ikooniga nupp, mis
+  (alates v1.6.78 on otsinguikooni asemel tekstiväljast sõltuva funktsiooni ja ikooniga nupp, mis
   sooritab otsingu, lisab reavahetuse, või liigutab kursori järgmisele väljale);
 - topeltvajutus lisab tühiku;
 - variant 1:
@@ -176,7 +176,7 @@ klaviatuur järgmisi operatsioone:
   - svaip paremale lisab reavahetuse,
   - pikk vajutus valib kogu teksti;
 
-- variant 2 (valikuline alates v1.6.78 beeta):
+- variant 2 (valikuline alates v1.6.78):
 
   - kustutamise ikoon kustutab kursorist vasakul oleva sümboli või praeguse valiku,
   - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),

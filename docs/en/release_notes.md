@@ -13,6 +13,35 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
+### v1.6.78 (2018-03-19)
+
+New in this release:
+
+- new menu "Swiping" under the IME settings to allow for the selection of a new IME mode. This mode is the default on the Watch, but currently non-default everywhere else.
+- behavior of the new mode while recognizing: same as the old mode, i.e. swipe to left deletes and swipe to right adds a newline
+- behavior of the new mode while not recognizing:
+
+  - button Delete: deletes the symbol on the left of the cursor, or deletes the selection (if present); holding the button keeps deleting symbols
+  - move left: moves cursor to the left
+  - move up left: moves cursor to the left faster
+  - move right: moves cursor to the right
+  - move down right: moves cursor to the right faster
+  - long press: enters the "selection mode", where the above movements change the selection (i.e. just one "side" of the cursor); in case there is no existing selection, then selects the word (``\w+``) under (or next to) the cursor
+  - single tap: cancels the selection
+  - double tap: adds a space at cursor
+  - press the left edge of the IME: moves the cursor to the left
+  - press the right edge of the IME: moves the cursor to the right
+
+- GUI in the new IME mode:
+
+  - hide buttons when in cursor moving mode
+  - light grey background when in selection mode
+  - show cursor direction/speed in the message bar
+
+- extension of the GUI in both IME modes:
+  - the search button was generalized to an "action" button, i.e. it performs a different action (currently: "search", "next" or "new line") depending on the type of the text field (search field, title field, regular text field)
+  - the keyboard button is replaced by a down-arrow during dictation to allow one to collapse the UI (showing only the dictation result, action button, and an up-arrow). This is useful when dictating longer, wanting to expose more of the text area, and/or not caring about touch commands.
+
 ### v1.6.68 (2017-10-26)
 
 New in this release:
