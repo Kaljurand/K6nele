@@ -9,6 +9,7 @@ digraph G {
     graph [style="dotted", fontsize=10 fontname="Helvetica"];
     node [shape="box", fontsize=10 fontname="Helvetica"];
     edge [arrowhead="normal", arrowsize="0.6"];
+    labeljust = "l";
 
     "Kõnele View" [label="Kõnele mic+swipe editor\n(view component)", shape="component", style="filled", fillcolor="yellow"];
 
@@ -26,7 +27,7 @@ digraph G {
     // (e.g. sample rate, duration, silence detection).
     subgraph cluster_1 {
         label = "Android speech services";
-        "other_service" [label="some other service:\nGoogle, Inimesed (future work), ..."];
+        "other_service" [label="some other service:\nGoogle, ..."];
         "Kõnele fast" [label="Kõnele (fast recognition)", style="filled", fillcolor="yellow"];
         "Kõnele grammar" [label="Kõnele (grammar support)", style="filled", fillcolor="yellow"];
     }
@@ -43,9 +44,9 @@ digraph G {
     }
 
     subgraph cluster_3 {
-        label = "Android keyboard apps";
-        "Kõnele IME" [label="Kõnele speech keyboard", style="filled", fillcolor="yellow"];
-        "Google Keyboard" [label="Google Keyboard"];
+        label = "Android IME apps";
+        "Kõnele IME" [label="Kõnele speak & swipe", style="filled", fillcolor="yellow"];
+        "Gboard" [label="Gboard"];
         "other_ime" [label="some other keyboard"];
     }
 
@@ -69,6 +70,7 @@ digraph G {
     "panel" -> "Android RecognizerIntent" ;
     "other_activity" -> "Android RecognizerIntent" ;
 
+    // "other_service" -> "Gboard" ;
     "Android SpeechRecognizer" -> "Kõnele View" ;
     "Kõnele View" -> "Kõnele IME" ;
     "Kõnele View" -> "panel" ;
@@ -76,7 +78,7 @@ digraph G {
     "Android SpeechRecognizer" -> "other_ime" [label="(maybe)", style="dashed", fontsize=9, fontname="Verdana"];
     "Android RecognizerIntent" -> "Google Keep" ;
     "Android SpeechRecognizer" -> "Google Translate" ;
-    "Google Keyboard" -> "IME";
+    "Gboard" -> "IME";
     "Kõnele IME" -> "IME";
     "other_ime" -> "IME";
     "IME" ->"Google Keep";
