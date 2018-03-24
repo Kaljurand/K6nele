@@ -209,6 +209,22 @@
                         android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
                         android:targetPackage="ee.ioc.phon.android.speak" />
                 </Preference>
+
+                <Preference
+                    android:summary="@string/labelActivityEncoderListDemo"
+                    android:title="@string/labelActivityEncoderListDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.EncoderListDemo"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
+
+                <Preference
+                    android:summary="@string/labelActivityImeListDemo"
+                    android:title="@string/labelActivityImeListDemo">
+                    <intent
+                        android:targetClass="ee.ioc.phon.android.speak.demo.ImeListDemo"
+                        android:targetPackage="ee.ioc.phon.android.speak" />
+                </Preference>
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>

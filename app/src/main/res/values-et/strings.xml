@@ -18,7 +18,7 @@
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Infootsingu demo</string>
-    <string name="labelActivityEncoderDemo">Muud testid/demod</string>
+    <string name="labelActivityEncoderDemo">Androidi vormi demo</string>
     <string name="labelActivityFormDemo">HTML-vormi demo</string>
     <string name="labelActivityServerList">Kõnetuvastusserverid</string>
     <string name="labelActivityQuickSettings">Kiirseaded</string>
@@ -69,7 +69,7 @@
     <string name="summaryChatDemo">Kõnekäskudega käivitatud rakenduste ajalugu</string>
     <string name="summaryVoiceSearchDemo">Transkribeerib kõne ning edastab tulemused
 		infootsingu rakendusele</string>
-    <string name="summaryEncoderDemo">Muud testid ja demod (lindistamine, audio kokkupakkimine, jne)</string>
+    <string name="summaryEncoderDemo">Androidi EditText erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
     <string name="summaryFormDemo">HTML-vorm erinevat tüüpi väljadega, klaviatuuri testimiseks</string>
 
     <!-- RecognizerIntent activity -->
@@ -316,7 +316,7 @@
         <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
     </plurals>
-    <string name="buttonDemoShowEncoders">Näita toetatud formaate</string>
+    <string name="labelActivityEncoderListDemo">Audioformaadid</string>
     <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Vajalik vähemalt Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
@@ -324,5 +324,6 @@
 
     <!-- Deprecated -->
     <string name="buttonStop">Lõpeta!</string>
+    <string name="labelActivityImeListDemo">Kõneklaviatuurid</string>
 
 </resources>

@@ -7,9 +7,26 @@
     android:padding="@dimen/layoutMargin4dp">
 
     <EditText
+        android:id="@+id/etTest1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="text, actionNext"
+        android:imeOptions="actionNext"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/etTest2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="textPassword, actionGo"
+        android:imeOptions="actionGo"
+        android:inputType="textPassword" />
+
+    <EditText
         android:id="@+id/etTest0"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:hint="textMultiLine, actionSearch"
         android:imeOptions="actionSearch"
         android:inputType="textMultiLine" />
 
@@ -32,21 +49,6 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/buttonImeSpeak"
                 android:text="@string/buttonImeSpeak" />
-
-            <Button
-                android:id="@+id/buttonTest2"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/buttonDemoShowEncoders"
-                android:text="@string/buttonDemoShowEncoders" />
-
-            <Button
-                android:id="@+id/buttonTest3"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/buttonDemoShowVoiceImes" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

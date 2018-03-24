@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 dependencies {
     compile project(':speechutils:app')
@@ -9,6 +10,7 @@ dependencies {
     //compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'com.koushikdutta.async:androidasync:2.2.1'
     compile 'com.android.support:support-v13:' + rootProject.supportLibVersion
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     // Enable this when using the support library for the vector drawables
     //compile 'com.android.support:appcompat-v7:23.2.1'
 }
@@ -25,8 +27,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1678
-        versionName '1.6.78'
+        versionCode 1679
+        versionName '1.6.79'
         // Enable this when using the support library for the vector drawables
         //vectorDrawables.useSupportLibrary = true
     }
@@ -94,4 +96,7 @@ task(deploy) << {
 
     println "adb uninstall ee.ioc.phon.android.speak"
     println "adb install ${apk2}"
+}
+repositories {
+    mavenCentral()
 }
