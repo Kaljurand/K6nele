@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1679
         versionName '1.6.79'
         // Enable this when using the support library for the vector drawables
