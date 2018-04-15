@@ -141,15 +141,28 @@ Neist tuleb juttu allpool.
 Paljudes Androidi rakendustes on tekstikastid, millele vajutades avaneb klaviatuurirakendus,
 nn sisestusmeetod, inglise keeles "input method editor (IME)".
 Kõnele sisaldab endas sellist klaviatuurirakendust, kuid erinevalt traditsioonilisest
-tähtede ja numbritega klahvist on Kõnele klaviatuuril ainult üks nupp, mis
-võimaldab kõnesisendit.
+tähtede ja numbritega klahvistikust on Kõnele klaviatuuril ainult paar klahvi,
+ning kogu tekstisisestus toimub kõne abil.
 
 <img title="Ekraanipilt: klaviatuur ja otsingurida" alt="Ekraanipilt: klaviatuur ja otsingurida." src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-15-41.png">
 <img title="Ekraanipilt: klaviatuur ja märkmerakendus" alt="Ekraanipilt: klaviatuur ja märkmerakendus." src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-00-23-30.png">
 
-Kõnele klaviatuuri kasutamiseks tuleb see ennem sisse lülitada Androidi süsteemses menüüs
-`Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`, valides
-seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
+### Seadistamine
+
+Kõnele klaviatuuri kasutamiseks tuleb see ennem sisse lülitada Androidi süsteemses
+virtuaalklaviatuurimenüüs.
+Kui Kõnele klaviatuur pole sisse lülitatud, siis on Kõnele seadetes, esimesel kohal, ka
+otselink sellesse menüüsse.
+
+<img title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/IMG_20170916_113335.png">
+
+Androidi seadete hierarhias asub vastav menüü üsna sügaval, ning lisaks erineb selle asukoht
+Androidi versiooniti:
+
+- Android v5: `Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`
+- uuemad Androidi versioonid: `Seaded -> Täpsemad seaded -> Keel ja klahvistik -> Virtuaalne klaviatuur`
+
+Järgnevad ekraanipildid näitavad klaviatuuri seadistamist Androidis v5.
 
 <img title="Ekraanipilt: Androidi sisestusmeetodite seadistamine" alt="Ekraanipilt: Androidi sisestusmeetodite seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-32-57.png">
 <img title="Ekraanipilt: Androidi vaikeklaviatuuri muutmine" alt="Ekraanipilt: Androidi vaikeklaviatuuri muutmine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-33-10.png">
@@ -157,9 +170,27 @@ seal Kõnele, ning muutes selle "praeguseks klaviatuuriks".
 <img title="Ekraanipilt: klaviatuuri sisselülitamine" alt="Ekraanipilt: klaviatuuri sisselülitamine." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-00.png">
 <img title="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks" alt="Ekraanipilt: Kõnele on määratud vaikeklaviatuuriks." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-19-34-24.png">
 
-Androidi uuemates versioonides on vastav menüü sügavamal, nt: `Seaded -> Täpsemad seaded -> Keel ja klahvistik -> Virtuaalne klaviatuur`. Kõnele seadetes on ka otselink sellesse menüüsse.
+### Kasutamine
 
-<img title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/IMG_20170916_113335.png">
+Kõiki sisselülitatud klaviatuure on võimalik paralleelselt kasutada --- tekstikastile klikkides
+kuvatakse vaikeklaviatuur ("praegune klaviatuur"), kuid ekraani alumises nurgas asuva klaviatuurinupu (põhinuppude _Back_, _Home_, _Recent apps_ kõrval) läbi saab seda jooksvalt muuta.
+Kõnele klaviatuuri ongi mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
+(nt _Gboard_, _Swype_, _SwiftKey_, _SlideIT_).
+Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
+kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
+Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
+ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi.
+Muudes olukordades võib ümber lülitada teisele klaviatuurile.
+Mõned klaviatuurid (nt _Gboard_ ja _Kõnele_ ise)
+võimaldavad klaviatuurivahetust ainult ühe nupuvajutusega. Nt, vajutades maakera-ikooni
+_Gboard_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
+_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
+Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
+kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
+
+<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
+
+### Omadused
 
 Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuur järgmisi operatsioone:
@@ -167,10 +198,10 @@ klaviatuur järgmisi operatsioone:
 - vajutus klaviatuuriikoonile vahetab eelmisele klaviatuurile;
 - pikk vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile;
 - vajutus otsinguikoonile käivitab otsingu (ainult otsingureal),
-  (alates v1.6.78 on otsinguikooni asemel tekstiväljast sõltuva funktsiooni ja ikooniga nupp, mis
+  (alates v1.6.78 on otsinguikooni asemel tekstivälja tüübist sõltuva funktsiooni ja ikooniga nupp, mis
   sooritab otsingu, lisab reavahetuse, või liigutab kursori järgmisele väljale);
 - topeltvajutus lisab tühiku;
-- variant 1:
+- variant 1 (vaikimisi):
 
   - svaip vasakule kustutab kursorist vasakul asuva sõna,
   - svaip paremale lisab reavahetuse,
@@ -185,24 +216,7 @@ klaviatuur järgmisi operatsioone:
   - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
   - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
-Kõneklaviatuuri on mõistlik kasutada paralleelselt mõne "tavaklaviatuuriga"
-(nt _Gboard_, _Swype_, _SwiftKey_, _SlideIT_).
-Kõnetuvastuse abil tekstide dikteerimine sobib peamiselt olukordadesse,
-kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti perfektne.
-Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
-ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi.
-Muudes olukordades võib ümber lülitada teisele klaviatuurile.
-Android v5+ seadmetes on lihtne teksti kirjutamise ajal klaviatuure
-vahetada, sest seadme põhinuppude (_Back_, _Home_, _Recent apps_) kõrvale ilmub teksti kirjutamise
-ajaks klaviatuurivahetusnupp. Mõned klaviatuurid (nt _Gboard_ ja _Kõnele_ ise)
-võimaldavad lisaks klaviatuurivahetust ainult ühe nupuvajutusega. Nt, vajutades maakera-ikooni
-_Gboard_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
-_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
-Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
-kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
-
-<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
-
+Lisaks on võimalik teksti sisestada ja muuta [ümberkirjutusreeglite](#ümberkirjutusreeglid) abil (vt allpool).
 
 ## Kõnele kutsumine teistest rakendustest
 
