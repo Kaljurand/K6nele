@@ -728,7 +728,9 @@ public class SpeechInputView extends LinearLayout {
             ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             if (results != null && !results.isEmpty()) {
                 // This can be true only with kaldi-gstreamer-server
-                boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL);
+                // ... and with Tilde's version of kaldi-gstreamer-server
+                boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL)
+                        || bundle.getBoolean("com.tilde.tildesbalss.extra.SEMI_FINAL");
                 showMessage(lastChars(results, isSemiFinal));
                 if (isSemiFinal) {
                     mListener.onFinalResult(results, bundle);
