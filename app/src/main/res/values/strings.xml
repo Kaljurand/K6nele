@@ -32,7 +32,7 @@
     <string name="labelActivityHandsfreeDemo">Handsfree demo</string>
     <string name="labelActivityChatDemo">Chat demo</string>
     <string name="labelActivityVoiceSearchDemo">Voice search demo</string>
-    <string name="labelActivityEncoderDemo">Other tests/demos</string>
+    <string name="labelActivityEncoderDemo">Android form demo</string>
     <string name="labelActivityFormDemo">HTML form demo</string>
     <string name="labelActivityQuickSettings">Quick settings</string>
 
@@ -95,7 +95,7 @@
     <string name="summaryHandsfreeDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
     <string name="summaryChatDemo">Chat-style UI for calling intents</string>
     <string name="summaryVoiceSearchDemo">Forwards the results to a search app</string>
-    <string name="summaryEncoderDemo">Various other tests and demos (recording, audio compression, voice IMEs, etc.)</string>
+    <string name="summaryEncoderDemo">Android EditTexts of various types for testing the IME</string>
     <string name="summaryFormDemo">HTML form with various types of fields for testing the IME</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
@@ -269,8 +269,8 @@
     <string name="menuRewritesHelp">Help page with links to examples</string>
     <string name="menuDemoGrammarAssign">Assign grammar</string>
     <string name="promptSearch">Speak a web search query</string>
-    <string name="buttonDemoShowEncoders">List audio encoders</string>
-    <string name="buttonDemoShowVoiceImes" translatable="false">List voice IMEs</string>
+    <string name="labelActivityEncoderListDemo">Audio encoders</string>
+    <string name="labelActivityImeListDemo">Voice IMEs</string>
     <string name="buttonApplyDeveloperDefaults">Apply developer defaults</string>
 
     <!-- Content description of images and buttons -->

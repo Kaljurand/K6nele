@@ -366,6 +366,16 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityEncoderDemo"></activity>
 
         <activity
+            android:name=".demo.EncoderListDemo"
+            android:exported="true"
+            android:label="@string/labelActivityEncoderListDemo"></activity>
+
+        <activity
+            android:name=".demo.ImeListDemo"
+            android:exported="true"
+            android:label="@string/labelActivityImeListDemo"></activity>
+
+        <activity
             android:name=".demo.FormDemoActivity"
             android:exported="true"
             android:label="@string/labelActivityFormDemo"></activity>
