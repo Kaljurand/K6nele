@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
 
     private static class ViewHolder {
         private TextView id;
-        private TextView isSelected;
+        private CheckBox isSelected;
     }
 
     @Override
@@ -39,20 +41,26 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
             LayoutInflater inflator = context.getLayoutInflater();
             view = inflator.inflate(R.layout.list_item_rewrites, null);
             final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.id = (TextView) view.findViewById(R.id.rewritesId);
-            viewHolder.isSelected = (TextView) view.findViewById(R.id.rewritesIsSelected);
+            viewHolder.id = view.findViewById(R.id.rewritesId);
+            viewHolder.isSelected = view.findViewById(R.id.rewritesIsSelected);
             view.setTag(viewHolder);
         } else {
             view = convertView;
         }
         ViewHolder holder = (ViewHolder) view.getTag();
-        Rewrites rewrites = list.get(position);
+        final Rewrites rewrites = list.get(position);
         holder.id.setText(rewrites.getId());
         if (rewrites.isSelected()) {
-            holder.isSelected.setVisibility(View.VISIBLE);
+            holder.isSelected.setChecked(true);
         } else {
-            holder.isSelected.setVisibility(View.INVISIBLE);
+            holder.isSelected.setChecked(false);
         }
+        holder.isSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                rewrites.toggle();
+            }
+        });
         return view;
     }
 }

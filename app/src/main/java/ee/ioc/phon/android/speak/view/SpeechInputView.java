@@ -125,7 +125,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     // TODO: change the content description when the button changes
-    //buttonAction.setContentDescription(context.getString(R.string.cdImeNewline));
+    // mBImeAction.setContentDescription(mContext.getString(R.string.cdImeNewline));
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
         if (mBImeAction != null && editorInfo != null) {

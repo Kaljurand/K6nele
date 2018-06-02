@@ -106,14 +106,6 @@ public class RewritesSelectorActivity extends Activity {
             super.onCreateContextMenu(menu, v, menuInfo);
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.cm_rewrites, menu);
-
-            final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            final Rewrites rewrites = (Rewrites) getListView().getItemAtPosition(info.position);
-            if (rewrites.isSelected()) {
-                menu.findItem(R.id.cmRewritesActivate).setTitle(R.string.cmDeactivate);
-            } else {
-                menu.findItem(R.id.cmRewritesActivate).setTitle(R.string.cmActivate);
-            }
         }
 
         @Override
@@ -122,14 +114,6 @@ public class RewritesSelectorActivity extends Activity {
             final Rewrites rewrites = (Rewrites) getListView().getItemAtPosition(info.position);
             final String name = rewrites.getId();
             switch (item.getItemId()) {
-                case R.id.cmRewritesActivate:
-                    if (rewrites.toggle()) {
-                        toast(String.format(getString(R.string.toastActivated), name));
-                    } else {
-                        toast(String.format(getString(R.string.toastDeactivated), name));
-                    }
-                    initAdapter();
-                    return true;
                 case R.id.cmRewritesShare:
                     startActivity(Intent.createChooser(rewrites.getSendIntent(), getResources().getText(R.string.labelRewritesShare)));
                     return true;
@@ -179,7 +163,12 @@ public class RewritesSelectorActivity extends Activity {
             ActionBar actionBar = getActivity().getActionBar();
             if (actionBar != null) {
                 int count = tables.size();
-                actionBar.setSubtitle(mRes.getQuantityString(R.plurals.subtitleRewritesSelector, count, count));
+                if (count == 0) {
+                    actionBar.setSubtitle("");
+                } else {
+                    int countSelected = Rewrites.getDefaults(mPrefs, mRes).size();
+                    actionBar.setSubtitle(mRes.getQuantityString(R.plurals.subtitleRewritesSelector, count, countSelected, count));
+                }
             }
         }
     }

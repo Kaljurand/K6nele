@@ -122,6 +122,10 @@ public class Rewrites {
         PreferenceUtils.putPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables, set);
     }
 
+    public static Set<String> getDefaults(SharedPreferences prefs, Resources res) {
+        return PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
+    }
+
     public static List<Rewrites> getTables(SharedPreferences prefs, Resources res) {
         List<String> rewritesIds = new ArrayList<>(PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap));
         List<Rewrites> rewritesTables = new ArrayList<>();

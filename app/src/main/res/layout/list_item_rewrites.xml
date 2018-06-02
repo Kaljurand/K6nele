@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:padding="@dimen/layoutMargin2">
 
     <TextView
@@ -14,15 +15,12 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="?android:textColorPrimary" />
 
-    <TextView
+    <CheckBox
         android:id="@+id/rewritesIsSelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="@string/check"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?android:textColorPrimary" />
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

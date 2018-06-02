@@ -66,8 +66,8 @@ public class RewritesLoaderActivity extends Activity {
         setContentView(R.layout.activity_rewrites_loader);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final Resources res = getResources();
-        final Button bRewritesLoader = (Button) findViewById(R.id.bRewritesNameOk);
-        final AutoCompleteTextView et = (AutoCompleteTextView) findViewById(R.id.etRewritesNameText);
+        final Button bRewritesLoader = findViewById(R.id.bRewritesNameOk);
+        final AutoCompleteTextView et = findViewById(R.id.etRewritesNameText);
         et.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -94,9 +94,9 @@ public class RewritesLoaderActivity extends Activity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
             et.setAdapter(adapter);
 
-            final LinearLayout ll = (LinearLayout) findViewById(R.id.llRewritesChooser);
+            final LinearLayout ll = findViewById(R.id.llRewritesChooser);
             ll.setVisibility(View.VISIBLE);
-            final ListView lv = (ListView) findViewById(R.id.lvRewrites);
+            final ListView lv = findViewById(R.id.lvRewrites);
             lv.setAdapter(new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, names));
 

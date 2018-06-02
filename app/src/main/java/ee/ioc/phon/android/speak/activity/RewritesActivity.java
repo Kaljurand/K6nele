@@ -124,7 +124,7 @@ public class RewritesActivity extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.rewrites, menu);
 
-        Switch abSwitch = (Switch) menu.findItem(R.id.menuRewritesToggle).getActionView().findViewById(R.id.abSwitch);
+        Switch abSwitch = menu.findItem(R.id.menuRewritesToggle).getActionView().findViewById(R.id.abSwitch);
         abSwitch.setChecked(mRewrites.isSelected());
         abSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

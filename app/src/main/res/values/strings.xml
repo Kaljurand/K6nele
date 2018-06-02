@@ -6,7 +6,6 @@
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
-    <string name="check" translatable="false">✓</string>
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
@@ -189,9 +188,8 @@
         <item quantity="other">%d errors</item>
     </plurals>
     <plurals name="subtitleRewritesSelector">
-        <item quantity="zero">No tables</item>
-        <item quantity="one">1 table</item>
-        <item quantity="other">%d tables</item>
+        <item quantity="zero" />
+        <item quantity="other">%1$d out of %2$d active</item>
     </plurals>
 
     <string name="labelPermissionFetchUrl">fetch URL and run its content</string>
@@ -251,8 +249,6 @@
     <string name="cmServerEdit">Change URL</string>
     <string name="cmServerDelete">Delete</string>
     <!-- General menu items -->
-    <string name="cmActivate">Activate</string>
-    <string name="cmDeactivate">Deactivate</string>
     <string name="cmShare">Share</string>
     <string name="cmTest">Test</string>
     <string name="cmRename">Rename</string>
@@ -296,7 +292,7 @@
 
     <!-- TODO: make separate docs for English -->
     <string name="urlDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html</string>
-    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#Ümberkirjutusreeglid</string>
+    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#%C3%BCmberkirjutusreeglid</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 

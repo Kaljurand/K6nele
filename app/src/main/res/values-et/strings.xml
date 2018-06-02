@@ -161,8 +161,6 @@
     <string name="cmServerEdit">Muuda URL</string>
     <string name="cmServerDelete">Kustuta</string>
     <!-- General menu items -->
-    <string name="cmActivate">Lülita sisse</string>
-    <string name="cmDeactivate">Lülita välja</string>
     <string name="cmShare">Jaga</string>
     <string name="cmTest">Proovi</string>
     <string name="cmRename">Muuda nimi</string>
@@ -202,8 +200,8 @@
         <item quantity="other">%d viga</item>
     </plurals>
     <plurals name="subtitleRewritesSelector">
-        <item quantity="one">1 tabelit</item>
-        <item quantity="other">%d tabelit</item>
+        <item quantity="one">%2$d tabel, aktiivseid %1$d</item>
+        <item quantity="other">%2$d tabelit, aktiivseid %1$d</item>
     </plurals>
     <string name="entryGrammarName1">[piiramata sisend]</string>
     <string name="entryGrammarDesc1">Selle grammatika saab omistada rakendustele, kus te
