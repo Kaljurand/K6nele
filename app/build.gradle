@@ -11,8 +11,6 @@ dependencies {
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation 'com.android.support:support-v13:' + rootProject.supportLibVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    // Enable this when using the support library for the vector drawables
-    //implementation 'com.android.support:appcompat-v7:23.2.1'
 }
 
 android {
@@ -27,10 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 1679
-        versionName '1.6.79'
-        // Enable this when using the support library for the vector drawables
-        //vectorDrawables.useSupportLibrary = true
+        versionCode 1680
+        versionName '1.6.80'
     }
 
     packagingOptions {
@@ -94,9 +90,6 @@ task(deploy) << {
         commandLine 'ls', '-l', deploy_dir
     }
 
-    println "adb uninstall ee.ioc.phon.android.speak"
+    println "adb uninstall ${android.defaultConfig.applicationId}"
     println "adb install ${apk2}"
-}
-repositories {
-    mavenCentral()
 }
