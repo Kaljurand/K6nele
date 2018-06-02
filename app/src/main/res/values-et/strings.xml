@@ -270,6 +270,7 @@
         <item>Svaipimine liigutab kursorit</item>
     </string-array>
 
+    <string name="summaryWsServerWithStatus">%1$s (%2$d vaba slotti)</string>
     <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>
     <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust. WebSocket-põhine server.</string>
     <string name="titleCategoryServices">Kõnetuvastusteenused</string>

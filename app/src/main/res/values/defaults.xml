@@ -2,12 +2,17 @@
 <resources>
     <string name="defaultRewriteTables" translatable="false">defaultRewriteTables</string>
 
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech
-    // ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status
+    <!-- Note that the URL of the status service is constructed automatically
+    by replacing the last segment with "status", i.e.
+    x.substring(0, x.lastIndexOf('/') + 1) + "status"
+    resulting in e.g.
+    ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status -->
     <string name="defaultWsServer" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech</string>
 
     <string name="defaultHttpServer" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
-
+    <!--
+    <string name="defaultHttpServer" translatable="false">http://192.168.0.38:8080/client/dynamic/recognize</string>
+-->
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
     <!-- TODO: convert to integer -->
     <string name="defaultImeMode" translatable="false">1</string>

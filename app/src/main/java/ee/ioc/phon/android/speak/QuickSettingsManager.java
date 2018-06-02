@@ -55,21 +55,9 @@ public class QuickSettingsManager {
         editor.apply();
     }
 
-    public void setWsServerGlobalWs() {
+    public void setWsServer(String uri) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(mRes.getString(R.string.keyWsServer), "ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech");
-        editor.apply();
-    }
-
-    public void setWsServerGlobalWss() {
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(mRes.getString(R.string.keyWsServer), "wss://bark.phon.ioc.ee:8443/dev/duplex-speech-api/ws/speech");
-        editor.apply();
-    }
-
-    public void setWsServerLocal() {
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(mRes.getString(R.string.keyWsServer), "ws://192.168.0.15:8080/client/ws/speech");
+        editor.putString(mRes.getString(R.string.keyWsServer), uri);
         editor.apply();
     }
 }

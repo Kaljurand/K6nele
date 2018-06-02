@@ -19,27 +19,19 @@
             android:contentDescription="@string/buttonApplyDeveloperDefaults"
             android:text="@string/buttonApplyDeveloperDefaults" />
 
-        <Button
-            android:id="@+id/buttonApplyWsServerGlobalWs"
-            style="?android:attr/buttonBarButtonStyle"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WebSocket server global (ws)" />
-
-        <Button
-            android:id="@+id/buttonApplyWsServerGlobalWss"
-            style="?android:attr/buttonBarButtonStyle"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WebSocket server global (wss)" />
-
-        <Button
-            android:id="@+id/buttonApplyWsServerLocal"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WebSocket server local" />
+        <AutoCompleteTextView
+            android:id="@+id/actvWsServerUrl"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/layoutMargin4dp"
+            android:layout_marginRight="@dimen/layoutMargin4dp"
+            android:layout_weight="4"
+            android:completionThreshold="1"
+            android:hint="@string/defaultWsServer"
+            android:imeOptions="actionDone"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 </ScrollView>

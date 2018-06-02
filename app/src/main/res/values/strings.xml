@@ -78,6 +78,8 @@
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleWsServer">WebSocket URL</string>
     <string name="summaryWsServer" translatable="false">%1$s</string>
+    <string name="summaryWsServerWithStatus">%1$s\n(%2$d slots available)</string>
+    <string name="summaryWsServerWithStatusError" translatable="false">%1$s\n(%2$s)</string>
     <string name="titleHelpText">Help text</string>
     <string name="summaryHelpText">Show usage instructions by the microphone button. Makes the search panel larger.</string>
     <string name="titleReturnErrors">Return errors</string>
