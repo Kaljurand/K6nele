@@ -125,7 +125,7 @@ Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena
 
 <img title="Ekraanipilt: otselingid" alt="Ekraanipilt: otselingid." src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
 
-Otselink on lihtne näide, kuidas käivitada Kõnele otsingupaneel sisendparameetritega, mille väärtused erinevad nendest, mis seadetes kirjas. Kõnele toetab palju erinevaid sisendparameeterid (nn EXTRA), mis võimaldavad teistel rakendustel (nt [Tasker](https://tasker.dinglisch.net/)) Kõnelega otse suhelda. Vt täpsemalt [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
+Otselink on lihtne näide, kuidas käivitada Kõnele otsingupaneel sisendparameetritega, mille väärtused erinevad nendest, mis seadetes kirjas. Kõnele toetab palju erinevaid sisendparameeterid (nn EXTRA), mis võimaldavad teistel rakendustel (nt [Tasker](https://tasker.joaoapps.com/)) Kõnelega otse suhelda. Vt täpsemalt [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
 
 Lisaks Kõnele oma seadetele, on Kõnelet võimalik konfigureerida kolmes Androidi süsteemses
 menüüs:
@@ -192,23 +192,38 @@ kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
 ### Omadused
 
-Lisaks nupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
-klaviatuur järgmisi operatsioone:
+Lisaks põhinupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
+klaviatuuri puutetundlik paneel erinevaid operatsioone, sõltuvalt
+klaviatuuriseadetest,
+tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
 
-- vajutus klaviatuuriikoonile vahetab eelmisele klaviatuurile;
-- pikk vajutus klaviatuuriikoonile vahetab järgmisele klaviatuurile;
-- vajutus otsinguikoonile käivitab otsingu (ainult otsingureal),
-  (alates v1.6.78 on otsinguikooni asemel tekstivälja tüübist sõltuva funktsiooni ja ikooniga nupp, mis
-  sooritab otsingu, lisab reavahetuse, või liigutab kursori järgmisele väljale);
-- topeltvajutus lisab tühiku;
-- variant 1 (vaikimisi):
+- vasak ülemine nurk:
 
+  - klaviatuuri-ikoon, kui tuvastust ei toimu:
+  lühike vajutus vahetab eelmisele klaviatuurile,
+  pikk vajutus vahetab järgmisele klaviatuurile;
+
+  - noole-ikoon, tuvastuse ajal:
+  lühike vajutus muudab klaviatuuri paneeli väikseks, või tagasi suureks;
+
+- parem ülemine nurk:
+
+  - otsinguikoon, otsinguvälja puhul: lühike vajutus sooritab otsingu,
+
+  - väljavahetusikoon, üherealise tekstivälja (nt pealkirjaväli) puhul: lühike vajutus liigutab kursori järgmisele väljale,
+
+  - reavahetusikoon, tavalise mitmerealise tekstivälja puhul: lühike vajutus lisab reavahetuse;
+
+- paneel, variant 1 (vaikimisi, aga seadetes muudetav):
+
+  - topeltvajutus lisab tühiku;
   - svaip vasakule kustutab kursorist vasakul asuva sõna,
   - svaip paremale lisab reavahetuse,
   - pikk vajutus valib kogu teksti;
 
-- variant 2 (valikuline alates v1.6.78):
+- paneel, variant 2:
 
+  - topeltvajutus lisab tühiku;
   - kustutamise ikoon kustutab kursorist vasakul oleva sümboli või praeguse valiku,
   - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
   - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
@@ -216,7 +231,8 @@ klaviatuur järgmisi operatsioone:
   - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
   - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
-Lisaks on võimalik teksti sisestada ja muuta [ümberkirjutusreeglite](#ümberkirjutusreeglid) abil (vt allpool).
+Osa nendest operatsioonidest on võimalik
+[tekstitoimetuskäskude](#tekstitoimetuskäsud) abil dubleerida (vt allpool).
 
 ## Kõnele kutsumine teistest rakendustest
 
@@ -300,7 +316,7 @@ Kõnele laeb ümberkirjutusreeglid lihtsast tabelikujulisest tekstifailist, nn T
 - __Comment__ Rida kirjeldav kommentaar.
 
 Igale reale vastab üks reegel, ning ridade järjekord määrab reeglite rakendamise järjekorra. Nõnda saavad allpool olevad reeglid ära kasutada eelnevate reeglite ümberkirjutusi.
-Veergude järjekord pole oluline. Kohustuslik veerg on ainult __Utterance__. Kui __Replacement__ puudub, siis on asendustekst alati tühisõne. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, rakenduse, ja tuvastusteenuse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/). Põhjalik regulaaravaldiste õpetus on nt <http://www.regular-expressions.info>.
+Veergude järjekord pole oluline. Kohustuslik veerg on ainult __Utterance__. Kui __Replacement__ puudub, siis on asendustekst alati tühisõne. Veerud __Locale__, __Service__ ja __App__ määravad, millise keele, tuvastusteenuse, ja rakenduse puhul on reegel aktiivne. Kõik regulaaravaldised on [Java regulaaravaldised](https://docs.oracle.com/javase/tutorial/essential/regex/). Põhjalik regulaaravaldiste õpetus on nt <http://www.regular-expressions.info>.
 
 Veergude tüübid on määratud esimesse ritta (nn päisesse) kirjutatud ingliskeelse märksõnaga ("Utterance", "Replacement", jne). Kui päis puudub (st esimene rida ei sisalda kohustusliku veeru nime "Utterance"), siis arvestatakse ainult tabeli esimest kahte veergu ning interpreteeritakse neid kui __Utterance__ ja __Replacement__ veerge. Kui tabelil on ainult üks veerg, siis on __Replacement__ alati tühisõne. Seega, kõige lihtsam tabel koosneb ainult ühest sümbolist, nt ``a`` (kustuta kõik "a" tähed).
 
@@ -403,7 +419,7 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 <img title="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse" alt="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse." src="{{ site.baseurl }}/images/et/Screenshot_20170115-154706.png">
 <img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri." src="{{ site.baseurl }}/images/et/Screenshot_20170115-160910.png">
 
-Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Korraga saab aktiivne olla ainult üks reeglifail.
+Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Kui mitu faili on aktiivsed, siis neid rakendatakse tähestikujärjekorras.
 
 ### Näited
 
