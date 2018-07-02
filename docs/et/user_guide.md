@@ -76,8 +76,8 @@ edasi seadme veebibrauserile.
 Ümberkirjutusreeglid võimaldavad tuvastustulemust muuta ning avada see muus rakenduses kui veebibrauser. Näiteks lisab järgmine reegel transkriptsioonile sõne `, Estonia` ning avab tulemuse [kaardirakenduses](https://developer.android.com/guide/components/intents-common.html#Maps).
 
 {% highlight sh %}
-    Utterance<HT>Command<HT>Arg1<NL>
-    (.*)<HT>activity<HT>{"action":"android.intent.action.VIEW", "data":"geo:0,0?q=$1, Estonia"}
+Utterance<HT>Command<HT>Arg1<NL>
+(.*)<HT>activity<HT>{"action":"android.intent.action.VIEW", "data":"geo:0,0?q=$1, Estonia"}
 {% endhighlight %}
 
 Antud juhul on reeglil kolm komponenti: regulaaravaldis, mis vastab lausungile (nt ``(.*)`` vastab suvalisele lausungile); käsk, mis käivitab rakenduse (``activity``) ning käsu argument (JSON struktuuriga kirjeldatud Androidi Intent, mis viitab ``$1`` abil kasutaja sisendile). Komponente eraldab tabulaator (ülal tähistatud kui ``<HT>``). Reeglifaili read on eraldatud reavahetusega (ülal tähistatud kui ``<NL>``) ning esimene rida on päis. Ümberkirjutusreegleid käsitleb pikemalt eraldi peatükk.
@@ -108,7 +108,7 @@ Kõnele toetab kahte erinevat kõnetuvastusteenust:
   - "kiire tuvastusega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/kaldi-gstreamer-server>)
     tagastab tuvastustulemuse juba rääkimise ajal, ega sea sisendkõne pikkusele mingit piirangut.
 
-Mõlema teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku.
+Mõlema teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku. Seda käsitleb pikemalt [eraldi peatükk](#tuvastusserver-koduvõrgus).
 
 Kõnele kasutajaliidesed kasutavad vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
 lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
@@ -541,6 +541,62 @@ kasutada ADB programmi.)
 
 Kõnele toimib eksperimentaalselt ka Android Things platvormil, vt
 <https://github.com/Kaljurand/K6nele/tree/master/docs/android_things>.
+
+## Tuvastusserver koduvõrgus
+
+Tuvastusserveri kasutamine koduserveris lisab kogu süsteemile privaatsust
+(sest audio ja selle transkriptsioon ei lahku koduvõrgust) ning võibolla ka
+kiirust (sõltuvalt koduserveri kiirusest ja välisinterneti aeglusest).
+
+Kõnetuvastusserveritarkvara <https://github.com/alumae/kaldi-gstreamer-server>
+koos eesti keele mudelite ja käivitusskriptiga on saadaval Dockeri konteinerina
+[alumae/docker-konele](https://hub.docker.com/r/alumae/docker-konele/), mis
+teeb serveri jooksutamise koduarvutis ülilihtsaks.
+
+Alustuseks on vaja ~3GB kõvakettaruumi
+ning Dockeri infrastruktuuri, mille paigaldamisjuhend nt Ubuntu Linuxile on
+<https://docs.docker.com/install/linux/docker-ce/ubuntu/>.
+Seejärel saab teenuse paigaldada järgmise käsuga
+(mis võtab natuke aega, sõltuvalt internetiühenduse ja arvuti kiirusest)
+
+{% highlight sh %}
+$ docker pull alumae/docker-konele
+{% endhighlight %}
+
+Teenuse käivitamiseks pordil 8080 (kasutada võib ka mõnd muud porti) tuleb
+anda käsk
+
+{% highlight sh %}
+$ docker run -p 8080:80 alumae/docker-konele
+{% endhighlight %}
+
+Jooksva teenuse testimiseks võib nt `curl` programmiga laadida sellesse
+mõne audiofaili:
+
+{% highlight sh %}
+$ curl -T lause.ogg http://localhost:8080/client/dynamic/recognize
+{"status": 0, "hypotheses": [{"utterance": "see on mingi suvaline lause"}], "id": "265...fea"}
+{% endhighlight %}
+
+Käivitatud teenuse kasutamiseks Kõnele rakenduses tuleb menüüs "Kõnetuvastusteenused"
+ära muuta üks või mõlemad kaks serveriaadressi.
+Konteiner "alumae/docker-konele" toetab nii "grammatikatoega" teenuse HTTP-liidest
+kui ka "kiire tuvastusega" teenuse WebSocket-liidest (esimesel juhul küll GF grammatikaid
+tegelikult toetamata, mistõttu on menüü nimi "grammatikatoega" siin eksitav).
+
+Teenuste aadressid sõltuvad koduserveri IP aadressist kohtvõrgus.
+Selle teadasaamiseks on tüüpiliselt kõige lihtsam
+külastada koduruuteri konfigureerimislehekülge, tüüpiliselt aadressil
+<http://192.168.0.1>. Eeldusel, et serveriaadress on `192.168.0.15`
+ja teenus sai käivitatud pordil `8080` tuleb Kõnele teenuste aadressid
+muuta kujule:
+
+- "grammatikatoega": `http://192.168.0.15:8080/client/dynamic/recognize`
+- "kiire tuvastusega": `ws://192.168.0.15:8080/client/ws/speech`
+
+Käivitades Kõnele läbi teise rakenduse (nt Tasker, Android Debug Bridge, omatehtud
+rakendus, või Kõnele ümberkirjutusreeglid), saab serveriaadressi üle
+defineerida ka EXTRAga `ee.ioc.phon.android.extra.SERVER_URL`.
 
 ## Veaolukorrad
 
