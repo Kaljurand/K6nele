@@ -125,7 +125,7 @@ Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena
 
 <img title="Ekraanipilt: otselingid" alt="Ekraanipilt: otselingid." src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
 
-Otselink on lihtne näide, kuidas käivitada Kõnele otsingupaneel sisendparameetritega, mille väärtused erinevad nendest, mis seadetes kirjas. Kõnele toetab palju erinevaid sisendparameeterid (nn EXTRA), mis võimaldavad teistel rakendustel (nt [Tasker](https://tasker.joaoapps.com/)) Kõnelega otse suhelda. Vt täpsemalt [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
+Otselink on lihtne näide, kuidas käivitada Kõnele otsingupaneel sisendparameetritega, mille väärtused erinevad nendest, mis seadetes kirjas. Kõnele toetab palju erinevaid sisendparameeterid (nn EXTRA), mis võimaldavad teistel rakendustel (nt Tasker, vt [eraldi peatükk](#kõnele-ja-tasker)) Kõnelega otse suhelda. Toetatud EXTRAte kohta vt täpsemalt [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
 
 Lisaks Kõnele oma seadetele, on Kõnelet võimalik konfigureerida kolmes Androidi süsteemses
 menüüs:
@@ -547,11 +547,17 @@ Kõnele toimib eksperimentaalselt ka Android Things platvormil, vt
 (_Eksperimentaalne_)
 
 Rakendus [Tasker](https://tasker.joaoapps.com/) võimaldab erinevaid nutiseadmetoiminguid automatiseerida.
-Järgnevalt mõned Taskeri "task"id, mis käivitavad Kõnele otsingupaneeli, kuid defineerivad
-üle mõned selle sisendparameetritest (nn EXTRA). Installeerimiseks on vaja lihtsalt klikkida allolevatele
-linkidele. Kasutamiseks vajalik Tasker 5.2 beeta.
+Järgnevalt mõned Taskeri käsud (nn "task"), mis käivitavad Kõnele otsingupaneeli, kuid defineerivad
+üle mõned selle sisendparameetritest (nn EXTRA). Käskude importimiseks Taskerisse (vajalik v5.2 beeta)
+tuleb klikkida allolevatele linkidele.
 
-- [K6 autostart](taskertask://H4sIAAAAAAAAAIVTy26DMBA8J18R+QNsHgGSyliKlEuUQ6UmPSODXWKFAHKM2/59/SAtapv2gpeZ2Z1lzeIjvZ653FJFF1eZA7BgWuQgBAulc5DACJYvKSDzGbZCJ1EmiCw0wxWjipMwiYN1GkXZar2MMfKgpfmEjpN1skyXGPFPWjASYWSe9qW9cLJPCzqo7qqoVBhZxDK9FCQMAoxsYIG9YK4Rc7o2ZrihQ1uddltb7zN2TH+uCSs5ZL2GfVOaIgZwjLb1dYiRvhmh/djLplKia50HrVQAFprnIBu9qo5xssoy86E2cthBSa+W9aiOAfLUrlU3ygxV0yYHwY2bpEXf0iZUfJ9a3ijCORRdBftT10LaMtkJBvmbkhRuno+PxeG4eTo+KDlwjEz+j0LJfY/0PpX9aX/tOT3/brf6PxGayQst1Ds89JxXJ38nmxGclJ0MeD0OOPS9YuSTXLy71E4mqtabR+N92tu/vBbUSYtG1CdVDk1ZdINqRMu//kNkSthFQHYTyNyffnXI/APM0lWWSAMAAA==) käivitab Kõnele EXTRAga `AUTO_START=True`
+- [K6 autostart](taskertask://H4sIAAAAAAAAAIVTy26DMBA8J18R+QNsHgGSyliKlEuUQ6UmPSODXWKFAHKM2/59/SAtapv2gpeZ2Z1lzeIjvZ653FJFF1eZA7BgWuQgBAulc5DACJYvKSDzGbZCJ1EmiCw0wxWjipMwiYN1GkXZar2MMfKgpfmEjpN1skyXGPFPWjASYWSe9qW9cLJPCzqo7qqoVBhZxDK9FCQMAoxsYIG9YK4Rc7o2ZrihQ1uddltb7zN2TH+uCSs5ZL2GfVOaIgZwjLb1dYiRvhmh/djLplKia50HrVQAFprnIBu9qo5xssoy86E2cthBSa+W9aiOAfLUrlU3ygxV0yYHwY2bpEXf0iZUfJ9a3ijCORRdBftT10LaMtkJBvmbkhRuno+PxeG4eTo+KDlwjEz+j0LJfY/0PpX9aX/tOT3/brf6PxGayQst1Ds89JxXJ38nmxGclJ0MeD0OOPS9YuSTXLy71E4mqtabR+N92tu/vBbUSYtG1CdVDk1ZdINqRMu//kNkSthFQHYTyNyffnXI/APM0lWWSAMAAA==) käivitab Kõnele EXTRAga `AUTO_START=true`, st sisendkõne lindistamine algab automaatselt.
+- [K6 send](taskertask://H4sIAAAAAAAAAI1T266bMBB8Tr4i8gfYQA6QRMYS0slDlFaVAkftG3JsN7ESDCIObf++vkAOatPLC17P7MyuWRuX9HYR3SvVdHHrMgAWvJcZCMFC9xmIYQSPXxNA5jNsE12KNkFsoRlmnGpBwngZrJMoSlfrlyVGHrS0mNBJvIoiS4sHLTmJMTJfu1G1IPukugnFMbIbC7adJGEQYGQDC+wldz2Y1XUww1d6V+y8eyURRo/YMe3lRPhRQN72sL0ejYkBHNNb/z7EqB8Lof3QRs60bJSrQZkOwKIXGUiHWqzhgqzS1JzRRg4rdOezu9OQvQTIUzulR8r8z55eMxCM3EQW/SKbUMs/Uy8jRYSAsmGwPTcKUsW7RnIovuuOwvyt/FQVZX4oN7q7C4yM/jej+D+MDtvi7UNZHbafD7tyW2wKN6VnbsnDbXS4tUKw82D0Mf9SebNiEz53SP/aj3Gjl+fC1b+F0MxU9lL/gIXryk87H8CJ7WR062F0oR8CRl7k4l19cmmSKV88Gm6KvVf1t4o1dX1XklGrqERN5fX9ciOjtg8L2ZdF5n71T5HMfwI2fbaomAMAAA==) käivitab Kõnele EXTRAtega `AUTO_START=true`, `MAX_RESULTS=1`, `RESULT_REWRITES="Send"`, st lindistamine algab automaatselt, tagastatakse ainult üks transkriptsioon, ning sellele rakendatakse ümberkirjutusreeglistikku "Send".
+
+Käskude käivitamiseks on mitmeid võimalusi, nt võib Taskeris defineerida
+käsu käivitamistingimused (nn "profile") või
+[teisendada käsk Androidi rakenduseks](http://tasker.dinglisch.net/userguide/en/appcreation.html), või
+käivitada see lihtsalt Taskeri kasutajaliidese vahendusel.
 
 ## Tuvastusserver koduvõrgus
 
