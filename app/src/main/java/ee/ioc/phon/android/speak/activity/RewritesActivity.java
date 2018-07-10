@@ -83,6 +83,9 @@ public class RewritesActivity extends Activity {
             case R.id.menuRewritesShare:
                 startActivity(Intent.createChooser(mRewrites.getSendIntent(), getResources().getText(R.string.labelRewritesShare)));
                 return true;
+            case R.id.menuRewritesSendBase64:
+                startActivity(mRewrites.getIntentSendBase64());
+                return true;
             case R.id.menuRewritesTest:
                 startActivity(mRewrites.getK6neleIntent());
                 return true;

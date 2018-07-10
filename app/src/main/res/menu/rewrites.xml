@@ -18,6 +18,11 @@
         android:title="@string/cmShare" />
 
     <item
+        android:id="@+id/menuRewritesSendBase64"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/cmSendBase64" />
+
+    <item
         android:id="@+id/menuRewritesRename"
         android:showAsAction="ifRoom|withText"
         android:title="@string/cmRename" />

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.speech.RecognizerIntent;
+import android.util.Base64;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,6 +82,17 @@ public class Rewrites {
         intent.putExtra(Intent.EXTRA_SUBJECT, mId);
         intent.putExtra(Intent.EXTRA_TEXT, ur.toTsv());
         intent.setType("text/tab-separated-values");
+        return intent;
+    }
+
+    public Intent getIntentSendBase64() {
+        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_SUBJECT, mId);
+        intent.putExtra(Intent.EXTRA_TEXT, "k6://" + Base64.encodeToString(ur.toTsv().getBytes(), Base64.NO_WRAP | Base64.URL_SAFE));
+        intent.setType("text/plain");
         return intent;
     }
 

@@ -162,6 +162,7 @@
     <string name="cmServerDelete">Kustuta</string>
     <!-- General menu items -->
     <string name="cmShare">Jaga</string>
+    <string name="cmSendBase64">Jaga base64 URI</string>
     <string name="cmTest">Proovi</string>
     <string name="cmRename">Muuda nimi</string>
     <string name="cmDelete">Kustuta</string>

@@ -252,6 +252,7 @@
     <string name="cmServerDelete">Delete</string>
     <!-- General menu items -->
     <string name="cmShare">Share</string>
+    <string name="cmSendBase64">Share as base64 URI</string>
     <string name="cmTest">Test</string>
     <string name="cmRename">Rename</string>
     <string name="cmDelete">Delete</string>

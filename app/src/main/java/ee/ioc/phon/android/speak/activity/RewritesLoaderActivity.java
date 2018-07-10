@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -130,7 +132,16 @@ public class RewritesLoaderActivity extends Activity {
                     uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                 }
                 if (uri != null) {
-                    utteranceRewriter = loadFromUri(uri);
+                    if (uri.getScheme().equals("k6")) {
+                        byte[] data = Base64.decode(uri.getSchemeSpecificPart().substring(2), Base64.NO_WRAP | Base64.URL_SAFE);
+                        try {
+                            utteranceRewriter = new UtteranceRewriter(new String(data, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            // TODO: dont ignore
+                        }
+                    } else {
+                        utteranceRewriter = loadFromUri(uri);
+                    }
                 }
             } else {
                 utteranceRewriter = new UtteranceRewriter(text);
