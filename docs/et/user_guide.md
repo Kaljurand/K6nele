@@ -423,7 +423,7 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Kui mitu faili on akti
 
 ### Näited
 
-- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU/edit?usp=sharing)] Ühest reeglist koosnev reeglistik, mis näitab, kuidas avada veebibrauseri asemel kaardirakendus.
+- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU/edit?usp=sharing), [k6-URI](k6://VXR0ZXJhbmNlCUNvbW1hbmQJQXJnMQooLiopCWFjdGl2aXR5CXsiYWN0aW9uIjogImFuZHJvaWQuaW50ZW50LmFjdGlvbi5WSUVXIiwgImRhdGEiOiAiZ2VvOjAsMD9xPSQxLCBFc3RvbmlhIn0=)] Ühest reeglist koosnev reeglistik, mis näitab, kuidas avada veebibrauseri asemel kaardirakendus.
 - [[TSV](https://docs.google.com/spreadsheets/d/1TC7hGq9SDrpiDmRjCxvFzfi6GJwOgKpQDQqTm086Xuk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1TC7hGq9SDrpiDmRjCxvFzfi6GJwOgKpQDQqTm086Xuk/edit?usp=sharing)] Tekstiasendusreeglid kirjavahemärkide lisamiseks (kommentaaridega)
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
