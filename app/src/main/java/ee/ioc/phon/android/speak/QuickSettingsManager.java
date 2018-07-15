@@ -13,10 +13,11 @@ public class QuickSettingsManager {
 
     static {
         Set<String> set = new HashSet<>();
+        set.add("ee.ioc.phon.android.speak/.service.WebSocketRecognitionService");
         set.add("ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE");
         set.add("ee.ioc.phon.android.speak/.service.HttpRecognitionService;et-EE");
+        set.add("com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService");
         set.add("com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService;en-US");
-        set.add("com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService;de-DE");
         COMBOS_MULTILINGUAL = Collections.unmodifiableSet(set);
     }
 

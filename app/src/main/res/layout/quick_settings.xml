@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/layoutMargin4dp"
+    android:orientation="vertical"
+    android:padding="@dimen/layoutMargin4dp">
 
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/buttonApplyDeveloperDefaults"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/layoutMargin4dp">
+        android:contentDescription="@string/buttonApplyDeveloperDefaults"
+        android:text="@string/buttonApplyDeveloperDefaults" />
 
-        <Button
-            android:id="@+id/buttonApplyDeveloperDefaults"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/buttonApplyDeveloperDefaults"
-            android:text="@string/buttonApplyDeveloperDefaults" />
-
-        <AutoCompleteTextView
-            android:id="@+id/actvWsServerUrl"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginEnd="@dimen/layoutMargin4dp"
-            android:layout_marginRight="@dimen/layoutMargin4dp"
-            android:layout_weight="4"
-            android:completionThreshold="1"
-            android:hint="@string/defaultWsServer"
-            android:imeOptions="actionDone"
-            android:inputType="textUri"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

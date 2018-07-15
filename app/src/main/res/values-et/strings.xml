@@ -161,7 +161,7 @@
     <string name="cmServerEdit">Muuda URL</string>
     <string name="cmServerDelete">Kustuta</string>
     <!-- General menu items -->
-    <string name="cmShare">Jaga</string>
+    <string name="cmShare">Jaga TSV</string>
     <string name="cmSendBase64">Jaga base64 URI</string>
     <string name="cmTest">Proovi</string>
     <string name="cmRename">Muuda nimi</string>
@@ -271,7 +271,7 @@
         <item>Svaipimine liigutab kursorit</item>
     </string-array>
 
-    <string name="summaryWsServerWithStatus">%1$s (%2$d vaba slotti)</string>
+    <string name="summaryWsServerWithStatus">%1$d vaba slotti</string>
     <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>
     <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust. WebSocket-põhine server.</string>
     <string name="titleCategoryServices">Kõnetuvastusteenused</string>

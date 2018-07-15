@@ -78,8 +78,8 @@
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleWsServer">WebSocket URL</string>
     <string name="summaryWsServer" translatable="false">%1$s</string>
-    <string name="summaryWsServerWithStatus">%1$s\n(%2$d slots available)</string>
-    <string name="summaryWsServerWithStatusError" translatable="false">%1$s\n(%2$s)</string>
+    <string name="summaryWsServerWithStatus">%1$d slots available</string>
+    <string name="summaryWsServerWithStatusError" translatable="false">%1$s</string>
     <string name="titleHelpText">Help text</string>
     <string name="summaryHelpText">Show usage instructions by the microphone button. Makes the search panel larger.</string>
     <string name="titleReturnErrors">Return errors</string>
@@ -132,6 +132,7 @@
     <string name="buttonOk">OK</string>
     <string name="buttonGoToSettings">Go to settings</string>
     <string name="buttonCancel">Cancel</string>
+    <string name="buttonApply">Apply</string>
     <string name="statusTranscribing">Transcribing…</string>
     <string name="statusImeTranscribing">Still transcribing…</string>
 
@@ -251,7 +252,7 @@
     <string name="cmServerEdit">Change URL</string>
     <string name="cmServerDelete">Delete</string>
     <!-- General menu items -->
-    <string name="cmShare">Share</string>
+    <string name="cmShare">Share as TSV</string>
     <string name="cmSendBase64">Share as base64 URI</string>
     <string name="cmTest">Test</string>
     <string name="cmRename">Rename</string>

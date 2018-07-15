@@ -16,21 +16,24 @@ package ee.ioc.phon.android.speak;
  * limitations under the License.
  */
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-//import com.koushikdutta.async.http.AsyncHttpClient;
-//import com.koushikdutta.async.http.WebSocket;
-
-
 public class PreferencesRecognitionServiceWs extends PreferenceActivity {
+
+    private static final int ACTIVITY_SELECT_SERVER_URL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,32 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
                 .commit();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+            case ACTIVITY_SELECT_SERVER_URL:
+                Uri serverUri = data.getData();
+                if (serverUri == null) {
+                    toast(getString(R.string.errorFailedGetServerUrl));
+                } else {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyWsServer, serverUri.toString());
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void toast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
     public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-        //private WebSocket mWebSocket;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +86,15 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
         public void onResume() {
             super.onResume();
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+            Preference service = findPreference(getString(R.string.keyWsServer));
+            service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    getActivity().startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
+                    return true;
+                }
+
+            });
         }
 
         @Override
@@ -70,9 +106,6 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
         @Override
         public void onStop() {
             super.onStop();
-            //if (mWebSocket != null && mWebSocket.isOpen()) {
-            //    mWebSocket.close();
-            //}
         }
 
         @Override
@@ -81,7 +114,6 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
             if (pref instanceof EditTextPreference) {
                 EditTextPreference etp = (EditTextPreference) pref;
                 pref.setSummary(etp.getText());
-                //setSummaryWithStatus(pref, etp.getText());
             }
         }
 
@@ -91,41 +123,7 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
             if (pref != null) {
                 final String urlSpeech = PreferenceUtils.getPrefString(prefs, res, key);
                 pref.setSummary(String.format(getString(R.string.summaryWsServer), urlSpeech));
-                //setSummaryWithStatus(pref, urlSpeech);
             }
         }
-
-        // TODO: continuously update
-        /*
-        private void setSummaryWithStatus(final Preference pref, final String urlSpeech) {
-            String urlStatus = urlSpeech.substring(0, urlSpeech.lastIndexOf('/') + 1) + "status";
-            AsyncHttpClient.getDefaultInstance().websocket(urlStatus, "", new AsyncHttpClient.WebSocketConnectCallback() {
-                @Override
-                public void onCompleted(Exception ex, WebSocket webSocket) {
-                    if (ex != null) {
-                        // TODO: exception if this touches the view after onStringAvailable has done it?
-                        pref.setSummary(String.format(getString(R.string.summaryWsServerWithStatusError),
-                                urlSpeech, ex.getLocalizedMessage()));
-                        return;
-                    }
-                    mWebSocket = webSocket;
-                    mWebSocket.setStringCallback(new WebSocket.StringCallback() {
-                        public void onStringAvailable(String s) {
-                            Log.i(s);
-                            try {
-                                JSONObject json = new JSONObject(s);
-                                int numWorkersAvailable = json.getInt("num_workers_available");
-                                pref.setSummary(String.format(getString(R.string.summaryWsServerWithStatus),
-                                        urlSpeech, numWorkersAvailable));
-                            } catch (JSONException e) {
-                                pref.setSummary(String.format(getString(R.string.summaryWsServerWithStatusError),
-                                        urlSpeech, e.getLocalizedMessage()));
-                            }
-                        }
-                    });
-                }
-            });
-        }
-        */
     }
 }

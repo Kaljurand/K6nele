@@ -25,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1681
-        versionName '1.6.81'
+        versionCode 1682
+        versionName '1.6.82'
     }
 
     packagingOptions {

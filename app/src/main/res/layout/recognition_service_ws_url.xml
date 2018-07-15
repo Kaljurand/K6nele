@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/layoutMargin4dp"
+    android:orientation="vertical"
+    android:padding="@dimen/layoutMargin4dp">
+
+    <EditText
+        android:id="@+id/etWsServerUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/layoutMargin4dp"
+        android:layout_marginRight="@dimen/layoutMargin4dp"
+        android:hint="@string/defaultWsServer"
+        android:imeOptions="actionDone"
+        android:inputType="textUri"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tvServerStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etWsServerUrl"
+        android:fontFamily="monospace"
+        android:padding="@dimen/layoutMargin4dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvServerStatus"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bWsServerDefault1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set default 1" />
+
+        <Button
+            android:id="@+id/bWsServerDefault2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set default 2" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
+        android:padding="@dimen/layoutMargin4dp"
+        android:text="Scan the local network (192.168.0.x) and click through the found servers to try to replace the service address."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/bScanNetwork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv"
+        android:contentDescription="cd"
+        android:text="Scan" />
+
+    <ListView
+        android:id="@+id/lvRewrites"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/bScanNetwork"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/bApplyUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/buttonOk"
+        android:text="@string/buttonApply" />
+</RelativeLayout>
