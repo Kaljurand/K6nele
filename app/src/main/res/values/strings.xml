@@ -44,6 +44,7 @@
     <string name="labelSearch">Search"</string>
     <string name="titleSearchRewrites">Filter rewrites</string>
     <string name="hintName">name</string>
+    <string name="hintLocalServer" translatable="false">192.168.0.0</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
@@ -78,7 +79,10 @@
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleWsServer">WebSocket URL</string>
     <string name="summaryWsServer" translatable="false">%1$s</string>
-    <string name="summaryWsServerWithStatus">%1$d slots available</string>
+    <plurals name="summaryWsServerWithStatus">
+        <item quantity="one">%d slot available</item>
+        <item quantity="other">%d slots available</item>
+    </plurals>
     <string name="summaryWsServerWithStatusError" translatable="false">%1$s</string>
     <string name="titleHelpText">Help text</string>
     <string name="summaryHelpText">Show usage instructions by the microphone button. Makes the search panel larger.</string>
@@ -133,8 +137,12 @@
     <string name="buttonGoToSettings">Go to settings</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonApply">Apply</string>
+    <string name="buttonScan">Scan</string>
+    <string name="buttonUseDefault1">Use default 1</string>
+    <string name="buttonUseDefault2">Use default 2</string>
     <string name="statusTranscribing">Transcribing…</string>
     <string name="statusImeTranscribing">Still transcribing…</string>
+    <string name="statusServerStatus" translatable="false">…</string>
 
     <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
         Many apps contain a text area or a text field (e.g. a search bar) that can be edited using the keyboard.
@@ -284,6 +292,7 @@
     <string name="cdSettings">Kõnele settings</string>
     <string name="cdImeDelete">Delete previous character</string>
     <string name="cdImeNewline">Insert a newline</string>
+    <string name="cdScan">Scan the local network and click through the found servers to try to replace the service address.</string>
 
     <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,
         please reconsider granting this permission.</string>

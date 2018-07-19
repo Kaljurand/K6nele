@@ -22,7 +22,7 @@ class ImeListDemo : ListActivity() {
 
         listAdapter = ArrayAdapter(this, R.layout.list_item_detail, info.toTypedArray())
 
-        listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+        listView.onItemClickListener = OnItemClickListener { _, view, _, _ ->
             val content = (view as TextView).text.toString()
             val settingsActivity = content.split('\n')[2]
             startActivity(Intent(this, Class.forName(settingsActivity)))

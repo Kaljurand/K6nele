@@ -9,6 +9,10 @@
     ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/status -->
     <string name="defaultWsServer" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech</string>
 
+    <!-- These URIs are without the final path component ("speech", "status") -->
+    <string name="defaultWsServer1" translatable="false">ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/</string>
+    <string name="defaultWsServer2" translatable="false">wss://bark.phon.ioc.ee:8443/dev/duplex-speech-api/ws/</string>
+
     <string name="defaultHttpServer" translatable="false">http://bark.phon.ioc.ee/speech-api/v1/recognize</string>
     <!--
     <string name="defaultHttpServer" translatable="false">http://192.168.0.38:8080/client/dynamic/recognize</string>

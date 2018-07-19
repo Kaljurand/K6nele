@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="@dimen/layoutMargin4dp"
-        android:layout_marginRight="@dimen/layoutMargin4dp"
         android:hint="@string/defaultWsServer"
         android:imeOptions="actionDone"
         android:inputType="textUri"
@@ -29,6 +27,7 @@
 
     <LinearLayout
         android:id="@+id/ll"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvServerStatus"
@@ -36,15 +35,17 @@
 
         <Button
             android:id="@+id/bWsServerDefault1"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set default 1" />
+            android:text="@string/buttonUseDefault1" />
 
         <Button
             android:id="@+id/bWsServerDefault2"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set default 2" />
+            android:text="@string/buttonUseDefault2" />
     </LinearLayout>
 
     <TextView
@@ -53,22 +54,42 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll"
         android:padding="@dimen/layoutMargin4dp"
-        android:text="Scan the local network (192.168.0.x) and click through the found servers to try to replace the service address."
+        android:text="@string/cdScan"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/bScanNetwork"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv"
-        android:contentDescription="cd"
-        android:text="Scan" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bScanNetwork"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cdScan"
+            android:text="@string/buttonScan" />
+
+        <EditText
+            android:id="@+id/etScanNetwork"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layoutMargin4dp"
+            android:layout_marginStart="@dimen/layoutMargin4dp"
+            android:digits="0123456789."
+            android:hint="@string/hintLocalServer"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:text="@string/hintLocalServer"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/lvRewrites"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/bScanNetwork"
+        android:layout_below="@+id/ll2"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button

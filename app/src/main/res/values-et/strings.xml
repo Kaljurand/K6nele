@@ -81,6 +81,8 @@
     <string name="buttonOk">OK</string>
     <string name="buttonGoToSettings">Seadista</string>
     <string name="buttonCancel">Loobu</string>
+    <string name="buttonUseDefault1">Vaikeserver 1</string>
+    <string name="buttonUseDefault2">Vaikeserver 2</string>
     <string name="statusTranscribing">Teisendan tekstiks…</string>
     <string name="statusImeTranscribing">Oodake…</string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> on kõnetuvastusteenus Androidi rakendustele,
@@ -271,7 +273,10 @@
         <item>Svaipimine liigutab kursorit</item>
     </string-array>
 
-    <string name="summaryWsServerWithStatus">%1$d vaba slotti</string>
+    <plurals name="summaryWsServerWithStatus">
+        <item quantity="one">%d vaba slott</item>
+        <item quantity="other">%d vaba slotti</item>
+    </plurals>
     <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>
     <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust. WebSocket-põhine server.</string>
     <string name="titleCategoryServices">Kõnetuvastusteenused</string>
@@ -325,5 +330,8 @@
     <!-- Deprecated -->
     <string name="buttonStop">Lõpeta!</string>
     <string name="labelActivityImeListDemo">Kõneklaviatuurid</string>
+    <string name="buttonApply">Rakenda</string>
+    <string name="buttonScan">Otsi</string>
+    <string name="cdScan">Proovi leida kohtvõrgust servereid, et asendada teenuse aadress mõne leitud serveri aadressiga.</string>
 
 </resources>

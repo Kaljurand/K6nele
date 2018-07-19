@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
@@ -70,9 +71,8 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String repl = lvResults.getItemAtPosition(position).toString();
-                setUrl("ws://192.168.0." + repl + ":8080/client/ws/");
+                setUrl("ws://" + repl + ":8080/client/ws/");
             }
-
         });
 
         mAdapter = new ArrayAdapter<>(RecognitionServiceWsUrlActivity.this,
@@ -82,14 +82,14 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         findViewById(R.id.bWsServerDefault1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setUrl("ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/");
+                setUrl(getString(R.string.defaultWsServer1));
             }
         });
 
         findViewById(R.id.bWsServerDefault2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setUrl("wss://bark.phon.ioc.ee:8443/dev/duplex-speech-api/ws/");
+                setUrl(getString(R.string.defaultWsServer2));
             }
         });
 
@@ -99,7 +99,8 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             @Override
             public void onClick(View view) {
                 view.setEnabled(false);
-                new Scan().execute("192.168.0.0");
+                String ip = ((EditText) findViewById(R.id.etScanNetwork)).getText().toString().trim();
+                new Scan().execute(ip);
             }
         });
 
@@ -122,49 +123,52 @@ public class RecognitionServiceWsUrlActivity extends Activity {
     private void setUrl(String url) {
         if (mEtUrl != null) {
             mEtUrl.setText(url + "speech");
+            mTvServerStatus.setText(getString(R.string.statusServerStatus));
             setSummaryWithStatus(url + "status");
         }
     }
 
-    private class Scan extends AsyncTask<String, Pair<Integer, Boolean>, List<String>> {
-        protected List<String> doInBackground(String... ips) {
-            List<String> results = new ArrayList<>();
+    private class Scan extends AsyncTask<String, Pair<String, Boolean>, String> {
+        protected String doInBackground(String... ips) {
+            String errorMessage = null;
             for (String ip : ips) {
                 String base = ip.substring(0, ip.lastIndexOf('.') + 1);
+                int start = 2;
                 // Escape early if cancel() is called
                 if (isCancelled()) break;
                 try {
+                    // TODO: review
                     NetworkInterface iFace = NetworkInterface
                             .getByInetAddress(InetAddress.getByName(ip));
 
-                    for (int i = 2; i <= 255; i++) {
+                    for (int i = start; i <= 255; i++) {
                         InetAddress pingAddr = InetAddress.getByName(base + i);
-
+                        String result = pingAddr.getHostAddress();
                         // 50ms Timeout for the "ping"
                         if (pingAddr.isReachable(iFace, 200, 50)) {
-                            String result = pingAddr.getHostAddress();
-                            results.add(result);
-                            publishProgress(new Pair<>(i, true));
+                            publishProgress(new Pair<>(result, true));
                         } else {
-                            publishProgress(new Pair<>(i, false));
+                            publishProgress(new Pair<>(result, false));
                         }
                     }
                 } catch (UnknownHostException ex) {
                     Log.e(ex.toString());
+                    errorMessage = ex.getLocalizedMessage();
                     break;
                 } catch (IOException ex) {
                     Log.e(ex.toString());
+                    errorMessage = ex.getLocalizedMessage();
                     break;
                 }
             }
-            return results;
+            return errorMessage;
         }
 
-        protected void onProgressUpdate(Pair<Integer, Boolean>... progress) {
-            Pair<Integer, Boolean> pair = progress[0];
-            mBScan.setText(pair.first + "/255");
+        protected void onProgressUpdate(Pair<String, Boolean>... progress) {
+            Pair<String, Boolean> pair = progress[0];
+            mBScan.setText(pair.first);
             if (pair.second) {
-                mList.add(pair.first + "");
+                mList.add(pair.first);
                 mAdapter.notifyDataSetChanged();
                 Log.i("FOUND: " + pair.first);
             }
@@ -185,10 +189,12 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             */
         }
 
-        protected void onPostExecute(List<String> results) {
-            Log.i(results.toString());
+        protected void onPostExecute(String errorMessage) {
             mBScan.setEnabled(true);
-            mBScan.setText("Scan");
+            mBScan.setText(getString(R.string.buttonScan));
+            if (errorMessage != null) {
+                Toast.makeText(RecognitionServiceWsUrlActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -214,7 +220,8 @@ public class RecognitionServiceWsUrlActivity extends Activity {
                             mTvServerStatus.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatus), numOfWorkers));
+                                    mTvServerStatus.setText(getResources().
+                                            getQuantityString(R.plurals.summaryWsServerWithStatus, numOfWorkers, numOfWorkers));
                                 }
                             });
                         } catch (JSONException e) {
