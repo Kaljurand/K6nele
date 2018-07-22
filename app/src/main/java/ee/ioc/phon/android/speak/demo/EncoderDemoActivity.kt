@@ -35,7 +35,7 @@ class EncoderDemoActivity : Activity() {
         setContentView(R.layout.encoder_demo)
 
         val editText = findViewById<EditText>(R.id.etTest0)
-        editText.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+        editText.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 toast(v.text.toString())
                 return@OnEditorActionListener true
@@ -102,7 +102,7 @@ class EncoderDemoActivity : Activity() {
 
     private fun stopRecording0() {
         releaseRecorder()
-        mStopHandler?.removeCallbacks(mStopTask)
+        mStopHandler.removeCallbacks(mStopTask)
         val recordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, 2.toShort(), 1.toShort())
         mBTest1?.setText(R.string.buttonImeSpeak)
 

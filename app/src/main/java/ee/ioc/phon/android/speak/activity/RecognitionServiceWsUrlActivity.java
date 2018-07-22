@@ -36,7 +36,6 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-// TODO: close socket on BACK or if new socket is opened
 public class RecognitionServiceWsUrlActivity extends Activity {
 
     private List<String> mList = new ArrayList<>();
@@ -44,6 +43,10 @@ public class RecognitionServiceWsUrlActivity extends Activity {
     private Button mBScan;
     private TextView mTvServerStatus;
     private EditText mEtUrl;
+    private EditText mEtScan;
+    private Scan mScan;
+    private String mIp;
+    private WebSocket mWebSocket;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,14 +96,20 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             }
         });
 
+        mEtScan = findViewById(R.id.etScanNetwork);
+
         mBScan = findViewById(R.id.bScanNetwork);
-        mBScan.setEnabled(true);
         mBScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setEnabled(false);
-                String ip = ((EditText) findViewById(R.id.etScanNetwork)).getText().toString().trim();
-                new Scan().execute(ip);
+                if (mScan == null) {
+                    mIp = mEtScan.getText().toString().trim();
+                    mScan = new Scan();
+                    mScan.execute(mIp);
+                } else {
+                    mScan.cancel(true);
+                    mScan = null;
+                }
             }
         });
 
@@ -120,6 +129,12 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         setUrl(baseUri);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        closeSocket();
+    }
+
     private void setUrl(String url) {
         if (mEtUrl != null) {
             mEtUrl.setText(url + "speech");
@@ -128,7 +143,25 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         }
     }
 
+    private void setScanUi() {
+        mBScan.setText(getString(R.string.buttonScan));
+        // We post the change otherwise onProgressUpdate might change it later (?)
+        mEtScan.post(new Runnable() {
+            @Override
+            public void run() {
+                mEtScan.setText(mIp);
+            }
+        });
+        mEtScan.setEnabled(true);
+    }
+
+    private void setCancelUi() {
+        mEtScan.setEnabled(false);
+        mBScan.setText(getString(R.string.buttonCancel));
+    }
+
     private class Scan extends AsyncTask<String, Pair<String, Boolean>, String> {
+        @Override
         protected String doInBackground(String... ips) {
             String errorMessage = null;
             for (String ip : ips) {
@@ -142,11 +175,13 @@ public class RecognitionServiceWsUrlActivity extends Activity {
                             .getByInetAddress(InetAddress.getByName(ip));
 
                     for (int i = start; i <= 255; i++) {
+                        if (isCancelled()) break;
                         InetAddress pingAddr = InetAddress.getByName(base + i);
                         String result = pingAddr.getHostAddress();
                         // 50ms Timeout for the "ping"
                         if (pingAddr.isReachable(iFace, 200, 50)) {
                             publishProgress(new Pair<>(result, true));
+                            Log.i("FOUND: " + result);
                         } else {
                             publishProgress(new Pair<>(result, false));
                         }
@@ -164,13 +199,13 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             return errorMessage;
         }
 
+        @Override
         protected void onProgressUpdate(Pair<String, Boolean>... progress) {
             Pair<String, Boolean> pair = progress[0];
-            mBScan.setText(pair.first);
+            mEtScan.setText(pair.first);
             if (pair.second) {
                 mList.add(pair.first);
                 mAdapter.notifyDataSetChanged();
-                Log.i("FOUND: " + pair.first);
             }
         }
 
@@ -178,30 +213,39 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             mList.clear();
-            mBScan.setEnabled(false);
-            /*
-            progressDialog = new ProgressDialog(QuickSettingsActivity.this);
-            progressDialog.setCancelable(true);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
-            */
+            setCancelUi();
         }
 
+        @Override
         protected void onPostExecute(String errorMessage) {
-            mBScan.setEnabled(true);
-            mBScan.setText(getString(R.string.buttonScan));
+            setScanUi();
+            if (errorMessage != null) {
+                Toast.makeText(RecognitionServiceWsUrlActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled(String errorMessage) {
+            setScanUi();
             if (errorMessage != null) {
                 Toast.makeText(RecognitionServiceWsUrlActivity.this, errorMessage, Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    private void closeSocket() {
+        if (mWebSocket != null && mWebSocket.isOpen()) {
+            mWebSocket.end(); // TODO: or close?
+            mWebSocket = null;
+        }
+    }
+
     private void setSummaryWithStatus(final String urlStatus) {
+        closeSocket();
         AsyncHttpClient.getDefaultInstance().websocket(urlStatus, "", new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(final Exception ex, WebSocket webSocket) {
+                mWebSocket = webSocket;
                 if (ex != null) {
                     mTvServerStatus.post(new Runnable() {
                         @Override
@@ -211,7 +255,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
                     });
                     return;
                 }
-                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                mWebSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
                         Log.i(s);
                         try {

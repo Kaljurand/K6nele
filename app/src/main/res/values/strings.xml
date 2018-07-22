@@ -138,8 +138,8 @@
     <string name="buttonCancel">Cancel</string>
     <string name="buttonApply">Apply</string>
     <string name="buttonScan">Scan</string>
-    <string name="buttonUseDefault1">Use default 1</string>
-    <string name="buttonUseDefault2">Use default 2</string>
+    <string name="buttonUseDefault1">Default 1</string>
+    <string name="buttonUseDefault2">Default 2</string>
     <string name="statusTranscribing">Transcribing…</string>
     <string name="statusImeTranscribing">Still transcribing…</string>
     <string name="statusServerStatus" translatable="false">…</string>

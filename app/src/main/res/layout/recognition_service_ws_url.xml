@@ -28,7 +28,7 @@
     <LinearLayout
         android:id="@+id/ll"
         style="?android:attr/buttonBarStyle"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvServerStatus"
         android:orientation="horizontal">
@@ -64,25 +64,30 @@
         android:layout_below="@+id/tv"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/bScanNetwork"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/cdScan"
-            android:text="@string/buttonScan" />
-
         <EditText
             android:id="@+id/etScanNetwork"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/layoutMargin4dp"
-            android:layout_marginStart="@dimen/layoutMargin4dp"
+            android:layout_marginEnd="@dimen/layoutMargin4dp"
+            android:layout_marginRight="@dimen/layoutMargin4dp"
             android:digits="0123456789."
             android:hint="@string/hintLocalServer"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:text="@string/hintLocalServer"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/bScanNetwork"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cdScan"
+            android:text="@string/buttonScan" />
     </LinearLayout>
 
     <ListView
