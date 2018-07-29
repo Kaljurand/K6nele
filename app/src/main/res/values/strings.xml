@@ -6,6 +6,8 @@
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
+    <string name="wsUrlSuffixSpeech" translatable="false">%1$sspeech</string>
+    <string name="wsUrlSuffixStatus" translatable="false">%1$sstatus</string>
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
@@ -115,8 +117,8 @@
 
     <string name="titleGetPutPrefSkipUi">Run GetPutPreference without confirmation</string>
     <string name="summaryGetPutPrefSkipUi">Allow GetPutPreference to change preferences without user confirmation.
-    This allows rewrite rules, or ADB scripts, or 3rd party apps to change multiple Kõnele settings without
-        the user having to confirm each change. Do not enable this setting, unless you know what you are doing.</string>
+    This allows rewrite rules, ADB scripts, or 3rd party apps to change Kõnele settings without
+        the user having to confirm the change. Do not enable this setting, unless you know what you are doing.</string>
 
     <string name="titleMaxResults">Recognition hypotheses</string>
 

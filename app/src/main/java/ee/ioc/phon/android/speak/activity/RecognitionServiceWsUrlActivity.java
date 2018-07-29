@@ -38,6 +38,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class RecognitionServiceWsUrlActivity extends Activity {
 
+    private static final int TIMEOUT_PING = 100;
     private List<String> mList = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
     private Button mBScan;
@@ -137,9 +138,9 @@ public class RecognitionServiceWsUrlActivity extends Activity {
 
     private void setUrl(String url) {
         if (mEtUrl != null) {
-            mEtUrl.setText(url + "speech");
+            mEtUrl.setText(String.format(getString(R.string.wsUrlSuffixSpeech), url));
             mTvServerStatus.setText(getString(R.string.statusServerStatus));
-            setSummaryWithStatus(url + "status");
+            setSummaryWithStatus(String.format(getString(R.string.wsUrlSuffixStatus), url));
         }
     }
 
@@ -179,7 +180,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
                         InetAddress pingAddr = InetAddress.getByName(base + i);
                         String result = pingAddr.getHostAddress();
                         // 50ms Timeout for the "ping"
-                        if (pingAddr.isReachable(iFace, 200, 50)) {
+                        if (pingAddr.isReachable(iFace, 200, TIMEOUT_PING)) {
                             publishProgress(new Pair<>(result, true));
                             Log.i("FOUND: " + result);
                         } else {
