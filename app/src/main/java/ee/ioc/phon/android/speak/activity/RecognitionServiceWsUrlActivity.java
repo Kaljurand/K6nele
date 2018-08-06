@@ -60,8 +60,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String serverUri = mEtUrl.getText().toString();
-                    String baseUri = serverUri.substring(0, serverUri.lastIndexOf('/') + 1);
-                    setUrl(baseUri);
+                    setUrl(getBaseUri(serverUri));
                 }
                 return false;
             }
@@ -125,15 +124,18 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         });
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String serverUri = PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyWsServer);
-        String baseUri = serverUri.substring(0, serverUri.lastIndexOf('/') + 1);
-        setUrl(baseUri);
+        String serverUri = PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyWsServer, R.string.defaultWsServer);
+        setUrl(getBaseUri(serverUri));
     }
 
     @Override
     public void onStop() {
         super.onStop();
         closeSocket();
+    }
+
+    private String getBaseUri(String serverUri) {
+        return serverUri.substring(0, serverUri.lastIndexOf('/') + 1);
     }
 
     private void setUrl(String url) {
