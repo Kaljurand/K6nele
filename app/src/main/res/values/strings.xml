@@ -233,6 +233,7 @@
     <string name="errorCantCreateRecorder">ERROR: Failed to create an audio recorder</string>
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
+    <string name="errorNetworkUndefined">ERROR: Network IP address undefined</string>
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>
@@ -294,7 +295,7 @@
     <string name="cdSettings">Kõnele settings</string>
     <string name="cdImeDelete">Delete previous character</string>
     <string name="cdImeNewline">Insert a newline</string>
-    <string name="cdScan">Scan the local network and click through the found servers to try to replace the service address.</string>
+    <string name="cdScan">Scan the (local) network and click through the found servers to try to replace the service address.</string>
 
     <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,
         please reconsider granting this permission.</string>

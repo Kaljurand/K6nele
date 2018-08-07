@@ -106,8 +106,12 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             public void onClick(View view) {
                 if (mScan == null) {
                     mIp = mEtScan.getText().toString().trim();
-                    mScan = new Scan();
-                    mScan.execute(mIp);
+                    if (mIp == null || mIp.isEmpty()) {
+                        toast(getString(R.string.errorNetworkUndefined));
+                    } else {
+                        mScan = new Scan();
+                        mScan.execute(mIp);
+                    }
                 } else {
                     mScan.cancel(true);
                     mScan = null;
@@ -165,6 +169,11 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         mBScan.setText(getString(R.string.buttonCancel));
     }
 
+    private void toast(String msg) {
+        Toast.makeText(RecognitionServiceWsUrlActivity.this, msg, Toast.LENGTH_LONG).show();
+
+    }
+
     /**
      * Get IP address from first non-localhost interface
      * Solution from https://stackoverflow.com/a/13007325/12547
@@ -205,21 +214,19 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         @Override
         protected String doInBackground(String... ips) {
             String errorMessage = null;
+            int start = 0;
+            int end = 255;
             for (String ip : ips) {
                 String base = ip.substring(0, ip.lastIndexOf('.') + 1);
-                int start = 2;
-                // Escape early if cancel() is called
-                if (isCancelled()) break;
                 try {
                     // TODO: review
                     NetworkInterface iFace = NetworkInterface
                             .getByInetAddress(InetAddress.getByName(ip));
 
-                    for (int i = start; i <= 255; i++) {
+                    for (int i = start; i <= end; i++) {
                         if (isCancelled()) break;
                         InetAddress pingAddr = InetAddress.getByName(base + i);
                         String result = pingAddr.getHostAddress();
-                        // 50ms Timeout for the "ping"
                         if (pingAddr.isReachable(iFace, 200, TIMEOUT_PING)) {
                             publishProgress(new Pair<>(result, true));
                             Log.i("FOUND: " + result);
@@ -261,7 +268,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         protected void onPostExecute(String errorMessage) {
             setScanUi();
             if (errorMessage != null) {
-                Toast.makeText(RecognitionServiceWsUrlActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                toast(errorMessage);
             }
         }
 
@@ -269,7 +276,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         protected void onCancelled(String errorMessage) {
             setScanUi();
             if (errorMessage != null) {
-                Toast.makeText(RecognitionServiceWsUrlActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                toast(errorMessage);
             }
         }
     }

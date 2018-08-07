@@ -242,6 +242,7 @@
     <string name="errorResultCanceled">Katkestatud</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
+    <string name="errorNetworkUndefined">ERROR: Võrgu IP aadressi pole määratud</string>
     <string name="promptSearch">Öelge veebiotsingu päring</string>
     <string name="promptDemo">Öelge nt: %1$s</string>
 
@@ -332,6 +333,6 @@
     <string name="labelActivityImeListDemo">Kõneklaviatuurid</string>
     <string name="buttonApply">Rakenda</string>
     <string name="buttonScan">Otsi</string>
-    <string name="cdScan">Proovi leida kohtvõrgust servereid, et asendada teenuse aadress mõne leitud serveri aadressiga.</string>
+    <string name="cdScan">Proovi leida (koht)võrgust servereid, et asendada teenuse aadress mõne leitud serveri aadressiga.</string>
 
 </resources>
