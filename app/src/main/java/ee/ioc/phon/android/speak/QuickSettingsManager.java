@@ -27,7 +27,6 @@ public class QuickSettingsManager {
     public QuickSettingsManager(SharedPreferences prefs, Resources res) {
         mPrefs = prefs;
         mRes = res;
-
     }
 
     public void setDefaultsDevel() {
@@ -53,12 +52,6 @@ public class QuickSettingsManager {
         editor.putString(mRes.getString(R.string.keyImeAudioFormat), "audio/x-flac");
         editor.putBoolean(mRes.getString(R.string.keyImeAudioCues), false);
 
-        editor.apply();
-    }
-
-    public void setWsServer(String uri) {
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(mRes.getString(R.string.keyWsServer), uri);
         editor.apply();
     }
 }
