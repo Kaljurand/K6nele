@@ -7,15 +7,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
 
     private static final int TIMEOUT_PING = 100;
     private List<String> mList = new ArrayList<>();
-    private ArrayAdapter<String> mAdapter;
+    private ServerAdapter mAdapter;
     private Button mBScan;
     private TextView mTvServerStatus;
     private EditText mEtUrl;
@@ -69,18 +70,11 @@ public class RecognitionServiceWsUrlActivity extends Activity {
 
         mTvServerStatus = findViewById(R.id.tvServerStatus);
 
-        final ListView lvResults = findViewById(R.id.lvRewrites);
-
-        lvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String repl = lvResults.getItemAtPosition(position).toString();
-                setUrl("ws://" + repl + ":8080/client/ws/");
-            }
-        });
-
-        mAdapter = new ArrayAdapter<>(RecognitionServiceWsUrlActivity.this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, mList);
+        final RecyclerView lvResults = findViewById(R.id.rvIpList);
+        //lvResults.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        lvResults.setLayoutManager(mLayoutManager);
+        mAdapter = new ServerAdapter(mList);
         lvResults.setAdapter(mAdapter);
 
         findViewById(R.id.bWsServerDefault1).setOnClickListener(new View.OnClickListener() {
@@ -277,6 +271,47 @@ public class RecognitionServiceWsUrlActivity extends Activity {
             if (errorMessage != null) {
                 toast(errorMessage);
             }
+        }
+    }
+
+    private class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHolder> {
+        private List<String> mDataset;
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            public Button mView;
+
+            public MyViewHolder(Button v) {
+                super(v);
+                mView = v;
+            }
+        }
+
+        public ServerAdapter(List<String> myDataset) {
+            mDataset = myDataset;
+        }
+
+        @Override
+        public ServerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Button v = (Button) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_server_ip, parent, false);
+            MyViewHolder vh = new MyViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
+            holder.mView.setText(mDataset.get(position));
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setUrl("ws://" + holder.mView.getText() + ":8080/client/ws/");
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDataset.size();
         }
     }
 

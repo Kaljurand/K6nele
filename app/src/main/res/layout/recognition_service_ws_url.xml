@@ -89,12 +89,12 @@
             android:text="@string/buttonScan" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lvRewrites"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvIpList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/ll2"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/bApplyUrl"
@@ -102,6 +102,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:contentDescription="@string/buttonOk"
+        android:contentDescription="@string/buttonApply"
         android:text="@string/buttonApply" />
 </RelativeLayout>

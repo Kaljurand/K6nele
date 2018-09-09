@@ -10,6 +10,7 @@ dependencies {
     //implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation 'com.android.support:support-v13:' + rootProject.supportLibVersion
+    implementation 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
@@ -25,8 +26,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1684
-        versionName '1.6.84'
+        versionCode 1685
+        versionName '1.6.85'
     }
 
     packagingOptions {

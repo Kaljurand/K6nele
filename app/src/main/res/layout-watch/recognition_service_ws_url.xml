@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layoutMargin4dp"
+        android:orientation="vertical"
+        android:padding="@dimen/layoutMargin4dp">
+
+        <EditText
+            android:id="@+id/etWsServerUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:hint="@string/defaultWsServer"
+            android:imeOptions="actionDone"
+            android:inputType="textUri"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tvServerStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etWsServerUrl"
+            android:fontFamily="monospace"
+            android:padding="@dimen/layoutMargin4dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <LinearLayout
+            android:id="@+id/ll"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvServerStatus"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/bWsServerDefault1"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/buttonUseDefault1" />
+
+            <Button
+                android:id="@+id/bWsServerDefault2"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/buttonUseDefault2" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll"
+            android:padding="@dimen/layoutMargin4dp"
+            android:text="@string/cdScan"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv"
+            android:orientation="horizontal">
+
+            <!-- TODO: didn't work on WearOS 1.5/Android v8: inputType="number", dot was ignored. -->
+            <EditText
+                android:id="@+id/etScanNetwork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/layoutMargin4dp"
+                android:layout_marginRight="@dimen/layoutMargin4dp"
+                android:digits="0123456789."
+                android:hint="@string/hintLocalServer"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/bScanNetwork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/cdScan"
+                android:text="@string/buttonScan" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvIpList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll2"
+            android:scrollbars="vertical" />
+
+        <Button
+            android:id="@+id/bApplyUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rvIpList"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/buttonApply"
+            android:text="@string/buttonApply" />
+    </RelativeLayout>
+</ScrollView>
