@@ -574,22 +574,26 @@ Kõnetuvastusserveritarkvara <https://github.com/alumae/kaldi-gstreamer-server>
 koos eesti keele mudelite ja käivitusskriptiga on saadaval Dockeri konteinerina
 [alumae/docker-konele](https://hub.docker.com/r/alumae/docker-konele/), mis
 teeb serveri jooksutamise koduarvutis ülilihtsaks.
+See konteiner toetab nii "grammatikatoega" teenuse HTTP-liidest
+kui ka "kiire tuvastusega" teenuse WebSocket-liidest (esimesel juhul küll GF grammatikaid
+tegelikult toetamata).
 
 Alustuseks on vaja ~3GB kõvakettaruumi
 ning Dockeri infrastruktuuri, mille paigaldamisjuhend nt Ubuntu Linuxile on
 <https://docs.docker.com/install/linux/docker-ce/ubuntu/>.
-Seejärel saab teenuse paigaldada järgmise käsuga
-(mis võtab natuke aega, sõltuvalt internetiühenduse ja arvuti kiirusest)
+Seejärel saab teenuse paigaldada käsuga
 
 {% highlight sh %}
 $ docker pull alumae/docker-konele
 {% endhighlight %}
 
+Käsu täitmine võtab mõnevõrra aega, sõltuvalt internetiühenduse ja arvuti kiirusest.
+
 Teenuse käivitamiseks pordil 8080 (kasutada võib ka mõnd muud porti) tuleb
 anda käsk
 
 {% highlight sh %}
-$ docker run -p 8080:80 alumae/docker-konele
+$ docker run -p 8080:80 -e num_workers=1 alumae/docker-konele
 {% endhighlight %}
 
 Jooksva teenuse testimiseks võib nt `curl` programmiga laadida sellesse
@@ -602,19 +606,23 @@ $ curl -T lause.ogg http://localhost:8080/client/dynamic/recognize
 
 Käivitatud teenuse kasutamiseks Kõnele rakenduses tuleb menüüs "Kõnetuvastusteenused"
 ära muuta üks või mõlemad kaks serveriaadressi.
-Konteiner "alumae/docker-konele" toetab nii "grammatikatoega" teenuse HTTP-liidest
-kui ka "kiire tuvastusega" teenuse WebSocket-liidest (esimesel juhul küll GF grammatikaid
-tegelikult toetamata, mistõttu on menüü nimi "grammatikatoega" siin eksitav).
-
 Teenuste aadressid sõltuvad koduserveri IP aadressist kohtvõrgus.
-Selle teadasaamiseks on tüüpiliselt kõige lihtsam
-külastada koduruuteri konfigureerimislehekülge, tüüpiliselt aadressil
-<http://192.168.0.1>. Eeldusel, et serveriaadress on `192.168.0.15`
+Nt juhul, kui serveriaadress on `192.168.0.38`
 ja teenus sai käivitatud pordil `8080` tuleb Kõnele teenuste aadressid
 muuta kujule:
 
-- "grammatikatoega": `http://192.168.0.15:8080/client/dynamic/recognize`
-- "kiire tuvastusega": `ws://192.168.0.15:8080/client/ws/speech`
+- "grammatikatoega": `http://192.168.0.38:8080/client/dynamic/recognize`
+- "kiire tuvastusega": `ws://192.168.0.38:8080/client/ws/speech`
+
+Koduserveri IP aadressi teadasaamiseks võib
+külastada koduruuteri konfigureerimislehekülge, tihti aadressil
+<http://192.168.0.1>. Samuti on Kõnele menüüs WebSocket-aadress (alates Kõnele v1.6.84)
+võimalik otsida nutiseadmega samas võrgus olevaid seadmeid,
+ning kontrollida, kas neis jookseb kaldi-gstreamer-server. Nt teade
+"2 vaba slotti" teenuse aadressikasti all tähendab,
+et teenus töötab ning võimaldab hetkel maksimaalselt kahte samaaegset tuvastussessiooni.
+
+<img title="Ekraanipilt: tuvastusserveri aadressi määramine" alt="Ekraanipilt: tuvastusserveri aadressi määramine." src="{{ site.baseurl }}/images/et/Screenshot_20180915-223504.png">
 
 Käivitades Kõnele läbi teise rakenduse (nt Tasker, Android Debug Bridge, omatehtud
 rakendus, või Kõnele ümberkirjutusreeglid), saab serveriaadressi üle
