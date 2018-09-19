@@ -631,7 +631,9 @@ public class SpeechInputView extends LinearLayout {
         if (mBImeKeyboard != null) {
             maximizeUi();
         }
-        setOnTouchListener(mOstl);
+        if (mSwipeType > 0) {
+            setOnTouchListener(mOstl);
+        }
     }
 
     /**

@@ -36,6 +36,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -211,7 +212,53 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setTheme(R.style.Theme_K6nele_Dialog);
         setContentView(layout);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        final Window window = getWindow();
+        final WindowManager.LayoutParams wlp = window.getAttributes();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int x = prefs.getInt("keyDialogX", -1);
+        int y = prefs.getInt("keyDialogY", -1);
+        if (x != -1 && y != -1) {
+            wlp.x = x;
+            wlp.y = y;
+            window.setAttributes(wlp);
+        }
+
+        findViewById(android.R.id.content).setOnTouchListener(new View.OnTouchListener() {
+            int mX;
+            int mY;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent evt) {
+                int x = (int) evt.getRawX();
+                int y = (int) evt.getRawY();
+
+                switch (evt.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mX = x;
+                        mY = y;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int dX = (mX - x);
+                        int dY = (mY - y);
+                        wlp.x -= dX;
+                        wlp.y -= dY;
+                        mX = x;
+                        mY = y;
+                        window.setAttributes(wlp);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("keyDialogX", wlp.x);
+                        editor.putInt("keyDialogY", wlp.y);
+                        editor.apply();
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     protected void setUpExtras() {
