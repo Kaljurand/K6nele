@@ -94,7 +94,7 @@
     <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the keyboard larger.</string>
     <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable Kõnele keyboard</string>
-    <string name="summaryEnableIme">The Kõnele keyboard allows you to dictate into any text field in any app, and modify the text with some swipe operations. Tap here to enable it in the Android virtual keyboard settings.</string>
+    <string name="summaryEnableIme">The Kõnele keyboard allows you to dictate into any text field in any app, and navigate and edit the text with swipe operations. Tap here to enable it in the Android virtual keyboard settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
     <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>

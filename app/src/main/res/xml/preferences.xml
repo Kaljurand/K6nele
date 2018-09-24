@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <!-- This preference is a shortcut to the Android IME settings to allow the
+    user to quickly enable the Kõnele IME. If already enabled, this preference is not shown. -->
+    <Preference
+        android:key="@string/keyEnableIme"
+        android:summary="@string/summaryEnableIme"
+        android:title="@string/titleEnableIme">
+        <intent android:action="android.settings.INPUT_METHOD_SETTINGS" />
+    </Preference>
     // Speech keyboard settings
     // These settings are specific to the UI
     // Settings which cannot be configured using standard extras (audio cues, autostop) are in
@@ -8,14 +15,6 @@
     <PreferenceCategory
         android:key="@string/keyCategoryIme"
         android:title="@string/titleCategoryIme">
-        <!-- This preference is a shortcut to the Android IME settings to allow the
-        user to quickly enable the Kõnele IME. If already enabled, this preference is not shown. -->
-        <Preference
-            android:key="@string/keyEnableIme"
-            android:summary="@string/summaryEnableIme"
-            android:title="@string/titleEnableIme">
-            <intent android:action="android.settings.INPUT_METHOD_SETTINGS" />
-        </Preference>
         <Preference
             android:key="@string/keyImeCombo"
             android:summary="@string/summaryImeCombo"

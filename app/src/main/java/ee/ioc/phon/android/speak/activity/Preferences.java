@@ -27,6 +27,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -126,19 +127,21 @@ public class Preferences extends PreferenceActivity {
             // if not already removed.
             // If the IME is not enabled then we add the link. The position of the link seems
             // to respect the position in preferences.xml.
+            PreferenceScreen prefScreen = getPreferenceScreen();
+            PreferenceCategory category = (PreferenceCategory) prefScreen.findPreference(getString(R.string.keyCategoryIme));
+            Preference pref = prefScreen.findPreference(getString(R.string.keyEnableIme));
+
             if (isK6neleImeEnabled()) {
-                PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryIme));
-                Preference pref = category.findPreference(getString(R.string.keyEnableIme));
+                category.setEnabled(true);
                 if (pref != null) {
-                    category.removePreference(pref);
+                    prefScreen.removePreference(pref);
                 }
             } else {
-                Preference pref = findPreference(getString(R.string.keyEnableIme));
-                PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryIme));
-                category.addPreference(pref);
+                category.setEnabled(false);
+                prefScreen.addPreference(pref);
             }
 
-            SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+            SharedPreferences sp = prefScreen.getSharedPreferences();
             String maxResults = sp.getString(mKeyMaxResults, getString(R.string.defaultMaxResults));
             updateSummaryInt(findPreference(mKeyMaxResults), R.plurals.summaryMaxResults, maxResults);
 
