@@ -47,10 +47,10 @@ class ExtrasDemo : AbstractRecognizerDemoActivity() {
     /**
      * Show the resulting extras
      */
-    override fun onSuccess(intent: Intent) {
-        val list = BundleUtils.ppBundle(intent.extras)
+    override fun onSuccess(intent: Intent?) {
+        val list = BundleUtils.ppBundle(intent?.extras)
         val details = Intent(this, DetailsActivity::class.java)
-        details.data = intent.data
+        details.data = intent?.data
         details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, list.toTypedArray())
         startActivity(details)
         finish()

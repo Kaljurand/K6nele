@@ -50,12 +50,11 @@ class SimpleDemo : AbstractRecognizerDemoActivity() {
         }
     }
 
-
     /**
      * Show the results i.e. an ordered list of transcription candidates.
      */
-    override fun onSuccess(intent: Intent) {
-        val matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+    override fun onSuccess(intent: Intent?) {
+        val matches = intent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
         (findViewById(R.id.list_matches) as ListView).adapter =
                 ArrayAdapter(this, android.R.layout.simple_list_item_1, matches)
     }

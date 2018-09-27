@@ -40,7 +40,7 @@ class VoiceSearchDemo : AbstractRecognizerDemoActivity() {
         speakButton.setOnClickListener({ launchRecognizerIntent(createVoiceAppSearchIntent()) })
     }
 
-    override fun onSuccess(intent: Intent) {
+    override fun onSuccess(intent: Intent?) {
         finish()
     }
 

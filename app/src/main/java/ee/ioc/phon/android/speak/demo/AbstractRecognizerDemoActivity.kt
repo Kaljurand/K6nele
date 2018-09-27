@@ -53,7 +53,7 @@ abstract class AbstractRecognizerDemoActivity : Activity() {
     private val grammarTargetLang: String?
         get() = Utils.idToValue(this, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.LANG, mGrammarId)
 
-    protected abstract fun onSuccess(intent: Intent)
+    protected abstract fun onSuccess(intent: Intent?)
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -94,12 +94,12 @@ abstract class AbstractRecognizerDemoActivity : Activity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ACTIVITY_SELECT_GRAMMAR_URL) {
             if (resultCode != Activity.RESULT_OK) {
                 return
             }
-            val grammarUri = data.data
+            val grammarUri = data?.data
             if (grammarUri == null) {
                 toast(getString(R.string.errorFailedGetGrammarUrl))
             } else {

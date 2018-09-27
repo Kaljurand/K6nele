@@ -50,9 +50,8 @@ class HandsfreeDemoActivity : AbstractRecognizerDemoActivity() {
         startButton.setOnClickListener { launchRecognizerIntent(mIntent) }
     }
 
-
-    override fun onSuccess(intent: Intent) {
-        val matches = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+    override fun onSuccess(intent: Intent?) {
+        val matches = intent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
         // Here we could do something with the transcription, e.g. switch on lights,
         // skip to the next track, change the channel, etc.
         mMatches.add(0, matches.toString())
