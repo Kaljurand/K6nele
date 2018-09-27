@@ -16,7 +16,6 @@ dependencies {
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
@@ -26,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1685
-        versionName '1.6.85'
+        versionCode 1686
+        versionName '1.6.86'
     }
 
     packagingOptions {
@@ -50,6 +49,8 @@ android {
         }
     }
     lintOptions {
+        // TODO: in the future check for Kotlin-Java interop
+        //check 'Interoperability'
         disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry'
     }
 }
