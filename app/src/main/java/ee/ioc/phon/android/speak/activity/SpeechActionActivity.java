@@ -64,7 +64,6 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  */
 public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
-    private TextView mTvPrompt;
     private SpeechInputView mView;
 
     @Override
@@ -114,7 +113,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
         */
         setUpActivity(R.layout.activity_recognizer);
-        mTvPrompt = findViewById(R.id.tvPrompt);
+        registerPrompt((TextView) findViewById(R.id.tvPrompt));
+
     }
 
     @Override
@@ -127,6 +127,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onStart() {
         super.onStart();
         Log.i("onStart");
+        setUpExtras();
+        setTvPrompt();
     }
 
     @Override
@@ -134,12 +136,9 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         super.onResume();
         Log.i("onResume");
 
-        // These steps are done in onResume, because when an activity that has been lanuched by Kõnele
+        // These steps are done in onResume, because when an activity that has been launched by Kõnele
         // finishes, then Kõnele might not necessarily go through onStart.
         clearAudioBuffer();
-        setUpExtras();
-        registerPrompt(mTvPrompt);
-        setTvPrompt();
 
         setUpSettingsButton();
 

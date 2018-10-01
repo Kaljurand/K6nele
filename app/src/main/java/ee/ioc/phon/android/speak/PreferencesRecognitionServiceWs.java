@@ -121,7 +121,7 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
             int key = R.string.keyWsServer;
             final Preference pref = findPreference(getString(key));
             if (pref != null) {
-                final String urlSpeech = PreferenceUtils.getPrefString(prefs, res, key);
+                final String urlSpeech = PreferenceUtils.getPrefString(prefs, res, key, R.string.defaultWsServer);
                 pref.setSummary(String.format(getString(R.string.summaryWsServer), urlSpeech));
             }
         }
