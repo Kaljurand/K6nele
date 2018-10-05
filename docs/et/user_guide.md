@@ -548,7 +548,7 @@ Kõnele toimib eksperimentaalselt ka Android Things platvormil, vt
 
 Rakendus [Tasker](https://tasker.joaoapps.com/) võimaldab erinevaid nutiseadmetoiminguid automatiseerida.
 Järgnevalt mõned Taskeri käsud (nn "task"), mis käivitavad Kõnele otsingupaneeli, kuid defineerivad
-üle mõned selle sisendparameetritest (nn EXTRA). Käskude importimiseks Taskerisse (vajalik v5.2 beeta)
+üle mõned selle sisendparameetritest (nn EXTRA). Käskude importimiseks Taskerisse (vajalik v5.5+)
 tuleb klikkida allolevatele linkidele.
 
 - [K6 autostart](taskertask://H4sIAAAAAAAAAIVTy26DMBA8J18R+QNsHgGSyliKlEuUQ6UmPSODXWKFAHKM2/59/SAtapv2gpeZ2Z1lzeIjvZ653FJFF1eZA7BgWuQgBAulc5DACJYvKSDzGbZCJ1EmiCw0wxWjipMwiYN1GkXZar2MMfKgpfmEjpN1skyXGPFPWjASYWSe9qW9cLJPCzqo7qqoVBhZxDK9FCQMAoxsYIG9YK4Rc7o2ZrihQ1uddltb7zN2TH+uCSs5ZL2GfVOaIgZwjLb1dYiRvhmh/djLplKia50HrVQAFprnIBu9qo5xssoy86E2cthBSa+W9aiOAfLUrlU3ygxV0yYHwY2bpEXf0iZUfJ9a3ijCORRdBftT10LaMtkJBvmbkhRuno+PxeG4eTo+KDlwjEz+j0LJfY/0PpX9aX/tOT3/brf6PxGayQst1Ds89JxXJ38nmxGclJ0MeD0OOPS9YuSTXLy71E4mqtabR+N92tu/vBbUSYtG1CdVDk1ZdINqRMu//kNkSthFQHYTyNyffnXI/APM0lWWSAMAAA==) käivitab Kõnele EXTRAga `AUTO_START=true`, st sisendkõne lindistamine algab automaatselt.
