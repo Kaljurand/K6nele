@@ -287,8 +287,8 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
     <string name="titleWsServer">WebSocket-aadress</string>
-    <string name="titleEnableIme">Kõnele klaviatuuri sisselülitamine</string>
-    <string name="summaryEnableIme">Kõnele klaviatuur võimaldab dikteerida kõikidesse tekstikastidesse, kõikides rakendustes, ja teksti svaip-operatsioonidega muuta. Vajutage siia, et see Androidi virtuaalklaviatuuriseadetes sisse lülitada.</string>
+    <string name="titleEnableIme">Kõne &amp; svaip klaviatuuri sisselülitamine</string>
+    <string name="summaryEnableIme">See klaviatuur võimaldab dikteerida kõikidesse tekstikastidesse, kõikides rakendustes, ja teksti svaip-operatsioonidega muuta. Vajutage siia, et see Androidi virtuaalklaviatuuriseadetes sisse lülitada.</string>
     <string name="summaryHelpText">Näita otsingupaneelil abiteksti (teeb paneeli sellevõrra suuremaks)</string>
     <string name="titleHelpText">Abitekst</string>
     <string name="titleReturnErrors">Tagasta veateated</string>
