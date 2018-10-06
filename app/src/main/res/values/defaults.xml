@@ -19,6 +19,6 @@
 -->
     <string name="defaultAutoStopAfterTime" translatable="false">20</string>
     <!-- TODO: convert to integer -->
-    <string name="defaultImeMode" translatable="false">1</string>
+    <string name="defaultImeMode" translatable="false">2</string>
 
 </resources>
