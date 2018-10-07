@@ -13,14 +13,16 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
-### v1.6.8x (2018-10-??)
+### (beta) v1.6.8? (2018-10-??)
 
 New in this release:
 
 - in menu ``Settings/Recognition services/Kõnele (fast recognition)/WebSocket URL``, scan the (local) network to look for server. Also show server status, which partially solves [issue #56](https://github.com/Kaljurand/K6nele/issues/56)
 - simpler sharing and importing of rewrite rule tables as base64-encoded URIs (scheme "k6")
-- "Speak & swipe keyboard" feature "Swiping moves cursor" (added in the previous release) is now the default behaviour
+- "Speak & swipe keyboard" feature "Swiping moves cursor" (added in the previous release) is now the default behavior
 - "Voice search panel" can be moved
+- "Recognition languages & services" now also includes services that do not specify any languages,
+  e.g. Tildes Balss' TldWebSocketRecognitionService (Latvian), and Google's service on the Wear
 - "Speak & swipe keyboard" settings are now disabled if the keyboard is disabled in the global settings
 - small UI improvements to the rewrites selector
 - fix regression in showing the warning message if microphone permission is not granted
@@ -66,7 +68,7 @@ New in this release:
 - improve and document usage on Android Wear
 - small UI improvements for service icons, app shortcuts, UI labels
 - support permission ``READ_EXTERNAL_STORAGE``, required when opening downloaded rewrite rules on some devices from some apps (needs to be enabled via the general Android settings if needed, i.e. Kõnele provides no permission requesting dialog for this permission)
-- support setting HTTP headers in``FetchUrlActivity``
+- support setting HTTP headers in ``FetchUrlActivity``
 - add ``GetPutPreferenceActivity`` that simplifies changing multiple preferences
 - add the Voice search panel setting "Return errors", and more developer settings
 - update dependencies
