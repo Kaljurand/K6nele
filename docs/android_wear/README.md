@@ -6,31 +6,42 @@ Kõnele on Android Wear
 Introduction
 ------------
 
-Using Kõnele on Android Wear. (Tested with Wear 2.0 on Huawei Watch 2.)
+Using Kõnele on Android Wear. (Tested with Wear OS by Google 1.6 on Huawei Watch 2.)
 
 Installation
 ------------
 
-Kõnele can work as a standalone app on the watch, but its UI has not been built for the watch,
-therefore some configuration steps are only possible using adb.
+The same Kõnele APK package that works on the phone also works on
+the watch. However, the package cannot be installed to the watch via Google Play.
+We perform the installation using the Android Debug Bridge (adb).
+
+Also, the Kõnele UI has not been fully customized for the watch,
+therefore some configuration steps are only possible using adb, calling
+Kõnele's `GetPutPreferenceActivity`.
 
 ### Setting up adb
 
-Install Android Debug Bridge (adb), which is part of the
+Install adb, which is part of the
 [SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools.html).
 
 Connect to the watch as detailed in [Debugging an Android Wear App](https://developer.android.com/training/wearables/apps/debugging.html).
 
-
 ### Installing Kõnele
 
-In case the Wear-compatible version of Kõnele is not available on Google Play, then install it using adb:
+Download APK
 
-    # Installation command examples
-    adb install K6nele-1.6.62.apk
-    adb -s 192.168.0.29:5555 install -r K6nele-1.6.62.apk
+    wget https://github.com/Kaljurand/K6nele/releases/download/v1.6.78/K6nele-1.6.78.apk
 
-    # (Optional) Verify that the package was installed
+Install APK
+
+    adb install K6nele-1.6.78.apk
+
+(Alternative command, that specifies the watch IP address, and the reinstallation flag.)
+
+    adb -s 192.168.0.29:5555 install -r K6nele-1.6.78.apk
+
+(Optional) Verify that the package was installed
+
     adb shell pm list packages | fgrep "ee.ioc.phon.android.speak"
 
 Configuring
@@ -38,15 +49,8 @@ Configuring
 
 ### Global settings
 
-    # Look at settings
-    adb shell am start -a android.settings.SETTINGS
-
-    # The standard Android voice input settings are not present on Wear.
-    # Expected result: Activity not started, unable to resolve Intent.
-    adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
-
 The menu `Settings -> Personalization -> Customize hardware buttons` lets
-you define an app to be launched (e.g. Kõnele) when pressing a hardware button.
+you define an app (e.g. Kõnele) to be launched when a hardware button is pressed.
 
 ### Kõnele UI configuration
 
@@ -57,7 +61,7 @@ Suggestions:
 
 ### Kõnele services configuration
 
-- enable IME
+- enable IME (also possible via `adb shell am start -a android.settings.INPUT_METHOD_SETTINGS`)
 - keep the raw encoding (FLAC is not supported on Wear)
 
 ### Importing and configuring rewrite rules
@@ -83,20 +87,14 @@ There is a script <https://github.com/Kaljurand/K6nele/blob/master/docs/adb-pref
 
        adb-pref.py prefs_developer.yml prefs_user_guide_rewrites.yml prefs_wear.yml prefs_private.yml | sh
 
-### Notes about rewrite rules
-
-- voice prompts use the system default TTS engine,
-  which on Huawei Watch 2 is Google's text-to-speech engine by default,
-  which does not support Estonian, so Kõnele falls back to Finnish.
-  This triggers the downloading of Finnish TTS data when first used, which lasts a while.
-  In general, TTS is very slow on Wear (e.g. Google's Finnish takes 20 sec to warm up), so consider designing your rewrite rules without voice prompts.
-
 ### Apps to install
 
 - TODO: something that supports the `VIEW` or `WEB_SEARCH` actions
-- for Estonian TTS, install e.g. the EKI TTS service (e.g. from https://github.com/Kaljurand/EKISpeak/releases,
-  this service is also slow, starting to speak ~20 sec after being started).
-  The default TTS enging can be set in `Settings -> Accesibility -> Text-to-speech output`.
+- for Estonian TTS, install e.g. the EKI TTS service.
+  The default TTS engine can be set in `Settings -> Accessibility -> Text-to-speech output`.
+
+      wget https://github.com/Kaljurand/EKISpeak/releases/download/v1.2.03/EKISpeak-1.2.03.apk
+      adb install EKISpeak-1.2.03.apk
 
 
 Examples
@@ -104,15 +102,20 @@ Examples
 
 ### Assistant
 
-Long press on the upper button (on Huawei Watch 2) launces action `ASSIST`. Kõnele needs to be configured
+Long press on the upper button (on Huawei Watch 2) launches action `ASSIST`. Kõnele needs to be configured
 with rewrite rules to be of any use, e.g. setting a timer using action `SET_TIMER` worked.
 
-### Hangouts
+### Hangouts, Keep, etc.
 
-Hangouts offers 3 input modes: action `RECOGNIZE_SPEECH` (microphone icon), emoji, IME (keyboard icon).
-Kõnele opens from the microphone icon and is available in the IME rotation. The Kõnele IME does not support
-editing on Wear (swipe commands do not work and edits are not visible because the IME is not drawn over the
-editor but instead over the input mode selection GUI).
+Apps that integrate text input (e.g. Hangouts, Keep) offer 3 input modes:
+
+- action `RECOGNIZE_SPEECH` (microphone icon),
+- emoji,
+- IME (keyboard icon).
+
+Kõnele opens from the microphone icon and is available in the IME rotation. The first is
+suitable for short inputs that cannot be edited. The IME mode offers basic editing with swipe
+commands.
 
 Known issues
 ------------
@@ -120,16 +123,27 @@ Known issues
 - FetchUrlActivity does not work with some (local?) URLs: connect timed out.
   The solution seems to be to disable Bluetooth and enable Wifi on the watch.
 
-- watch does not have menus (e.g. Action bar)
+- searching for local recognition servers does not work. Again, the solution
+  is to disable Bluetooth.
 
-- some actions are not available: VIEW?, `WEB_SEARCH`, `VOICE_INPUT_SETTINGS`
+- watch does not have phone-like menus, e.g. the Action bar, but some tasks assume them
 
 - the providers of `RECOGNIZE_SPEECH` and `ASSIST` are not configurable.
   On Huawei Watch 2 by default, Google's responds to these actions, but once Kõnele is installed, it overrides Google.
-  Kõnele sets the `ASSIST` intent filter priorty to -10 to let Google win for the `ASSIST` action.
+  Kõnele sets the `ASSIST` intent filter priority to -10 to let Google win for the `ASSIST` action.
 
-- (Google's) TTS is very slow on Wear
-
-- IME could support swipe commands and show a small editor line which reflects rewritten text and editing results
+- voice prompts use the system default TTS engine,
+  which on Huawei Watch 2 is Google's text-to-speech engine by default,
+  which does not support Estonian, so Kõnele falls back to Finnish.
+  This triggers the downloading of Finnish TTS data when first used, which lasts a while.
+  In general, TTS is very slow on Wear (e.g. Google's Finnish takes 20 sec to warm up), so consider designing your rewrite rules without voice prompts.
+  (In my most recent tests TTS did not seem to work at all.)
 
 - Android Wear does not support the Estonian UI
+
+- the standard Android voice input settings are not present on Wear.
+
+      adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+      # results in: Activity not started, unable to resolve Intent.
+
+- other actions that are not available: `VIEW`?, `WEB_SEARCH`
