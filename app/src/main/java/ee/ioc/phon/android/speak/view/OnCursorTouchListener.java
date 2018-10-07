@@ -183,6 +183,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 mCursorType = -1;
                 mIsLongPress = false;
                 break;
+            default:
+                break;
         }
         return true;
     }

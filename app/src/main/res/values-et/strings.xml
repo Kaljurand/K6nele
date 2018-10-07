@@ -242,7 +242,7 @@
     <string name="errorResultCanceled">Katkestatud</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
-    <string name="errorNetworkUndefined">ERROR: Võrgu IP aadressi pole määratud</string>
+    <string name="errorNetworkUndefined">VIGA: Võrgu IP aadressi pole määratud</string>
     <string name="promptSearch">Öelge veebiotsingu päring</string>
     <string name="promptDemo">Öelge nt: %1$s</string>
 

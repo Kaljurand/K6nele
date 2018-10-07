@@ -20,12 +20,12 @@ import java.util.List;
 
 public final class Log {
 
-    private Log() {
-    }
-
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
-    public static final String LOG_TAG = "k6nele";
+    private static final String LOG_TAG = "k6nele";
+
+    private Log() {
+    }
 
     public static void i(String msg) {
         if (DEBUG) android.util.Log.i(LOG_TAG, msg);

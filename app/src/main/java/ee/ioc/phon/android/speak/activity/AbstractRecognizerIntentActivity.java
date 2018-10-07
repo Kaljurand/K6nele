@@ -257,6 +257,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
                             editor.putInt("keyDialogY", wlp.y);
                             editor.apply();
                             break;
+                        default:
+                            break;
                     }
                     return true;
                 }

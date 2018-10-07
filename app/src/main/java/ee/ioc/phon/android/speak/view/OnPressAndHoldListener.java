@@ -34,6 +34,8 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
                 if (mHandler != null) mHandler.removeCallbacks(mTask);
                 v.setPressed(false);
                 break;
+            default:
+                break;
         }
         return true;
     }
