@@ -155,11 +155,10 @@
         %1$s implements both the activity and the service.&lt;/p>
 
         &lt;p>How to use the Kõnele keyboard?
-        Tap the big yellow button and start dictating, the words
-        appear immediately in the text area.
-        Swipe left to delete the previous word, swipe right to add a newline, double-tap to add space,
-        long-press to select all text (e.g. to dictate over it). Rewrite rules allow you to define voice commands
-        to edit an existing text.&lt;/p>
+        Tap the big yellow button and start dictating, the words will
+        appear at the cursor position in the text area.
+        Swipe left or right to move the cursor, long-press and swipe to select text, double-tap to add space.
+        Rewrite rules allow you to define voice commands to edit an existing text.&lt;/p>
 
         &lt;p>How to use the voice search activity? Its user interface is similar to the speech keyboard
         but because the transcription is immediately executed (e.g. loaded into a web browser) or returned to the caller

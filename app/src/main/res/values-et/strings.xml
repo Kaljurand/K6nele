@@ -98,8 +98,8 @@
 
         &lt;p>Kuidas töötab Kõnele klaviatuur? Mikrofoninupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
-        Svaip vasakule kustutab kursorile eelneva sõna.
-        Svaip paremale teeb reavahetuse. Topeltvajutus lisab tühiku. Pikk vajutus valib kogu teksti.
+        Svaipides saab kursori asukohta muuta. Pikalt vajutades ja siis svaipides saab teksti valida.
+        Topeltvajutus lisab tühiku.
         Ümberkirjutusreeglite abil saab luua tekstiasendus- ja tekstitoimetuskäske.&lt;/p>
 
         &lt;p>Kõnele toetab kõiki seadmes olevad tuvastusteenusi, mis on läbi Androidi avatud kõnetuvastusliidese
@@ -108,7 +108,7 @@
         Vaikimisi on nendeks TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori eesti keele
 		kõnetuvastusserverid, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.
         Seega, Kõnele kasutamine eeldab üldiselt internetiühenduse olemasolu,
-        laadides serverisse umbes 1MB kõne poole minuti kohta.&lt;/p>
+        laadides serverisse umbes 1 MB kõne poole minuti kohta.&lt;/p>
 
         &lt;p>&lt;b>Kiire tuvastusega teenus&lt;/b> väljastab tuvastustulemuse juba rääkimise ajal ja ei sea
         kõnesisendi pikkusele mingit piirangut.&lt;/p>
