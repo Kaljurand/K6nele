@@ -36,7 +36,7 @@ milliseid sõnu ja lauseid ta erinevates rakendustes kasutab.
 Kuna Kõnele kasutab tööks veebiserverit, peab olema nutiseadmes internetiühendus sisse lülitatud.
 Sõltuvalt mobiilioperaatori teenusepaketist võib interneti kasutamise hind
 sõltuda andmemahtudest. Seega tasub teada, et pooleminutise kõne
-transkribeerimiseks laaditakse serverisse umbes 1MB jagu andmeid. Wifivõrkudes
+transkribeerimiseks laaditakse serverisse umbes 1 MB jagu andmeid. Wifivõrkudes
 on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
@@ -188,7 +188,9 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_2015-05-11-21-44-34.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest" src="{{ site.baseurl }}/images/et/Screenshot_2015-06-14-01-46-37.png">
+<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181010-083344.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181010-083352.png"><img title="Ekraanipilt: Kõnele võib tuvastuse ajaks veel väiksemaks teha." src="{{ site.baseurl }}/images/et/Screenshot_20181010-083440.png">
+
+Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult veerandi, ning tuvastuse ajaks saab klaviatuuri veel väiksemaks teha.
 
 ### Omadused
 
@@ -214,14 +216,14 @@ tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
 
   - reavahetusikoon, tavalise mitmerealise tekstivälja puhul: lühike vajutus lisab reavahetuse;
 
-- paneel, variant 1 (vaikimisi, aga seadetes muudetav):
+- paneel, variant 1:
 
   - topeltvajutus lisab tühiku;
   - svaip vasakule kustutab kursorist vasakul asuva sõna,
   - svaip paremale lisab reavahetuse,
   - pikk vajutus valib kogu teksti;
 
-- paneel, variant 2:
+- paneel, variant 2 (vaikimisi, aga seadetes muudetav):
 
   - topeltvajutus lisab tühiku;
   - kustutamise ikoon kustutab kursorist vasakul oleva sümboli või praeguse valiku,
@@ -578,7 +580,7 @@ See konteiner toetab nii "grammatikatoega" teenuse HTTP-liidest
 kui ka "kiire tuvastusega" teenuse WebSocket-liidest (esimesel juhul küll GF grammatikaid
 tegelikult toetamata).
 
-Alustuseks on vaja ~3GB kõvakettaruumi
+Alustuseks on vaja ~3 GB kõvakettaruumi
 ning Dockeri infrastruktuuri, mille paigaldamisjuhend nt Ubuntu Linuxile on
 <https://docs.docker.com/install/linux/docker-ce/ubuntu/>.
 Seejärel saab teenuse paigaldada käsuga
