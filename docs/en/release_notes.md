@@ -13,20 +13,20 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
-### (beta) v1.6.8? (2018-10-??)
+### v1.6.90 (2018-10-13)
 
 New in this release:
 
 - in menu ``Settings/Recognition services/Kõnele (fast recognition)/WebSocket URL``, scan the (local) network to look for server. Also show server status, which partially solves [issue #56](https://github.com/Kaljurand/K6nele/issues/56)
 - simpler sharing and importing of rewrite rule tables as base64-encoded URIs (scheme "k6")
 - "Speak & swipe keyboard" feature "Swiping moves cursor" (added in the previous release) is now the default behavior
-- "Voice search panel" can be moved
+- "Voice search panel" can be moved and remembers its previous location (might be useful on larger screens)
 - "Recognition languages & services" now also includes services that do not specify any languages,
   e.g. Tildes Balss' TldWebSocketRecognitionService (Latvian), and Google's service on the Wear
 - "Speak & swipe keyboard" settings are now disabled if the keyboard is disabled in the global settings
 - small UI improvements to the rewrites selector
 - fix regression in showing the warning message if microphone permission is not granted
-- remove "Quick settings" from the Developer menu
+- some reorganization of the Developer menu, e.g. remove "Quick settings"
 
 ### v1.6.78 (2018-03-19)
 
