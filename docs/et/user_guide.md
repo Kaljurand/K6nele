@@ -532,6 +532,8 @@ Vt ka rakendust [Arvutaja](http://kaljurand.github.io/Arvutaja/), mis kasutab K�
 
 ## K천nele nutikellal
 
+<img style="float: right" title="Ekraanipilt: K천nele nutikella klaviatuurina" alt="Ekraanipilt: K천nele nutikella klaviatuurina." src="{{ site.baseurl }}/images/et/Screenshot_20181007.png">
+
 K천nele toimib peaaegu kogu oma v천imaluste ulatuses ka nutikellal, kuigi selle kasutajaliidest
 pole nutikella v채iksele ekraanile veel kohandatud. Paigaldamist, seadistamist ja peamiseid
 kasutusn채iteid on kirjeldatud (inglise keeles) siin:
