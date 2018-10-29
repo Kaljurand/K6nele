@@ -118,7 +118,7 @@
     <string name="titleGetPutPrefSkipUi">Run GetPutPreference without confirmation</string>
     <string name="summaryGetPutPrefSkipUi">Allow GetPutPreference to change preferences without user confirmation.
     This allows rewrite rules, ADB scripts, or 3rd party apps to change Kõnele settings without
-        the user having to confirm the change. Do not enable this setting, unless you know what you are doing.</string>
+        the user having to confirm the change. Enable this setting only if you know what you are doing.</string>
 
     <string name="titleMaxResults">Recognition hypotheses</string>
 
