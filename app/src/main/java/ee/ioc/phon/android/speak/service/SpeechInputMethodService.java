@@ -15,6 +15,7 @@ import android.speech.SpeechRecognizer;
 import android.text.InputType;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
@@ -152,7 +153,8 @@ public class SpeechInputMethodService extends InputMethodService {
             return;
         }
 
-        mInputView.setListener(getSpeechInputViewListener(editorInfo.packageName), editorInfo);
+        Window window = getWindow().getWindow();
+        mInputView.setListener(getSpeechInputViewListener(window, editorInfo.packageName), editorInfo);
         mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
@@ -204,6 +206,7 @@ public class SpeechInputMethodService extends InputMethodService {
         if (mInputView != null) {
             mInputView.cancel();
         }
+        getWindow().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private IBinder getToken() {
@@ -267,7 +270,7 @@ public class SpeechInputMethodService extends InputMethodService {
         return extras;
     }
 
-    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final String packageName) {
+    private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final Window window, final String packageName) {
         return new AbstractSpeechInputViewListener() {
 
             // TODO: quick hack to add app to the matcher, not sure if we can access the
@@ -278,6 +281,14 @@ public class SpeechInputMethodService extends InputMethodService {
                 mCommandEditor.runOp(op, false);
             }
 
+            private void setKeepScreenOn(boolean b) {
+                if (b) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                } else {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+            }
+
             @Override
             public void onComboChange(String language, ComponentName service) {
                 // TODO: name of the rewrites table configurable
@@ -285,9 +296,16 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
-            public void onPartialResult(List<String> results) {
-                if (mShowPartialResults) {
-                    mCommandEditor.commitPartialResult(getText(results));
+            public void onPartialResult(List<String> results, boolean isSemiFinal) {
+                if (isSemiFinal) {
+                    CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
+                    if (editorResult != null && mInputView != null && editorResult.isCommand()) {
+                        mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
+                    }
+                } else {
+                    if (mShowPartialResults) {
+                        mCommandEditor.commitPartialResult(getText(results));
+                    }
                 }
             }
 
@@ -297,6 +315,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (editorResult != null && mInputView != null && editorResult.isCommand()) {
                     mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
                 }
+                setKeepScreenOn(false);
             }
 
             @Override
@@ -385,17 +404,20 @@ public class SpeechInputMethodService extends InputMethodService {
             public void onStartListening() {
                 Log.i("IME: onStartListening");
                 mCommandEditor.reset();
+                setKeepScreenOn(true);
             }
 
             @Override
             public void onStopListening() {
                 Log.i("IME: onStopListening");
+                setKeepScreenOn(false);
             }
 
             // TODO: add onCancel()
 
             @Override
             public void onError(int errorCode) {
+                setKeepScreenOn(false);
                 Log.i("IME: onError: " + errorCode);
                 if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
                     Intent intent = new Intent(SpeechInputMethodService.this, PermissionsRequesterActivity.class);

@@ -65,7 +65,7 @@ public class SpeechInputView extends LinearLayout {
 
         void onComboChange(String language, ComponentName service);
 
-        void onPartialResult(List<String> text);
+        void onPartialResult(List<String> text, boolean isSemiFinal);
 
         void onFinalResult(List<String> text, Bundle bundle);
 
@@ -734,11 +734,7 @@ public class SpeechInputView extends LinearLayout {
                 boolean isSemiFinal = bundle.getBoolean(Extras.EXTRA_SEMI_FINAL)
                         || bundle.getBoolean("com.tilde.tildesbalss.extra.SEMI_FINAL");
                 showMessage(lastChars(results, isSemiFinal));
-                if (isSemiFinal) {
-                    mListener.onFinalResult(results, bundle);
-                } else {
-                    mListener.onPartialResult(results);
-                }
+                mListener.onPartialResult(results, isSemiFinal);
             }
         }
 

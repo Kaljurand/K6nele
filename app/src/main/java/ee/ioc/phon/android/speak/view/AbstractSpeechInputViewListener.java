@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class AbstractSpeechInputViewListener implements SpeechInputView.SpeechInputViewListener {
 
     @Override
-    public void onPartialResult(List<String> results) {
+    public void onPartialResult(List<String> results, boolean isSemiFinal) {
         // empty
     }
 

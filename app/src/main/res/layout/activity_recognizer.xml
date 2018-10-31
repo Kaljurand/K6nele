@@ -6,10 +6,10 @@
     android:background="@drawable/rectangle_gradient"
     android:gravity="end"
     android:orientation="vertical"
-    android:paddingBottom="0dip"
     android:paddingLeft="0dip"
-    android:paddingRight="0dip"
     android:paddingTop="0dip"
+    android:paddingRight="0dip"
+    android:paddingBottom="0dip"
     android:scaleType="fitXY">
 
     <RelativeLayout
@@ -20,12 +20,12 @@
             android:id="@+id/tvPrompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_margin="@dimen/layoutMargin4dp"
-            android:layout_toLeftOf="@+id/bSettings"
             android:layout_toStartOf="@+id/bSettings"
+            android:layout_toLeftOf="@+id/bSettings"
             android:ellipsize="end"
             android:lines="3"
             android:textColor="@color/grey200"
@@ -37,9 +37,9 @@
             android:id="@+id/bSettings"
             android:layout_width="@dimen/layoutMargin32"
             android:layout_height="@dimen/layoutMargin32"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdSettings"
             android:src="@drawable/ic_settings_24dp" />
@@ -63,7 +63,6 @@
         android:layout_width="@dimen/layoutSpeechInputViewWidth"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:keepScreenOn="true"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -124,8 +123,8 @@
             android:ellipsize="end"
             android:focusable="true"
             android:gravity="center"
-            android:minHeight="@dimen/layoutMargin3"
             android:minWidth="@dimen/layoutMargin3"
+            android:minHeight="@dimen/layoutMargin3"
             android:singleLine="true"
             android:textColor="@color/grey100"
             android:textSize="@dimen/textSize10sp"

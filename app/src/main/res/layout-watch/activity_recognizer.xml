@@ -32,7 +32,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:keepScreenOn="true"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -87,15 +86,15 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/layoutMargin2"
                     android:layout_marginTop="@dimen/layoutMargin2"
+                    android:layout_marginBottom="@dimen/layoutMargin2"
                     android:background="@drawable/button_combo"
                     android:clickable="true"
                     android:ellipsize="end"
                     android:focusable="true"
                     android:gravity="center"
-                    android:minHeight="@dimen/layoutMargin3"
                     android:minWidth="@dimen/layoutMargin3"
+                    android:minHeight="@dimen/layoutMargin3"
                     android:singleLine="true"
                     android:textColor="@color/grey100"
                     android:textSize="@dimen/textSize10sp"
