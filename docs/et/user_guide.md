@@ -341,8 +341,6 @@ Näide. Keelest sõltumatu reegel, mis tuvastab lausungis kahe järjestikuse sõ
 
 ### Käsud
 
-(_Eksperimentaalne_)
-
 Käskude sidumiseks lausungiga tuleb kasutada kuni kolme lisaveergu:
 
 - __Command__ Käsu nimi (ingliskeelne märksõna).
@@ -427,7 +425,8 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Kui mitu faili on akti
 
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU/edit?usp=sharing), [k6-URI](k6://VXR0ZXJhbmNlCUNvbW1hbmQJQXJnMQooLiopCWFjdGl2aXR5CXsiYWN0aW9uIjogImFuZHJvaWQuaW50ZW50LmFjdGlvbi5WSUVXIiwgImRhdGEiOiAiZ2VvOjAsMD9xPSQxLCBFc3RvbmlhIn0=)] Ühest reeglist koosnev reeglistik, mis näitab, kuidas avada veebibrauseri asemel kaardirakendus.
 - [[TSV](https://docs.google.com/spreadsheets/d/1TC7hGq9SDrpiDmRjCxvFzfi6GJwOgKpQDQqTm086Xuk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1TC7hGq9SDrpiDmRjCxvFzfi6GJwOgKpQDQqTm086Xuk/edit?usp=sharing)] Tekstiasendusreeglid kirjavahemärkide lisamiseks (kommentaaridega)
-- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Suur hulk lihtsamaid tekstiasendusreegleid, keerulisemaid tekstitoimetusreegleid, ja muid näiteid.
+- [[TSV](https://docs.google.com/spreadsheets/d/1cOkZZ1l8aEsWNHj_ynZm9VPKuktDWCy4tRZlT7qc_Og/export=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1cOkZZ1l8aEsWNHj_ynZm9VPKuktDWCy4tRZlT7qc_Og/edit?usp=sharing)] Tekstitoimetuskäsud Androidi tekstiväljadele
+- [[TSV](https://docs.google.com/spreadsheets/d/13yVjVHMrHVBMZQYaBkHXdvE5U_MUgkW7XbKONYCc2xA/export=tsv), [Sheets](https://docs.google.com/spreadsheets/d/13yVjVHMrHVBMZQYaBkHXdvE5U_MUgkW7XbKONYCc2xA/edit?usp=sharing)] Tekstitoimetuskäsud tekstiredaktorile Vim
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_translate.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ndVmgLCG1wZ0cedfaAhL_kzw9aoqyP5jnsp1I-qFHwQ/edit?usp=sharing)] Mitut sisendkeelt toetav reeglistik tõlkerakenduse avamiseks koos etteantud keelepaari ja tõlgitava fraasiga. Sisendkeele määrab __Locale__-veerg, väljundkeele ning tõlgitava fraasi määrab lausung.
 - [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_skill_send.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1a_waZskhCxM0NGy6T0_cIAzWd7rHocg0kBvFAIJ6M2s/edit?usp=sharing)] Dialoogisüsteem e-kirja saatmiseks, mis näitab, kuidas "programmeerida" ümberkirjutusreeglite abil lihtne dialoogisüsteem.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZAlBIZniTNorGn8U_WwOxNURT9NlyiGfzjGslIbNx2k/edit?usp=sharing)] Kõnekäsud valgustite juhtimiseks näitab, kuidas loomulikus keeles sisend viia lihtsamale ja keelest sõltumatule kujule (nt "pane elutoa lamp põlema heledusega kaks sada" -> ``<lights><1><on><200>``), mida alljärgnevad reeglistikud edasi teistendavad ning lõpuks käivitavad.
@@ -437,6 +436,7 @@ Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Kui mitu faili on akti
 - [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda.
 - (_vajalik rakendus [ee.ioc.phon.android.speechtrigger](https://github.com/Kaljurand/speech-trigger)_) [[TSV](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk/edit?usp=sharing)] Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja lausub etteantud fraasi nn _wake up phrase_), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub.
 - [[TSV](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg/edit?usp=sharing)] Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks).
+- [[TSV]({{ site.baseurl }}/rewrites/tsv/k6_various.tsv), [Sheets](https://docs.google.com/spreadsheets/d/1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0/edit?usp=sharing)] Muud näited (testimiseks)
 
 ### Reeglid kui liides dialoogisüsteemile
 
