@@ -160,6 +160,13 @@
                 android:key="@string/keyGetPutPrefSkipUi"
                 android:summary="@string/summaryGetPutPrefSkipUi"
                 android:title="@string/titleGetPutPrefSkipUi" />
+            <Preference
+                android:summary="@string/titleCategoryServices"
+                android:title="@string/titleCategoryServices">
+                <intent
+                    android:targetClass="ee.ioc.phon.android.speak.activity.RecServiceSelectorActivity"
+                    android:targetPackage="ee.ioc.phon.android.speak" />
+            </Preference>
             <PreferenceCategory android:title="@string/titleCategoryDemos">
                 <Preference
                     android:summary="@string/summarySimpleDemo"

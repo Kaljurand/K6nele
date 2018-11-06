@@ -261,6 +261,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/dialogTitleCombo"
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
+            android:name=".activity.RecServiceSelectorActivity"
+            android:exported="true"
+            android:label="@string/titleCategoryServices"
+            android:parentActivityName=".activity.Preferences"></activity>
+        <activity
             android:name=".AppListActivity"
             android:label="@string/labelActivityAppList"
             android:parentActivityName=".activity.Preferences"></activity>
@@ -391,6 +396,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <!-- TODO: why can't I specify more permissions here? -->
         <service
             android:name=".service.WebSocketRecognitionService"
+            android:description="@string/summaryServiceWs"
             android:exported="true"
             android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceWs"
@@ -410,6 +416,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <service
             android:name=".service.HttpRecognitionService"
+            android:description="@string/summaryServiceHttp"
             android:exported="true"
             android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceHttp"
