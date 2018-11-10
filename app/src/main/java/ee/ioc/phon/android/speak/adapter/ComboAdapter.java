@@ -27,11 +27,11 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
         this.list = list;
     }
 
-    static class ViewHolder {
-        protected ImageView icon;
-        protected TextView language;
-        protected TextView service;
-        protected CheckBox checkbox;
+    private static class ViewHolder {
+        private ImageView icon;
+        private TextView language;
+        private TextView service;
+        private CheckBox checkbox;
     }
 
     @Override
@@ -41,10 +41,10 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
             LayoutInflater inflator = context.getLayoutInflater();
             view = inflator.inflate(R.layout.list_item_combo, null);
             final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.icon = (ImageView) view.findViewById(R.id.serviceIcon);
-            viewHolder.language = (TextView) view.findViewById(R.id.language);
-            viewHolder.service = (TextView) view.findViewById(R.id.service);
-            viewHolder.checkbox = (CheckBox) view.findViewById(R.id.check);
+            viewHolder.icon = view.findViewById(R.id.serviceIcon);
+            viewHolder.language = view.findViewById(R.id.language);
+            viewHolder.service = view.findViewById(R.id.service);
+            viewHolder.checkbox = view.findViewById(R.id.check);
             viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override

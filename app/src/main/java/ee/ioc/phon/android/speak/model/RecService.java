@@ -13,11 +13,9 @@ import java.io.IOException;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
-import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 
 public class RecService {
 
-    private final String mId;
     private final String mLabel;
     private final String mDesc;
     private String mSettingsActivity;
@@ -26,7 +24,6 @@ public class RecService {
     public RecService(Context context, String id) {
         // Can return <null, "">
         Pair<ComponentName, String> pair = RecognitionServiceManager.unflattenFromString(id);
-        mId = id;
         mComponentName = pair.first;
         mLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
         ServiceInfo si = RecognitionServiceManager.getServiceInfo(context, mComponentName);
@@ -36,7 +33,6 @@ public class RecService {
         } else {
             mDesc = context.getString(si.descriptionRes);
         }
-
         try {
             mSettingsActivity = RecognitionServiceManager.getSettingsActivity(context, si);
             Log.i(mSettingsActivity);
@@ -45,10 +41,6 @@ public class RecService {
         } catch (IOException e) {
             mSettingsActivity = null;
         }
-    }
-
-    public String getId() {
-        return mId;
     }
 
     public String getService() {
@@ -61,6 +53,10 @@ public class RecService {
 
     public Drawable getIcon(Context context) {
         return RecognitionServiceManager.getServiceIcon(context, mComponentName);
+    }
+
+    public ComponentName getComponentName() {
+        return mComponentName;
     }
 
     public Intent getSettingsIntent() {

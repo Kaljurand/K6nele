@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/layoutMargin1">
@@ -17,12 +18,14 @@
         android:contentDescription="@string/cdServiceIcon"
         android:maxWidth="32dp"
         android:maxHeight="32dp"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        tools:src="@drawable/ic_service" />
 
     <TextView
         android:id="@+id/service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/serviceIcon"
         android:layout_toEndOf="@+id/serviceIcon"
         android:layout_toRightOf="@+id/serviceIcon"
         android:paddingStart="@dimen/layoutMargin4dp"
@@ -31,36 +34,21 @@
         android:paddingRight="@dimen/layoutMargin4dp"
         android:paddingBottom="@dimen/layoutMargin4dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?android:textColorPrimary" />
+        android:textColor="?android:textColorPrimary"
+        tools:text="@string/labelRecognitionServiceWs" />
 
     <TextView
         android:id="@+id/desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/service"
-        android:layout_toEndOf="@+id/serviceIcon"
-        android:layout_toRightOf="@+id/serviceIcon"
+        android:layout_below="@+id/serviceIcon"
         android:paddingStart="@dimen/layoutMargin4dp"
         android:paddingLeft="@dimen/layoutMargin4dp"
         android:paddingEnd="@dimen/layoutMargin4dp"
         android:paddingRight="@dimen/layoutMargin4dp"
         android:paddingBottom="@dimen/layoutMargin4dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:textColorSecondary" />
-
-    <TextView
-        android:id="@+id/settingsActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/desc"
-        android:layout_toEndOf="@+id/serviceIcon"
-        android:layout_toRightOf="@+id/serviceIcon"
-        android:paddingStart="@dimen/layoutMargin4dp"
-        android:paddingLeft="@dimen/layoutMargin4dp"
-        android:paddingEnd="@dimen/layoutMargin4dp"
-        android:paddingRight="@dimen/layoutMargin4dp"
-        android:paddingBottom="@dimen/layoutMargin4dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:textColorSecondary" />
+        android:textColor="?android:textColorSecondary"
+        tools:text="@string/summaryServiceWs" />
 
 </RelativeLayout>

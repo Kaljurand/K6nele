@@ -51,7 +51,7 @@ public class ComboSelectorActivity extends Activity {
         public void onPause() {
             super.onPause();
             ListAdapter listAdapter = getListAdapter();
-            if (listAdapter != null && listAdapter instanceof ComboAdapter) {
+            if (listAdapter instanceof ComboAdapter) {
                 Set<String> selected = new HashSet<>();
                 List<Combo> selectedCombos = new ArrayList<>();
                 ComboAdapter comboAdapter = (ComboAdapter) listAdapter;
