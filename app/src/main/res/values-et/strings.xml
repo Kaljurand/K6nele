@@ -36,7 +36,7 @@
     <!-- Preferences activity -->
     <string name="titleCategoryUi">Otsingupaneel</string>
     <string name="titleCategoryIme">Kõne &amp; svaip klaviatuur</string>
-    <string name="titleCategoryApps">Rakendused, grammatikad, ümberkirjutusreeglid</string>
+    <string name="titleCategoryDependencies">Muu</string>
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleCategoryDemos">Demod, testid, jne</string>
     <string name="titleScreenDevel">Arendaja seaded, demod, jne</string>
@@ -240,6 +240,7 @@
     <string name="errorResultNoMatch">Sisendkõne transkribeerimine luhtus. Proovige
 		uuesti!</string>
     <string name="errorResultCanceled">Katkestatud</string>
+    <string name="errorRecognizerSettingsNotPresent">Tuvastusteenusel puudub konfiguratsioonipaneel</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
     <string name="errorNetworkUndefined">VIGA: Võrgu IP aadressi pole määratud</string>
@@ -280,9 +281,6 @@
     </plurals>
     <string name="summaryServiceHttp">Toetab eesti keelt ja tõlkegrammatikaid. HTTP-põhine server.</string>
     <string name="summaryServiceWs">Toetab eesti keelt ja kiiret/täpset tuvastust. WebSocket-põhine server.</string>
-    <string name="titleCategoryServices">Kõnetuvastusteenused</string>
-    <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
-    <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityPreferencesRecognitionServiceHttp">@string/labelRecognitionServiceHttp</string>
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="titleDefaultServiceHttp">HTTP-aadress</string>
@@ -304,6 +302,8 @@
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
     <string name="labelIme">Kõnele kõne &amp; svaip</string>
     <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
+    <string name="titleServices">Kõnetuvastusteenused</string>
+    <string name="summaryServices">Kõik paigaldatud kõnetuvastusteenused</string>
     <string name="titleQuickSettings">Kiirseaded</string>
     <string name="summaryQuickSettings">Muuda korraga mitut (omavahel seotud) seadet</string>
 
@@ -315,7 +315,7 @@
     <string name="labelPermissionFetchUrl">laadi URL ja käivita selle sisu</string>
     <string name="descriptionPermissionFetchUrl">Lubab rakendusel laadida etteantud URL, interpreteerida selle sisu kui rakenduse nime ja sisendparameetreid, ning vastav rakendus vastavate sisendparameetritega käivitada.</string>
 
-    <string name="titleSystemVoiceInputSettings">Kõik kõnetuvastusteenused</string>
+    <string name="titleSystemVoiceInputSettings">Kõnetuvastusteenused (süsteemsed seaded)</string>
     <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>
 
     <plurals name="summaryMaxResults">

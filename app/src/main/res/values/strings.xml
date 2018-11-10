@@ -51,13 +51,12 @@
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">HTTP URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
-    <string name="titleCategoryApps">Apps, Grammars, Rewrites</string>
+    <string name="titleCategoryDependencies">Dependencies</string>
     <string name="titleCategoryIme">Speak &amp; swipe keyboard</string>
-    <string name="titleCategoryServices">Recognition services</string>
     <string name="titleCategoryDevel">For developers</string>
     <string name="titleCategoryDemos">Demos, tests, etc.</string>
-    <string name="titleServiceHttp">@string/labelRecognitionServiceHttp</string>
-    <string name="titleServiceWs">@string/labelRecognitionServiceWs</string>
+    <string name="titleServices">Recognition services</string>
+    <string name="summaryServices">List of installed recognition services with links to their settings panels</string>
     <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>
     <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server.</string>
     <string name="titleScreenDevel">Developer settings, demos, tools</string>
@@ -96,7 +95,7 @@
     <string name="titleEnableIme">Enable Speak &amp; swipe keyboard</string>
     <string name="summaryEnableIme">The keyboard allows you to dictate into any text field in any app, and navigate and edit the text with swipe operations. Tap here to enable it in the Android virtual keyboard settings.</string>
     <string name="summaryAppList">List of apps where you have used speech input</string>
-    <string name="summaryGrammarList">List of grammars that translate the raw transcription into app-specific language</string>
+    <string name="summaryGrammarList">List of GF and JSGF grammars that translate the raw transcription into app-specific language. (Needs service support.)</string>
     <string name="summarySimpleDemo">Demonstrates the simplest way of using the speech recognizer</string>
     <string name="summaryExtrasDemo">Shows only the "result extras" returned by the recognizer</string>
     <string name="summaryHandsfreeDemo">Repeatedly calls the speech recognizer and shows the best transcription. Grammar can be assigned to the input (via menu).</string>
@@ -106,11 +105,11 @@
     <string name="summaryFormDemo">HTML form with various types of fields for testing the IME</string>
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
-    <string name="titleSystemVoiceInputSettings">All recognition services</string>
-    <string name="summarySystemVoiceInputSettings">System-wide settings of all the installed speech recognition services, as well as the Assist-app.</string>
+    <string name="titleSystemVoiceInputSettings">Recognition services (system UI)</string>
+    <string name="summarySystemVoiceInputSettings">System-wide settings panel for the installed speech recognition services, as well as the Assist-app</string>
 
     <string name="titleSelectRewrites">Rewrites</string>
-    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription.</string>
+    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. (Works with any service.)</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
@@ -187,6 +186,7 @@
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
     <string name="toastPlayingAudio">Playing the recorded audio: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Done playing the audio</string>
+    <string name="errorRecognizerSettingsNotPresent">This service does not have a settings panel.</string>
     <string name="errorRecognizerNotPresent">ERROR: There is no activity that provides speech recognition service.</string>
     <string name="errorLoadRewrites">ERROR: Failed to load rewrite rules: %1$s</string>
     <plurals name="statusLoadRewrites">

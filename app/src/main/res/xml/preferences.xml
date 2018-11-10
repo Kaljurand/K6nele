@@ -93,7 +93,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/titleCategoryApps">
+    <PreferenceCategory android:title="@string/titleCategoryDependencies">
         <Preference
             android:summary="@string/summaryAppList"
             android:title="@string/labelActivityAppList">
@@ -115,25 +115,14 @@
                 android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
-    </PreferenceCategory>
+        <Preference
+            android:summary="@string/summaryServices"
+            android:title="@string/titleServices">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.activity.RecServiceSelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak" />
+        </Preference>
 
-    <PreferenceCategory
-        android:key="@string/keyCategoryServices"
-        android:title="@string/titleCategoryServices">
-        <Preference
-            android:summary="@string/summaryServiceHttp"
-            android:title="@string/titleServiceHttp">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.PreferencesRecognitionServiceHttp"
-                android:targetPackage="ee.ioc.phon.android.speak" />
-        </Preference>
-        <Preference
-            android:summary="@string/summaryServiceWs"
-            android:title="@string/titleServiceWs">
-            <intent
-                android:targetClass="ee.ioc.phon.android.speak.PreferencesRecognitionServiceWs"
-                android:targetPackage="ee.ioc.phon.android.speak" />
-        </Preference>
         <!-- This intent requires API 21+, and can crash on older versions. -->
         <!-- TODO: hide this on Wear, which does not offer this intent -->
         <Preference
@@ -160,13 +149,6 @@
                 android:key="@string/keyGetPutPrefSkipUi"
                 android:summary="@string/summaryGetPutPrefSkipUi"
                 android:title="@string/titleGetPutPrefSkipUi" />
-            <Preference
-                android:summary="@string/titleCategoryServices"
-                android:title="@string/titleCategoryServices">
-                <intent
-                    android:targetClass="ee.ioc.phon.android.speak.activity.RecServiceSelectorActivity"
-                    android:targetPackage="ee.ioc.phon.android.speak" />
-            </Preference>
             <PreferenceCategory android:title="@string/titleCategoryDemos">
                 <Preference
                     android:summary="@string/summarySimpleDemo"

@@ -263,7 +263,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.RecServiceSelectorActivity"
             android:exported="true"
-            android:label="@string/titleCategoryServices"
+            android:label="@string/titleServices"
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".AppListActivity"
@@ -432,29 +432,25 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             <meta-data
                 android:name="android.speech"
                 android:resource="@xml/recognition_service_http" />
-            <!--
-            // TODO: export K6nele functionality via meta-data
-            <meta-data
-                android:name="k6nele.valuesRecordingRate"
-                android:value="string-array/valuesRecordingRate" />
-            -->
         </service>
+        <!--
+                <service
+                    android:name=".service.WebSocketRecognitionService2"
+                    android:exported="true"
+                    android:label="@string/labelRecognitionServiceWs2"
+                    android:permission="android.permission.RECORD_AUDIO">
+                    <intent-filter>
 
-        <service
-            android:name=".service.WebSocketRecognitionService2"
-            android:enabled="false"
-            android:exported="true"
-            android:label="@string/labelRecognitionServiceWs2"
-            android:permission="android.permission.RECORD_AUDIO">
-            <intent-filter>
+                        <action android:name="android.speech.RecognitionService" />
 
-                <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
-                <action android:name="android.speech.RecognitionService" />
+                        <category android:name="android.intent.category.DEFAULT" />
+                    </intent-filter>
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
-
+                    <meta-data
+                        android:name="k6nele.test"
+                        android:value="123" />
+                </service>
+        -->
         <service
             android:name=".service.SpeechInputMethodService"
             android:label="@string/labelIme"

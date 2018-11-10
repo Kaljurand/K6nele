@@ -25,11 +25,10 @@ public class RecServiceAdapter extends ArrayAdapter<RecService> {
         this.list = list;
     }
 
-    static class ViewHolder {
-        protected ImageView icon;
-        protected TextView service;
-        protected TextView desc;
-        protected TextView settingsActivity;
+    private static class ViewHolder {
+        private ImageView icon;
+        private TextView service;
+        private TextView desc;
     }
 
     @Override
