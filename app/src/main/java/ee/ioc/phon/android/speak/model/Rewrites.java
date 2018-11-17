@@ -46,16 +46,19 @@ public class Rewrites {
         return getDefaults().contains(mId);
     }
 
-    public boolean toggle() {
+    public void setSelected(boolean b) {
         Set<String> set = new HashSet(getDefaults());
         if (set.contains(mId)) {
-            set.remove(mId);
-            putDefaults(set);
-            return false;
+            if (!b) {
+                set.remove(mId);
+                putDefaults(set);
+            }
+        } else {
+            if (b) {
+                set.add(mId);
+                putDefaults(set);
+            }
         }
-        set.add(mId);
-        putDefaults(set);
-        return true;
     }
 
     public Intent getK6neleIntent() {

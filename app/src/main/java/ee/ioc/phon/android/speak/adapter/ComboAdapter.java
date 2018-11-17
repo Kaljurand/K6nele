@@ -2,7 +2,7 @@ package ee.ioc.phon.android.speak.adapter;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,12 +34,12 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
         private CheckBox checkbox;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
         if (convertView == null) {
-            LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.list_item_combo, null);
+            view = context.getLayoutInflater().inflate(R.layout.list_item_combo, null);
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.icon = view.findViewById(R.id.serviceIcon);
             viewHolder.language = view.findViewById(R.id.language);
@@ -49,8 +49,8 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Combo element = (Combo) viewHolder.checkbox.getTag();
-                    element.setSelected(buttonView.isChecked());
+                    Combo item = (Combo) viewHolder.checkbox.getTag();
+                    item.setSelected(isChecked);
                 }
             });
             view.setTag(viewHolder);
@@ -60,11 +60,11 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
             ((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
         }
         ViewHolder holder = (ViewHolder) view.getTag();
-        Combo combo = list.get(position);
-        holder.icon.setImageDrawable(combo.getIcon(this.context));
-        holder.language.setText(combo.getLanguage());
-        holder.service.setText(combo.getService());
-        holder.checkbox.setChecked(combo.isSelected());
+        Combo item = list.get(position);
+        holder.icon.setImageDrawable(item.getIcon(this.context));
+        holder.language.setText(item.getLanguage());
+        holder.service.setText(item.getService());
+        holder.checkbox.setChecked(item.isSelected());
         return view;
     }
 }

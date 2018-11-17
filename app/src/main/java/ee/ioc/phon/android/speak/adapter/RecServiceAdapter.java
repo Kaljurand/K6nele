@@ -2,7 +2,7 @@ package ee.ioc.phon.android.speak.adapter;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,12 +31,12 @@ public class RecServiceAdapter extends ArrayAdapter<RecService> {
         private TextView desc;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
         if (convertView == null) {
-            LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.list_item_recservice, null);
+            view = context.getLayoutInflater().inflate(R.layout.list_item_recservice, null);
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.icon = view.findViewById(R.id.serviceIcon);
             viewHolder.service = view.findViewById(R.id.service);
@@ -46,10 +46,10 @@ public class RecServiceAdapter extends ArrayAdapter<RecService> {
             view = convertView;
         }
         ViewHolder holder = (ViewHolder) view.getTag();
-        RecService combo = list.get(position);
-        holder.icon.setImageDrawable(combo.getIcon(this.context));
-        holder.service.setText(combo.getService());
-        holder.desc.setText(combo.getDesc());
+        RecService item = list.get(position);
+        holder.icon.setImageDrawable(item.getIcon(this.context));
+        holder.service.setText(item.getService());
+        holder.desc.setText(item.getDesc());
         return view;
     }
 }

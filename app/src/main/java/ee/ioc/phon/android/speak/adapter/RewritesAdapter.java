@@ -3,7 +3,6 @@ package ee.ioc.phon.android.speak.adapter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -29,38 +28,35 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
 
     private static class ViewHolder {
         private TextView id;
-        private CheckBox isSelected;
+        private CheckBox checkbox;
     }
 
-    @Override
-    public
     @NonNull
-    View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
         if (convertView == null) {
-            LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.list_item_rewrites, null);
+            view = context.getLayoutInflater().inflate(R.layout.list_item_rewrites, null);
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.id = view.findViewById(R.id.rewritesId);
-            viewHolder.isSelected = view.findViewById(R.id.rewritesIsSelected);
+            viewHolder.checkbox = view.findViewById(R.id.rewritesIsSelected);
+            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Rewrites item = (Rewrites) viewHolder.checkbox.getTag();
+                    item.setSelected(isChecked);
+                }
+            });
             view.setTag(viewHolder);
+            viewHolder.checkbox.setTag(list.get(position));
         } else {
             view = convertView;
+            ((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
         }
         ViewHolder holder = (ViewHolder) view.getTag();
-        final Rewrites rewrites = list.get(position);
-        holder.id.setText(rewrites.getId());
-        if (rewrites.isSelected()) {
-            holder.isSelected.setChecked(true);
-        } else {
-            holder.isSelected.setChecked(false);
-        }
-        holder.isSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                rewrites.toggle();
-            }
-        });
+        Rewrites item = list.get(position);
+        holder.id.setText(item.getId());
+        holder.checkbox.setChecked(item.isSelected());
         return view;
     }
 }
