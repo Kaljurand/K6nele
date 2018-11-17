@@ -222,7 +222,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".PreferencesRecognitionServiceHttp"
             android:exported="false"
             android:label="@string/labelActivityPreferencesRecognitionServiceHttp"
-            android:parentActivityName=".activity.Preferences">
+            android:parentActivityName=".activity.RecServiceSelectorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -234,7 +234,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".PreferencesRecognitionServiceWs"
             android:exported="false"
             android:label="@string/labelActivityPreferencesRecognitionServiceWs"
-            android:parentActivityName=".activity.Preferences">
+            android:parentActivityName=".activity.RecServiceSelectorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -262,7 +262,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
             android:name=".activity.RecServiceSelectorActivity"
-            android:exported="true"
             android:label="@string/titleServices"
             android:parentActivityName=".activity.Preferences"></activity>
         <activity
