@@ -307,7 +307,7 @@
 
     <!-- TODO: make separate docs for English -->
     <string name="urlDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html</string>
-    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/user_guide.html#%C3%BCmberkirjutusreeglid</string>
+    <string name="urlRewritesDoc" translatable="false">http://kaljurand.github.io/K6nele/docs/et/rewrites.html</string>
 
     <string name="defaultAudioFormat" translatable="false">audio/x-raw</string>
 
