@@ -131,7 +131,8 @@ public class RewritesActivity extends Activity {
         abSwitch.setChecked(mRewrites.isSelected());
         abSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mRewrites.toggle()) {
+                mRewrites.setSelected(isChecked);
+                if (isChecked) {
                     toast(String.format(getString(R.string.toastActivated), mRewrites.getId()));
                 } else {
                     toast(String.format(getString(R.string.toastDeactivated), mRewrites.getId()));
