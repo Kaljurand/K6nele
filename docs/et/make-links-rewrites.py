@@ -29,7 +29,7 @@ def make_link(tag, out, doc):
 
 def enc_url_content(tag):
     f = urlopen('{0}{1}/export?format=tsv'.format(DOCS_PREFIX, tag))
-    return 'k6://' + base64.b64encode(f.read()).decode('utf-8')
+    return 'k6://' + base64.urlsafe_b64encode(f.read()).decode('utf-8')
 
 def save_file(content, name):
     with open(name, 'w') as text_file:
