@@ -297,7 +297,7 @@ ja [200496](https://code.google.com/p/android/issues/detail?id=200496).)
 
 ## Ümberkirjutusreeglid
 
-Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks. Vt [näiteid reeglitest](links_rewrites.html).
+Ümberkirjutusreeglid on Kõnele kasutaja poolt loodavad reeglid tuvastusteenuse poolt tagastatud transkriptsiooni jooksvaks muutmiseks, ja sellele käskude rakendamiseks. Vaata/paigalda [ümberkirjutusreegleid](rewrites.html).
 
 Ümberkirjutusreeglid võimaldavad
 
