@@ -13,6 +13,16 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
+### v1.6.9? (2018-11-??)
+
+New in this release:
+
+- IME: submit partial results as "composing text", which depending on the editor indicates their span, e.g. with underline
+- IME: allow the screen to switch off (i.e. do not raise ``KEEP_SCREEN_ON``), unless recognizing
+- settings: list every installed recognition service, with its name, icon, description, and settings dialog.
+  (Note that while Kõnele's two services provide all these components, 3rd-party services might lack some.)
+- minor fixes/improvements to rewrite rule management
+
 ### v1.6.90 (2018-10-13)
 
 New in this release:
