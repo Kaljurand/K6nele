@@ -404,12 +404,19 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 - __Arg1__ = `[.?!]\\s*()[^.?!]+[.?!]`
 - __Arg2__ = `2`
 
-### Reeglite tegemine
+### Reeglite tegemine ja paigaldamine
 
-Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel TSV-kujul jagada. Faili laadimiseks Kõnele rakendusse on kaks võimalust:
+Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel TSV-kujul jagada. Faili laadimiseks Kõnele rakendusse on erinevaid võimalusi:
 
-- Kõnele menüüvalik "Ümberkirjutusreeglid" avab nimekirja olemasolevatest reeglistikest. Seal on Lisa-nupp (plussmärk ringi sees), mis avab failibrauseri, mille abil tuleb soovitava faili juurde navigeerida ning sellele klikkida.
-- Tabelarvutusrakenduses on failijagamislink, millele klikkides avaneb võimalus faili TSV-kujule teisendamiseks ning tulemuse jagamiseks Kõnelega. Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
+- Kõnele menüüvalik "Ümberkirjutusreeglid" avab nimekirja olemasolevatest reeglistikest. Seal on Lisa-nupp (plussmärk ringi sees), mis avab failibrauseri, mille abil tuleb soovitava TSV-faili juurde navigeerida ning sellele klikkida. Reeglifail peab sel juhul seadme failide hulgas juba olema.
+- Veebibrauseris klikkida TSV-laiendiga veebilingile (proovi nt [seda linki]({{ site.baseurl }}/rewrites/tsv/k6_skill_map.tsv)), mille tulemusena fail seadmesse laaditakse, ja avaneb võimalus sellele klikkida ja see Kõneles avada. See protsess on erinevates brauserites mõnevõrra erinev.
+- Veebibrauseris klikkida k6-prefiksiga lingile (proovi nt PAIGALDA-linki [sellel lehel]({{ site.baseurl }}/docs/et/1liMiWDiU4iN1faAENtAIbFenbtpjKocJvNxjyuW9hqU.html)). Sel juhul on kogu tabel salvestatud lingi sisse ning veebibrauser annab selle klikkimisel kohe edasi Kõnelele. Paigaldamiseks on see viis kõige lihtsam, aga reeglifaili loomisel lisandub k6-lingiks tegemise samm (nt Pythonis: ``'k6://' + base64.urlsafe_b64encode( faili_sisu )``).
+- Juhul kui tabelarvutusrakenduses (Google Sheets, Microsoft Excel, ...) on failijagamismenüü, kus saab tabeli eelnevalt teisendada TSV-kujule (kõigis kahjuks pole), siis saab tulemuse otse jagada Kõnelega. See on kõige lihtsam viis, juhul kui reegleid on vaja pidevalt (endal) muuta.
+- Kõnele seadete muutmine Kõnele alamrakendusega ``GetPutPreferenceActivity``, nt ADB abil (vt näidet [siin](https://github.com/Kaljurand/K6nele/tree/master/docs)). See sobib olukordadesse, kus on vaja paigaldada/uuendada korraga mitut reeglifaili. Samuti on see hetkel ainuvõimalik meetod nutikellal ja Android Things seadmetel.
+
+Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Kui mitu faili on aktiivsed, siis neid rakendatakse tähestikujärjekorras.
+
+Järgnevad ekraanipildid näitavad faili jagamist rakenduses Google'i Arvutustabelid, menüüde "Jagamine ja eksportimine" ja "Saada koopia" abil.
 
 <img title="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses" alt="Ekraanipilt: ümberkirjutusreeglid tabelarvutusrakenduses." src="{{ site.baseurl }}/images/et/Screenshot_20160925-202955.png">
 <img title="Ekraanipilt: ümberkirjutusreeglite jagamine menüüvalikuga 'Jagamine ja eksportimine'" alt="Ekraanipilt: ümberkirjutusreeglite jagamine menüüvalikuga 'Jagamine ja eksportimine'." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203014.png">
@@ -417,8 +424,6 @@ Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Goog
 <img title="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati" alt="Ekraanipilt: ümberkirjutusreeglite teisendamine TSV-formaati." src="{{ site.baseurl }}/images/et/Screenshot_20160925-203041.png">
 <img title="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse" alt="Ekraanipilt: ümberkirjutusreeglite importimine Kõnele rakendusse." src="{{ site.baseurl }}/images/et/Screenshot_20170115-154706.png">
 <img title="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri" alt="Ekraanipilt: imporditud ümberkirjutusreeglite nimekiri." src="{{ site.baseurl }}/images/et/Screenshot_20170115-160910.png">
-
-Reeglifaili kasutamiseks tuleb see eelnevalt aktiveerida. Kui mitu faili on aktiivsed, siis neid rakendatakse tähestikujärjekorras.
 
 ### Reeglid kui liides dialoogisüsteemile
 

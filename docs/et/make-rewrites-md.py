@@ -17,14 +17,15 @@ def make_link(tag, out, doc):
         return '[TSV]({0}{1}/export?format=tsv)'.format(DOCS_PREFIX, tag)
     if out == 'sheets':
         return '[Sheets]({0}{1}/edit?usp=sharing)'.format(DOCS_PREFIX, tag)
-    if out == 'install':
+    if out == 'install' or out == 'base64':
+        content = enc_url_content(tag)
+        if out == 'base64':
+            return '[k6-URI]({0})'.format(content)
         save_file(
-            make_install_page(doc, '[PAIGALDA]({0})'.format(enc_url_content(tag))),
+            make_install_page(doc, '[PAIGALDA]({0})'.format(content)),
             tag + '.md'
         )
         return '[Paigalda]({0}.html)'.format(tag)
-    if out == 'base64':
-        return '[k6-URI]({0})'.format(enc_url_content(tag))
     return 'UNKNOWN_TYPE'
 
 def enc_url_content(tag):
