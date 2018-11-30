@@ -7,7 +7,6 @@
     android:padding="@dimen/layoutMargin4dp">
 
     <EditText
-        android:id="@+id/etTest1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="text, actionNext"
@@ -15,7 +14,13 @@
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/etTest2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="text, actionSend"
+        android:imeOptions="actionSend"
+        android:inputType="text" />
+
+    <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="textPassword, actionGo"

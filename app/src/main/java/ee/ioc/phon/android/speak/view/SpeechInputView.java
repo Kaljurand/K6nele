@@ -138,30 +138,21 @@ public class SpeechInputView extends LinearLayout {
                                     imeAction == EditorInfo.IME_ACTION_DONE ||
                                     imeAction == EditorInfo.IME_ACTION_SEND
                     )) {
-                mBImeAction.setImageResource(R.drawable.ic_search);
-                mBImeAction.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        cancelOrDestroy();
-                        mListener.onAction(imeAction, true);
-                    }
+                if (imeAction == EditorInfo.IME_ACTION_SEND) {
+                    mBImeAction.setImageResource(R.drawable.ic_send);
+                } else {
+                    mBImeAction.setImageResource(R.drawable.ic_search);
+                }
+                mBImeAction.setOnClickListener(v -> {
+                    cancelOrDestroy();
+                    mListener.onAction(imeAction, true);
                 });
             } else if (overrideEnter && imeAction == EditorInfo.IME_ACTION_NEXT) {
                 mBImeAction.setImageResource(R.drawable.ic_next);
-                mBImeAction.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
-                    }
-                });
+                mBImeAction.setOnClickListener(v -> mListener.onAction(EditorInfo.IME_ACTION_NEXT, false));
             } else {
                 mBImeAction.setImageResource(R.drawable.ic_newline);
-                mBImeAction.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mListener.onAddNewline();
-                    }
-                });
+                mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
             // TODO: do something interesting on long press,
             // e.g. open a menu with arrows, or other actions, or various punctuation symbols
