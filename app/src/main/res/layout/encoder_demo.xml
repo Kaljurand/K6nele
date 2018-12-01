@@ -1,87 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/layoutMargin4dp">
+    android:padding="@dimen/layoutMargin4dp"
+    android:scrollbars="vertical">
 
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="text, actionNext"
-        android:imeOptions="actionNext"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="text, actionPrevious"
-        android:imeOptions="actionPrevious"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="text, actionSend"
-        android:imeOptions="actionSend"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="text, actionDone"
-        android:imeOptions="actionDone"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="text, actionGo"
-        android:imeOptions="actionGo"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="text, actionNone"
-        android:imeOptions="actionNone"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="textPassword, actionGo"
-        android:imeOptions="actionGo"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/etTest0"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="textMultiLine, actionSearch"
-        android:imeOptions="actionSearch"
-        android:inputType="textMultiLine" />
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="match_parent"
+        <EditText
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/layoutMargin4dp">
+            android:hint="text, actionNext"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
 
-            <Button
-                android:id="@+id/buttonTest1"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/buttonImeSpeak"
-                android:text="@string/buttonImeSpeak" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="text, actionPrevious"
+            android:imeOptions="actionPrevious"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="text, actionSend"
+            android:imeOptions="actionSend"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="text, actionDone"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="text, actionGo"
+            android:imeOptions="actionGo"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="text, actionNone"
+            android:imeOptions="actionNone"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="textPassword, actionGo"
+            android:imeOptions="actionGo"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/etTest0"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="textMultiLine, actionSearch"
+            android:imeOptions="actionSearch"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/buttonTest1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/buttonImeSpeak"
+            android:text="@string/buttonImeSpeak" />
+    </LinearLayout>
+</ScrollView>
