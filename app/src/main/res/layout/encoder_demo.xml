@@ -16,8 +16,36 @@
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:hint="text, actionPrevious"
+        android:imeOptions="actionPrevious"
+        android:inputType="text" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:hint="text, actionSend"
         android:imeOptions="actionSend"
+        android:inputType="text" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="text, actionDone"
+        android:imeOptions="actionDone"
+        android:inputType="text" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="text, actionGo"
+        android:imeOptions="actionGo"
+        android:inputType="text" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="text, actionNone"
+        android:imeOptions="actionNone"
         android:inputType="text" />
 
     <EditText

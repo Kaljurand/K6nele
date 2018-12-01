@@ -87,10 +87,10 @@
             android:id="@+id/centralButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_toStartOf="@+id/bImeAction"
             android:layout_toLeftOf="@+id/bImeAction"
-            android:gravity="right">
+            android:gravity="end">
 
             <ee.ioc.phon.android.speechutils.view.MicButton
                 android:id="@+id/bImeStartStop"

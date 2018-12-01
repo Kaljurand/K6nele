@@ -72,7 +72,7 @@ public class SpeechInputView extends LinearLayout {
         /**
          * Switch to the next IME or ask the user to choose the IME.
          *
-         * @param isAskUser
+         * @param isAskUser Iff true then ask the user to choose the IME
          */
         void onSwitchIme(boolean isAskUser);
 
@@ -131,23 +131,21 @@ public class SpeechInputView extends LinearLayout {
         if (mBImeAction != null && editorInfo != null) {
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
             final int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
-            if (overrideEnter &&
-                    (
-                            imeAction == EditorInfo.IME_ACTION_SEARCH ||
-                                    imeAction == EditorInfo.IME_ACTION_GO ||
-                                    imeAction == EditorInfo.IME_ACTION_DONE ||
-                                    imeAction == EditorInfo.IME_ACTION_SEND
-                    )) {
-                if (imeAction == EditorInfo.IME_ACTION_SEND) {
+            if (overrideEnter && imeAction != EditorInfo.IME_ACTION_NEXT) {
+                if (imeAction == EditorInfo.IME_ACTION_GO) {
+                    mBImeAction.setImageResource(R.drawable.ic_go);
+                } else if (imeAction == EditorInfo.IME_ACTION_SEARCH) {
+                    mBImeAction.setImageResource(R.drawable.ic_search);
+                } else if (imeAction == EditorInfo.IME_ACTION_SEND) {
                     mBImeAction.setImageResource(R.drawable.ic_send);
                 } else {
-                    mBImeAction.setImageResource(R.drawable.ic_search);
+                    mBImeAction.setImageResource(R.drawable.ic_done);
                 }
                 mBImeAction.setOnClickListener(v -> {
                     cancelOrDestroy();
                     mListener.onAction(imeAction, true);
                 });
-            } else if (overrideEnter && imeAction == EditorInfo.IME_ACTION_NEXT) {
+            } else if (overrideEnter) {
                 mBImeAction.setImageResource(R.drawable.ic_next);
                 mBImeAction.setOnClickListener(v -> mListener.onAction(EditorInfo.IME_ACTION_NEXT, false));
             } else {
@@ -332,51 +330,43 @@ public class SpeechInputView extends LinearLayout {
         }
 
         // This button can be pressed in any state.
-        mBImeStartStop.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.i("Microphone button pressed: state = " + mState);
-                switch (mState) {
-                    case INIT:
-                    case ERROR:
-                        startListening(mSlc);
-                        break;
-                    case RECORDING:
-                        stopListening();
-                        break;
-                    case LISTENING:
-                    case TRANSCRIBING:
-                        cancelOrDestroy();
-                        setGuiInitState(0);
-                        break;
-                    default:
-                }
+        mBImeStartStop.setOnClickListener(v -> {
+            Log.i("Microphone button pressed: state = " + mState);
+            switch (mState) {
+                case INIT:
+                case ERROR:
+                    startListening(mSlc);
+                    break;
+                case RECORDING:
+                    stopListening();
+                    break;
+                case LISTENING:
+                case TRANSCRIBING:
+                    cancelOrDestroy();
+                    setGuiInitState(0);
+                    break;
+                default:
             }
         });
 
         if (mBComboSelector != null) {
-            mBComboSelector.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mState == MicButton.State.RECORDING) {
-                        stopListening();
-                    }
-                    mSlc.next();
-                    mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
-                    updateComboSelector(mSlc);
+            mBComboSelector.setOnClickListener(v -> {
+                if (mState == MicButton.State.RECORDING) {
+                    stopListening();
                 }
+                mSlc.next();
+                mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+                updateComboSelector(mSlc);
             });
 
-            mBComboSelector.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    cancelOrDestroy();
-                    Context context = getContext();
-                    Intent intent = new Intent(context, ComboSelectorActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("key", context.getString(key));
-                    context.startActivity(intent);
-                    return true;
-                }
+            mBComboSelector.setOnLongClickListener(view -> {
+                cancelOrDestroy();
+                Context context = getContext();
+                Intent intent = new Intent(context, ComboSelectorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("key", context.getString(key));
+                context.startActivity(intent);
+                return true;
             });
         }
     }
@@ -444,12 +434,7 @@ public class SpeechInputView extends LinearLayout {
             mBComboSelector.setVisibility(View.GONE);
         }
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
-        mBImeKeyboard.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleUi();
-            }
-        });
+        mBImeKeyboard.setOnClickListener(v -> toggleUi());
     }
 
     private void maximizeUi() {
@@ -460,28 +445,15 @@ public class SpeechInputView extends LinearLayout {
         }
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             mBImeKeyboard.setImageResource(R.drawable.ic_notification_ime_default);
-            mBImeKeyboard.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onSwitchToLastIme();
-                }
-            });
+            mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
-            mBImeKeyboard.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onSwitchIme(false);
-                    return true;
-                }
+            mBImeKeyboard.setOnLongClickListener(v -> {
+                mListener.onSwitchIme(false);
+                return true;
             });
         } else {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
-            mBImeKeyboard.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleUi();
-                }
-            });
+            mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
     }
 
@@ -549,56 +521,31 @@ public class SpeechInputView extends LinearLayout {
 
     private static void setText(final TextView textView, final CharSequence text) {
         if (textView != null && textView.getVisibility() != View.GONE) {
-            textView.post(new Runnable() {
-                @Override
-                public void run() {
-                    textView.setText(text);
-                }
-            });
+            textView.post(() -> textView.setText(text));
         }
     }
 
     private static void setText(final TextView textView, final int text) {
         if (textView != null && textView.getVisibility() != View.GONE) {
-            textView.post(new Runnable() {
-                @Override
-                public void run() {
-                    textView.setText(text);
-                }
-            });
+            textView.post(() -> textView.setText(text));
         }
     }
 
     private static void setMicButtonVolumeLevel(final MicButton button, final float rmsdB) {
         if (button != null) {
-            button.post(new Runnable() {
-                @Override
-                public void run() {
-                    button.setVolumeLevel(rmsdB);
-                }
-            });
+            button.post(() -> button.setVolumeLevel(rmsdB));
         }
     }
 
     private static void setMicButtonState(final MicButton button, final MicButton.State state) {
         if (button != null) {
-            button.post(new Runnable() {
-                @Override
-                public void run() {
-                    button.setState(state);
-                }
-            });
+            button.post(() -> button.setState(state));
         }
     }
 
     private static void setVisibility(final View view, final int visibility) {
         if (view != null && view.getVisibility() != View.GONE) {
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    view.setVisibility(visibility);
-                }
-            });
+            view.post(() -> view.setVisibility(visibility));
         }
     }
 
