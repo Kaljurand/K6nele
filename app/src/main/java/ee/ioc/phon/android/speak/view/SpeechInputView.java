@@ -435,6 +435,7 @@ public class SpeechInputView extends LinearLayout {
         }
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
+        setBackgroundResource(R.drawable.rectangle_gradient_red);
     }
 
     private void maximizeUi() {
@@ -455,6 +456,7 @@ public class SpeechInputView extends LinearLayout {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
+        setBackgroundResource(R.drawable.rectangle_gradient);
     }
 
     private void showMessageArrow(int numOfChars, String dash) {
