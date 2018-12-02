@@ -93,7 +93,9 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/titleCategoryDependencies">
+    <PreferenceCategory
+        android:key="@string/keyCategoryDependencies"
+        android:title="@string/titleCategoryDependencies">
         <Preference
             android:summary="@string/summaryAppList"
             android:title="@string/labelActivityAppList">

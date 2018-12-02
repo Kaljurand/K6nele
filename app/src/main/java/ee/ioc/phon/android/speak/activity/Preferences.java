@@ -116,7 +116,7 @@ public class Preferences extends PreferenceActivity {
             // exist pre Android v5.
             // TODO: also remove it on Wear
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryServices));
+                PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryDependencies));
                 Preference pref = category.findPreference(getString(R.string.keySystemVoiceInputSettings));
                 if (pref != null) {
                     category.removePreference(pref);

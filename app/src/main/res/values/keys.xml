@@ -31,8 +31,7 @@
     // These keys are needed to locate (to show/hide) the "enable ime" link in the settings
     <string name="keyEnableIme" translatable="false">keyEnableIme</string>
     <string name="keyCategoryIme" translatable="false">keyCategoryIme</string>
-
-    <string name="keyCategoryServices" translatable="false">keyCategoryServices</string>
+    <string name="keyCategoryDependencies" translatable="false">keyCategoryDependencies</string>
 
     <!-- TODO: convert to integer-array -->
     <string-array name="valuesAutoStopAfterTime" translatable="false">
