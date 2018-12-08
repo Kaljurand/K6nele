@@ -13,7 +13,7 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
-### v1.6.96 (2018-12-??)
+### v1.6.96 (2018-12-08)
 
 New in this release:
 
