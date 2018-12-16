@@ -49,7 +49,7 @@
     <string name="hintLocalServer" translatable="false">192.168.0.0</string>
 
     <!-- Preferences activity -->
-    <string name="titleDefaultServiceHttp">HTTP URL</string>
+    <string name="titleDefaultServiceHttp">Server URL</string>
     <string name="titleCategoryUi">Voice search panel</string>
     <string name="titleCategoryDependencies">Dependencies</string>
     <string name="titleCategoryIme">Speak &amp; swipe keyboard</string>
@@ -57,8 +57,8 @@
     <string name="titleCategoryDemos">Demos, tests, etc.</string>
     <string name="titleServices">Recognition services</string>
     <string name="summaryServices">List of installed recognition services with links to their settings panels</string>
-    <string name="summaryServiceHttp">Supports Estonian and Grammatical Framework. Based on an HTTP-server.</string>
-    <string name="summaryServiceWs">Supports Estonian and fast/accurate recognition. Based on a WebSocket-server.</string>
+    <string name="summaryServiceHttp">Service based on the Ruby PocketSphinx GStreamer server. The server URL can be changed. The default server supports Estonian and Grammatical Framework.</string>
+    <string name="summaryServiceWs">Service based on the Kaldi GStreamer server. The server URL can be changed. The default server supports Estonian and fast/accurate recognition.</string>
     <string name="titleScreenDevel">Developer settings, demos, tools</string>
     <string name="titleAutoStart">Auto start</string>
     <string name="summaryAutoStart">Start recording automatically</string>
@@ -78,7 +78,7 @@
     <string name="summaryAudioFormat">%1$s\n(Using a non-raw format results in 2x less network traffic. Requires at least Android v4.1 or even v5.0, and might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
-    <string name="titleWsServer">WebSocket URL</string>
+    <string name="titleWsServer">Server URL</string>
     <string name="summaryWsServer" translatable="false">%1$s</string>
     <plurals name="summaryWsServerWithStatus">
         <item quantity="one">%d slot available</item>
