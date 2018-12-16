@@ -163,8 +163,7 @@ public class SpeechInputMethodService extends InputMethodService {
             return;
         }
 
-        Window window = getWindow().getWindow();
-        mInputView.setListener(getSpeechInputViewListener(window, editorInfo.packageName), editorInfo);
+        mInputView.setListener(getSpeechInputViewListener(getMyWindow(), editorInfo.packageName), editorInfo);
         mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);
 
         // Launch recognition immediately (if set so)
@@ -216,10 +215,21 @@ public class SpeechInputMethodService extends InputMethodService {
         if (mInputView != null) {
             mInputView.cancel();
         }
-        getWindow().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Window window = getMyWindow();
+        if (window != null) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     private IBinder getToken() {
+        Window window = getMyWindow();
+        if (window == null) {
+            return null;
+        }
+        return window.getAttributes().token;
+    }
+
+    private Window getMyWindow() {
         final Dialog dialog = getWindow();
         if (dialog == null) {
             return null;
@@ -228,7 +238,7 @@ public class SpeechInputMethodService extends InputMethodService {
         if (window == null) {
             return null;
         }
-        return window.getAttributes().token;
+        return window;
     }
 
     /**
@@ -292,10 +302,12 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             private void setKeepScreenOn(boolean b) {
-                if (b) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                } else {
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                if (window != null) {
+                    if (b) {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    } else {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    }
                 }
             }
 
