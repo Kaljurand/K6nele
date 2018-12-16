@@ -2,10 +2,14 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListAdapter;
 
 import java.util.ArrayList;
@@ -29,6 +33,24 @@ public class ComboSelectorActivity extends Activity {
         ComboSelectorFragment fragment = new ComboSelectorFragment();
         fragment.setArguments(getIntent().getExtras());
         getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.combos_header, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuServices:
+                startActivity(new Intent(this, RecServiceSelectorActivity.class));
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     public static class ComboSelectorFragment extends ListFragment {
@@ -85,29 +107,25 @@ public class ComboSelectorActivity extends Activity {
             RecognitionServiceManager mngr = new RecognitionServiceManager();
             mngr.setInitiallySelectedCombos(combos);
             mngr.setCombosExcluded(PreferenceUtils.getStringSetFromStringArray(res, mDefaultCombosExcluded));
-            mngr.populateCombos(getActivity(), new RecognitionServiceManager.Listener() {
-
-                @Override
-                public void onComplete(List<String> combos, Set<String> selectedCombos) {
-                    List<Combo> list = new ArrayList<>();
-                    for (String comboAsString : combos) {
-                        Combo combo = get(comboAsString);
-                        if (selectedCombos.contains(comboAsString)) {
-                            combo.setSelected(true);
-                        }
-                        list.add(combo);
+            mngr.populateCombos(getActivity(), (combos1, selectedCombos) -> {
+                List<Combo> list = new ArrayList<>();
+                for (String comboAsString : combos1) {
+                    Combo combo = get(comboAsString);
+                    if (selectedCombos.contains(comboAsString)) {
+                        combo.setSelected(true);
                     }
-                    Collections.sort(list, Combo.SORT_BY_SELECTED_BY_LANGUAGE);
-
-                    ComboAdapter adapter = new ComboAdapter(ComboSelectorFragment.this, list);
-                    setListAdapter(adapter);
-
-                    // TODO: the fast scroll handle overlaps with the checkboxes
-                    //getListView().setFastScrollEnabled(true);
-
-                    // TODO: provide more info about the number of (selected) services and languages
-                    //getActivity().getActionBar().setSubtitle("" + adapter.getCount());
+                    list.add(combo);
                 }
+                Collections.sort(list, Combo.SORT_BY_SELECTED_BY_LANGUAGE);
+
+                ComboAdapter adapter = new ComboAdapter(ComboSelectorFragment.this, list);
+                setListAdapter(adapter);
+
+                // TODO: the fast scroll handle overlaps with the checkboxes
+                //getListView().setFastScrollEnabled(true);
+
+                // TODO: provide more info about the number of (selected) services and languages
+                //getActivity().getActionBar().setSubtitle("" + adapter.getCount());
             });
 
         }
