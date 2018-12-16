@@ -79,7 +79,8 @@ Configure Kõnele, e.g. import some rewrite tables (which define what the applic
 
 ### Speech trigger
 
-Install speech-trigger and grant the permissions.
+Install speech-trigger (https://github.com/Kaljurand/speech-trigger)
+and grant the permissions.
 speech-trigger is an Android speech recognition service that returns once it hears a given phrase.
 
     $ adb install SpeechTrigger-0.1.21.apk
@@ -110,7 +111,7 @@ Configure the system to use EKI TTS by default.
     $ adb install EKISpeak-1.1.02.apk
 
 TODO: don't know how to change the default TTS using adb. Connect a USB mouse, launch the `TTS_SETTINGS`
-and use the mouse the change the default TTS engine.
+and use the mouse to change the default TTS engine.
 
 ### IoT launcher
 
@@ -182,9 +183,9 @@ Alternative way
 
 Based on <https://developer.android.com/things/console/app_bundle.html>.
 
-1. Install this image: TODO. It contains the latest Androidn Things + a bundle created like this:
+1. Install this image: TODO. It contains the latest Android Things + a bundle created like this:
 
-    zip -j bundle.zip $APK/K6nele-1.6.64.apk $APK/SpeechTrigger-0.1.21.apk $APK/EKISpeak-1.1.04.apk $APK/app-debug.apk
+       zip -j bundle.zip $APK/K6nele-1.6.64.apk $APK/SpeechTrigger-0.1.21.apk $APK/EKISpeak-1.1.04.apk $APK/app-debug.apk
 
 2. Configure the Kõnele rewrite rules using GetPutPreferenceActivity
 
@@ -203,6 +204,7 @@ Guidelines for rewrite rules
 Issues
 ------
 
+- not tested with Android Things 1.0
 - compile EKI TTS without the storage permission, it does not seem to be using it
 - Google's TTS very slow to start up (before every utterance): 25 sec
 - EKI TTS does not support English. TODO: this could be added to be able to test the speed.
