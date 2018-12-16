@@ -130,25 +130,37 @@ public class SpeechInputView extends LinearLayout {
         mListener = listener;
         if (mBImeAction != null && editorInfo != null) {
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
+            boolean useEnter = !overrideEnter;
             final int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
-            if (overrideEnter && imeAction != EditorInfo.IME_ACTION_NEXT) {
+            if (overrideEnter) {
+                boolean hide = true;
                 if (imeAction == EditorInfo.IME_ACTION_GO) {
                     mBImeAction.setImageResource(R.drawable.ic_go);
                 } else if (imeAction == EditorInfo.IME_ACTION_SEARCH) {
                     mBImeAction.setImageResource(R.drawable.ic_search);
                 } else if (imeAction == EditorInfo.IME_ACTION_SEND) {
                     mBImeAction.setImageResource(R.drawable.ic_send);
-                } else {
+                } else if (imeAction == EditorInfo.IME_ACTION_DONE) {
                     mBImeAction.setImageResource(R.drawable.ic_done);
+                    hide = false;
+                } else if (imeAction == EditorInfo.IME_ACTION_NEXT) {
+                    mBImeAction.setImageResource(R.drawable.ic_next);
+                    hide = false;
+                } else {
+                    useEnter = true;
                 }
+                final boolean finalHide = hide;
                 mBImeAction.setOnClickListener(v -> {
-                    cancelOrDestroy();
-                    mListener.onAction(imeAction, true);
+                    if (finalHide) {
+                        cancelOrDestroy();
+                    }
+                    mListener.onAction(imeAction, finalHide);
                 });
-            } else if (overrideEnter) {
-                mBImeAction.setImageResource(R.drawable.ic_next);
-                mBImeAction.setOnClickListener(v -> mListener.onAction(EditorInfo.IME_ACTION_NEXT, false));
-            } else {
+            }
+
+            // If no action was defined, then we show the Enter icon,
+            // even if we were allowed to override Enter.
+            if (useEnter) {
                 mBImeAction.setImageResource(R.drawable.ic_newline);
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
