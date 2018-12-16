@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menuAbout"
-        android:icon="@drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_menu_info"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menuAbout" />
 

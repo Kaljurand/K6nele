@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menuAppsSort"
-        android:icon="@drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/ic_menu_sort"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menuAppsSort">
         <menu>

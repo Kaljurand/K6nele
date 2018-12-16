@@ -105,7 +105,7 @@
             android:layout_gravity="center"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdSettings"
-            android:src="@drawable/ic_settings_24dp" />
+            android:src="@drawable/ic_settings" />
 
     </LinearLayout>
 </ScrollView>

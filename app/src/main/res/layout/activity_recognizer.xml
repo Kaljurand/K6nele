@@ -32,7 +32,6 @@
             android:textSize="@dimen/textSize2"
             tools:text="@string/testComboLabel" />
 
-        <!-- app:srcCompat ="@drawable/ic_settings_24dp" -->
         <ImageButton
             android:id="@+id/bSettings"
             android:layout_width="@dimen/layoutMargin32"
@@ -42,20 +41,20 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdSettings"
-            android:src="@drawable/ic_settings_24dp" />
+            android:src="@drawable/ic_settings" />
         <!--
         <ImageButton
             android:id="@+id/bEnterPip"
             android:layout_width="@dimen/layoutMargin32"
             android:layout_height="@dimen/layoutMargin32"
+            android:layout_below="@+id/bSettings"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/bSettings"
             android:background="@drawable/button_go"
             android:contentDescription="Enter Picture-in-picture mode"
             android:src="@drawable/ic_picture_in_picture"
             tools:targetApi="O" />
-            -->
+        -->
     </RelativeLayout>
 
     <ee.ioc.phon.android.speak.view.SpeechInputView

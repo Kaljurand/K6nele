@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:gravity="end"
     android:orientation="vertical"
-    android:paddingBottom="0dip"
     android:paddingLeft="0dip"
+    android:paddingTop="0dip"
     android:paddingRight="0dip"
-    android:paddingTop="0dip">
+    android:paddingBottom="0dip">
 
     <!-- Settings, Prompt, transcription progress monitor, start/stop button, volume monitor, waveform -->
 
@@ -18,7 +18,7 @@
         android:layout_margin="5dp"
         android:background="@drawable/button_go"
         android:contentDescription="@string/cdSettings"
-        android:src="@drawable/ic_settings_24dp" />
+        android:src="@drawable/ic_settings" />
 
     <LinearLayout
         android:layout_width="250dip"
@@ -58,8 +58,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:text="@string/statusTranscribing"
                 android:textColor="@color/grey2"
                 android:textSize="18sp" />

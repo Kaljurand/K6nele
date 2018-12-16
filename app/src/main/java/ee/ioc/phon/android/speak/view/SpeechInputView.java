@@ -433,7 +433,7 @@ public class SpeechInputView extends LinearLayout {
         if (mBComboSelector != null) {
             mBComboSelector.setVisibility(View.GONE);
         }
-        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward_black_24dp);
+        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
         setBackgroundResource(R.drawable.rectangle_gradient_red);
     }
@@ -445,7 +445,7 @@ public class SpeechInputView extends LinearLayout {
             mBComboSelector.setVisibility(View.VISIBLE);
         }
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            mBImeKeyboard.setImageResource(R.drawable.ic_notification_ime_default);
+            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
             mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
             mBImeKeyboard.setOnLongClickListener(v -> {
@@ -453,7 +453,7 @@ public class SpeechInputView extends LinearLayout {
                 return true;
             });
         } else {
-            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward_black_24dp);
+            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
         setBackgroundResource(R.drawable.rectangle_gradient);
