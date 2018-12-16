@@ -233,6 +233,7 @@
     <string name="errorFailedGetGrammarUrl">ERROR: Failed to obtain the grammar URL</string>
     <string name="errorFailedGetServerUrl">ERROR: Failed to obtain the server URL</string>
     <string name="errorNetworkUndefined">ERROR: Network IP address undefined</string>
+    <string name="errorFailedGetCurrentInputConnection">ERROR: No currently active InputConnection that is bound to the input method</string>
     <string name="confirmDeleteEntry">Are you sure you want to delete entry \"%1$s\"?</string>
     <string name="confirmRemoveGrammar">Are you sure you do not want to set/override this app\'s grammar?</string>
     <string name="confirmRemoveServer">Are you sure you want to use the default server in this app?</string>

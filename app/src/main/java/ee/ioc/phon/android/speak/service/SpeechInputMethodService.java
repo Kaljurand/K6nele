@@ -17,8 +17,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -138,7 +140,15 @@ public class SpeechInputMethodService extends InputMethodService {
         super.onStartInputView(editorInfo, restarting);
         Log.i("onStartInputView: " + editorInfo.inputType + "/" + editorInfo.imeOptions + "/" + restarting);
 
-        ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(getCurrentInputConnection());
+        InputConnection ic = getCurrentInputConnection();
+        // InputConnectionCommandEditor cannot be called with a null InputConnection.
+        // We do not expect this to happen, but Google Play crash reports show that it does.
+        if (ic == null) {
+            Toast.makeText(getApplicationContext(), R.string.errorFailedGetCurrentInputConnection, Toast.LENGTH_LONG).show();
+            switchToLastIme();
+            return;
+        }
+        ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(ic);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mRes = getResources();
         mInputView.init(

@@ -243,7 +243,8 @@
     <string name="errorRecognizerSettingsNotPresent">Tuvastusteenusel puudub konfiguratsioonipaneel</string>
     <string name="errorCantCreateRecorder">VIGA: lindistaja loomine luhtus</string>
     <string name="exceptionMalformedUrl">VIGA: URLi formaat vigane</string>
-    <string name="errorNetworkUndefined">VIGA: Võrgu IP aadressi pole määratud</string>
+    <string name="errorNetworkUndefined">VIGA: võrgu IP aadress pole määratud</string>
+    <string name="errorFailedGetCurrentInputConnection">VIGA: ühenduse loomine tekstivälja ja klaviatuuri vahel luhtus</string>
     <string name="promptSearch">Öelge veebiotsingu päring</string>
     <string name="promptDemo">Öelge nt: %1$s</string>
 
