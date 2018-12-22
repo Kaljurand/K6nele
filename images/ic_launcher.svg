@@ -14,7 +14,7 @@
    height="512"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="ic_launcher.svg">
   <defs
      id="defs4">
@@ -179,10 +179,10 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="true"
-     inkscape:window-width="1411"
-     inkscape:window-height="975"
-     inkscape:window-x="70"
-     inkscape:window-y="29"
+     inkscape:window-width="1331"
+     inkscape:window-height="960"
+     inkscape:window-x="232"
+     inkscape:window-y="120"
      inkscape:window-maximized="0"
      inkscape:snap-grids="false"
      inkscape:snap-to-guides="false"
@@ -262,7 +262,7 @@
        sodipodi:cy="-251.66722"
        sodipodi:rx="100.40247"
        sodipodi:ry="123.84208"
-       d="m 369.31074,-227.85084 a 100.40247,123.84208 0 0 1 -196.59294,2.75275"
+       d="m 369.31074,-227.85084 a 100.40247,123.84208 0 0 1 -97.38863,100.01772 100.40247,123.84208 0 0 1 -99.20431,-97.26497"
        transform="matrix(1.1636618,0.00779593,-0.00502725,0.9163318,-58.867622,1020.0462)"
        sodipodi:start="0.19351813"
        sodipodi:end="2.9253714"

@@ -33,9 +33,9 @@ digraph G {
     }
 
     // Android speech and text input APIs
-    "Android SpeechRecognizer" [label="Android SpeechRecognizer API", shape="egg", style="filled", fillcolor="lightgreen"];
-    "Android RecognizerIntent" [label="Android RecognizerIntent API", shape="egg", style="filled", fillcolor="lightgreen"];
-    "IME" [label="Input Method Editor API", shape="egg", style="filled", fillcolor="lightgreen"];
+    "Android SpeechRecognizer" [label="Android SpeechRecognizer API", shape="egg", style="filled", fillcolor="limegreen"];
+    "Android RecognizerIntent" [label="Android RecognizerIntent API", shape="egg", style="filled", fillcolor="limegreen"];
+    "IME" [label="Input Method Editor API", shape="egg", style="filled", fillcolor="limegreen"];
 
     subgraph cluster_2 {
         label = "Android RecognizerIntent activities";
