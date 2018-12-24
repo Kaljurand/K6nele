@@ -73,7 +73,7 @@
         android:allowBackup="true"
         android:description="@string/descriptionApp"
         android:fullBackupContent="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/labelApp"
         android:supportsRtl="true"
         android:theme="@style/Theme.K6nele">
