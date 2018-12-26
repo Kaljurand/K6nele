@@ -13,6 +13,19 @@ Requires Android 4.0+
 
 - extension of v0.8.xx, but with Android 4.0+ style UI
 
+### v1.6.98 (2018-12-??)
+
+New in this release:
+
+- launcher icon is now adaptive (and slightly redesigned)
+- menu icons are now all vector drawables (and slightly redesigned)
+- fix issue with FLAC-encoded recording getting stuck after ~30 sec (on some devices)
+- improve service descriptions
+- Settings: add shortcut from "Languages & services" to "Recognition services"
+- IME: improve how action icon is selected, e.g. show newline icon in GMail's "Compose email" field
+- IME: fix some potential NPEs
+- IME: extend command ``getUrl`` to support ``@sel`` and URL encoding
+
 ### v1.6.96 (2018-12-08)
 
 New in this release:
