@@ -6,7 +6,7 @@ Kõnele on Android Wear
 Introduction
 ------------
 
-Using Kõnele on Android Wear. (Tested with Wear OS by Google 1.6 on Huawei Watch 2.)
+Using Kõnele on Android Wear. (Tested with Wear OS by Google 2.2 on Huawei Watch 2.)
 
 Installation
 ------------
@@ -28,7 +28,7 @@ Connect to the watch as detailed in [Debugging an Android Wear App](https://deve
 
 ### Installing Kõnele
 
-Download APK
+Download the latest APK from https://github.com/Kaljurand/K6nele/releases
 
     wget https://github.com/Kaljurand/K6nele/releases/download/v1.6.78/K6nele-1.6.78.apk
 
@@ -62,7 +62,6 @@ Suggestions:
 ### Kõnele services configuration
 
 - enable IME (also possible via `adb shell am start -a android.settings.INPUT_METHOD_SETTINGS`)
-- keep the raw encoding (FLAC is not supported on Wear)
 
 ### Importing and configuring rewrite rules
 
