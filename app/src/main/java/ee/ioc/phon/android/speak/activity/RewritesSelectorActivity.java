@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import ee.ioc.phon.android.speak.Executable;
-import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.adapter.RewritesAdapter;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
@@ -125,12 +123,10 @@ public class RewritesSelectorActivity extends Activity {
                             getActivity(),
                             getString(R.string.confirmRename),
                             name,
-                            new ExecutableString() {
-                                public void execute(String newName) {
-                                    if (!newName.isEmpty()) {
-                                        rewrites.rename(newName);
-                                        initAdapter();
-                                    }
+                            newName -> {
+                                if (!newName.isEmpty()) {
+                                    rewrites.rename(newName);
+                                    initAdapter();
                                 }
                             }
                     ).show();
@@ -139,11 +135,9 @@ public class RewritesSelectorActivity extends Activity {
                     Utils.getYesNoDialog(
                             getActivity(),
                             String.format(getString(R.string.confirmDelete), name),
-                            new Executable() {
-                                public void execute() {
-                                    rewrites.delete();
-                                    initAdapter();
-                                }
+                            () -> {
+                                rewrites.delete();
+                                initAdapter();
                             }
                     ).show();
                     return true;

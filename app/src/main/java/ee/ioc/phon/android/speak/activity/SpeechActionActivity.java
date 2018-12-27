@@ -18,7 +18,6 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.TtsProvider;
 import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -113,7 +112,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
         */
         setUpActivity(R.layout.activity_recognizer);
-        registerPrompt((TextView) findViewById(R.id.tvPrompt));
+        registerPrompt(findViewById(R.id.tvPrompt));
 
     }
 
@@ -151,12 +150,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         String[] results = getExtras().getStringArray(Extras.EXTRA_RESULT_RESULTS);
         if (results == null) {
             if (hasVoicePrompt()) {
-                sayVoicePrompt(new TtsProvider.Listener() {
-                    @Override
-                    public void onDone() {
-                        start();
-                    }
-                });
+                sayVoicePrompt(this::start);
             } else {
                 start();
             }
@@ -169,12 +163,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         if (isAutoStart()) {
             // TODO: test what happens if the view is started while TTS is running
             // and then started again when the TTS stops and calls onDone
-            mView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mView.start();
-                }
-            });
+            mView.post(() -> mView.start());
         }
     }
 

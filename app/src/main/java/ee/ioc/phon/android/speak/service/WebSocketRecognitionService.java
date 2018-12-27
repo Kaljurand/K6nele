@@ -9,7 +9,6 @@ import android.os.Process;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
-import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 
@@ -134,52 +133,40 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         mIsEosSent = false;
         Log.i(url);
 
-        AsyncHttpClient.getDefaultInstance().websocket(url, PROTOCOL, new AsyncHttpClient.WebSocketConnectCallback() {
+        AsyncHttpClient.getDefaultInstance().websocket(url, PROTOCOL, (ex, webSocket) -> {
+            mWebSocket = webSocket;
 
-            @Override
-            public void onCompleted(Exception ex, final WebSocket webSocket) {
-                mWebSocket = webSocket;
-
-                if (ex != null) {
-                    handleException(ex);
-                    return;
-                }
-
-                webSocket.setStringCallback(new WebSocket.StringCallback() {
-                    public void onStringAvailable(String s) {
-                        Log.i(s);
-                        handleResult(s);
-                    }
-                });
-
-                webSocket.setClosedCallback(new CompletedCallback() {
-                    @Override
-                    public void onCompleted(Exception ex) {
-                        if (ex == null) {
-                            Log.e("ClosedCallback");
-                            handleFinish(mIsEosSent);
-                        } else {
-                            Log.e("ClosedCallback: ", ex);
-                            handleException(ex);
-                        }
-                    }
-                });
-
-                webSocket.setEndCallback(new CompletedCallback() {
-                    @Override
-                    public void onCompleted(Exception ex) {
-                        if (ex == null) {
-                            Log.e("EndCallback");
-                            handleFinish(mIsEosSent);
-                        } else {
-                            Log.e("EndCallback: ", ex);
-                            handleException(ex);
-                        }
-                    }
-                });
-
-                startSending(webSocket);
+            if (ex != null) {
+                handleException(ex);
+                return;
             }
+
+            webSocket.setStringCallback(s -> {
+                Log.i(s);
+                handleResult(s);
+            });
+
+            webSocket.setClosedCallback(ex1 -> {
+                if (ex1 == null) {
+                    Log.e("ClosedCallback");
+                    handleFinish(mIsEosSent);
+                } else {
+                    Log.e("ClosedCallback: ", ex1);
+                    handleException(ex1);
+                }
+            });
+
+            webSocket.setEndCallback(ex12 -> {
+                if (ex12 == null) {
+                    Log.e("EndCallback");
+                    handleFinish(mIsEosSent);
+                } else {
+                    Log.e("EndCallback: ", ex12);
+                    handleException(ex12);
+                }
+            });
+
+            startSending(webSocket);
         });
     }
 

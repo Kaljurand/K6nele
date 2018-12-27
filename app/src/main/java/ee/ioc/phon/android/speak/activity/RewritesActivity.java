@@ -29,13 +29,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import ee.ioc.phon.android.speak.Executable;
-import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Rewrites;
@@ -94,12 +91,10 @@ public class RewritesActivity extends Activity {
                         this,
                         getString(R.string.confirmRename),
                         mRewrites.getId(),
-                        new ExecutableString() {
-                            public void execute(String newName) {
-                                if (!newName.isEmpty()) {
-                                    mRewrites.rename(newName);
-                                    setRewrites(newName, null);
-                                }
+                        newName -> {
+                            if (!newName.isEmpty()) {
+                                mRewrites.rename(newName);
+                                setRewrites(newName, null);
                             }
                         }
                 ).show();
@@ -108,12 +103,10 @@ public class RewritesActivity extends Activity {
                 Utils.getYesNoDialog(
                         this,
                         String.format(getString(R.string.confirmDelete), mRewrites.getId()),
-                        new Executable() {
-                            public void execute() {
-                                mRewrites.delete();
-                                toast(String.format(getString(R.string.toastDeleted), mRewrites.getId()));
-                                finish();
-                            }
+                        () -> {
+                            mRewrites.delete();
+                            toast(String.format(getString(R.string.toastDeleted), mRewrites.getId()));
+                            finish();
                         }
                 ).show();
                 return true;
@@ -129,14 +122,12 @@ public class RewritesActivity extends Activity {
 
         Switch abSwitch = menu.findItem(R.id.menuRewritesToggle).getActionView().findViewById(R.id.abSwitch);
         abSwitch.setChecked(mRewrites.isSelected());
-        abSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mRewrites.setSelected(isChecked);
-                if (isChecked) {
-                    toast(String.format(getString(R.string.toastActivated), mRewrites.getId()));
-                } else {
-                    toast(String.format(getString(R.string.toastDeactivated), mRewrites.getId()));
-                }
+        abSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            mRewrites.setSelected(isChecked);
+            if (isChecked) {
+                toast(String.format(getString(R.string.toastActivated), mRewrites.getId()));
+            } else {
+                toast(String.format(getString(R.string.toastDeactivated), mRewrites.getId()));
             }
         });
 

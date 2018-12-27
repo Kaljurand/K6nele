@@ -17,5 +17,5 @@
 package ee.ioc.phon.android.speak;
 
 public interface ExecutableString {
-	void execute(String str);
+    void execute(String str);
 }

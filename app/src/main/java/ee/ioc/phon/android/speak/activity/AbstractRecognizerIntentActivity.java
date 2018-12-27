@@ -158,23 +158,16 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     protected void setUpSettingsButton() {
         // Short click opens the settings
-        ImageButton bSettings = (ImageButton) findViewById(R.id.bSettings);
+        ImageButton bSettings = findViewById(R.id.bSettings);
         if (bSettings != null) {
-            bSettings.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(), Preferences.class));
-                }
-            });
+            bSettings.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), Preferences.class)));
 
             // Long click shows some technical details (for developers)
-            bSettings.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
-                    details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
-                    startActivity(details);
-                    return false;
-                }
+            bSettings.setOnLongClickListener(v -> {
+                Intent details = new Intent(getApplicationContext(), DetailsActivity.class);
+                details.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, getDetails());
+                startActivity(details);
+                return false;
             });
         }
 
@@ -617,22 +610,19 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
 
     // TODO: use it to speak errors if EXTRA_SPEAK_ERRORS
     private void sayVoicePrompt(final String lang, final String prompt, final TtsProvider.Listener listener) {
-        mTts = new TtsProvider(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    Locale locale = mTts.chooseLanguage(lang);
-                    if (locale == null) {
-                        toast(String.format(getString(R.string.errorTtsLangNotAvailable), lang));
-                        if (listener != null) listener.onDone();
-                    } else {
-                        mTts.setLanguage(locale);
-                        mTts.say(prompt, listener);
-                    }
-                } else {
-                    toast(getString(R.string.errorTtsInitError));
+        mTts = new TtsProvider(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                Locale locale = mTts.chooseLanguage(lang);
+                if (locale == null) {
+                    toast(String.format(getString(R.string.errorTtsLangNotAvailable), lang));
                     if (listener != null) listener.onDone();
+                } else {
+                    mTts.setLanguage(locale);
+                    mTts.say(prompt, listener);
                 }
+            } else {
+                toast(getString(R.string.errorTtsInitError));
+                if (listener != null) listener.onDone();
             }
         });
 

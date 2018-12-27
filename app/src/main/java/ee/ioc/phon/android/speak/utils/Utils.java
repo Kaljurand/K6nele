@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -33,7 +32,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
@@ -48,11 +46,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import org.apache.commons.io.FileUtils;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -72,7 +65,6 @@ import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
-
 
 /**
  * <p>Some useful static methods.</p>
@@ -103,91 +95,6 @@ public final class Utils {
         return value;
     }
 
-
-    /**
-     * <p>Pretty-prints an integer value which expresses a size
-     * of some data.</p>
-     */
-    public static String getSizeAsString(int size) {
-        if (size > FileUtils.ONE_MB) {
-            return String.format("%.1fMB", (float) size / FileUtils.ONE_MB);
-        }
-
-        if (size > FileUtils.ONE_KB) {
-            return String.format("%.1fkB", (float) size / FileUtils.ONE_KB);
-        }
-        return size + "b";
-    }
-
-
-    /**
-     * <p>Returns a bitmap that visualizes the given waveform (byte array),
-     * i.e. a sequence of 16-bit integers.</p>
-     * <p/>
-     * TODO: show to high/low points in other color
-     * TODO: show end pause data with another color
-     */
-    public static Bitmap drawWaveform(byte[] waveBuffer, int w, int h, int start, int end) {
-        final Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        final Canvas c = new Canvas(b);
-        final Paint paint = new Paint();
-        paint.setColor(0xFFFFFFFF); // 0xRRGGBBAA
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(0);
-
-        final Paint redPaint = new Paint();
-        redPaint.setColor(0xFF000080);
-        redPaint.setAntiAlias(true);
-        redPaint.setStrokeWidth(0);
-
-        final ShortBuffer buf = ByteBuffer.wrap(waveBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
-        buf.position(0);
-
-        final int numSamples = waveBuffer.length / 2;
-        //final int delay = (SAMPLING_RATE * 100 / 1000);
-        final int delay = 0;
-        int endIndex = end / 2 + delay;
-        if (end == 0 || endIndex >= numSamples) {
-            endIndex = numSamples;
-        }
-        int index = start / 2 - delay;
-        if (index < 0) {
-            index = 0;
-        }
-        final int size = endIndex - index;
-        int numSamplePerPixel = 32;
-        int delta = size / (numSamplePerPixel * w);
-        if (delta == 0) {
-            numSamplePerPixel = size / w;
-            delta = 1;
-        }
-
-        final float scale = 3.5f / 65536.0f;
-        // do one less column to make sure we won't read past
-        // the buffer.
-        try {
-            for (int i = 0; i < w - 1; i++) {
-                final float x = i;
-                for (int j = 0; j < numSamplePerPixel; j++) {
-                    final short s = buf.get(index);
-                    final float y = (h / 2) - (s * h * scale);
-                    if (s > Short.MAX_VALUE - 10 || s < Short.MIN_VALUE + 10) {
-                        // TODO: make it work
-                        c.drawPoint(x, y, redPaint);
-                    } else {
-                        c.drawPoint(x, y, paint);
-                    }
-                    index += delta;
-                }
-            }
-        } catch (IndexOutOfBoundsException e) {
-            // this can happen, but we don't care
-        }
-
-        return b;
-    }
-
-
     /**
      * Creates a non-cancelable dialog with two buttons, both finish the activity,
      * one launches the given intent first.
@@ -196,17 +103,13 @@ public final class Utils {
      */
     public static AlertDialog getLaunchIntentDialog(final Activity activity, String msg, final Intent intent) {
         return new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog)
-                .setPositiveButton(activity.getString(R.string.buttonGoToSettings), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        activity.startActivity(intent);
-                        activity.finish();
-                    }
+                .setPositiveButton(activity.getString(R.string.buttonGoToSettings), (dialog, id) -> {
+                    activity.startActivity(intent);
+                    activity.finish();
                 })
-                .setNegativeButton(activity.getString(R.string.buttonCancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        activity.finish();
-                    }
+                .setNegativeButton(activity.getString(R.string.buttonCancel), (dialog, id) -> {
+                    dialog.cancel();
+                    activity.finish();
                 })
                 .setMessage(msg)
                 .setCancelable(false)
@@ -219,16 +122,8 @@ public final class Utils {
         builder
                 .setMessage(confirmationMessage)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ex.execute();
-                    }
-                })
-                .setNegativeButton(context.getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                .setPositiveButton(context.getString(R.string.buttonYes), (dialog, id) -> ex.execute())
+                .setNegativeButton(context.getString(R.string.buttonNo), (dialog, id) -> dialog.cancel());
         return builder.create();
     }
 
@@ -237,16 +132,10 @@ public final class Utils {
         builder
                 .setMessage(confirmationMessage)
                 .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.buttonOk), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ex1.execute();
-                    }
-                })
-                .setNegativeButton(context.getString(R.string.buttonCancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        ex2.execute();
-                    }
+                .setPositiveButton(context.getString(R.string.buttonOk), (dialog, id) -> ex1.execute())
+                .setNegativeButton(context.getString(R.string.buttonCancel), (dialog, id) -> {
+                    dialog.cancel();
+                    ex2.execute();
                 });
         return builder.create();
     }
@@ -261,16 +150,8 @@ public final class Utils {
         return new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setView(textEntryView)
-                .setPositiveButton(R.string.buttonOk, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        ex.execute(et.getText().toString());
-                    }
-                })
-                .setNegativeButton(R.string.buttonCancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                })
+                .setPositiveButton(R.string.buttonOk, (dialog, whichButton) -> ex.execute(et.getText().toString()))
+                .setNegativeButton(R.string.buttonCancel, (dialog, whichButton) -> dialog.cancel())
                 .create();
     }
 
@@ -351,27 +232,22 @@ public final class Utils {
         }
         final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
 
-        return new Iterable<UtteranceRewriter>() {
+        return () -> new Iterator<UtteranceRewriter>() {
+
+            private int mCurrent = 0;
+
             @Override
-            public Iterator<UtteranceRewriter> iterator() {
-                return new Iterator<UtteranceRewriter>() {
+            public boolean hasNext() {
+                return mCurrent < length;
+            }
 
-                    private int mCurrent = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return mCurrent < length;
-                    }
-
-                    @Override
-                    public UtteranceRewriter next() {
-                        String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, resources, R.string.keyRewritesMap, names[mCurrent++]);
-                        if (rewritesAsStr == null) {
-                            return null;
-                        }
-                        return new UtteranceRewriter(rewritesAsStr, commandMatcher);
-                    }
-                };
+            @Override
+            public UtteranceRewriter next() {
+                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, resources, R.string.keyRewritesMap, names[mCurrent++]);
+                if (rewritesAsStr == null) {
+                    return null;
+                }
+                return new UtteranceRewriter(rewritesAsStr, commandMatcher);
             }
         };
     }
@@ -490,7 +366,7 @@ public final class Utils {
      * will simplify things.
      */
     private static Bitmap drawableToBitmap(Drawable drawable) {
-        Bitmap bitmap = null;
+        Bitmap bitmap;
 
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;

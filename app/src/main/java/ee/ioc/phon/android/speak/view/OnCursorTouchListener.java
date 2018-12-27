@@ -189,7 +189,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         return true;
     }
 
-    void cancelEdge() {
+    private void cancelEdge() {
         if (mHandler != null) mHandler.removeCallbacks(mTask1);
         if (mHandler != null) mHandler.removeCallbacks(mTask2);
         mIsEdge = false;

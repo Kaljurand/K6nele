@@ -8,7 +8,7 @@
     This is an essential permission for Kõnele. Because it is also a "dangerous" permission,
     then Kõnele requests it as soon as the user starts the audio recorder.
     -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- Permission INTERNET.
     Used to reach the speech recognition server.
@@ -16,7 +16,7 @@
     This is not needed when only using offline recognition services (e.g. wake up word triggers),
     but unfortunately there is no way to enable/disable it at runtime.
     -->
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Permission READ_EXTERNAL_STORAGE is sometimes required when importing rewrite rules,
     e.g. when opening rules via Firefox or Dropbox. (It is not needed via Chrome.)
@@ -88,26 +88,12 @@
             android:required="false" />
         -->
 
-        <!-- RecognizerIntentActivity does not have any intent-filters and is thus not findable
-        by the OS, but it can still be called directly by the class name. -->
         <!--
 TODO: singleTask seems a more appropriate launchMode but returns the results to the caller
 only on Android v5, So we have to use standard on older versions. See also:
 http://stackoverflow.com/questions/8960072/onactivityresult-with-launchmode-singletask
 Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION
 -->
-        <!-- This activity is exported, i.e. any app can launch K6nele. -->
-        <!-- TODO: launching worked also with exported=true, although didn't try explicit packagename-based launching. -->
-        <activity
-            android:name=".activity.RecognizerIntentActivity"
-            android:exported="true"
-            android:label="@string/labelActivityRecognizerIntent"
-            android:launchMode="standard"
-            android:theme="@style/Theme.K6nele.Dialog">
-            <meta-data
-                android:name="android.speech.DETAILS"
-                android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
-        </activity>
 
         <!-- Voice search panel. -->
 
@@ -246,42 +232,42 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".AboutActivity"
             android:label="@string/labelActivityAbout"
             android:parentActivityName=".activity.Preferences"
-            android:theme="@style/Theme.K6nele"></activity>
+            android:theme="@style/Theme.K6nele" />
 
         <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
         <activity
             android:name=".activity.DetailsActivity"
-            android:theme="@style/Theme.K6nele.Dialog"></activity>
+            android:theme="@style/Theme.K6nele.Dialog" />
         <activity
             android:name=".activity.RewritesErrorsActivity"
-            android:theme="@style/Theme.K6nele.Dialog"></activity>
+            android:theme="@style/Theme.K6nele.Dialog" />
         <activity
             android:name=".activity.ComboSelectorActivity"
             android:label="@string/dialogTitleCombo"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.RecServiceSelectorActivity"
             android:label="@string/titleServices"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".AppListActivity"
             android:label="@string/labelActivityAppList"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".GrammarListActivity"
             android:label="@string/labelActivityGrammarList"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".ServerListActivity"
             android:label="@string/labelActivityServerList"
-            android:parentActivityName=".PreferencesRecognitionServiceHttp"></activity>
+            android:parentActivityName=".PreferencesRecognitionServiceHttp" />
         <!-- Exporting this to allow a shortcut to be created e.g. using Tasker. -->
         <activity
             android:name=".activity.RewritesSelectorActivity"
             android:exported="true"
             android:label="@string/labelActivityRewritesSelector"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.RewritesLoaderActivity"
             android:label="@string/labelActivityRewritesLoader"
@@ -324,33 +310,33 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".activity.FetchUrlActivity"
             android:exported="true"
             android:permission="ee.ioc.phon.android.speak.permission.FETCH_URL"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- TODO: require: ee.ioc.phon.android.speak.permission.GET_PUT_SETTING -->
         <activity
             android:name=".activity.GetPutPreferenceActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".activity.QuickSettingsActivity"
             android:label="@string/labelActivityQuickSettings"
-            android:parentActivityName=".activity.Preferences"></activity>
+            android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.RecognitionServiceWsUrlActivity"
             android:label="@string/titleWsServer"
             android:parentActivityName=".PreferencesRecognitionServiceWs"
-            android:windowSoftInputMode="stateUnchanged"></activity>
+            android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".demo.SimpleDemo"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".demo.ExtrasDemo"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".demo.HandsfreeDemoActivity"
             android:label="@string/labelActivityHandsfreeDemo">
@@ -364,32 +350,30 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".demo.ChatDemoActivity"
             android:exported="true"
             android:label="@string/labelActivityChatDemo"
-            android:theme="@style/Theme.K6nele.Light"></activity>
+            android:theme="@style/Theme.K6nele.Light" />
         <activity
             android:name=".demo.VoiceSearchDemo"
-            android:label="@string/labelActivityVoiceSearchDemo"></activity>
+            android:label="@string/labelActivityVoiceSearchDemo" />
 
         <activity
             android:name=".demo.EncoderDemoActivity"
             android:exported="true"
-            android:label="@string/labelActivityEncoderDemo"></activity>
+            android:label="@string/labelActivityEncoderDemo" />
 
         <activity
             android:name=".demo.EncoderListDemo"
             android:exported="true"
-            android:label="@string/labelActivityEncoderListDemo"></activity>
+            android:label="@string/labelActivityEncoderListDemo" />
 
         <activity
             android:name=".demo.ImeListDemo"
             android:exported="true"
-            android:label="@string/labelActivityImeListDemo"></activity>
+            android:label="@string/labelActivityImeListDemo" />
 
         <activity
             android:name=".demo.FormDemoActivity"
             android:exported="true"
-            android:label="@string/labelActivityFormDemo"></activity>
-
-        <service android:name="RecognizerIntentService"></service>
+            android:label="@string/labelActivityFormDemo" />
 
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->

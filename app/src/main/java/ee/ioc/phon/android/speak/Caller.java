@@ -62,49 +62,49 @@ public class Caller {
 
     private static final String KEY_PACKAGE_NAME = "packageName";
 
-	private final String mPrimaryCaller;
-	private final String mSecondaryCaller;
+    private final String mPrimaryCaller;
+    private final String mSecondaryCaller;
 
-	public Caller(PendingIntent pendingIntent, Bundle bundle) {
-		if (pendingIntent == null) {
-			mPrimaryCaller = bundle.getString(RecognizerIntent.EXTRA_CALLING_PACKAGE);
-		} else {
-			mPrimaryCaller = pendingIntent.getTargetPackage();
-		}
-		mSecondaryCaller = getPackageName(bundle);
-	}
-
-
-	public String getActualCaller() {
-		if (mSecondaryCaller == null) {
-			if (mPrimaryCaller == null) {
-				return "null";
-			}
-			return mPrimaryCaller;
-		}
-		return mSecondaryCaller;
-	}
+    public Caller(PendingIntent pendingIntent, Bundle bundle) {
+        if (pendingIntent == null) {
+            mPrimaryCaller = bundle.getString(RecognizerIntent.EXTRA_CALLING_PACKAGE);
+        } else {
+            mPrimaryCaller = pendingIntent.getTargetPackage();
+        }
+        mSecondaryCaller = getPackageName(bundle);
+    }
 
 
-	public String toString() {
-		return mPrimaryCaller + "/" + mSecondaryCaller;
-	}
+    public String getActualCaller() {
+        if (mSecondaryCaller == null) {
+            if (mPrimaryCaller == null) {
+                return "null";
+            }
+            return mPrimaryCaller;
+        }
+        return mSecondaryCaller;
+    }
 
 
-	/**
-	 * <p>Traverses the given bundle (which can contain other bundles)
-	 * looking for the key "packageName".
-	 * Returns its corresponding value if finds it.</p>
-	 *
-	 * @param bundle bundle (e.g. intent extras)
-	 * @return package name possibly hidden deep into the given bundle
-	 */
-	private static String getPackageName(Bundle bundle) {
-		Object obj = BundleUtils.getBundleValue(bundle, KEY_PACKAGE_NAME);
-		if (obj instanceof String) {
-			return (String) obj;
-		}
-		return null;
-	}
+    public String toString() {
+        return mPrimaryCaller + "/" + mSecondaryCaller;
+    }
+
+
+    /**
+     * <p>Traverses the given bundle (which can contain other bundles)
+     * looking for the key "packageName".
+     * Returns its corresponding value if finds it.</p>
+     *
+     * @param bundle bundle (e.g. intent extras)
+     * @return package name possibly hidden deep into the given bundle
+     */
+    private static String getPackageName(Bundle bundle) {
+        Object obj = BundleUtils.getBundleValue(bundle, KEY_PACKAGE_NAME);
+        if (obj instanceof String) {
+            return (String) obj;
+        }
+        return null;
+    }
 
 }

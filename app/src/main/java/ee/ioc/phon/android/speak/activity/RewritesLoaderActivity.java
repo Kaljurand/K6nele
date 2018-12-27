@@ -24,17 +24,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -70,22 +66,14 @@ public class RewritesLoaderActivity extends Activity {
         final Resources res = getResources();
         final Button bRewritesLoader = findViewById(R.id.bRewritesNameOk);
         final AutoCompleteTextView et = findViewById(R.id.etRewritesNameText);
-        et.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    bRewritesLoader.performClick();
-                    return true;
-                }
-                return false;
+        et.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                bRewritesLoader.performClick();
+                return true;
             }
+            return false;
         });
-        bRewritesLoader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveAndShow(prefs, res, et.getText().toString());
-            }
-        });
+        bRewritesLoader.setOnClickListener(view -> saveAndShow(prefs, res, et.getText().toString()));
         List<String> keysSorted = new ArrayList<>(PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap));
 
         // If there are already some rewrites then we show their names as well
@@ -102,13 +90,7 @@ public class RewritesLoaderActivity extends Activity {
             lv.setAdapter(new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, names));
 
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    saveAndShow(prefs, res, (String) lv.getItemAtPosition(position));
-                }
-
-            });
+            lv.setOnItemClickListener((parent, view, position, id) -> saveAndShow(prefs, res, (String) lv.getItemAtPosition(position)));
         }
 
         Intent intent = getIntent();
@@ -132,7 +114,7 @@ public class RewritesLoaderActivity extends Activity {
                     uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                 }
                 if (uri != null) {
-                    if (uri.getScheme().equals("k6")) {
+                    if ("k6".equals(uri.getScheme())) {
                         byte[] data = Base64.decode(uri.getSchemeSpecificPart().substring(2), Base64.NO_WRAP | Base64.URL_SAFE);
                         try {
                             utteranceRewriter = new UtteranceRewriter(new String(data, "UTF-8"));

@@ -16,214 +16,202 @@
 
 package ee.ioc.phon.android.speak;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import ee.ioc.phon.android.speak.provider.Grammar;
-import ee.ioc.phon.android.speak.utils.Utils;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import ee.ioc.phon.android.speak.provider.Grammar;
+import ee.ioc.phon.android.speak.utils.Utils;
 
 /**
  * <p>This activity lists all the grammar URLs and allows the
  * user to add more. The list data comes from the Grammar-table
  * via the standard SimpleCursorAdapter. Long-tapping on a
  * list item allows the user to:</p>
- * 
+ *
  * <ul>
  * <li>view the content of the grammar (in a browser)</li>
  * <li>edit the entry, i.e. the name, URL, etc.</li>
  * <li>delete the entry</li>
  * </ul>
- * 
+ *
  * @author Kaarel Kaljurand
  */
 public class GrammarListActivity extends RecognizerIntentListActivity {
 
-	private static final Uri CONTENT_URI = Grammar.Columns.CONTENT_URI;
+    private static final Uri CONTENT_URI = Grammar.Columns.CONTENT_URI;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		String[] columns = new String[] {
-				Grammar.Columns._ID,
-				Grammar.Columns.NAME,
-				Grammar.Columns.LANG,
-				Grammar.Columns.DESC,
-				Grammar.Columns.URL
-		};
+        String[] columns = new String[]{
+                Grammar.Columns._ID,
+                Grammar.Columns.NAME,
+                Grammar.Columns.LANG,
+                Grammar.Columns.DESC,
+                Grammar.Columns.URL
+        };
 
-		int[] to = new int[] {
-				R.id.itemGrammarId,
-				R.id.itemGrammarName,
-				R.id.itemGrammarLang,
-				R.id.itemGrammarDesc,
-				R.id.itemGrammarUrl
-		};
-
-
-		Cursor managedCursor = managedQuery(
-				CONTENT_URI,
-				columns, 
-				null,
-				null,
-				Grammar.Columns.NAME + " ASC"
-		);
-
-		SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(
-				this,
-				R.layout.list_item_grammar,
-				managedCursor,
-				columns,
-				to
-		);
-
-		ListView lv = getListView();
-		setEmptyView(getString(R.string.emptylistGrammars));
-		lv.setAdapter(mAdapter);
-
-		registerForContextMenu(lv);
-		setClickToFinish(CONTENT_URI, Grammar.Columns._ID);
-	}
+        int[] to = new int[]{
+                R.id.itemGrammarId,
+                R.id.itemGrammarName,
+                R.id.itemGrammarLang,
+                R.id.itemGrammarDesc,
+                R.id.itemGrammarUrl
+        };
 
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.grammars, menu);
-		return true;
-	}
+        Cursor managedCursor = managedQuery(
+                CONTENT_URI,
+                columns,
+                null,
+                null,
+                Grammar.Columns.NAME + " ASC"
+        );
+
+        SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.list_item_grammar,
+                managedCursor,
+                columns,
+                to
+        );
+
+        ListView lv = getListView();
+        setEmptyView(getString(R.string.emptylistGrammars));
+        lv.setAdapter(mAdapter);
+
+        registerForContextMenu(lv);
+        setClickToFinish(CONTENT_URI, Grammar.Columns._ID);
+    }
 
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menuGrammarsAdd:
-			Utils.getTextEntryDialog(
-					this,
-					getString(R.string.dialogTitleNewGrammar),
-					"",
-					new ExecutableString() {
-						public void execute(String url) {
-							if (url.length() > 0) {
-								try {
-									new URL(url);
-									String name = url.replaceFirst(".*\\/", "").replaceFirst("\\.[^.]*$", "");
-									ContentValues values = new ContentValues();
-									values.put(Grammar.Columns.NAME, name);
-									values.put(Grammar.Columns.URL, url);
-									insert(CONTENT_URI, values);
-								} catch (MalformedURLException e) {
-									toast(getString(R.string.exceptionMalformedUrl));
-								}
-							}
-						}
-					}
-			).show();
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.grammars, menu);
+        return true;
+    }
 
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.cm_grammar, menu);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuGrammarsAdd:
+                Utils.getTextEntryDialog(
+                        this,
+                        getString(R.string.dialogTitleNewGrammar),
+                        "",
+                        url -> {
+                            if (url.length() > 0) {
+                                try {
+                                    new URL(url);
+                                    String name = url.replaceFirst(".*\\/", "").replaceFirst("\\.[^.]*$", "");
+                                    ContentValues values = new ContentValues();
+                                    values.put(Grammar.Columns.NAME, name);
+                                    values.put(Grammar.Columns.URL, url);
+                                    insert(CONTENT_URI, values);
+                                } catch (MalformedURLException e) {
+                                    toast(getString(R.string.exceptionMalformedUrl));
+                                }
+                            }
+                        }
+                ).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		Cursor cursor = (Cursor) getListView().getItemAtPosition(info.position);
-		final long key = cursor.getLong(cursor.getColumnIndex(Grammar.Columns._ID));
-		String name = cursor.getString(cursor.getColumnIndex(Grammar.Columns.NAME));
-		String grammarName = cursor.getString(cursor.getColumnIndex(Grammar.Columns.NAME));
-		String grammarLang = cursor.getString(cursor.getColumnIndex(Grammar.Columns.LANG));
-		String grammarUrl = cursor.getString(cursor.getColumnIndex(Grammar.Columns.URL));
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.cm_grammar, menu);
+    }
 
-		switch (item.getItemId()) {
-		case R.id.cmGrammarView:
-			Intent intentView = new Intent();  
-			intentView.setAction(Intent.ACTION_VIEW);
-			intentView.setDataAndType(Uri.parse(grammarUrl), "text/plain");  
-			startActivity(intentView);
-			return true;
-		case R.id.cmGrammarEditName:
-			Utils.getTextEntryDialog(
-					this,
-					getString(R.string.dialogTitleChangeGrammarName),
-					grammarName,
-					new ExecutableString() {
-						public void execute(String name) {
-							if (name != null && name.length() == 0) {
-								name = null;
-							}
-							update(CONTENT_URI, key, Grammar.Columns.NAME, name);
-						}
-					}
-			).show();
-			return true;
-		case R.id.cmGrammarEditLang:
-			Utils.getTextEntryDialog(
-					this,
-					getString(R.string.dialogTitleChangeGrammarLang),
-					grammarLang,
-					new ExecutableString() {
-						public void execute(String lang) {
-							if (lang != null && lang.length() == 0) {
-								lang = null;
-							}
-							update(CONTENT_URI, key, Grammar.Columns.LANG, lang);
-						}
-					}
-			).show();
-			return true;
-		case R.id.cmGrammarEditUrl:
-			Utils.getTextEntryDialog(
-					this,
-					getString(R.string.dialogTitleChangeGrammarUrl),
-					grammarUrl,
-					new ExecutableString() {
-						public void execute(String newUrl) {
-							try {
-								updateUrl(CONTENT_URI, key, Grammar.Columns.URL, newUrl);
-							} catch (MalformedURLException e) {
-								toast(getString(R.string.exceptionMalformedUrl));
-							}
-						}
-					}
-			).show();
-			return true;
-		case R.id.cmGrammarDelete:
-			Utils.getYesNoDialog(
-					this,
-					String.format(getString(R.string.confirmDeleteEntry), name),
-					new Executable() {
-						public void execute() {
-							delete(CONTENT_URI, key);
-						}
-					}
-			).show();
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Cursor cursor = (Cursor) getListView().getItemAtPosition(info.position);
+        final long key = cursor.getLong(cursor.getColumnIndex(Grammar.Columns._ID));
+        String name = cursor.getString(cursor.getColumnIndex(Grammar.Columns.NAME));
+        String grammarName = cursor.getString(cursor.getColumnIndex(Grammar.Columns.NAME));
+        String grammarLang = cursor.getString(cursor.getColumnIndex(Grammar.Columns.LANG));
+        String grammarUrl = cursor.getString(cursor.getColumnIndex(Grammar.Columns.URL));
+
+        switch (item.getItemId()) {
+            case R.id.cmGrammarView:
+                Intent intentView = new Intent();
+                intentView.setAction(Intent.ACTION_VIEW);
+                intentView.setDataAndType(Uri.parse(grammarUrl), "text/plain");
+                startActivity(intentView);
+                return true;
+            case R.id.cmGrammarEditName:
+                Utils.getTextEntryDialog(
+                        this,
+                        getString(R.string.dialogTitleChangeGrammarName),
+                        grammarName,
+                        name1 -> {
+                            if (name1 != null && name1.length() == 0) {
+                                name1 = null;
+                            }
+                            update(CONTENT_URI, key, Grammar.Columns.NAME, name1);
+                        }
+                ).show();
+                return true;
+            case R.id.cmGrammarEditLang:
+                Utils.getTextEntryDialog(
+                        this,
+                        getString(R.string.dialogTitleChangeGrammarLang),
+                        grammarLang,
+                        lang -> {
+                            if (lang != null && lang.length() == 0) {
+                                lang = null;
+                            }
+                            update(CONTENT_URI, key, Grammar.Columns.LANG, lang);
+                        }
+                ).show();
+                return true;
+            case R.id.cmGrammarEditUrl:
+                Utils.getTextEntryDialog(
+                        this,
+                        getString(R.string.dialogTitleChangeGrammarUrl),
+                        grammarUrl,
+                        newUrl -> {
+                            try {
+                                updateUrl(CONTENT_URI, key, Grammar.Columns.URL, newUrl);
+                            } catch (MalformedURLException e) {
+                                toast(getString(R.string.exceptionMalformedUrl));
+                            }
+                        }
+                ).show();
+                return true;
+            case R.id.cmGrammarDelete:
+                Utils.getYesNoDialog(
+                        this,
+                        String.format(getString(R.string.confirmDeleteEntry), name),
+                        () -> delete(CONTENT_URI, key)
+                ).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 }

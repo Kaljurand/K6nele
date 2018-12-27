@@ -136,6 +136,8 @@ public class HttpRecognitionService extends AbstractRecognitionService {
 
     @Override
     protected int getAutoStopAfterMillis() {
+        //return 1000 * PreferenceUtils.getPrefInt(getSharedPreferences(), getResources(),
+        //        R.string.keyAutoStopAfterTime, R.string.defaultAutoStopAfterTime);
         return 1000 * Integer.parseInt(
                 getSharedPreferences().getString(
                         getString(R.string.keyAutoStopAfterTime),
@@ -174,7 +176,7 @@ public class HttpRecognitionService extends AbstractRecognitionService {
     /**
      * @param bytes  byte array representing the audio data
      * @param isLast indicates that this is the last chunk that is sent
-     * @throws IOException
+     * @throws IOException IO exception
      */
     private void sendChunk(byte[] bytes, boolean isLast) throws IOException {
         if (mRecSession != null && !mRecSession.isFinished()) {

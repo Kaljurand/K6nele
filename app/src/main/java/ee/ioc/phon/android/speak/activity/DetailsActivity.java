@@ -22,10 +22,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,13 +72,11 @@ public class DetailsActivity extends ListActivity {
             if (stringArray != null) {
                 setListAdapter(new ArrayAdapter<>(this, R.layout.list_item_detail, stringArray));
 
-                getListView().setOnItemClickListener(new OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent();
-                        intent.putExtra(SearchManager.QUERY, ((TextView) view).getText());
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
+                getListView().setOnItemClickListener((parent, view, position, id) -> {
+                    Intent intent1 = new Intent();
+                    intent1.putExtra(SearchManager.QUERY, ((TextView) view).getText());
+                    setResult(RESULT_OK, intent1);
+                    finish();
                 });
             }
         }
@@ -103,14 +98,11 @@ public class DetailsActivity extends ListActivity {
             toast(String.format(getString(R.string.errorFailedPlayAudio), uri.toString(), type));
         } else {
             int duration = mMediaPlayer.getDuration();
-            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    releasePlayer();
-                    toast(getString(R.string.toastPlayingAudioDone));
-                    if (mIsFinishAfterPlayAudio) {
-                        finish();
-                    }
+            mMediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                releasePlayer();
+                toast(getString(R.string.toastPlayingAudioDone));
+                if (mIsFinishAfterPlayAudio) {
+                    finish();
                 }
             });
             mMediaPlayer.start();

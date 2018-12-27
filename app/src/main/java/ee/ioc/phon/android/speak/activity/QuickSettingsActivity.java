@@ -3,7 +3,6 @@ package ee.ioc.phon.android.speak.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.View;
 
 import ee.ioc.phon.android.speak.QuickSettingsManager;
 import ee.ioc.phon.android.speak.R;
@@ -20,11 +19,6 @@ public class QuickSettingsActivity extends Activity {
                 getResources());
 
         findViewById(R.id.buttonApplyDeveloperDefaults)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mngr.setDefaultsDevel();
-                    }
-                });
+                .setOnClickListener(view -> mngr.setDefaultsDevel());
     }
 }
