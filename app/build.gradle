@@ -5,11 +5,7 @@ dependencies {
     implementation project(':speechutils:app')
     implementation project(':net-speech-api')
     implementation 'commons-io:commons-io:2.5'
-    implementation 'com.googlecode.json-simple:json-simple:1.1'
-    // TODO: This did not work
-    //implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
-    implementation 'com.android.support:support-v13:' + rootProject.supportLibVersion
     implementation 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
@@ -23,10 +19,10 @@ android {
     // API level 14: @android:style/Theme.DeviceDefault
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1698
-        versionName '1.6.98'
+        versionCode 1700
+        versionName '1.7.00'
     }
 
     compileOptions {
