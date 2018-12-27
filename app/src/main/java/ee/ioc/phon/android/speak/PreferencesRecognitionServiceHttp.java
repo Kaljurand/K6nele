@@ -111,13 +111,9 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity {
             Preference service = findPreference(getString(R.string.keyHttpServer));
             service.setSummary(sp.getString(getString(R.string.keyHttpServer), getString(R.string.defaultHttpServer)));
 
-            service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    getActivity().startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
-                    return true;
-                }
-
+            service.setOnPreferenceClickListener(preference -> {
+                getActivity().startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
+                return true;
             });
         }
 

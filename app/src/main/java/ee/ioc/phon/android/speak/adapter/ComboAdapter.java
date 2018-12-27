@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,13 +44,9 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
             viewHolder.language = view.findViewById(R.id.language);
             viewHolder.service = view.findViewById(R.id.service);
             viewHolder.checkbox = view.findViewById(R.id.check);
-            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Combo item = (Combo) viewHolder.checkbox.getTag();
-                    item.setSelected(isChecked);
-                }
+            viewHolder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                Combo item = (Combo) viewHolder.checkbox.getTag();
+                item.setSelected(isChecked);
             });
             view.setTag(viewHolder);
             viewHolder.checkbox.setTag(list.get(position));

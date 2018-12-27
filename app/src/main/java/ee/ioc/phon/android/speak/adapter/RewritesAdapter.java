@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,12 +39,9 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.id = view.findViewById(R.id.rewritesId);
             viewHolder.checkbox = view.findViewById(R.id.rewritesIsSelected);
-            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Rewrites item = (Rewrites) viewHolder.checkbox.getTag();
-                    item.setSelected(isChecked);
-                }
+            viewHolder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                Rewrites item = (Rewrites) viewHolder.checkbox.getTag();
+                item.setSelected(isChecked);
             });
             view.setTag(viewHolder);
             viewHolder.checkbox.setTag(list.get(position));

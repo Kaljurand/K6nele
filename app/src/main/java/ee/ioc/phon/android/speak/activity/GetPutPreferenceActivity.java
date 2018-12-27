@@ -133,74 +133,63 @@ public class GetPutPreferenceActivity extends Activity {
                     this,
                     message,
                     ex,
-                    new Executable() {
-                        @Override
-                        public void execute() {
-                            finish();
-                        }
-                    }
+                    this::finish
             ).show();
         }
     }
 
     private Executable createExecutablePutUrl(final SharedPreferences prefs, final String key, final String url) {
-        return new Executable() {
-            public void execute() {
-                final SharedPreferences.Editor editor = prefs.edit();
-                new AsyncTask<String, Void, String>() {
+        return () -> {
+            final SharedPreferences.Editor editor = prefs.edit();
+            new AsyncTask<String, Void, String>() {
 
-                    @Override
-                    protected String doInBackground(String... urls) {
-                        try {
-                            return HttpUtils.getUrl(urls[0]);
-                        } catch (IOException e) {
-                            return "ERROR: Unable to retrieve " + urls[0] + ": " + e.getLocalizedMessage();
-                        }
+                @Override
+                protected String doInBackground(String... urls) {
+                    try {
+                        return HttpUtils.getUrl(urls[0]);
+                    } catch (IOException e) {
+                        return "ERROR: Unable to retrieve " + urls[0] + ": " + e.getLocalizedMessage();
                     }
+                }
 
-                    @Override
-                    protected void onPostExecute(String result) {
-                        editor.putString(key, result);
-                        editor.apply();
-                    }
-                }.execute(url);
-                finish();
-            }
+                @Override
+                protected void onPostExecute(String result) {
+                    editor.putString(key, result);
+                    editor.apply();
+                }
+            }.execute(url);
+            finish();
         };
     }
 
     private Executable createExecutablePut(final SharedPreferences prefs, final String key, final Object val) {
-        return new Executable() {
-            public void execute() {
-                SharedPreferences.Editor editor = prefs.edit();
-                if (val instanceof String[]) {
-                    // adb --esa
-                    editor.putStringSet(key, new HashSet<>(Arrays.asList((String[]) val)));
-                } else if (val instanceof Boolean) {
-                    editor.putBoolean(key, (Boolean) val);
-                } else if (val instanceof Integer) {
-                    editor.putInt(key, (Integer) val);
-                } else if (val instanceof Float) {
-                    editor.putFloat(key, (Float) val);
-                } else if (val instanceof Long) {
-                    editor.putLong(key, (Long) val);
-                } else {
-                    editor.putString(key, val.toString());
-                }
-                editor.apply();
-                finish();
+        return () -> {
+            SharedPreferences.Editor editor = prefs.edit();
+            if (val instanceof String[]) {
+                // adb --esa
+                editor.putStringSet(key, new HashSet<>(Arrays.asList((String[]) val)));
+            } else if (val instanceof Boolean) {
+                editor.putBoolean(key, (Boolean) val);
+            } else if (val instanceof Integer) {
+                editor.putInt(key, (Integer) val);
+            } else if (val instanceof Float) {
+                editor.putFloat(key, (Float) val);
+            } else if (val instanceof Long) {
+                editor.putLong(key, (Long) val);
+            } else {
+                editor.putString(key, val.toString());
             }
+            editor.apply();
+            finish();
         };
     }
 
     private Executable createExecutableRemove(final SharedPreferences prefs, final String key) {
-        return new Executable() {
-            public void execute() {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.remove(key);
-                editor.apply();
-                finish();
-            }
+        return () -> {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove(key);
+            editor.apply();
+            finish();
         };
     }
 }

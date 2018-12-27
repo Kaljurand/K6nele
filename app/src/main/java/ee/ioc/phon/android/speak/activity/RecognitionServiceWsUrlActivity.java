@@ -7,12 +7,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -57,15 +56,12 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         setContentView(R.layout.recognition_service_ws_url);
 
         mEtUrl = findViewById(R.id.etWsServerUrl);
-        mEtUrl.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String serverUri = mEtUrl.getText().toString();
-                    setUrl(getBaseUri(serverUri));
-                }
-                return false;
+        mEtUrl.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                String serverUri = mEtUrl.getText().toString();
+                setUrl(getBaseUri(serverUri));
             }
+            return false;
         });
 
         mTvServerStatus = findViewById(R.id.tvServerStatus);
@@ -77,50 +73,34 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         mAdapter = new ServerAdapter(mList);
         lvResults.setAdapter(mAdapter);
 
-        findViewById(R.id.bWsServerDefault1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setUrl(getString(R.string.defaultWsServer1));
-            }
-        });
+        findViewById(R.id.bWsServerDefault1).setOnClickListener(view -> setUrl(getString(R.string.defaultWsServer1)));
 
-        findViewById(R.id.bWsServerDefault2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setUrl(getString(R.string.defaultWsServer2));
-            }
-        });
+        findViewById(R.id.bWsServerDefault2).setOnClickListener(view -> setUrl(getString(R.string.defaultWsServer2)));
 
         mEtScan = findViewById(R.id.etScanNetwork);
         mEtScan.setText(getIPAddress(true));
 
         mBScan = findViewById(R.id.bScanNetwork);
-        mBScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mScan == null) {
-                    mIp = mEtScan.getText().toString().trim();
-                    if (mIp == null || mIp.isEmpty()) {
-                        toast(getString(R.string.errorNetworkUndefined));
-                    } else {
-                        mScan = new Scan();
-                        mScan.execute(mIp);
-                    }
+        mBScan.setOnClickListener(view -> {
+            if (mScan == null) {
+                mIp = mEtScan.getText().toString().trim();
+                if (mIp.isEmpty()) {
+                    toast(getString(R.string.errorNetworkUndefined));
                 } else {
-                    mScan.cancel(true);
-                    mScan = null;
+                    mScan = new Scan();
+                    mScan.execute(mIp);
                 }
+            } else {
+                mScan.cancel(true);
+                mScan = null;
             }
         });
 
-        findViewById(R.id.bApplyUrl).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setData(Uri.parse(mEtUrl.getText().toString()));
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
+        findViewById(R.id.bApplyUrl).setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setData(Uri.parse(mEtUrl.getText().toString()));
+            setResult(Activity.RESULT_OK, intent);
+            finish();
         });
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -149,12 +129,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
     private void setScanUi() {
         mBScan.setText(getString(R.string.buttonScan));
         // We post the change otherwise onProgressUpdate might change it later (?)
-        mEtScan.post(new Runnable() {
-            @Override
-            public void run() {
-                mEtScan.setText(mIp);
-            }
-        });
+        mEtScan.post(() -> mEtScan.setText(mIp));
         mEtScan.setEnabled(true);
     }
 
@@ -291,22 +266,16 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         }
 
         @Override
-        public ServerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ServerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             Button v = (Button) LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_server_ip, parent, false);
-            MyViewHolder vh = new MyViewHolder(v);
-            return vh;
+            return new MyViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
             holder.mView.setText(mDataset.get(position));
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setUrl("ws://" + holder.mView.getText() + ":8080/client/ws/");
-                }
-            });
+            holder.mView.setOnClickListener(view -> setUrl("ws://" + holder.mView.getText() + ":8080/client/ws/"));
         }
 
         @Override
@@ -324,43 +293,23 @@ public class RecognitionServiceWsUrlActivity extends Activity {
 
     private void setSummaryWithStatus(final String urlStatus) {
         closeSocket();
-        AsyncHttpClient.getDefaultInstance().websocket(urlStatus, "", new AsyncHttpClient.WebSocketConnectCallback() {
-            @Override
-            public void onCompleted(final Exception ex, WebSocket webSocket) {
-                mWebSocket = webSocket;
-                if (ex != null) {
-                    mTvServerStatus.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatusError), ex.getLocalizedMessage()));
-                        }
-                    });
-                    return;
-                }
-                mWebSocket.setStringCallback(new WebSocket.StringCallback() {
-                    public void onStringAvailable(String s) {
-                        Log.i(s);
-                        try {
-                            final JSONObject json = new JSONObject(s);
-                            final int numOfWorkers = json.getInt("num_workers_available");
-                            mTvServerStatus.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mTvServerStatus.setText(getResources().
-                                            getQuantityString(R.plurals.summaryWsServerWithStatus, numOfWorkers, numOfWorkers));
-                                }
-                            });
-                        } catch (JSONException e) {
-                            mTvServerStatus.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatusError), ex.getLocalizedMessage()));
-                                }
-                            });
-                        }
-                    }
-                });
+        AsyncHttpClient.getDefaultInstance().websocket(urlStatus, "", (ex, webSocket) -> {
+            mWebSocket = webSocket;
+            if (ex != null) {
+                mTvServerStatus.post(() -> mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatusError), ex.getLocalizedMessage())));
+                return;
             }
+            mWebSocket.setStringCallback(s -> {
+                Log.i(s);
+                try {
+                    final JSONObject json = new JSONObject(s);
+                    final int numOfWorkers = json.getInt("num_workers_available");
+                    mTvServerStatus.post(() -> mTvServerStatus.setText(getResources().
+                            getQuantityString(R.plurals.summaryWsServerWithStatus, numOfWorkers, numOfWorkers)));
+                } catch (JSONException e) {
+                    mTvServerStatus.post(() -> mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatusError), ex.getLocalizedMessage())));
+                }
+            });
         });
     }
 }

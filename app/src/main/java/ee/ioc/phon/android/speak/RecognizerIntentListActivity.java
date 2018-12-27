@@ -16,9 +16,6 @@
 
 package ee.ioc.phon.android.speak;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -28,11 +25,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * <p>Some methods that various list activities can share by extending
@@ -43,71 +41,69 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public abstract class RecognizerIntentListActivity extends ListActivity {
 
-	protected void toast(String message) {
-		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-	}
+    protected void toast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
 
 
-	protected void setEmptyView(String text) {
-		ListView lv = getListView();
-		TextView emptyView = (TextView) getLayoutInflater().inflate(R.layout.empty_list, null);
-		emptyView.setText(text);
-		emptyView.setVisibility(View.GONE);
-		((ViewGroup) lv.getParent()).addView(emptyView);
-		lv.setEmptyView(emptyView);
-	}
+    protected void setEmptyView(String text) {
+        ListView lv = getListView();
+        TextView emptyView = (TextView) getLayoutInflater().inflate(R.layout.empty_list, null);
+        emptyView.setText(text);
+        emptyView.setVisibility(View.GONE);
+        ((ViewGroup) lv.getParent()).addView(emptyView);
+        lv.setEmptyView(emptyView);
+    }
 
 
-	protected void setClickToFinish(final Uri contentUri, final String columnName) {
-		getListView().setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-				final long key = cursor.getLong(cursor.getColumnIndex(columnName));
-				Intent intent = new Intent();
-				intent.setData(ContentUris.withAppendedId(contentUri, key));
-				setResult(Activity.RESULT_OK, intent);
-				finish();
-			}
-		});
-	}
+    protected void setClickToFinish(final Uri contentUri, final String columnName) {
+        getListView().setOnItemClickListener((parent, view, position, id) -> {
+            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+            final long key = cursor.getLong(cursor.getColumnIndex(columnName));
+            Intent intent = new Intent();
+            intent.setData(ContentUris.withAppendedId(contentUri, key));
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        });
+    }
 
 
-	protected void insertUrl(Uri contentUri, String fieldKey, String url) throws MalformedURLException {
-		if (url.length() > 0) {
-			new URL(url);
-			ContentValues values = new ContentValues();
-			values.put(fieldKey, url);
-			insert(contentUri, values);
-		}
-	}
+    protected void insertUrl(Uri contentUri, String fieldKey, String url) throws MalformedURLException {
+        if (url.length() > 0) {
+            new URL(url);
+            ContentValues values = new ContentValues();
+            values.put(fieldKey, url);
+            insert(contentUri, values);
+        }
+    }
 
 
-	protected void insert(Uri contentUri, ContentValues values) {
-		getContentResolver().insert(contentUri, values);
-	}
+    protected void insert(Uri contentUri, ContentValues values) {
+        getContentResolver().insert(contentUri, values);
+    }
 
 
-	protected void updateUrl(Uri contentUri, long key, String fieldKey, String url) throws MalformedURLException {
-		new URL(url);
-		update(contentUri, key, fieldKey, url);
-	}
+    protected void updateUrl(Uri contentUri, long key, String fieldKey, String url) throws MalformedURLException {
+        new URL(url);
+        update(contentUri, key, fieldKey, url);
+    }
 
 
-	protected void update(Uri contentUri, long key, String fieldKey, String str) {
-		ContentValues values = new ContentValues();
-		values.put(fieldKey, str);
-		update(contentUri, key, values);
-	}
+    protected void update(Uri contentUri, long key, String fieldKey, String str) {
+        ContentValues values = new ContentValues();
+        values.put(fieldKey, str);
+        update(contentUri, key, values);
+    }
 
 
-	protected void update(Uri contentUri, long key, ContentValues values) {
-		Uri uri = ContentUris.withAppendedId(contentUri, key);
-		getContentResolver().update(uri, values, null, null);
-	}
+    protected void update(Uri contentUri, long key, ContentValues values) {
+        Uri uri = ContentUris.withAppendedId(contentUri, key);
+        getContentResolver().update(uri, values, null, null);
+    }
 
 
-	protected void delete(Uri contentUri, long key) {
-		Uri uri = ContentUris.withAppendedId(contentUri, key);
-		getContentResolver().delete(uri, null, null);
-	}
+    protected void delete(Uri contentUri, long key) {
+        Uri uri = ContentUris.withAppendedId(contentUri, key);
+        getContentResolver().delete(uri, null, null);
+    }
 }

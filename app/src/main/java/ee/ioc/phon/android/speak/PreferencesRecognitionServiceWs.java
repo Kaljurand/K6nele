@@ -87,13 +87,9 @@ public class PreferencesRecognitionServiceWs extends PreferenceActivity {
             super.onResume();
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
             Preference service = findPreference(getString(R.string.keyWsServer));
-            service.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    getActivity().startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
-                    return true;
-                }
-
+            service.setOnPreferenceClickListener(preference -> {
+                getActivity().startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
+                return true;
             });
         }
 

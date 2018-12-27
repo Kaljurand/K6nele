@@ -31,9 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import ee.ioc.phon.android.speak.provider.App;
@@ -79,16 +77,14 @@ public class AppListActivity extends RecognizerIntentListActivity {
 
         registerForContextMenu(lv);
 
-        lv.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
-                Intent intent = IntentUtils.getAppIntent(getApplicationContext(), fname);
-                if (intent != null) {
-                    startActivity(intent);
-                } else {
-                    toast(String.format(getString(R.string.errorFailedLaunchApp), fname));
-                }
+        lv.setOnItemClickListener((parent, view, position, id) -> {
+            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+            String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
+            Intent intent = IntentUtils.getAppIntent(getApplicationContext(), fname);
+            if (intent != null) {
+                startActivity(intent);
+            } else {
+                toast(String.format(getString(R.string.errorFailedLaunchApp), fname));
             }
         });
     }
@@ -167,11 +163,7 @@ public class AppListActivity extends RecognizerIntentListActivity {
                 Utils.getYesNoDialog(
                         this,
                         getString(R.string.confirmRemoveGrammar),
-                        new Executable() {
-                            public void execute() {
-                                removeApp(key, App.Columns.GRAMMAR);
-                            }
-                        }
+                        () -> removeApp(key, App.Columns.GRAMMAR)
                 ).show();
                 return true;
             case R.id.cmAppAssignServer:
@@ -182,22 +174,14 @@ public class AppListActivity extends RecognizerIntentListActivity {
                 Utils.getYesNoDialog(
                         this,
                         getString(R.string.confirmRemoveServer),
-                        new Executable() {
-                            public void execute() {
-                                removeApp(key, App.Columns.SERVER);
-                            }
-                        }
+                        () -> removeApp(key, App.Columns.SERVER)
                 ).show();
                 return true;
             case R.id.cmAppDelete:
                 Utils.getYesNoDialog(
                         this,
                         String.format(getString(R.string.confirmDeleteEntry), fname),
-                        new Executable() {
-                            public void execute() {
-                                delete(CONTENT_URI, key);
-                            }
-                        }
+                        () -> delete(CONTENT_URI, key)
                 ).show();
                 return true;
             default:

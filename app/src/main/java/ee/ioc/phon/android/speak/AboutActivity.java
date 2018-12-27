@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
@@ -40,11 +41,12 @@ public class AboutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
 
-        getActionBar().setTitle(R.string.labelApp);
-        getActionBar().setSubtitle("v" + Utils.getVersionName(this));
-
-        // Content
-        TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
+        ActionBar ab = getActionBar();
+        if (ab != null) {
+            ab.setTitle(R.string.labelApp);
+            ab.setSubtitle("v" + Utils.getVersionName(this));
+        }
+        TextView tvAbout = findViewById(R.id.tvAbout);
         tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
         String about = String.format(
                 getString(R.string.tvAbout),
