@@ -255,11 +255,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityAppList"
             android:parentActivityName=".activity.Preferences" />
         <activity
-            android:name=".GrammarListActivity"
+            android:name=".activity.GrammarListActivity"
             android:label="@string/labelActivityGrammarList"
             android:parentActivityName=".activity.Preferences" />
         <activity
-            android:name=".ServerListActivity"
+            android:name=".activity.ServerListActivity"
             android:label="@string/labelActivityServerList"
             android:parentActivityName=".PreferencesRecognitionServiceHttp" />
         <!-- Exporting this to allow a shortcut to be created e.g. using Tasker. -->

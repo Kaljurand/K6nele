@@ -23,8 +23,8 @@ import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import ee.ioc.phon.android.speak.GrammarListActivity
 import ee.ioc.phon.android.speak.R
+import ee.ioc.phon.android.speak.activity.GrammarListActivity
 import ee.ioc.phon.android.speak.provider.Grammar
 import ee.ioc.phon.android.speak.utils.Utils
 import ee.ioc.phon.android.speechutils.Extras

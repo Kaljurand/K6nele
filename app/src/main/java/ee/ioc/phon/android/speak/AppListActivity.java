@@ -34,6 +34,8 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
+import ee.ioc.phon.android.speak.activity.GrammarListActivity;
+import ee.ioc.phon.android.speak.activity.ServerListActivity;
 import ee.ioc.phon.android.speak.provider.App;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
@@ -49,8 +51,9 @@ import ee.ioc.phon.android.speechutils.utils.IntentUtils;
  * <li>long-tapping on the entry opens the context menu which
  * allows the user to assign dedicated grammars and servers to individual apps;</li>
  * <li>the global menu allows the user to sort the list in various ways.</li>
- *
- * @author Kaarel Kaljurand
+ * </ul>
+ * <p>
+ * TODO: implement using CursorLoader (see e.g. ServerListActivity)
  */
 public class AppListActivity extends RecognizerIntentListActivity {
 
@@ -246,20 +249,6 @@ public class AppListActivity extends RecognizerIntentListActivity {
                 App.Columns.SERVER,
                 App.Columns.COUNT
         };
-
-        // TODO: replace the deprecated managedQuery with CursorLoader
-        // managedQuery(                  Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
-        // CursorLoader (Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
-        /*
-        CursorLoader cursorLoader = new CursorLoader(
-				this,
-				CONTENT_URI,
-				columns,
-				null,
-				null,
-				sortOrder
-		);
-		*/
 
         Cursor managedCursor = managedQuery(
                 CONTENT_URI,

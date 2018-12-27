@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android'
 dependencies {
     implementation project(':speechutils:app')
     implementation project(':net-speech-api')
-    //implementation 'commons-io:commons-io:2.5'
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
