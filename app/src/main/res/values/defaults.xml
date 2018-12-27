@@ -21,4 +21,6 @@
     <!-- TODO: convert to integer -->
     <string name="defaultImeMode" translatable="false">2</string>
 
+    <string name="defaultUrlPrefix" translatable="false">http://</string>
+
 </resources>

@@ -107,7 +107,7 @@
             android:summary="@string/summaryGrammarList"
             android:title="@string/labelActivityGrammarList">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.GrammarListActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.GrammarListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
