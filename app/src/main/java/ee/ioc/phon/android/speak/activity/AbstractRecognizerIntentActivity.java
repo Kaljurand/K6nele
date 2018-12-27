@@ -406,7 +406,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             }
         }
 
-        intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, getResultsAsArrayList(matches));
+        intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, new ArrayList<>(matches));
         setResult(Activity.RESULT_OK, intent);
     }
 
@@ -509,7 +509,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             // This is for Google Maps, YouTube, ...
             intent.putExtra(SearchManager.QUERY, match);
             // This is for SwiftKey X (from year 2011), ...
-            intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, getResultsAsArrayList(matches));
+            intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, new ArrayList<>(matches));
             String message;
             if (matches.size() == 1) {
                 message = match;
@@ -609,12 +609,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         if (mIsStoreAudio) {
             mBufferList.add(buffer);
         }
-    }
-
-    private ArrayList<String> getResultsAsArrayList(List<String> results) {
-        ArrayList<String> resultsAsArrayList = new ArrayList<>();
-        resultsAsArrayList.addAll(results);
-        return resultsAsArrayList;
     }
 
     protected void sayVoicePrompt(final TtsProvider.Listener listener) {
