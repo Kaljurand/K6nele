@@ -4,9 +4,10 @@ title: About
 permalink: /about/
 ---
 
-Kõnele is an Android app that offers speech-to-text services to other apps.
+Kõnele is an Android app that offers speech-to-text user interfaces and services to other apps.
 Many apps contain a text area or a text field (e.g. a search bar) that can be edited using
-the keyboard. Kõnele provides a __speech keyboard__, which allows text to be created via speaking.
+the __input method editor (IME)__, aka the virtual keyboard.
+Kõnele provides an IME that allows text to be created via speaking.
 Many apps (e.g. intelligent assistants, keyboard apps, navigation apps) also contain a microphone button that
 is linked to either the __standard Android speech recognition activity__
 or the __standard Android speech recognition service__.
@@ -27,7 +28,7 @@ currently available on Android.
 <table>
 <tr>
 <td class="logo">
-<img class="logo" title="Screenshot: address search with the Kõnele speech keyboard" src="{{ site.baseurl }}/images/en/screenshot_portrait_1_framed_20170702_resize20.png">
+<img class="logo" title="Screenshot: address search with the Kõnele IME" src="{{ site.baseurl }}/images/en/screenshot_portrait_1_framed_20170702_resize20.png">
 </td>
 <td class="logo">
 <img class="logo" title="Screenshot: directions search with the Kõnele voice search panel in split screen mode" src="{{ site.baseurl }}/images/en/screenshot_portrait_framed_20170702_resize20.png">
@@ -35,7 +36,7 @@ currently available on Android.
 </tr>
 <tr>
 <td class="logo" colspan="2" align="center">
-<img class="logo" title="Screenshot: composing an email with the Kõnele speech keyboard in landscape mode" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20170702_resize20.png">
+<img class="logo" title="Screenshot: composing an email with the Kõnele IME in landscape mode" src="{{ site.baseurl }}/images/en/screenshot_landscape_framed_20170702_resize20.png">
 </td>
 </tr>
 </table>
@@ -45,7 +46,7 @@ currently available on Android.
 Kõnele provides two user interface components that can use any speech recognition service/language available on the device:
 
   - the voice search panel can be called from other apps (typically by pressing a microphone button), and returns the recognition results to the app; in case the panel is opened via the Kõnele launcher icon, custom rewrite rules allow one to define which app is launched to interpret the recognition results (by default, the results are used to perform a web search using the default browser);
-  - the speech keyboard can be used to dictate into any text field in any app, edit the result with swipe commands, and execute user-defined editor commands (select, copy, replace, undo, move cursor to next regex match etc.)
+  - the IME can be used to dictate into any text field in any app, edit the result with swipe commands, and execute user-defined editor commands (e.g. "select", "copy", "replace", "undo", "move cursor to next regex match")
 
 Kõnele also provides two speech recognition services that are pre-configured to use Estonian speech recognition:
 

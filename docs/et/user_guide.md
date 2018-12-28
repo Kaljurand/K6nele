@@ -85,7 +85,7 @@ Antud juhul on reeglil kolm komponenti: regulaaravaldis, mis vastab lausungile (
 
 ## Kõnele seadistamine
 
-<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2017-09-13-23-06-39.jpg">
+<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2018-12-27-09-29-43.jpg">
 
 Sama mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
 Need võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
@@ -154,7 +154,7 @@ virtuaalklaviatuurimenüüs.
 Kui Kõnele klaviatuur pole sisse lülitatud, siis on Kõnele seadetes, esimesel kohal, ka
 otselink sellesse menüüsse.
 
-<img title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/IMG_20170916_113335.png">
+<img title="Ekraanipilt: otselink klaviatuuri sisselülitamise menüüsse" alt="Ekraanipilt: otselink klaviatuuri sisselülitamise menüüsse." src="{{ site.baseurl }}/images/et/Screenshot_20181227-093420.png">
 
 Androidi seadete hierarhias asub vastav menüü üsna sügaval, ning lisaks erineb selle asukoht
 Androidi versiooniti:
@@ -188,7 +188,7 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181010-083344.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181010-083352.png"><img title="Ekraanipilt: Kõnele võib tuvastuse ajaks veel väiksemaks teha." src="{{ site.baseurl }}/images/et/Screenshot_20181010-083440.png">
+<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181227-093824.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181227-093855.png"><img title="Ekraanipilt: Kõnele võib tuvastuse ajaks veel väiksemaks teha." src="{{ site.baseurl }}/images/et/Screenshot_20181227-094100.png">
 
 Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult veerandi, ning tuvastuse ajaks saab klaviatuuri veel väiksemaks teha.
 
@@ -286,10 +286,14 @@ on _SlideIT Keyboard_, mida saab konfigureerida Kõnelet kasutama.
 Hea ülevaade parimatest klaviatuurirakendustest (eesti keeles kirjutamise
 seisukohast) on ajakirjas [[digi] 5/2014](http://www.digi.ee/2014/05/arhiiv/).
 
-Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab kõnetuvastuseks
+<del>Huvitav olukord on Google'i tõlkerakendusega (_Google Translate_), mis kasutab kõnetuvastuseks
 üldiselt Google'i tuvastajat, kuid keelte jaoks, mida see ei toeta (nt eesti keel)
 kasutab vaikimisi määratud kõnetuvastusteenust. Seega saab Kõnele ja Google'i tõlkerakendusega
-teha kõnest-kõnesse tõlget eesti keelest paljudesse teistesse keeltesse.
+teha kõnest-kõnesse tõlget eesti keelest paljudesse teistesse keeltesse.</del>
+(Alates dets. 2018 enam ei toimi, sest Google (arvab, et) oskab ise eestikeelset kõne tuvastada, ning
+Translate pole seega teistele tuvastajatele avatud.
+Lahenduseks võib olla Google'i tuvastaja telefonist eemaldamine.
+Samuti toimib endiselt teksti sisestamine Kõnele klaviatuuri abil.)
 
 Android v6 on lisanud nn "Abirakenduse" mõiste, kuid kui abirakenduseks on valitud _Google'i rakendus_, siis valikut `Häälsisend` ei kuvata, ning Kõnele rakendust vaikimisi teenuseks seada ei saa. Üheks kahetsusväärseks tagajärjeks on see, et nüüd puudub võimalus korraga kasutada funktsionaalsust "Google Assistant" ja eestikeelset kõnesisendit rakenduses _Google Translate_.
 (Vt ka vearaporteid [200494](https://code.google.com/p/android/issues/detail?id=200494)
