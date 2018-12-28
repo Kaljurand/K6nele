@@ -5,20 +5,20 @@ title: Release notes
 
 (For more detailed notes see <https://github.com/Kaljurand/K6nele/commits/master>)
 
-(Old issue numbers refer to `code.google.com/p/recognizer-intent/issues/list`, which is no longer available.)
+## v1.7 -
+
+Requires Android 4.1+
 
 ## v1.1 - v1.6
 
-Requires Android 4.0+
+Requires Android 4.0+ (has Android 4.0+ style UI)
 
-- extension of v0.8.xx, but with Android 4.0+ style UI
-
-### v1.6.98 (2018-12-??)
+### v1.6.98 (2018-12-27)
 
 New in this release:
 
 - launcher icon is now adaptive (and slightly redesigned)
-- menu icons are now all vector drawables (and slightly redesigned)
+- menu icons are now all vector drawables (and some are slightly redesigned)
 - fix issue with FLAC-encoded recording getting stuck after ~30 sec (on some devices)
 - improve service descriptions
 - Settings: add shortcut from "Languages & services" to "Recognition services"
@@ -224,7 +224,7 @@ Name changes and deprecation:
 - require API >= 16 (Android v4.1 Jelly Bean)
 - modernize the UI (making the menus more accessible)
 - remove some hidden developer features, reducing the APK size by 40k
-- fix crash due to the WEB_SEARCH activity not available on some devices (we now fall back to SEARCH, or no activity if SEARCH is also not available)
+- fix crash due to the ``WEB_SEARCH`` activity not available on some devices (we now fall back to SEARCH, or no activity if SEARCH is also not available)
 
 ## v0.8 (not maintained)
 
@@ -234,6 +234,8 @@ Requires Android 2.2+
 - settings are part of the global settings
 - launcher submits the transcription to the standard websearch
 - starting with v0.8.50 implements the IME interface
+
+(Old issue numbers refer to `code.google.com/p/recognizer-intent/issues/list`, which is no longer available.)
 
 ### v0.8.58 (2015-01-29) (released on Google Play: 2015-01-29)
 
