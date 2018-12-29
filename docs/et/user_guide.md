@@ -91,11 +91,10 @@ Sama mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele 
 Need võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
 
 - milliseid tuvastusteenusi ja -keeli kasutatakse;
-- kui palju tuvastushüpoteese serverilt paluda;
+- kas/kuidas rakendada tuvastustulemusele tõlkegrammatikaid ja ümberkirjutusreegleid (vt allpool);
 - kas lindistamine algab automaatselt või peale nupule vajutamist;
 - kas lindistamine lõpeb kui sisendkõnesse tekib paus, või alles siis, kui nupule on vajutatud;
-- kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga;
-- kas/kuidas rakendada tuvastustulemusele tõlkegrammatikaid ja ümberkirjutusreegleid (vt allpool).
+- kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga.
 
 Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest (st klaviatuuri ja otsingupaneeli) ning
 seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
@@ -208,13 +207,13 @@ tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
   - noole-ikoon, tuvastuse ajal:
   lühike vajutus muudab klaviatuuri paneeli väikseks, või tagasi suureks;
 
-- parem ülemine nurk:
+- parem ülemine nurk, tekstivälja tüübist sõltuv "action" nupp, nt
 
-  - otsinguikoon, otsinguvälja puhul: lühike vajutus sooritab otsingu,
+  - otsinguväli: lühike vajutus sooritab otsingu,
 
-  - väljavahetusikoon, üherealise tekstivälja (nt pealkirjaväli) puhul: lühike vajutus liigutab kursori järgmisele väljale,
+  - üherealine tekstiväli (nt pealkirjaväli): lühike vajutus liigutab kursori järgmisele väljale,
 
-  - reavahetusikoon, tavalise mitmerealise tekstivälja puhul: lühike vajutus lisab reavahetuse;
+  - tavaline mitmerealine tekstiväli: lühike vajutus lisab reavahetuse;
 
 - paneel, variant 1:
 
@@ -272,7 +271,7 @@ mis hoolitsevad ise kogu kasutajaliidese eest (mikrofoninupp, helisignaalid, VU-
 Selliselt kutsutavad teenused on kirjas süsteemses `Häälsisend`-menüüs,
 kus üks neist on alati seatud vaikimisi teenuseks.
 (Android v4-5: `Seaded -> Keeled ja sisestamine -> Kõne -> Häälsisend`;
-Android v6-7: `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`; Kõnele seadetes on ka otsetee `Kõik kõnetuvastusteenused`.)
+Android v6-7: `Seaded -> Rakendused -> Rakenduste seadistamine (hammasrattaikoon) -> Vaikerakendused -> Abirakendus ja häälsisend -> Häälsisend`; Kõnele seadetes on ka otsetee `Kõnetuvastusteenused (süsteemsed seaded)`.)
 
 
 <img title="Ekraanipilt: nimekiri paigaldatud tuvastusteenustest" alt="Ekraanipilt: nimekiri paigaldatud tuvastusteenustest." src="{{ site.baseurl }}/images/et/Screenshot_2014-12-23-21-16-00.png">
