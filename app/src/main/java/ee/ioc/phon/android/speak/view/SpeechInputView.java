@@ -164,15 +164,11 @@ public class SpeechInputView extends LinearLayout {
                 mBImeAction.setImageResource(R.drawable.ic_newline);
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
-            // TODO: do something interesting on long press,
-            // e.g. open a menu with arrows, or other actions, or various punctuation symbols
+
             /*
-            mBImeAction.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onAction(EditorInfo.IME_ACTION_SEND, false);
-                    return true;
-                }
+            mBImeAction.setOnLongClickListener(v -> {
+                // TODO: show clipboard
+                return true;
             });
             */
         }

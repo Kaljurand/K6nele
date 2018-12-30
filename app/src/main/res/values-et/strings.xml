@@ -324,13 +324,11 @@
         <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
     </plurals>
     <string name="labelActivityEncoderListDemo">Audioformaadid</string>
-    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Vajalik vähemalt Android v4.1 või isegi v5.0, ja kõikidel seadmetel ei pruugi toimida.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
     <string name="buttonApplyDeveloperDefaults">Arendaja seaded</string>
 
-    <!-- Deprecated -->
-    <string name="buttonStop">Lõpeta!</string>
     <string name="labelActivityImeListDemo">Kõneklaviatuurid</string>
     <string name="buttonApply">Rakenda</string>
     <string name="buttonScan">Otsi</string>

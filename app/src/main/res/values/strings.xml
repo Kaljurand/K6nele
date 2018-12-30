@@ -75,7 +75,7 @@
     <string name="titleRecordingRate">Sample rate</string>
     <string name="summaryRecordingRate">Sampling %1$s times per second</string>
     <string name="titleAudioFormat">Audio format</string>
-    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format results in 2x less network traffic. Requires at least Android v4.1 or even v5.0, and might not work on all devices.)</string>
+    <string name="summaryAudioFormat">%1$s\n(Using a non-raw format results in 2x less network traffic. Might not work on all devices.)</string>
     <string name="titleAudioCues">Play audio cues</string>
     <string name="summaryAudioCues">Beep before and after recording</string>
     <string name="titleWsServer">Server URL</string>
@@ -414,7 +414,4 @@
         <item>Lampjalgadega stampvambilgi on rambikramp.</item>
         <item>Anna õlu üle Ülo õe õla.</item>
     </string-array>
-
-    <!-- Deprecated -->
-    <string name="buttonStop">Speak now!\nTap when finished</string>
 </resources>

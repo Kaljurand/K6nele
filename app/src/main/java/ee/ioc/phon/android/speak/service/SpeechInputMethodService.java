@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.view.View;
 import android.view.Window;
@@ -274,7 +275,7 @@ public class SpeechInputMethodService extends InputMethodService {
         mInputMethodManager.switchToLastInputMethod(getToken());
     }
 
-    private static String getText(List<String> results) {
+    private static String getText(@NonNull List<String> results) {
         if (results.size() > 0) {
             return results.get(0);
         }
@@ -369,10 +370,6 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onDeleteLastWord() {
                 runOp(mCommandEditor.deleteLeftWord());
-                // Show all of the current text. (Only on Watch.)
-                if (getResources().getBoolean(R.bool.isWatch)) {
-                    mInputView.showMessage(mCommandEditor.getText());
-                }
             }
 
             @Override

@@ -115,6 +115,9 @@ public class RewritesSelectorActivity extends Activity {
                 case R.id.cmRewritesShare:
                     startActivity(Intent.createChooser(rewrites.getSendIntent(), getResources().getText(R.string.labelRewritesShare)));
                     return true;
+                case R.id.cmRewritesSendBase64:
+                    startActivity(rewrites.getIntentSendBase64());
+                    return true;
                 case R.id.cmRewritesTest:
                     startActivity(rewrites.getK6neleIntent());
                     return true;

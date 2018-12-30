@@ -7,7 +7,7 @@
         android:summary="@string/defaultHttpServer"
         android:title="@string/titleDefaultServiceHttp">
         <intent
-            android:targetClass="ee.ioc.phon.android.speak.ServerListActivity"
+            android:targetClass="ee.ioc.phon.android.speak.activity.ServerListActivity"
             android:targetPackage="ee.ioc.phon.android.speak" />
     </Preference>
     <CheckBoxPreference

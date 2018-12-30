@@ -47,7 +47,7 @@ public class Rewrites {
     }
 
     public void setSelected(boolean b) {
-        Set<String> set = new HashSet(getDefaults());
+        Set<String> set = new HashSet<>(getDefaults());
         if (set.contains(mId)) {
             if (!b) {
                 set.remove(mId);
@@ -114,7 +114,7 @@ public class Rewrites {
             Set<String> deleteKeys = new HashSet<>();
             deleteKeys.add(mId);
             PreferenceUtils.clearPrefMap(mPrefs, mRes, R.string.keyRewritesMap, deleteKeys);
-            Set<String> defaults = new HashSet(getDefaults());
+            Set<String> defaults = new HashSet<>(getDefaults());
             if (defaults.contains(mId)) {
                 defaults.remove(mId);
                 if (newName != null) {
