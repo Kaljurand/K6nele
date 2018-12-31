@@ -10,18 +10,27 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
@@ -165,12 +174,28 @@ public class SpeechInputView extends LinearLayout {
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
-            /*
             mBImeAction.setOnLongClickListener(v -> {
-                // TODO: show clipboard
+                final RecyclerView rvClipboard = findViewById(R.id.rvClipboard);
+                final RelativeLayout rlKeyboard = findViewById(R.id.centralButtons);
+                if (rvClipboard.getVisibility() == View.GONE) {
+                    Context context = getContext();
+                    Map<String, String> clipboard = PreferenceUtils.getPrefMap(
+                            PreferenceManager.getDefaultSharedPreferences(getContext()),
+                            context.getResources(),
+                            ee.ioc.phon.android.speechutils.R.string.keyClipboardMap);
+
+                    rlKeyboard.setVisibility(View.GONE);
+                    rvClipboard.setVisibility(View.VISIBLE);
+                    //lvResults.setHasFixedSize(true);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+                    rvClipboard.setLayoutManager(mLayoutManager);
+                    rvClipboard.setAdapter(new CliboardAdapter(clipboard));
+                } else {
+                    rvClipboard.setVisibility(View.GONE);
+                    rlKeyboard.setVisibility(View.VISIBLE);
+                }
                 return true;
             });
-            */
         }
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
@@ -585,7 +610,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     /**
-     * TODO: not sure if its better to call cancel or destroy
+     * TODO: not sure if it is better to call cancel or destroy
      * Note that SpeechRecognizer#destroy calls cancel first.
      */
     private void cancelOrDestroy() {
@@ -719,6 +744,50 @@ public class SpeechInputView extends LinearLayout {
         public void onBufferReceived(byte[] buffer) {
             Log.i("View: onBufferReceived: " + buffer.length);
             mListener.onBufferReceived(buffer);
+        }
+    }
+
+    // TODO: show empty view
+    private class CliboardAdapter extends RecyclerView.Adapter<CliboardAdapter.MyViewHolder> {
+        private final List<String> mDataset;
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            public Button mView;
+
+            public MyViewHolder(Button v) {
+                super(v);
+                mView = v;
+            }
+        }
+
+        public CliboardAdapter(Map<String, String> clipboard) {
+            mDataset = new ArrayList<>();
+            if (clipboard != null && !clipboard.isEmpty()) {
+                for (String key : new TreeSet<>(clipboard.keySet())) {
+                    mDataset.add(clipboard.get(key));
+                    Log.i(key + ":" + clipboard.get(key));
+                }
+            }
+        }
+
+        @Override
+        public CliboardAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            Button v = (Button) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_server_ip, parent, false);
+            return new CliboardAdapter.MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final CliboardAdapter.MyViewHolder holder, int position) {
+            holder.mView.setText(mDataset.get(position));
+            holder.mView.setOnClickListener(view -> mListener.onFinalResult(
+                    Collections.singletonList(holder.mView.getText().toString()), new Bundle()));
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDataset.size();
         }
     }
 }
