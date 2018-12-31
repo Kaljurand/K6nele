@@ -7,6 +7,7 @@
     <dimen name="textSize4">22sp</dimen>
     <dimen name="layoutHeightButtonMicrophone">72dp</dimen>
     <dimen name="layoutHeightButtonMicrophoneIme">72dp</dimen>
+    <dimen name="layoutHeightClipboard">144dp</dimen>
     <dimen name="layoutMargin4dp">4dp</dimen>
     <dimen name="layoutMargin1">8dp</dimen>
     <dimen name="layoutMargin12dp">12dp</dimen>

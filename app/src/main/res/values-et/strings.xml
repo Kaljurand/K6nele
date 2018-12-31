@@ -13,6 +13,7 @@
     <string name="labelActivityPreferences">Kõnele seaded</string>
     <string name="labelActivityRewritesLoader">Kõnele ü.k.-reeglid</string>
     <string name="labelActivityRewritesSelector">Ümberkirjutusreeglid</string>
+    <string name="labelActivityProcessText">Kõnele salvesta lõikelauale</string>
     <string name="labelActivitySimpleDemo">Lihtne demo</string>
     <string name="labelActivityExtrasDemo">"Extras" demo</string>
     <string name="labelActivityHandsfreeDemo">Käed-vabad demo</string>
@@ -193,6 +194,7 @@
     <string name="toastRequestedAudioFormatNotSupported">Audioformaat pole toetatud: %1$s</string>
     <string name="toastPlayingAudio">Mängin lindistust: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Lindistuse lõpp</string>
+    <string name="toastClipSaved">Salvestan lõikelauale: %1$s</string>
     <string name="errorLoadRewrites">VIGA: ümberkirjutusreeglite laadimine luhtus: %1$s</string>
     <plurals name="statusLoadRewrites">
         <item quantity="one">1 reegel</item>

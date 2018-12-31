@@ -25,6 +25,7 @@
     <string name="labelActivityPreferencesRecognitionServiceWs">@string/labelRecognitionServiceWs</string>
     <string name="labelActivityRewritesLoader">Kõnele rewrite rules</string>
     <string name="labelActivityRewritesSelector">Rewrite rule tables</string>
+    <string name="labelActivityProcessText">Kõnele save clip</string>
     <string name="labelActivityAppList">Apps</string>
     <string name="labelActivityGrammarList">Grammars</string>
     <string name="labelActivityServerList">Recognizer servers</string>
@@ -186,6 +187,7 @@
     <string name="toastRequestedAudioFormatNotSupported">Requested audio format not supported: %1$s</string>
     <string name="toastPlayingAudio">Playing the recorded audio: %1$s, %2$s, %3$d ms</string>
     <string name="toastPlayingAudioDone">Done playing the audio</string>
+    <string name="toastClipSaved">Clip saved: %1$s</string>
     <string name="errorRecognizerSettingsNotPresent">This service does not have a settings panel.</string>
     <string name="errorRecognizerNotPresent">ERROR: There is no activity that provides speech recognition service.</string>
     <string name="errorLoadRewrites">ERROR: Failed to load rewrite rules: %1$s</string>
