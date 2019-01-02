@@ -40,7 +40,7 @@
             android:layout_toRightOf="@+id/bImeKeyboard"
             android:ellipsize="start"
             android:gravity="center"
-            android:singleLine="true"
+            android:lines="2"
             android:textColor="@color/grey300"
             android:textSize="@dimen/textSize2"
             android:visibility="visible"

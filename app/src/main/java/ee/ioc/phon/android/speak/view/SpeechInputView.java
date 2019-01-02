@@ -774,6 +774,20 @@ public class SpeechInputView extends LinearLayout {
             if (clipboard != null && !clipboard.isEmpty()) {
                 mDataset.addAll(new TreeSet<>(clipboard.values()));
             }
+            mDataset.add("võta tagasi");
+            mDataset.add("vali a");
+            mDataset.add("vali kõik");
+            mDataset.add("naerunäosümbol");
+            mDataset.add(";");
+            mDataset.add("Tervitades,\nKaarel");
+            mDataset.add(" ");
+            mDataset.add("!?");
+            mDataset.add("kustuta eelmine sõna");
+            mDataset.add("vali eelmine sõna");
+            mDataset.add("suured tähed");
+            mDataset.add("_");
+            mDataset.add(",");
+            mDataset.add("saada ära");
         }
 
         @Override
@@ -789,9 +803,9 @@ public class SpeechInputView extends LinearLayout {
                     Collections.singletonList(holder.mView.getText().toString()), new Bundle()));
             holder.mView.setOnLongClickListener(v -> {
                 String clip = holder.mView.getText().toString();
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, KEY_CLIPBOARD, clip, null);
-                // TODO: confirmation
-                showMessage("Deleted: " + clip);
+                // TODO: delete with confirmation
+                // PreferenceUtils.putPrefMapEntry(mPrefs, mRes, KEY_CLIPBOARD, clip, null);
+                showMessage("<" + clip + ">");
                 return true;
             });
         }
