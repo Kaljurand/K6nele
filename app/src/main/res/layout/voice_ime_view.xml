@@ -64,7 +64,8 @@
             android:layout_height="@dimen/layoutHeightClipboard"
             android:layout_below="@+id/tvMessage"
             android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/layoutMargin4dp"
+            android:layout_marginLeft="@dimen/layoutMargin3"
+            android:layout_marginRight="@dimen/layoutMargin3"
             android:scrollbars="vertical"
             android:visibility="gone" />
     </RelativeLayout>

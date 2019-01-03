@@ -16,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
@@ -182,9 +182,7 @@ public class SpeechInputView extends LinearLayout {
                         setVisibilityKeyboard(View.GONE);
                         mRvClipboard.setVisibility(View.VISIBLE);
                         mRvClipboard.setHasFixedSize(true);
-                        //rvClipboard.setLayoutManager(new LinearLayoutManager(context));
                         mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                        //rvClipboard.setLayoutManager(new GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false));
                         mRvClipboard.setAdapter(ca);
                     }
                 } else {
@@ -242,7 +240,11 @@ public class SpeechInputView extends LinearLayout {
             }
         };
 
-        mOctl = new OnCursorTouchListener() {
+        // TODO: move to utilities (48dp for the edges)
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int edge = Math.round(48 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+        mOctl = new OnCursorTouchListener(edge) {
             @Override
             public void onMove(int numOfChars) {
                 mListener.moveRel(numOfChars);
@@ -276,28 +278,36 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onDown() {
-                mBImeStartStop.setVisibility(View.INVISIBLE);
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
                 mBImeAction.setVisibility(View.INVISIBLE);
-                setVisibility(mTvInstruction, View.INVISIBLE);
-                if (mBComboSelector != null) {
-                    mBComboSelector.setVisibility(View.INVISIBLE);
+                if (mRvClipboard.getVisibility() == View.GONE) {
+                    mBImeStartStop.setVisibility(View.INVISIBLE);
+                    setVisibility(mTvInstruction, View.INVISIBLE);
+                    if (mBComboSelector != null) {
+                        mBComboSelector.setVisibility(View.INVISIBLE);
+                    }
+                    setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+                } else {
+                    setVisibility(mRvClipboard, View.INVISIBLE);
                 }
-                setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                 showMessage("");
             }
 
             @Override
             public void onUp() {
                 showMessage("");
-                mBImeStartStop.setVisibility(View.VISIBLE);
                 mBImeKeyboard.setVisibility(View.VISIBLE);
                 mBImeAction.setVisibility(View.VISIBLE);
-                setVisibility(mTvInstruction, View.VISIBLE);
-                if (mBComboSelector != null) {
-                    mBComboSelector.setVisibility(View.VISIBLE);
+                if (mRvClipboard.getVisibility() == View.GONE) {
+                    mBImeStartStop.setVisibility(View.VISIBLE);
+                    setVisibility(mTvInstruction, View.VISIBLE);
+                    if (mBComboSelector != null) {
+                        mBComboSelector.setVisibility(View.VISIBLE);
+                    }
+                    setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
+                } else {
+                    setVisibility(mRvClipboard, View.VISIBLE);
                 }
-                setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
                 setBackgroundResource(R.drawable.rectangle_gradient);
             }
 
@@ -752,6 +762,7 @@ public class SpeechInputView extends LinearLayout {
 
     private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
         private final List<String> mDataset;
+        private final Map<String, String> mClipboard;
         private final SharedPreferences mPrefs;
         private final Resources mRes;
         private static final int KEY_CLIPBOARD = ee.ioc.phon.android.speechutils.R.string.keyClipboardMap;
@@ -769,25 +780,11 @@ public class SpeechInputView extends LinearLayout {
             Context context = getContext();
             mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             mRes = getResources();
-            Map<String, String> clipboard = PreferenceUtils.getPrefMap(mPrefs, mRes, KEY_CLIPBOARD);
+            mClipboard = PreferenceUtils.getPrefMap(mPrefs, mRes, KEY_CLIPBOARD);
             mDataset = new ArrayList<>();
-            if (clipboard != null && !clipboard.isEmpty()) {
-                mDataset.addAll(new TreeSet<>(clipboard.values()));
-            }
-            mDataset.add("võta tagasi");
-            mDataset.add("vali a");
-            mDataset.add("vali kõik");
-            mDataset.add("naerunäosümbol");
-            mDataset.add(";");
-            mDataset.add("Tervitades,\nKaarel");
-            mDataset.add(" ");
-            mDataset.add("!?");
-            mDataset.add("kustuta eelmine sõna");
-            mDataset.add("vali eelmine sõna");
-            mDataset.add("suured tähed");
-            mDataset.add("_");
-            mDataset.add(",");
-            mDataset.add("saada ära");
+            mDataset.addAll(mClipboard.keySet());
+            mDataset.remove(null);
+            Collections.sort(mDataset);
         }
 
         @Override
@@ -798,14 +795,19 @@ public class SpeechInputView extends LinearLayout {
 
         @Override
         public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
-            holder.mView.setText(mDataset.get(position));
+            final String key = mDataset.get(position);
+            final String val = mClipboard.get(key);
+            holder.mView.setText(key);
             holder.mView.setOnClickListener(view -> mListener.onFinalResult(
-                    Collections.singletonList(holder.mView.getText().toString()), new Bundle()));
+                    Collections.singletonList(val), new Bundle()));
             holder.mView.setOnLongClickListener(v -> {
-                String clip = holder.mView.getText().toString();
                 // TODO: delete with confirmation
                 // PreferenceUtils.putPrefMapEntry(mPrefs, mRes, KEY_CLIPBOARD, clip, null);
-                showMessage("<" + clip + ">");
+                if (key.equals(val)) {
+                    showMessage(key + "=");
+                } else {
+                    showMessage(key + "->" + val);
+                }
                 return true;
             });
         }

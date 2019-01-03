@@ -15,4 +15,5 @@
     <dimen name="layoutMargin3">24dp</dimen>
     <dimen name="layoutMargin32">32dp</dimen>
     <dimen name="layoutSpeechInputViewWidth">270dp</dimen>
+    <dimen name="edgeWidth">48dp</dimen>
 </resources>
