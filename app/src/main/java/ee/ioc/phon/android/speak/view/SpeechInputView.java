@@ -176,19 +176,7 @@ public class SpeechInputView extends LinearLayout {
             }
 
             mBImeAction.setOnLongClickListener(v -> {
-                if (mRvClipboard.getVisibility() == View.GONE) {
-                    ClipboardAdapter ca = new ClipboardAdapter();
-                    if (ca.getItemCount() > 0) {
-                        setVisibilityKeyboard(View.GONE);
-                        mRvClipboard.setVisibility(View.VISIBLE);
-                        mRvClipboard.setHasFixedSize(true);
-                        mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                        mRvClipboard.setAdapter(ca);
-                    }
-                } else {
-                    mRvClipboard.setVisibility(View.GONE);
-                    setVisibilityKeyboard(View.VISIBLE);
-                }
+                toggleClipboard();
                 return true;
             });
         }
@@ -374,43 +362,67 @@ public class SpeechInputView extends LinearLayout {
             }
         }
 
-        // This button can be pressed in any state.
-        mBImeStartStop.setOnClickListener(v -> {
-            Log.i("Microphone button pressed: state = " + mState);
-            switch (mState) {
-                case INIT:
-                case ERROR:
-                    startListening(mSlc);
-                    break;
-                case RECORDING:
-                    stopListening();
-                    break;
-                case LISTENING:
-                case TRANSCRIBING:
-                    cancelOrDestroy();
-                    setGuiInitState(0);
-                    break;
-                default:
+        mBImeStartStop.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+                mListener.onDeleteLastWord();
             }
+
+            @Override
+            public void onSwipeRight() {
+                mListener.onAddNewline();
+            }
+
+            @Override
+            public void onSwipeUp() {
+                nextCombo();
+            }
+
+            @Override
+            public void onSwipeDown() {
+                // TODO: maybe: minimizeUi();
+                toggleClipboard();
+            }
+
+            @Override
+            public void onSingleTapMotion() {
+                Log.i("Microphone button pressed: state = " + mState);
+                switch (mState) {
+                    case INIT:
+                    case ERROR:
+                        startListening(mSlc);
+                        break;
+                    case RECORDING:
+                        stopListening();
+                        break;
+                    case LISTENING:
+                    case TRANSCRIBING:
+                        cancelOrDestroy();
+                        setGuiInitState(0);
+                        break;
+                    default:
+                }
+            }
+
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onAddSpace();
+            }
+
+            @Override
+            public void onLongPressMotion() {
+                comboSelector(key);
+            }
+
         });
 
         if (mBComboSelector != null) {
             mBComboSelector.setOnClickListener(v -> {
-                if (mState == MicButton.State.RECORDING) {
-                    stopListening();
-                }
-                mSlc.next();
-                mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
-                updateComboSelector(mSlc);
+                nextCombo();
             });
 
             mBComboSelector.setOnLongClickListener(view -> {
-                cancelOrDestroy();
-                Context context = getContext();
-                Intent intent = new Intent(context, ComboSelectorActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("key", context.getString(key));
-                context.startActivity(intent);
+                comboSelector(key);
                 return true;
             });
         }
@@ -462,6 +474,40 @@ public class SpeechInputView extends LinearLayout {
                 setText(mTvMessage, message);
             }
         }
+    }
+
+    private void toggleClipboard() {
+        if (mRvClipboard.getVisibility() == View.GONE) {
+            ClipboardAdapter ca = new ClipboardAdapter();
+            if (ca.getItemCount() > 0) {
+                setVisibilityKeyboard(View.GONE);
+                mRvClipboard.setVisibility(View.VISIBLE);
+                mRvClipboard.setHasFixedSize(true);
+                mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                mRvClipboard.setAdapter(ca);
+            }
+        } else {
+            mRvClipboard.setVisibility(View.GONE);
+            setVisibilityKeyboard(View.VISIBLE);
+        }
+    }
+
+    private void nextCombo() {
+        if (mState == MicButton.State.RECORDING) {
+            stopListening();
+        }
+        mSlc.next();
+        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+        updateComboSelector(mSlc);
+    }
+
+    private void comboSelector(int key) {
+        cancelOrDestroy();
+        Context context = getContext();
+        Intent intent = new Intent(context, ComboSelectorActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("key", context.getString(key));
+        context.startActivity(intent);
     }
 
     private void toggleUi() {
@@ -784,7 +830,7 @@ public class SpeechInputView extends LinearLayout {
             mDataset = new ArrayList<>();
             mDataset.addAll(mClipboard.keySet());
             mDataset.remove(null);
-            Collections.sort(mDataset);
+            Collections.sort(mDataset, (o1, o2) -> mClipboard.get(o1).compareTo(mClipboard.get(o2)));
         }
 
         @Override
