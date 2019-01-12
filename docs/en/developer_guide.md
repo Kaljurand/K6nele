@@ -20,7 +20,6 @@ existing app.
 
 Kõnele implements [android.speech.RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) actions `ACTION_RECOGNIZE_SPEECH` and `ACTION_WEB_SEARCH`,
 and supports its EXTRAs up to Android API level 3.
-
 In addition to the standard EXTRAs, Kõnele adds the following EXTRAs:
 
 | `SERVER_URL`          | URL                           | Web address of the speech recognition server
@@ -60,13 +59,13 @@ To obtain a Kõnele-specific SpeechRecognizer-object, use the two-argument call 
 SpeechRecognizer.createSpeechRecognizer(this,
     new ComponentName(
         "ee.ioc.phon.android.speak",
-        "ee.ioc.phon.android.speak.service.HttpRecognitionService"));
+        "ee.ioc.phon.android.speak.service.WebSocketRecognitionService"));
 {% endhighlight %}
 
 The available services are:
 
+  - `ee.ioc.phon.android.speak.service.WebSocketRecognitionService` (recommended; uses the continuous full-duplex server)
   - `ee.ioc.phon.android.speak.service.HttpRecognitionService` (uses the grammar-supporting server)
-  - `ee.ioc.phon.android.speak.service.WebSocketRecognitionService` (uses the continuous full-duplex server)
 
 The above-listed EXTRAs are also supported when calling Kõnele as a service, with the
 exception of the `GET_AUDIO` EXTRAs.
