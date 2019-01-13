@@ -20,5 +20,6 @@
     <color name="grey800">#424242</color>
     <color name="grey900">#212121</color>
     <color name="transparent_blue">#990099cc</color>
+    <color name="transparent_grey800">#99424242</color>
 
 </resources>

@@ -411,7 +411,8 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onLongPressMotion() {
-                comboSelector(key);
+                //comboSelector(key);
+                mListener.onSelectAll();
             }
 
         });

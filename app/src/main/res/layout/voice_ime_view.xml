@@ -58,14 +58,16 @@
             android:padding="@dimen/layoutMargin1"
             android:src="@drawable/ic_search" />
 
+        <!--
+                    android:layout_marginLeft="@dimen/layoutMargin3"
+            android:layout_marginRight="@dimen/layoutMargin3"
+            -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvClipboard"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layoutHeightClipboard"
             android:layout_below="@+id/tvMessage"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/layoutMargin3"
-            android:layout_marginRight="@dimen/layoutMargin3"
             android:scrollbars="vertical"
             android:visibility="gone" />
     </RelativeLayout>
