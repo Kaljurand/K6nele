@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,10 @@ import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
+import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.Command;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
@@ -812,7 +816,7 @@ public class SpeechInputView extends LinearLayout {
         private final Map<String, String> mClipboard;
         private final SharedPreferences mPrefs;
         private final Resources mRes;
-        private static final int KEY_CLIPBOARD = ee.ioc.phon.android.speechutils.R.string.keyClipboardMap;
+        private final int KEY_CLIPBOARD = ee.ioc.phon.android.speechutils.R.string.keyClipboardMap;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView mView;
@@ -823,14 +827,36 @@ public class SpeechInputView extends LinearLayout {
             }
         }
 
+        /**
+         * TODO: improve specification of header (load only the columns that are needed)
+         * TODO: implement putPrefMapMap (takes map instead of key and val)
+         * TODO: improve dealing with nulls
+         * TODO: support named clipboards
+         */
         public ClipboardAdapter() {
             Context context = getContext();
             mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             mRes = getResources();
-            mClipboard = PreferenceUtils.getPrefMap(mPrefs, mRes, KEY_CLIPBOARD);
             mDataset = new ArrayList<>();
-            mDataset.addAll(mClipboard.keySet());
-            mDataset.remove(null);
+            mClipboard = new HashMap<>();
+            for (String id : Rewrites.getClips(mPrefs, mRes)) {
+                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, id);
+                UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+                for (Command command : ur.getCommands()) {
+                    String key = command.get(UtteranceRewriter.HEADER_COMMENT);
+                    String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
+                    key = key == null ? val : key;
+                    val = val == null ? key : val;
+                    Log.i("save to clipboard: " + key + "->" + val);
+                    mDataset.add(key);
+                    mClipboard.put(key, val);
+                }
+            }
+            // Add items saved using PROCESS_TEXT.
+            // TODO: add them to a separate clipboard
+            Map<String, String> cb = PreferenceUtils.getPrefMap(mPrefs, mRes, KEY_CLIPBOARD);
+            mClipboard.putAll(cb);
+            mDataset.addAll(cb.keySet());
             Collections.sort(mDataset, (o1, o2) -> mClipboard.get(o1).compareTo(mClipboard.get(o2)));
         }
 

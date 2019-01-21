@@ -37,7 +37,6 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 
 // TODO: use CursorAdapter to be able to specify the filterting
 // TODO: make it possible to select multiple rows to convert them to a new table and test in Kõnele
@@ -110,9 +109,6 @@ public class RewritesActivity extends Activity {
                             finish();
                         }
                 ).show();
-                return true;
-            case R.id.menuRewritesClipboard:
-                mRewrites.saveToClipboard(UtteranceRewriter.HEADER_COMMENT, UtteranceRewriter.HEADER_UTTERANCE);
                 return true;
             default:
                 return super.onContextItemSelected(item);

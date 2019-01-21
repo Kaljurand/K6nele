@@ -32,11 +32,6 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/cmDelete" />
 
-    <item
-        android:id="@+id/menuRewritesClipboard"
-        android:showAsAction="ifRoom|withText"
-        android:title="Save to clipboard" />
-
     <!--
     <item
         android:id="@+id/search"

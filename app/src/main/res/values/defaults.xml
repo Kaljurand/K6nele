@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="defaultRewriteTables" translatable="false">defaultRewriteTables</string>
+    <string name="defaultClipTables" translatable="false">defaultClipTables</string>
 
     <!-- Note that the URL of the status service is constructed automatically
     by replacing the last segment with "status", i.e.

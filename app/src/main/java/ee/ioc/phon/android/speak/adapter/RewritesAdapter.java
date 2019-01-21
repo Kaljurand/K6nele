@@ -28,6 +28,7 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
     private static class ViewHolder {
         private TextView id;
         private CheckBox checkbox;
+        private CheckBox clip;
     }
 
     @NonNull
@@ -43,16 +44,24 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
                 Rewrites item = (Rewrites) viewHolder.checkbox.getTag();
                 item.setSelected(isChecked);
             });
+            viewHolder.clip = view.findViewById(R.id.rewritesAsClip);
+            viewHolder.clip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                Rewrites item = (Rewrites) viewHolder.clip.getTag();
+                item.setClip(isChecked);
+            });
             view.setTag(viewHolder);
             viewHolder.checkbox.setTag(list.get(position));
+            viewHolder.clip.setTag(list.get(position));
         } else {
             view = convertView;
             ((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
+            ((ViewHolder) view.getTag()).clip.setTag(list.get(position));
         }
         ViewHolder holder = (ViewHolder) view.getTag();
         Rewrites item = list.get(position);
         holder.id.setText(item.getId());
         holder.checkbox.setChecked(item.isSelected());
+        holder.clip.setChecked(item.isClip());
         return view;
     }
 }

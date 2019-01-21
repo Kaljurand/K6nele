@@ -9,18 +9,28 @@
         android:id="@+id/rewritesId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="?android:textColorPrimary" />
 
-    <CheckBox
-        android:id="@+id/rewritesIsSelected"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
+        <CheckBox
+            android:id="@+id/rewritesIsSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/rewritesAsClip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </RelativeLayout>

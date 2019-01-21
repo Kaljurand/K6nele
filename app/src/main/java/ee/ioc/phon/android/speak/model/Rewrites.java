@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speechutils.Extras;
@@ -61,6 +60,25 @@ public class Rewrites {
             if (b) {
                 set.add(mId);
                 putDefaults(set);
+            }
+        }
+    }
+
+    public boolean isClip() {
+        return getDefaults(R.string.defaultClipTables).contains(mId);
+    }
+
+    public void setClip(boolean b) {
+        Set<String> set = new HashSet<>(getDefaults(R.string.defaultClipTables));
+        if (set.contains(mId)) {
+            if (!b) {
+                set.remove(mId);
+                putDefaults(R.string.defaultClipTables, set);
+            }
+        } else {
+            if (b) {
+                set.add(mId);
+                putDefaults(R.string.defaultClipTables, set);
             }
         }
     }
@@ -117,27 +135,6 @@ public class Rewrites {
         return array;
     }
 
-    /**
-     * TODO: improve specification of header (load only the columns that are needed)
-     * TODO: implement putPrefMapMap (takes map instead of key and val)
-     * TODO: improve dealing with nulls
-     * TODO: support named clipboards
-     */
-    public void saveToClipboard(String keyId, String valId) {
-        final int KEY_CLIPBOARD = ee.ioc.phon.android.speechutils.R.string.keyClipboardMap;
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        //UtteranceRewriter ur = new UtteranceRewriter(rewrites, keyId + '\t' + valId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
-        for (Command command : ur.getCommands()) {
-            String key = command.get(keyId);
-            String val = command.get(valId);
-            key = key == null ? val : key;
-            val = val == null ? key : val;
-            Log.i("save to clipboard: " + key + "->" + val);
-            PreferenceUtils.putPrefMapEntry(mPrefs, mRes, KEY_CLIPBOARD, key, val);
-        }
-    }
-
     public void rename(String newName) {
         if (!mId.equals(newName)) {
             if (newName != null) {
@@ -168,6 +165,19 @@ public class Rewrites {
 
     private void putDefaults(Set<String> set) {
         PreferenceUtils.putPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables, set);
+    }
+
+    private Set<String> getDefaults(int table) {
+        return PreferenceUtils.getPrefStringSet(mPrefs, mRes, table);
+    }
+
+    private void putDefaults(int table, Set<String> set) {
+        PreferenceUtils.putPrefStringSet(mPrefs, mRes, table, set);
+    }
+
+
+    public static Set<String> getClips(SharedPreferences prefs, Resources res) {
+        return PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultClipTables);
     }
 
     public static Set<String> getDefaults(SharedPreferences prefs, Resources res) {
