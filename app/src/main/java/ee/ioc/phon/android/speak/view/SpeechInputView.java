@@ -12,6 +12,7 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -220,7 +221,11 @@ public class SpeechInputView extends LinearLayout {
             }
         };
 
-        mOctl = new OnCursorTouchListener() {
+        // TODO: move to utilities (48dp for the edges)
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int edge = Math.round(48 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+        mOctl = new OnCursorTouchListener(edge) {
             @Override
             public void onMove(int numOfChars) {
                 mListener.moveRel(numOfChars);
@@ -585,7 +590,7 @@ public class SpeechInputView extends LinearLayout {
     }
 
     /**
-     * TODO: not sure if its better to call cancel or destroy
+     * TODO: not sure if it is better to call cancel or destroy
      * Note that SpeechRecognizer#destroy calls cancel first.
      */
     private void cancelOrDestroy() {

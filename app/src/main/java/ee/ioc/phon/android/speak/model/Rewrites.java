@@ -7,15 +7,18 @@ import android.speech.RecognizerIntent;
 import android.util.Base64;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -102,7 +105,15 @@ public class Rewrites {
     public String[] getRules() {
         String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
         UtteranceRewriter ur = new UtteranceRewriter(rewrites);
-        return ur.toStringArray();
+
+        UtteranceRewriter.CommandHolder holder = ur.getCommandHolder();
+        Collection<String> header = holder.getHeader().values();
+        String[] array = new String[holder.size()];
+        int i = 0;
+        for (Command command : holder.getCommands()) {
+            array[i++] = pp(command.toMap(header));
+        }
+        return array;
     }
 
     public void rename(String newName) {
@@ -158,5 +169,49 @@ public class Rewrites {
             Rewrites c2 = (Rewrites) o2;
             return c1.getId().compareToIgnoreCase(c2.getId());
         }
+    }
+
+    /**
+     * Pretty-print the rule, assuming that space-character sequences actually stand
+     * for newline (single space) followed by tab (two spaces) sequences.
+     * Sequence of 1 or 2 spaces is kept as it is.
+     * <p>
+     * TODO: map it to a layout file
+     * TODO: handle null values
+     *
+     * @param map Mapping of rule component names to the corresponding components
+     * @return pretty-printed rule
+     */
+    private static String pp(Map<String, String> map) {
+        return
+                map.get(UtteranceRewriter.HEADER_APP) + " · " +
+                        map.get(UtteranceRewriter.HEADER_LOCALE) + " · " +
+                        map.get(UtteranceRewriter.HEADER_SERVICE) + "\n" +
+                        map.get(UtteranceRewriter.HEADER_UTTERANCE) + "\n" +
+                        map.get(UtteranceRewriter.HEADER_REPLACEMENT)
+                                .replace("         ", "\n\t\t\t\t")
+                                .replace("       ", "\n\t\t\t")
+                                .replace("     ", "\n\t\t")
+                                .replace("   ", "\n\t") +
+                        ppCommand(map) +
+                        ppComment(map);
+    }
+
+    private static String ppCommand(Map<String, String> map) {
+        String id = map.get(UtteranceRewriter.HEADER_COMMAND);
+        if (id == null || id.isEmpty()) {
+            return "";
+        }
+        String arg1 = map.get(UtteranceRewriter.HEADER_ARG1);
+        String arg2 = map.get(UtteranceRewriter.HEADER_ARG2);
+        return "\n" + id + "\n· " + arg1 + "\n· " + arg2 + "\n";
+    }
+
+    private static String ppComment(Map<String, String> map) {
+        String id = map.get(UtteranceRewriter.HEADER_COMMENT);
+        if (id == null || id.isEmpty()) {
+            return "";
+        }
+        return "\n" + id;
     }
 }

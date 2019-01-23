@@ -38,7 +38,7 @@ Point to the Android SDK directory by setting the environment variable
     ANDROID_HOME=${HOME}/myapps/android-sdk/
 
 
-Build the Kõnele app
+Build the Kõnele app (tested with Gradle v4.10.3)
 
     gradle assemble
 

@@ -24,9 +24,10 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private final Handler mHandlerPress = new GestureHandler(this);
 
     // TODO: calculate dynamically
-    private static final int EDGE = 100;
     private static final float VERTICAL_SPEED = 3.5f;
     private static final float DISTANCE_SCALE = 0.04f;
+
+    private final int mEdge;
 
     private boolean mIsLongPress;
     private boolean mIsFirstMove;
@@ -51,6 +52,9 @@ public class OnCursorTouchListener implements View.OnTouchListener {
         }
     };
 
+    public OnCursorTouchListener(int edge) {
+        mEdge = edge;
+    }
 
     public void onMove(int numOfChars) {
         // intentionally empty
@@ -115,14 +119,14 @@ public class OnCursorTouchListener implements View.OnTouchListener {
                 // TODO: scale by size of the panel / font size?
                 int numOfChars = Math.round(DISTANCE_SCALE * distance);
                 //Log.i("cursor: " + numOfChars + " (" + distance + "), " + newX + "-" + newY);
-                if (newX < EDGE) {
+                if (newX < mEdge) {
                     mTapCounter = 0;
                     mHandlerPress.removeMessages(MSG_LONG_PRESS);
                     if (!mIsEdge) {
                         mIsEdge = true;
                         mHandler.post(mTask1);
                     }
-                } else if (newX > v.getWidth() - EDGE) {
+                } else if (newX > v.getWidth() - mEdge) {
                     mTapCounter = 0;
                     mHandlerPress.removeMessages(MSG_LONG_PRESS);
                     if (!mIsEdge) {

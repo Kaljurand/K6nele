@@ -191,7 +191,6 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
-
     /**
      * Called to inform the input method that text input has finished in the last editor.
      * At this point there may be a call to onStartInput(EditorInfo, boolean) to perform input in a new editor,
@@ -364,7 +363,10 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onDeleteLeftChar() {
-                runOp(mCommandEditor.deleteLeftChars(1));
+                // TODO: indicate somehow (e.g. vibration, different background color) that the Op failed
+                runOp(mCommandEditor.deleteChars(-1));
+                // TODO: might be better, i.e. able to delete non-text (checkboxes), but not undoable
+                //runOp(mCommandEditor.keyCode(KeyEvent.KEYCODE_DEL));
             }
 
             @Override
