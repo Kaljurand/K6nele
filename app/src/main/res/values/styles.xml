@@ -16,16 +16,12 @@
     <style name="Theme.K6nele.Light" parent="@android:style/Theme.Holo.Light" />
 
     <!--
-        <style name="Theme.K6nele" parent="@android:style/Theme.Holo.Light" />
-
-        <style name="Theme.K6nele.NoActionBar" parent="@android:style/Theme.Holo.Light.NoActionBar" />
-
-        <style name="Theme.K6nele.Dialog" parent="@android:style/Theme.Holo.Light.Dialog" />
-
-        <style name="Theme.K6nele.Dialog.NoActionBar" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
-
-        <style name="Theme.K6nele.DialogWhenLarge" parent="@android:style/Theme.Holo.Light.DialogWhenLarge" />
-
-        <style name="Theme.K6nele.DialogWhenLarge.NoActionBar" parent="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar" />
+    TODO: this allows more flexible styling, but action bar disappeared
+    implementation 'com.android.support:design:' + rootProject.supportLibVersion
+    <style name="Theme.K6nele" parent="Theme.AppCompat">
+        <item name="colorPrimary">#FFC400</item>
+        <item name="colorPrimaryDark">#FFA000</item>
+        <item name="colorAccent">#FFA000</item>
+    </style>
      -->
 </resources>
