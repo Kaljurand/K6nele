@@ -145,8 +145,9 @@ public class Preferences extends PreferenceActivity {
             String maxResults = sp.getString(mKeyMaxResults, getString(R.string.defaultMaxResults));
             updateSummaryInt(findPreference(mKeyMaxResults), R.plurals.summaryMaxResults, maxResults);
 
-            Preference prefImeMode = findPreference(getString(R.string.keyImeMode));
-            prefImeMode.setSummary(((ListPreference) prefImeMode).getEntry());
+            // TODO: removed from the GUI
+            //Preference prefImeMode = findPreference(getString(R.string.keyImeMode));
+            //prefImeMode.setSummary(((ListPreference) prefImeMode).getEntry());
 
             updateSummary(R.string.keyImeCombo, R.string.emptylistImeCombos);
             updateSummary(R.string.keyCombo, R.string.emptylistCombos);

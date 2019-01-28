@@ -39,12 +39,14 @@
             android:key="@string/keyImeShowPartialResults"
             android:summary="@string/summaryImeShowPartialResults"
             android:title="@string/titleImeShowPartialResults" />
+        <!--
         <ListPreference
             android:defaultValue="@string/defaultImeMode"
             android:entries="@array/entriesImeMode"
             android:entryValues="@array/valuesImeMode"
             android:key="@string/keyImeMode"
             android:title="@string/titleImeMode" />
+        -->
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"

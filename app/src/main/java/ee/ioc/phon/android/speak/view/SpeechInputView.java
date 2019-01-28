@@ -366,26 +366,31 @@ public class SpeechInputView extends LinearLayout {
             }
         }
 
+        // TODO: needs to be enabled in the settings
         mBImeStartStop.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+
+            // Y (yellow i.e. not-transcribing)
+            // R (red, i.e. transcribing)
+            private String mBtnType = "Y";
+
             @Override
             public void onSwipeLeft() {
-                mListener.onDeleteLastWord();
+                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_LEFT"), null);
             }
 
             @Override
             public void onSwipeRight() {
-                mListener.onAddNewline();
+                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_RIGHT"), null);
             }
 
             @Override
             public void onSwipeUp() {
-                nextCombo();
+                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_UP"), null);
             }
 
             @Override
             public void onSwipeDown() {
-                // TODO: maybe: minimizeUi();
-                toggleClipboard();
+                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_DOWN"), null);
             }
 
             @Override
@@ -410,13 +415,12 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onDoubleTapMotion() {
-                mListener.onAddSpace();
+                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_DOUBLETAP"), null);
             }
 
             @Override
             public void onLongPressMotion() {
-                //comboSelector(key);
-                mListener.onSelectAll();
+                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_LONGPRESS"), null);
             }
 
         });
@@ -668,9 +672,12 @@ public class SpeechInputView extends LinearLayout {
         if (mBImeKeyboard != null) {
             maximizeUi();
         }
+        /*
+        // TODO: better not have it, can mistrigger
         if (mSwipeType > 0) {
             setOnTouchListener(mOstl);
         }
+        */
     }
 
     /**
