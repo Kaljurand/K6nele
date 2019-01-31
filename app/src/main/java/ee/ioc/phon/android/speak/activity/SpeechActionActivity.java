@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Log;
@@ -214,6 +215,21 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             @Override
             public void onStartListening() {
                 stopTts();
+            }
+
+            @Override
+            public void onCommand(String text) {
+                // TODO: temporary, should not fire if does not resolve into an Op
+                returnOrForwardMatches(Collections.singletonList(text));
+                /*
+                Op op = mCommandEditor.getOpOrNull(text);
+                if (op != null) {
+                    boolean success = mCommandEditor.runOp(op);
+                    if (mInputView != null) {
+                        mInputView.showMessage(op.toString(), success);
+                    }
+                }
+                */
             }
         };
     }

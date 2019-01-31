@@ -83,6 +83,8 @@ public class SpeechInputView extends LinearLayout {
 
         void onFinalResult(List<String> text, Bundle bundle);
 
+        void onCommand(String text);
+
         /**
          * Switch to the next IME or ask the user to choose the IME.
          *
@@ -375,22 +377,22 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onSwipeLeft() {
-                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_LEFT"), null);
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_LEFT");
             }
 
             @Override
             public void onSwipeRight() {
-                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_RIGHT"), null);
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_RIGHT");
             }
 
             @Override
             public void onSwipeUp() {
-                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_UP"), null);
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_UP");
             }
 
             @Override
             public void onSwipeDown() {
-                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_DOWN"), null);
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_DOWN");
             }
 
             @Override
@@ -415,12 +417,12 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onDoubleTapMotion() {
-                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_DOUBLETAP"), null);
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_DOUBLETAP");
             }
 
             @Override
             public void onLongPressMotion() {
-                mListener.onFinalResult(Collections.singletonList("K6_" + mBtnType + "_BTN_MIC_LONGPRESS"), null);
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_LONGPRESS");
             }
 
         });

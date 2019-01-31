@@ -341,6 +341,19 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             @Override
+            public void onCommand(String text) {
+                Op op = mCommandEditor.getOpOrNull(text);
+                if (op != null) {
+                    boolean success = mCommandEditor.runOp(op);
+                    if (mInputView != null) {
+                        // TODO: show command or replacement text
+                        mInputView.showMessage(op.toString(), success);
+                    }
+                    setKeepScreenOn(false);
+                }
+            }
+
+            @Override
             public void onSwitchIme(boolean isAskUser) {
                 switchIme(isAskUser);
             }
