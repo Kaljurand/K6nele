@@ -3,7 +3,11 @@ package ee.ioc.phon.android.speak.model;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.speech.RecognizerIntent;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Base64;
 
 import java.util.ArrayList;
@@ -121,18 +125,19 @@ public class Rewrites {
         return intent;
     }
 
-    public String[] getRules() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
-
-        UtteranceRewriter.CommandHolder holder = ur.getCommandHolder();
+    public SpannableStringBuilder[] getRules() {
+        UtteranceRewriter.CommandHolder holder = getCommandHolder();
         Collection<String> header = holder.getHeader().values();
-        String[] array = new String[holder.size()];
+        SpannableStringBuilder[] array = new SpannableStringBuilder[holder.size()];
         int i = 0;
         for (Command command : holder.getCommands()) {
             array[i++] = pp(command.toMap(header));
         }
         return array;
+    }
+
+    public int size() {
+        return getCommandHolder().size();
     }
 
     public void rename(String newName) {
@@ -157,6 +162,12 @@ public class Rewrites {
 
     public void delete() {
         rename(null);
+    }
+
+    private UtteranceRewriter.CommandHolder getCommandHolder() {
+        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        return ur.getCommandHolder();
     }
 
     private Set<String> getDefaults() {
@@ -208,25 +219,40 @@ public class Rewrites {
      * for newline (single space) followed by tab (two spaces) sequences.
      * Sequence of 1 or 2 spaces is kept as it is.
      * <p>
-     * TODO: map it to a layout file
-     * TODO: handle null values
+     * TODO: map it to a layout file instead of using spans (?)
      *
      * @param map Mapping of rule component names to the corresponding components
      * @return pretty-printed rule
      */
-    private static String pp(Map<String, String> map) {
-        return
-                map.get(UtteranceRewriter.HEADER_APP) + " · " +
-                        map.get(UtteranceRewriter.HEADER_LOCALE) + " · " +
-                        map.get(UtteranceRewriter.HEADER_SERVICE) + "\n" +
-                        map.get(UtteranceRewriter.HEADER_UTTERANCE) + "\n" +
-                        map.get(UtteranceRewriter.HEADER_REPLACEMENT)
-                                .replace("         ", "\n\t\t\t\t")
-                                .replace("       ", "\n\t\t\t")
-                                .replace("     ", "\n\t\t")
-                                .replace("   ", "\n\t") +
-                        ppCommand(map) +
-                        ppComment(map);
+    private static SpannableStringBuilder pp(Map<String, String> map) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        // Matcher with its 3 constraints
+        ssb.append(ppMatcher(map));
+        ssb.append('\n');
+        // Utterance
+        int start = ssb.length();
+        ssb.append(map.get(UtteranceRewriter.HEADER_UTTERANCE));
+        // Other text is 0xffBDBDBD (400)
+        // TODO: use the accent color
+        ssb.setSpan(new ForegroundColorSpan(0xffFAFAFA), start, ssb.length(), 0);
+        ssb.append('\n');
+        // Replacement
+        ssb.append(toPp(map.get(UtteranceRewriter.HEADER_REPLACEMENT))
+                .replace("         ", "\n\t\t\t\t")
+                .replace("       ", "\n\t\t\t")
+                .replace("     ", "\n\t\t")
+                .replace("   ", "\n\t"));
+        // Command with arguments
+        ssb.append(ppCommand(map));
+        // Comment
+        String comment = map.get(UtteranceRewriter.HEADER_COMMENT);
+        if (comment != null && !comment.isEmpty()) {
+            ssb.append("\n\n");
+            start = ssb.length();
+            ssb.append(comment);
+            ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, ssb.length(), 0);
+        }
+        return ssb;
     }
 
     private static String ppCommand(Map<String, String> map) {
@@ -234,16 +260,19 @@ public class Rewrites {
         if (id == null || id.isEmpty()) {
             return "";
         }
-        String arg1 = map.get(UtteranceRewriter.HEADER_ARG1);
-        String arg2 = map.get(UtteranceRewriter.HEADER_ARG2);
-        return "\n" + id + "\n· " + arg1 + "\n· " + arg2 + "\n";
+        return "\n" + id +
+                "\n · " + toPp(map.get(UtteranceRewriter.HEADER_ARG1)) +
+                "\n · " + toPp(map.get(UtteranceRewriter.HEADER_ARG2));
     }
 
-    private static String ppComment(Map<String, String> map) {
-        String id = map.get(UtteranceRewriter.HEADER_COMMENT);
-        if (id == null || id.isEmpty()) {
-            return "";
-        }
-        return "\n" + id;
+    private static String ppMatcher(Map<String, String> map) {
+        // The middot is between U+202F (NARROW NO-BREAK SPACE)
+        return toPp(map.get(UtteranceRewriter.HEADER_APP)) + " • " +
+                toPp(map.get(UtteranceRewriter.HEADER_LOCALE)) + " • " +
+                toPp(map.get(UtteranceRewriter.HEADER_SERVICE));
+    }
+
+    private static String toPp(String str) {
+        return (str == null) ? "" : str;
     }
 }

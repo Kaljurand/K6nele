@@ -151,7 +151,7 @@ public class RewritesActivity extends Activity {
         Resources res = getResources();
         mRewrites = new Rewrites(prefs, res, name);
 
-        int ruleCount = mRewrites.getRules().length;
+        int ruleCount = mRewrites.size();
         String subtitle = res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
 
         if (errors != null) {

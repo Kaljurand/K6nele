@@ -342,7 +342,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onCommand(String text) {
-                Op op = mCommandEditor.getOpOrNull(text);
+                Op op = mCommandEditor.getOpOrNull(text, false);
                 if (op != null) {
                     boolean success = mCommandEditor.runOp(op);
                     if (mInputView != null) {
