@@ -346,7 +346,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (op != null) {
                     boolean success = mCommandEditor.runOp(op);
                     if (mInputView != null) {
-                        // TODO: show command or replacement text
+                        // TODO: show executed command or replacement text
                         mInputView.showMessage(op.toString(), success);
                     }
                     setKeepScreenOn(false);

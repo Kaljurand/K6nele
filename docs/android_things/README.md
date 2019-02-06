@@ -24,7 +24,7 @@ Power it on. A monitor is not required by the application but can be helpful dur
 A mouse is not required but can be helpful during installation and testing. Some of the configuration steps in the instructions below are easier done with a mouse.
 
 Install Android Things and set up wifi. (Internet is required but wifi is optional.)
-Tested with `0.5.1-devpreview` on rpi3.
+Tested with `v1.0.8` on rpi3.
 
 Install Android Debug Bridge (adb), which is part of the
 [SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools.html).
@@ -115,7 +115,7 @@ and use the mouse to change the default TTS engine.
 
 ### IoT launcher
 
-Install an app of category `IOT_LAUNCHER`. This app is launched after Pi has finished booting up.
+Install an app of category `HOME`. This app is launched after Pi has finished booting up.
 It should either immediately launch Kõnele (with the speech-trigger service) or do that when a GPIO button
 is pressed. The intent to launch Kõnele would look something like this:
 
@@ -204,7 +204,6 @@ Guidelines for rewrite rules
 Issues
 ------
 
-- not tested with Android Things 1.0
 - compile EKI TTS without the storage permission, it does not seem to be using it
 - Google's TTS very slow to start up (before every utterance): 25 sec
 - EKI TTS does not support English. TODO: this could be added to be able to test the speed.
@@ -212,3 +211,5 @@ Issues
 - make sure there is no other app using the GPIO BCM4
 - analog audio/TTS does not work. TODO: Use a USB speaker.
 - how to change the default TTS provider using adb
+- scrolling the settings (with the mouse) does not work
+- IME is not present: remove the IME settings on Things
