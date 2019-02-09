@@ -11,7 +11,6 @@
     <color name="buttonNormalEnd">#660000</color>
 
     <!-- http://www.google.com/design/spec/style/color.html#color-color-palette -->
-    <color name="grey50">#fafafa</color>
     <color name="grey100">#f5f5f5</color>
     <color name="grey200">#eeeeee</color>
     <color name="grey300">#e0e0e0</color>

@@ -141,7 +141,6 @@
     <string name="buttonScan">Scan</string>
     <string name="buttonUseDefault1">Default 1</string>
     <string name="buttonUseDefault2">Default 2</string>
-    <string name="statusTranscribing">Transcribing…</string>
     <string name="statusImeTranscribing">Still transcribing…</string>
     <string name="statusServerStatus" translatable="false">…</string>
 
@@ -286,8 +285,6 @@
 
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Press this button and speak</string>
-    <string name="cdWaveform">Waveform of the spoken input</string>
-    <string name="cdVolume">Volume level</string>
     <string name="cdAppIcon">App icon</string>
     <string name="cdServiceIcon">Service icon</string>
     <string name="cdChangeInputMethod">Change input method</string>

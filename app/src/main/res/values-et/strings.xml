@@ -83,7 +83,6 @@
     <string name="buttonCancel">Loobu</string>
     <string name="buttonUseDefault1">Vaikeserver 1</string>
     <string name="buttonUseDefault2">Vaikeserver 2</string>
-    <string name="statusTranscribing">Teisendan tekstiks…</string>
     <string name="statusImeTranscribing">Oodake…</string>
     <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> on kõnetuvastusteenus Androidi rakendustele,
         mis võimaldab kõne abil sooritada infootsingut, kirjutada e-kirju ja märkmeid, anda käske jne.&lt;/p>
@@ -250,8 +249,6 @@
 
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Vajutage sellele nupule ja kõnelege</string>
-    <string name="cdWaveform">Sisendkõne pilt</string>
-    <string name="cdVolume">Valjuse näit</string>
     <string name="cdAppIcon">Rakenduse logo</string>
     <string name="cdServiceIcon">Teenuse logo</string>
     <string name="cdChangeInputMethod">Vahetage sisestusmeetodit</string>

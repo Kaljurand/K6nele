@@ -45,6 +45,9 @@
 #
 # WebSocket service
 #
+#- key: keyWsServer
+#  val: ws://192.168.0.38:8080/client/ws/speech
+
 - key: keyImeAudioFormat
   val: audio/x-flac
 

@@ -1,5 +1,5 @@
-Free hands-free light switch or something else
-==============================================
+Kõnele on Android Things
+========================
 
 _Work in progress_
 
@@ -44,6 +44,7 @@ Connect to Pi.
 (Optional) Look at the current voice input settings. There shouldn't be any voice input providers.
 
     $ adb shell am start -a android.settings.VOICE_INPUT_SETTINGS
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.RecServiceSelectorActivity
 
 You can press BACK to finish the windows.
 
@@ -71,6 +72,9 @@ Configure Kõnele, e.g. import some rewrite tables (which define what the applic
 
     # Install the desired rewrite rules, e.g.
     adb-pref.py prefs_user_guide_rewrites.yml | sh
+
+    # Show the installed tables (needs a monitor and mouse)
+    adb shell am start -n ee.ioc.phon.android.speak/.activity.RewritesSelectorActivity
 
 (Optional) Start Kõnele to test it.
 
@@ -213,3 +217,15 @@ Issues
 - how to change the default TTS provider using adb
 - scrolling the settings (with the mouse) does not work
 - IME is not present: remove the IME settings on Things
+
+Other
+-----
+
+Enabling the Kõnele keyboard.
+
+    # Show the list of all IMEs,
+    # Kõnele should show up but is not enabled.
+    adb shell ime list -a
+
+    # Enable it.
+    adb shell ime enable ee.ioc.phon.android.speak/.service.SpeechInputMethodService

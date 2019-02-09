@@ -8,10 +8,10 @@
 cmd=adb
 basedir=$(mktemp -d)
 
-ver_k6nele=1.6.62
-ver_ekispeak=1.1.04
+ver_k6nele=1.6.98
+ver_ekispeak=1.2.03
 ver_trigger=0.1.21
-ver_launcher=0.0.1-alpha
+ver_launcher=0.0.2
 
 fakedir=$HOME/Desktop/APK/
 
@@ -23,8 +23,8 @@ function download {
 $cmd connect Android.local
 
 echo "Installing Kõnele..."
-#download https://github.com/Kaljurand/K6nele/releases/download/v$ver/K6nele-${ver_k6nele}.apk
-cp $fakedir/K6nele-${ver_k6nele}.apk $basedir
+download https://github.com/Kaljurand/K6nele/releases/download/v${ver_k6nele}/K6nele-${ver_k6nele}.apk
+##cp $fakedir/K6nele-${ver_k6nele}.apk $basedir
 $cmd install $basedir/K6nele-${ver_k6nele}.apk
 $cmd shell pm grant ee.ioc.phon.android.speak android.permission.RECORD_AUDIO
 
@@ -39,12 +39,13 @@ download https://github.com/Kaljurand/EKISpeak/releases/download/v${ver_ekispeak
 $cmd install $basedir/EKISpeak-${ver_ekispeak}.apk
 
 echo "Installing Things Kõnele Launcher..."
-download https://github.com/Kaljurand/things-k6nelelauncher/releases/download/v${ver_launcher}/app-debug.apk
-$cmd install $basedir/app-debug.apk
+download https://github.com/Kaljurand/things-k6nelelauncher/releases/download/v${ver_launcher}/things-k6nelelauncher-${ver_launcher}.apk
+$cmd install $basedir/things-k6nelelauncher-${ver_launcher}.apk
+$cmd shell pm grant ee.ioc.phon.android.things.k6nelelauncher com.google.android.things.permission.USE_PERIPHERAL_IO
 
 echo "Installed the following APKs:"
 ls -l $basedir
 $cmd shell 'pm list packages'
 
-echo "Installation done. Reboot using: echo adb shell reboot"
+echo "Installation done. Reboot using: adb shell reboot"
 echo "or start the app by: adb shell am start -n ee.ioc.phon.android.things.k6nelelauncher/.ActivityLauncherActivity"
