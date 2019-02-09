@@ -524,16 +524,29 @@ Vt ka rakendust [Arvutaja](http://kaljurand.github.io/Arvutaja/), mis kasutab K�
 
 <img style="float: right" title="Ekraanipilt: Kõnele nutikella klaviatuurina" alt="Ekraanipilt: Kõnele nutikella klaviatuurina." src="{{ site.baseurl }}/images/et/Screenshot_20181007.png">
 
+(_Eksperimentaalne_)
+
 Kõnele toimib peaaegu kogu oma võimaluste ulatuses ka nutikellal, kuigi selle kasutajaliidest
 pole nutikella väiksele ekraanile veel kohandatud. Paigaldamist, seadistamist ja peamiseid
-kasutusnäiteid on kirjeldatud (inglise keeles) siin:
+kasutusnäiteid kirjeldab (inglise keeles)
+
 <https://github.com/Kaljurand/K6nele/tree/master/docs/android_wear>.
+
 (Hetkel pole võimalik Kõnelet otse Google Play poest kellale paigalda, selleks tuleb
 kasutada ADB programmi.)
 
 ## Kõnele ja Android Things
 
-Kõnele toimib eksperimentaalselt ka Android Things platvormil, vt
+<a href="{{ site.baseurl }}/images/et/20190209_android_things.jpg">
+<img style="float: right" title="Ekraanipilt: Kõnele ja Android Things, riistvara: Raspberry Pi, mikrofon, kõlar, aku, monitor (valikuline)" alt="Ekraanipilt: riistvara: Raspberry Pi, mikrofon, kõlar, monitor (valikuline)" src="{{ site.baseurl }}/images/et/20190209_android_things_small.jpg">
+</a>
+
+(_Eksperimentaalne_)
+
+Kõnele toimib ka Android Things platvormil, nt Raspberry Pi riistvaral.
+Paigaldamist, seadistamist ja peamiseid
+kasutusnäiteid kirjeldab (inglise keeles)
+
 <https://github.com/Kaljurand/K6nele/tree/master/docs/android_things>.
 
 ## Kõnele ja Tasker
