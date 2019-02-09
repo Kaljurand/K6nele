@@ -611,6 +611,17 @@ $ curl -T lause.ogg http://localhost:8080/client/dynamic/recognize
 {"status": 0, "hypotheses": [{"utterance": "see on mingi suvaline lause"}], "id": "265...fea"}
 {% endhighlight %}
 
+Teenuse logi seire:
+
+{% highlight sh %}
+# Uuri välja konteineri nimi ja sisene sellesse:
+$ docker ps
+$ docker exec -it <nimi> bash
+
+# Seal jälgi kahte logifaili:
+tail -f master.log worker.log
+{% endhighlight %}
+
 Käivitatud teenuse kasutamiseks Kõnele rakenduses tuleb menüüs "Kõnetuvastusteenused"
 ära muuta üks või mõlemad kaks serveriaadressi.
 Teenuste aadressid sõltuvad koduserveri IP aadressist kohtvõrgus.
