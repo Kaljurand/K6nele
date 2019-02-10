@@ -84,7 +84,7 @@ There is a script <https://github.com/Kaljurand/K6nele/blob/master/docs/adb-pref
 1. Enable `Run GetPutPreference without confirmation` in Kõnele's `Developer settings, demos, tools`
 2. Run `adb-pref.py` with the settings overrides specified in YAML files, e.g.:
 
-       adb-pref.py prefs_developer.yml prefs_user_guide_rewrites.yml prefs_wear.yml prefs_private.yml | sh
+       adb-pref.py prefs_developer.yml prefs_user_guide_rewrites.yml android_wear/prefs_wear.yml | sh
 
 ### Apps to install
 

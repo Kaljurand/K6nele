@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- This preference is a shortcut to the Android IME settings to allow the
-    user to quickly enable the Kõnele IME. If already enabled, this preference is not shown. -->
+    user to quickly enable the Kõnele IME. If already enabled, this preference is not shown.
+    Note that Android Things does not have the INPUT_METHOD_SETTINGS activity, so clicking
+    on the preference causes the app to crash on Android Things. One must enable Kõnele using
+    adb shell ime enable ee.ioc.phon.android.speak/.service.SpeechInputMethodService.
+    -->
     <Preference
         android:key="@string/keyEnableIme"
         android:summary="@string/summaryEnableIme"

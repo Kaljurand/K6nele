@@ -11,11 +11,13 @@ Step-by-step instructions on how to build an Amazon Echo style voice assistant f
 Steps
 -----
 
-Note that the steps of downloading, installing and configuring of APKs can be executed by executing the script `setup-k6nele-on-things.sh`,
+Note that downloading and installing of the APKs can be done by executing the script `setup-k6nele-on-things.sh`,
 which downloads the needed APKs (using `wget`), installs them to the current device (using `adb`),
-and configures them (using `adb`). The configuring consists of permission assignment (which is not needed if the device is
-going to be rebooted anyway), and running Kõnele's `GetPutPreferenceActivity` to change the Kõnele settings
-(e.g. installing rewrite tables).
+and assigns their required permissions (using `adb`).
+
+To complete the installation (e.g. adding the desired rewrite tables), one must separately run
+Kõnele's `GetPutPreferenceActivity` to change the Kõnele settings.
+This is best done using ``adb-pref.py`` as explained below.
 
 ### Pi
 
@@ -70,15 +72,19 @@ Configure Kõnele, e.g. import some rewrite tables (which define what the applic
     # If the dialog is already disabled then the above command has no effect.
     adb-pref.py --disable-confirmation | sh
 
-    # Install the desired rewrite rules, e.g.
-    adb-pref.py prefs_user_guide_rewrites.yml | sh
+    # Install the desired rewrite rules and change some settings
+    # (e.g. use a local recognition server instead of the default one).
+    adb-pref.py prefs_android_things.yml | sh
 
     # Show the installed tables (needs a monitor and mouse)
     adb shell am start -n ee.ioc.phon.android.speak/.activity.RewritesSelectorActivity
 
-(Optional) Start Kõnele to test it.
+(Optional) Start Kõnele to test it:
 
     $ adb shell am start -n ee.ioc.phon.android.speak/.activity.SpeechActionActivity
+
+    # ... possibly overriding some EXTRAs
+    $ adb shell am start -n ee.ioc.phon.android.speak/.activity.SpeechActionActivity --ez ee.ioc.phon.android.extra.AUTO_START true
 
 
 ### Speech trigger
@@ -103,6 +109,7 @@ For Estonian support install EKI TTS. Used for voice prompts.
 Configure the system to use EKI TTS by default.
 
     # (Optional) Look at the current TTS settings and go BACK.
+    # TODO: TTS_SETTINGS does not seem to be present
     $ adb shell am start -a com.android.settings.TTS_SETTINGS
     $ adb shell input keyevent 4
 
@@ -221,10 +228,12 @@ Issues
 Other
 -----
 
-Enabling the Kõnele keyboard.
+Android Things does not offer a UI for changing the active IME, and as a result
+tapping on the top item in Kõnele's settings causes Kõnele to crash.
+The Kõnele IME can be enabled as follows:
 
     # Show the list of all IMEs,
-    # Kõnele should show up but is not enabled.
+    # Kõnele should show up, but is not enabled.
     adb shell ime list -a
 
     # Enable it.
