@@ -18,6 +18,11 @@ public abstract class AbstractSpeechInputViewListener implements SpeechInputView
     }
 
     @Override
+    public void onCommand(String text) {
+        // empty
+    }
+
+    @Override
     public void onSwitchIme(boolean isAskUser) {
         // empty
     }

@@ -54,6 +54,10 @@ public class SpeechInputView extends LinearLayout {
 
     private MicButton.State mState;
 
+    // Y (yellow i.e. not-transcribing)
+    // R (red, i.e. transcribing)
+    private String mBtnType = "Y";
+
     private boolean mUiIsMinimized = false;
 
     // TODO: make it an attribute
@@ -69,6 +73,8 @@ public class SpeechInputView extends LinearLayout {
         void onPartialResult(List<String> text, boolean isSemiFinal);
 
         void onFinalResult(List<String> text, Bundle bundle);
+
+        void onCommand(String text);
 
         /**
          * Switch to the next IME or ask the user to choose the IME.
@@ -265,6 +271,7 @@ public class SpeechInputView extends LinearLayout {
                 setVisibility(mTvInstruction, View.INVISIBLE);
                 if (mBComboSelector != null) {
                     mBComboSelector.setVisibility(View.INVISIBLE);
+
                 }
                 setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                 showMessage("");
@@ -342,43 +349,67 @@ public class SpeechInputView extends LinearLayout {
             }
         }
 
-        // This button can be pressed in any state.
-        mBImeStartStop.setOnClickListener(v -> {
-            Log.i("Microphone button pressed: state = " + mState);
-            switch (mState) {
-                case INIT:
-                case ERROR:
-                    startListening(mSlc);
-                    break;
-                case RECORDING:
-                    stopListening();
-                    break;
-                case LISTENING:
-                case TRANSCRIBING:
-                    cancelOrDestroy();
-                    setGuiInitState(0);
-                    break;
-                default:
+        mBImeStartStop.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+
+            @Override
+            public void onSwipeLeft() {
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_LEFT");
             }
+
+            @Override
+            public void onSwipeRight() {
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_RIGHT");
+            }
+
+            @Override
+            public void onSwipeUp() {
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_UP");
+            }
+
+            @Override
+            public void onSwipeDown() {
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_DOWN");
+            }
+
+            @Override
+            public void onSingleTapMotion() {
+                Log.i("Microphone button pressed: state = " + mState);
+                switch (mState) {
+                    case INIT:
+                    case ERROR:
+                        startListening(mSlc);
+                        break;
+                    case RECORDING:
+                        stopListening();
+                        break;
+                    case LISTENING:
+                    case TRANSCRIBING:
+                        cancelOrDestroy();
+                        setGuiInitState(0);
+                        break;
+                    default:
+                }
+            }
+
+            @Override
+            public void onDoubleTapMotion() {
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_DOUBLETAP");
+            }
+
+            @Override
+            public void onLongPressMotion() {
+                mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_LONGPRESS");
+            }
+
         });
 
         if (mBComboSelector != null) {
             mBComboSelector.setOnClickListener(v -> {
-                if (mState == MicButton.State.RECORDING) {
-                    stopListening();
-                }
-                mSlc.next();
-                mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
-                updateComboSelector(mSlc);
+                nextCombo();
             });
 
             mBComboSelector.setOnLongClickListener(view -> {
-                cancelOrDestroy();
-                Context context = getContext();
-                Intent intent = new Intent(context, ComboSelectorActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("key", context.getString(key));
-                context.startActivity(intent);
+                comboSelector(key);
                 return true;
             });
         }
@@ -432,6 +463,24 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
+    private void nextCombo() {
+        if (mState == MicButton.State.RECORDING) {
+            stopListening();
+        }
+        mSlc.next();
+        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+        updateComboSelector(mSlc);
+    }
+
+    private void comboSelector(int key) {
+        cancelOrDestroy();
+        Context context = getContext();
+        Intent intent = new Intent(context, ComboSelectorActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("key", context.getString(key));
+        context.startActivity(intent);
+    }
+
     private void toggleUi() {
         if (mUiIsMinimized) {
             maximizeUi();
@@ -442,10 +491,7 @@ public class SpeechInputView extends LinearLayout {
 
     private void minimizeUi() {
         mUiIsMinimized = true;
-        mCentralButtons.setVisibility(View.GONE);
-        if (mBComboSelector != null) {
-            mBComboSelector.setVisibility(View.GONE);
-        }
+        setVisibilityKeyboard(View.GONE);
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
         setBackgroundResource(R.drawable.rectangle_gradient_red);
@@ -453,10 +499,7 @@ public class SpeechInputView extends LinearLayout {
 
     private void maximizeUi() {
         mUiIsMinimized = false;
-        mCentralButtons.setVisibility(View.VISIBLE);
-        if (mBComboSelector != null) {
-            mBComboSelector.setVisibility(View.VISIBLE);
-        }
+        setVisibilityKeyboard(View.VISIBLE);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             mBImeKeyboard.setImageResource(R.drawable.ic_ime);
             mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
@@ -470,6 +513,13 @@ public class SpeechInputView extends LinearLayout {
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
         setBackgroundResource(R.drawable.rectangle_gradient);
+    }
+
+    private void setVisibilityKeyboard(int visibility) {
+        mCentralButtons.setVisibility(visibility);
+        if (mBComboSelector != null) {
+            mBComboSelector.setVisibility(visibility);
+        }
     }
 
     private void showMessageArrow(int numOfChars, String dash) {
@@ -584,9 +634,6 @@ public class SpeechInputView extends LinearLayout {
         if (mBImeKeyboard != null) {
             maximizeUi();
         }
-        if (mSwipeType > 0) {
-            setOnTouchListener(mOstl);
-        }
     }
 
     /**
@@ -607,6 +654,7 @@ public class SpeechInputView extends LinearLayout {
         public void onReadyForSpeech(Bundle params) {
             Log.i("onReadyForSpeech: state = " + mState);
             setGuiState(MicButton.State.LISTENING);
+            mBtnType = "R";
             setText(mTvInstruction, R.string.buttonImeStop);
             showMessage("");
         }
@@ -615,6 +663,7 @@ public class SpeechInputView extends LinearLayout {
         public void onBeginningOfSpeech() {
             Log.i("onBeginningOfSpeech: state = " + mState);
             setGuiState(MicButton.State.RECORDING);
+            mBtnType = "R";
         }
 
         @Override
@@ -675,6 +724,7 @@ public class SpeechInputView extends LinearLayout {
                     setGuiInitState(R.string.errorImeResultClientError);
                     break;
             }
+            mBtnType = "Y";
         }
 
         @Override
@@ -712,6 +762,7 @@ public class SpeechInputView extends LinearLayout {
                 mListener.onFinalResult(results, bundle);
             }
             setGuiInitState(0);
+            mBtnType = "Y";
         }
 
         @Override
