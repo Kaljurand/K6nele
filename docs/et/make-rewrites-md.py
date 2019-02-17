@@ -43,8 +43,7 @@ def make_md_line(tag, doc, level):
         doc
     )
 
-def get_fields(line):
-    fields = line.split('\t')
+def get_fields(fields):
     if len(fields) == 1:
         return fields[0], '', 0
     if len(fields) == 2:
@@ -71,10 +70,13 @@ layout: page
 def main():
     print(get_header('Ümberkirjutusreeglid'))
     for idx, line in enumerate(sys.stdin):
-        line = line.strip()
-        tag, doc, level = get_fields(line)
-        print('Processing: {0}: {1}'.format(idx, line), file=sys.stderr)
-        print(make_md_line(tag, doc, level))
+        fields = line.strip().split('\t')
+        if len(fields) > 1:
+            tag, doc, level = get_fields(fields)
+            print('Processing: {0}: {1}'.format(idx, line), file=sys.stderr)
+            print(make_md_line(tag, doc, level))
+        else:
+            print(fields[0])
 
 if __name__ == "__main__":
     main()
