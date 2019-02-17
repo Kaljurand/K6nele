@@ -27,5 +27,4 @@ Testid/Eksperimendid
 1jYhX5ARj_I5c78K9ECUDmE9gr96xes732vFlJsuGLtk	Näide, kus Kõnele töötab kui kõnepõhine lüliti (st ootab kuni kasutaja lausub etteantud fraasi nn _wake up phrase_), mis lülitab sisse Hue valgustite käsustiku, pärast mille täitmist lülitirežiim jätkub. _Vajalik rakendus [ee.ioc.phon.android.speechtrigger](https://github.com/Kaljurand/speech-trigger)_
 1c4Rbo6LLTr24Yw0NO9lZiXsPe36aCozmqrPvHScw2Ss	Mikrofoninupu svaip-käsud (eeldab Kõnele v1.7.02+)
 1lG3e0lhOyrRnYTLrbroLR2g3Z6R3QdwFOvRBna7Du5I	Lõikelauarakendus "Kalkulaator" (eeldab Kõnele alfa-versiooni)
-1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg	Reeglid erinevate veasituatsioonide esilekutsumiseks (testimiseks)
-1SXxXcJf6YQv7ALb_2QJWPs9tVsk4SGc-vxSy6n6l1S0	Muud näited (testimiseks)
+1ZrkBeDT3C9OplX4uDL_HG4lLAJajBgZDxy8VK_3JyYg	Reeglid erinevate veasituatsioonide esilekutsumiseks
