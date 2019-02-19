@@ -4,17 +4,23 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,7 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
@@ -31,7 +40,10 @@ import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
+import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.Command;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
@@ -44,7 +56,9 @@ public class SpeechInputView extends LinearLayout {
     private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
+    private RecyclerView mRvClipboard;
 
+    private ComponentName mApp;
     private SpeechInputViewListener mListener;
     private SpeechRecognizer mRecognizer;
     private ServiceLanguageChooser mSlc;
@@ -135,6 +149,11 @@ public class SpeechInputView extends LinearLayout {
     // mBImeAction.setContentDescription(mContext.getString(R.string.cdImeNewline));
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
+        // TODO: quick hack to add app to the matcher, not sure if we can access the
+        // class name of the app
+        if (editorInfo != null) {
+            mApp = new ComponentName(editorInfo.packageName, editorInfo.packageName);
+        }
         if (mBImeAction != null && editorInfo != null) {
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
             boolean useEnter = !overrideEnter;
@@ -172,12 +191,10 @@ public class SpeechInputView extends LinearLayout {
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
-            /*
             mBImeAction.setOnLongClickListener(v -> {
-                // TODO: show clipboard
+                toggleClipboard();
                 return true;
             });
-            */
         }
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
@@ -265,29 +282,36 @@ public class SpeechInputView extends LinearLayout {
 
             @Override
             public void onDown() {
-                mBImeStartStop.setVisibility(View.INVISIBLE);
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
                 mBImeAction.setVisibility(View.INVISIBLE);
-                setVisibility(mTvInstruction, View.INVISIBLE);
-                if (mBComboSelector != null) {
-                    mBComboSelector.setVisibility(View.INVISIBLE);
-
+                if (mRvClipboard.getVisibility() == View.GONE) {
+                    mBImeStartStop.setVisibility(View.INVISIBLE);
+                    setVisibility(mTvInstruction, View.INVISIBLE);
+                    if (mBComboSelector != null) {
+                        mBComboSelector.setVisibility(View.INVISIBLE);
+                    }
+                    setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+                } else {
+                    setVisibility(mRvClipboard, View.INVISIBLE);
                 }
-                setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                 showMessage("");
             }
 
             @Override
             public void onUp() {
                 showMessage("");
-                mBImeStartStop.setVisibility(View.VISIBLE);
                 mBImeKeyboard.setVisibility(View.VISIBLE);
                 mBImeAction.setVisibility(View.VISIBLE);
-                setVisibility(mTvInstruction, View.VISIBLE);
-                if (mBComboSelector != null) {
-                    mBComboSelector.setVisibility(View.VISIBLE);
+                if (mRvClipboard.getVisibility() == View.GONE) {
+                    mBImeStartStop.setVisibility(View.VISIBLE);
+                    setVisibility(mTvInstruction, View.VISIBLE);
+                    if (mBComboSelector != null) {
+                        mBComboSelector.setVisibility(View.VISIBLE);
+                    }
+                    setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
+                } else {
+                    setVisibility(mRvClipboard, View.VISIBLE);
                 }
-                setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
                 setBackgroundResource(R.drawable.rectangle_gradient);
             }
 
@@ -302,7 +326,7 @@ public class SpeechInputView extends LinearLayout {
             }
         };
         setGuiInitState(0);
-        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+        makeComboChange();
     }
 
     public void init(int keys, CallerInfo callerInfo, int swipeType) {
@@ -316,8 +340,16 @@ public class SpeechInputView extends LinearLayout {
         mBComboSelector = findViewById(R.id.tvComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
+        mRvClipboard = findViewById(R.id.rvClipboard);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        if (mRvClipboard != null) {
+            mRvClipboard.setVisibility(View.GONE);
+            mRvClipboard.setHasFixedSize(true);
+            // TODO: make span count configurable
+            mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
         mSlc = new ServiceLanguageChooser(getContext(), prefs, keys, callerInfo);
@@ -463,12 +495,30 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
+
+    private void toggleClipboard() {
+        if (mRvClipboard.getVisibility() == View.GONE) {
+            setVisibilityKeyboard(View.GONE);
+            mRvClipboard.setVisibility(View.VISIBLE);
+        } else {
+            mRvClipboard.setVisibility(View.GONE);
+            setVisibilityKeyboard(View.VISIBLE);
+        }
+    }
+
+    private void makeComboChange() {
+        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+        if (mRvClipboard != null) {
+            mRvClipboard.setAdapter(new ClipboardAdapter(mSlc.getLanguage(), mSlc.getService(), mApp));
+        }
+    }
+
     private void nextCombo() {
         if (mState == MicButton.State.RECORDING) {
             stopListening();
         }
         mSlc.next();
-        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+        makeComboChange();
         updateComboSelector(mSlc);
     }
 
@@ -518,7 +568,7 @@ public class SpeechInputView extends LinearLayout {
     private void setVisibilityKeyboard(int visibility) {
         mCentralButtons.setVisibility(visibility);
         if (mBComboSelector != null) {
-            mBComboSelector.setVisibility(visibility);
+            //mBComboSelector.setVisibility(visibility);
         }
     }
 
@@ -775,6 +825,77 @@ public class SpeechInputView extends LinearLayout {
         public void onBufferReceived(byte[] buffer) {
             Log.i("View: onBufferReceived: " + buffer.length);
             mListener.onBufferReceived(buffer);
+        }
+    }
+
+    private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
+        private final List<String> mDataset;
+        private final Map<String, String> mClipboard;
+        private final SharedPreferences mPrefs;
+        private final Resources mRes;
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            public TextView mView;
+
+            public MyViewHolder(TextView v) {
+                super(v);
+                mView = v;
+            }
+        }
+
+        /**
+         * TODO: improve specification of header (load only the columns that are needed)
+         * TODO: implement putPrefMapMap (takes map instead of key and val)
+         * TODO: improve dealing with nulls
+         * TODO: support named clipboards
+         */
+        public ClipboardAdapter(String lang, ComponentName service, ComponentName app) {
+            Context context = getContext();
+            mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+            mRes = getResources();
+            mDataset = new ArrayList<>();
+            mClipboard = new HashMap<>();
+            for (UtteranceRewriter ur : Utils.genRewriters(mPrefs, mRes, null, lang, service, app)) {
+                for (Command command : ur.getCommands()) {
+                    String key = command.get(UtteranceRewriter.HEADER_COMMENT);
+                    String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
+                    key = key == null ? val : key;
+                    val = val == null ? key : val;
+                    Log.i("save to clipboard: " + key + "->" + val);
+                    mDataset.add(key);
+                    mClipboard.put(key, val);
+                }
+            }
+            Collections.sort(mDataset, (o1, o2) -> mClipboard.get(o1).compareTo(mClipboard.get(o2)));
+        }
+
+        @Override
+        public ClipboardAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ClipboardAdapter.MyViewHolder((TextView) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_clip, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
+            final String key = mDataset.get(position);
+            final String val = mClipboard.get(key);
+            holder.mView.setText(key);
+            holder.mView.setOnClickListener(view -> mListener.onFinalResult(
+                    Collections.singletonList(val), new Bundle()));
+            holder.mView.setOnLongClickListener(v -> {
+                // TODO: delete with confirmation
+                if (key.equals(val)) {
+                    showMessage(key + "=");
+                } else {
+                    showMessage(key + "->" + val);
+                }
+                return true;
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDataset.size();
         }
     }
 }
