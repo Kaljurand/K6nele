@@ -25,6 +25,9 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdChangeInputMethod"
             android:padding="@dimen/layoutMargin1"
+            android:paddingEnd="@dimen/layoutMargin2"
+            android:paddingRight="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
             android:src="@drawable/ic_ime" />
 
         <TextView
@@ -56,6 +59,9 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
+            android:paddingStart="@dimen/layoutMargin2"
+            android:paddingLeft="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
             android:src="@drawable/ic_search" />
     </RelativeLayout>
 
@@ -99,16 +105,21 @@
             android:layout_toEndOf="@+id/bImeStartStop"
             android:layout_toRightOf="@+id/bImeStartStop"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/bImeDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
+                android:gravity="center"
                 android:padding="@dimen/layoutMargin1"
+                android:paddingTop="@dimen/layoutMargin3"
+                android:paddingEnd="@dimen/layoutMargin3"
+                android:paddingRight="@dimen/layoutMargin3"
+                android:paddingBottom="@dimen/layoutMargin3"
                 android:src="@drawable/ic_backspace" />
         </LinearLayout>
     </RelativeLayout>

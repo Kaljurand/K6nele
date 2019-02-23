@@ -25,6 +25,9 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdChangeInputMethod"
             android:padding="@dimen/layoutMargin1"
+            android:paddingEnd="@dimen/layoutMargin2"
+            android:paddingRight="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
             android:src="@drawable/ic_ime" />
 
         <TextView
@@ -55,8 +58,20 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
+            android:paddingStart="@dimen/layoutMargin2"
+            android:paddingLeft="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
             android:src="@drawable/ic_search" />
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvClipboard"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layoutHeightClipboard"
+        android:layout_below="@+id/tvMessage"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="vertical"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/centralButtons"
@@ -78,8 +93,7 @@
             android:id="@+id/rlKeyButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:visibility="gone">
+            android:layout_gravity="bottom">
 
             <ImageButton
                 android:id="@+id/bImeDelete"
@@ -91,6 +105,10 @@
                 android:background="@drawable/button_go"
                 android:contentDescription="@string/cdImeDelete"
                 android:padding="@dimen/layoutMargin1"
+                android:paddingTop="@dimen/layoutMargin2"
+                android:paddingEnd="@dimen/layoutMargin2"
+                android:paddingRight="@dimen/layoutMargin2"
+                android:paddingBottom="@dimen/layoutMargin2"
                 android:src="@drawable/ic_backspace" />
         </RelativeLayout>
     </LinearLayout>

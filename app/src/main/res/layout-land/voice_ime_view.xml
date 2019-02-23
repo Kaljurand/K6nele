@@ -13,8 +13,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/layoutMargin4dp">
+        android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/bImeKeyboard"
@@ -26,6 +25,9 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdChangeInputMethod"
             android:padding="@dimen/layoutMargin1"
+            android:paddingEnd="@dimen/layoutMargin2"
+            android:paddingRight="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
             android:src="@drawable/ic_ime" />
 
         <TextView
@@ -54,6 +56,9 @@
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
+            android:paddingStart="@dimen/layoutMargin2"
+            android:paddingLeft="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
             android:src="@drawable/ic_search" />
 
         <TextView
@@ -90,7 +95,8 @@
             android:layout_gravity="end"
             android:layout_toStartOf="@+id/bImeAction"
             android:layout_toLeftOf="@+id/bImeAction"
-            android:gravity="end">
+            android:gravity="end"
+            android:padding="@dimen/layoutMargin4dp">
 
             <ee.ioc.phon.android.speechutils.view.MicButton
                 android:id="@+id/bImeStartStop"
@@ -105,12 +111,12 @@
                 android:id="@+id/rlKeyButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/layoutMargin1"
                 android:layout_marginLeft="@dimen/layoutMargin1"
                 android:layout_toEndOf="@+id/bImeStartStop"
                 android:layout_toRightOf="@+id/bImeStartStop"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <ImageButton
                     android:id="@+id/bImeDelete"
@@ -118,10 +124,24 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_go"
                     android:contentDescription="@string/cdImeDelete"
-                    android:padding="@dimen/layoutMargin1"
+                    android:padding="@dimen/layoutMargin2"
+                    android:paddingTop="@dimen/layoutMargin3"
+                    android:paddingEnd="@dimen/layoutMargin3"
+                    android:paddingRight="@dimen/layoutMargin3"
+                    android:paddingBottom="@dimen/layoutMargin3"
                     android:src="@drawable/ic_backspace" />
             </LinearLayout>
         </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvClipboard"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layoutHeightClipboard"
+            android:layout_below="@+id/tvMessage"
+            android:layout_centerHorizontal="true"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 </ee.ioc.phon.android.speak.view.SpeechInputView>
