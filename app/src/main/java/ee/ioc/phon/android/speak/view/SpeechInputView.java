@@ -28,10 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
@@ -40,14 +42,17 @@ import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
-import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.Command;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayout {
+
+    private static final String[] EMPTY_STRING_ARRAY = {};
 
     private View mCentralButtons;
     private MicButton mBImeStartStop;
@@ -348,7 +353,7 @@ public class SpeechInputView extends LinearLayout {
             mRvClipboard.setVisibility(View.GONE);
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
-            mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 3));
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
@@ -509,7 +514,8 @@ public class SpeechInputView extends LinearLayout {
     private void makeComboChange() {
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
         if (mRvClipboard != null) {
-            mRvClipboard.setAdapter(new ClipboardAdapter(mSlc.getLanguage(), mSlc.getService(), mApp));
+            final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
+            mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher));
         }
     }
 
@@ -849,24 +855,35 @@ public class SpeechInputView extends LinearLayout {
          * TODO: improve dealing with nulls
          * TODO: support named clipboards
          */
-        public ClipboardAdapter(String lang, ComponentName service, ComponentName app) {
+        public ClipboardAdapter(CommandMatcher commandMatcher) {
             Context context = getContext();
             mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             mRes = getResources();
             mDataset = new ArrayList<>();
             mClipboard = new HashMap<>();
-            for (UtteranceRewriter ur : Utils.genRewriters(mPrefs, mRes, null, lang, service, app)) {
-                for (Command command : ur.getCommands()) {
-                    String key = command.get(UtteranceRewriter.HEADER_COMMENT);
-                    String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
-                    key = key == null ? val : key;
-                    val = val == null ? key : val;
-                    Log.i("save to clipboard: " + key + "->" + val);
-                    mDataset.add(key);
-                    mClipboard.put(key, val);
+            Set<String> defaults = PreferenceUtils.getPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables);
+            final String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
+            // TODO: defaults should be a list (not a set that needs to be sorted)
+            Arrays.sort(names);
+            for (String def : names) {
+                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, def);
+                if (rewritesAsStr == null) {
+                    // TODO: show error
+                    mDataset.add("[" + def + " (null)] ☞");
+                } else {
+                    mDataset.add("[" + def + " ] ☞");
+                    UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
+                    for (Command command : ur.getCommands()) {
+                        String key = command.get(UtteranceRewriter.HEADER_COMMENT);
+                        String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
+                        key = key == null ? val : key;
+                        val = val == null ? key : val;
+                        Log.i("save to clipboard: " + key + "->" + val);
+                        mDataset.add(key);
+                        mClipboard.put(key, val);
+                    }
                 }
             }
-            Collections.sort(mDataset, (o1, o2) -> mClipboard.get(o1).compareTo(mClipboard.get(o2)));
         }
 
         @Override
