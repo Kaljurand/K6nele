@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
+    <string name="prefIsClipboard" translatable="false">prefIsClipboard</string>
     <string name="keyHttpServer" translatable="false">keyHttpServer</string>
     <string name="keyWsServer" translatable="false">keyWsServer</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>

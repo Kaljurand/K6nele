@@ -197,7 +197,11 @@ public class SpeechInputView extends LinearLayout {
             }
 
             mBImeAction.setOnLongClickListener(v -> {
-                toggleClipboard();
+                Context context = getContext();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean b = prefs.getBoolean(context.getString(R.string.prefIsClipboard), false);
+                PreferenceUtils.putPrefBoolean(prefs, getResources(), R.string.prefIsClipboard, !b);
+                showClipboard(true);
                 return true;
             });
         }
@@ -347,17 +351,17 @@ public class SpeechInputView extends LinearLayout {
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Context context = getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (mRvClipboard != null) {
-            mRvClipboard.setVisibility(View.GONE);
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
-            mRvClipboard.setLayoutManager(new GridLayoutManager(getContext(), 3));
+            mRvClipboard.setLayoutManager(new GridLayoutManager(context, 3));
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
-        mSlc = new ServiceLanguageChooser(getContext(), prefs, keys, callerInfo);
+        mSlc = new ServiceLanguageChooser(context, prefs, keys, callerInfo);
         if (mBComboSelector != null) {
             if (mSlc.size() > 1) {
                 mBComboSelector.setVisibility(View.VISIBLE);
@@ -500,14 +504,20 @@ public class SpeechInputView extends LinearLayout {
         }
     }
 
-
-    private void toggleClipboard() {
-        if (mRvClipboard.getVisibility() == View.GONE) {
-            setVisibilityKeyboard(View.GONE);
-            mRvClipboard.setVisibility(View.VISIBLE);
+    private void showClipboard(boolean b) {
+        if (b) {
+            Context context = getContext();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            if (prefs.getBoolean(context.getString(R.string.prefIsClipboard), false)) {
+                setVisibilityKeyboard(View.GONE);
+                mRvClipboard.setVisibility(View.VISIBLE);
+            } else {
+                mRvClipboard.setVisibility(View.GONE);
+                setVisibilityKeyboard(View.VISIBLE);
+            }
         } else {
+            setVisibilityKeyboard(View.GONE);
             mRvClipboard.setVisibility(View.GONE);
-            setVisibilityKeyboard(View.VISIBLE);
         }
     }
 
@@ -548,6 +558,7 @@ public class SpeechInputView extends LinearLayout {
     private void minimizeUi() {
         mUiIsMinimized = true;
         setVisibilityKeyboard(View.GONE);
+        showClipboard(false);
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
         setBackgroundResource(R.drawable.rectangle_gradient_red);
@@ -556,6 +567,7 @@ public class SpeechInputView extends LinearLayout {
     private void maximizeUi() {
         mUiIsMinimized = false;
         setVisibilityKeyboard(View.VISIBLE);
+        showClipboard(true);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             mBImeKeyboard.setImageResource(R.drawable.ic_ime);
             mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
@@ -573,9 +585,6 @@ public class SpeechInputView extends LinearLayout {
 
     private void setVisibilityKeyboard(int visibility) {
         mCentralButtons.setVisibility(visibility);
-        if (mBComboSelector != null) {
-            //mBComboSelector.setVisibility(visibility);
-        }
     }
 
     private void showMessageArrow(int numOfChars, String dash) {
@@ -869,9 +878,9 @@ public class SpeechInputView extends LinearLayout {
                 String rewritesAsStr = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, def);
                 if (rewritesAsStr == null) {
                     // TODO: show error
-                    mDataset.add("[" + def + " (null)] ☞");
+                    mDataset.add("☞ " + def + " (null)");
                 } else {
-                    mDataset.add("[" + def + " ] ☞");
+                    mDataset.add("☞ " + def);
                     UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
                     for (Command command : ur.getCommands()) {
                         String key = command.get(UtteranceRewriter.HEADER_COMMENT);
