@@ -12,6 +12,13 @@ Its main components are:
     - <https://github.com/alumae/ruby-pocketsphinx-server>
   - a speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/ee.ioc.phon.android.speak/)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak)
+
 The diagram below shows Kõnele's main components in yellow, while the standard Android interfaces via which other apps can interact with Kõnele are in green.
 
 ![Components](https://rawgithub.com/Kaljurand/K6nele/master/docs/components.dot.svg)
