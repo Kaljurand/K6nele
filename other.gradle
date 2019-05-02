@@ -1,50 +1,54 @@
-task(makeIcons) << {
-    description 'Converts the SVG launcher icon to multiple resolution PNGs'
+task makeIcons {
+    doLast {
+        description 'Converts the SVG launcher icon to multiple resolution PNGs'
 
-    def dir_res = 'app/src/main/res/'
-    def dir_svg = 'images/'
+        def dir_res = 'app/src/main/res/'
+        def dir_svg = 'images/'
 
-    def launcher_fn_svg = 'ic_launcher.svg'
-    def launcher_fn_png = 'ic_launcher.png'
+        def launcher_fn_svg = 'ic_launcher.svg'
+        def launcher_fn_png = 'ic_launcher.png'
 
-    def sizeLogo = 512
-    def sizeMap = ['mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192]
+        def sizeLogo = 512
+        def sizeMap = ['mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192]
 
-    def convertSvg = {
-        size, dir_in, dir_out ->
-            println "Converting launcher icon into ${dir_out} ..."
-            exec {
-                commandLine 'mkdir', '-p', dir_out
-            }
+        def convertSvg = {
+            size, dir_in, dir_out ->
+                println "Converting launcher icon into ${dir_out} ..."
+                exec {
+                    commandLine 'mkdir', '-p', dir_out
+                }
 
-            exec {
-                // 16-bit/color RGBA, non-interlaced (TODO: we need 32)
-                commandLine 'rsvg-convert', '-f', 'png', '-w', size, '-h', size, '-o', dir_out + launcher_fn_png, dir_in + launcher_fn_svg
-            }
-    }
+                exec {
+                    // 16-bit/color RGBA, non-interlaced (TODO: we need 32)
+                    commandLine 'rsvg-convert', '-f', 'png', '-w', size, '-h', size, '-o', dir_out + launcher_fn_png, dir_in + launcher_fn_svg
+                }
+        }
 
-    convertSvg(sizeLogo, dir_svg, dir_svg)
+        convertSvg(sizeLogo, dir_svg, dir_svg)
 
-    sizeMap.each {
-        key, val -> convertSvg(val, dir_svg, dir_res + 'drawable-' + key + '/')
+        sizeMap.each {
+            key, val -> convertSvg(val, dir_svg, dir_res + 'drawable-' + key + '/')
+        }
     }
 }
 
-task(makeDiagrams) << {
-    description 'Converts dot to SVG'
+task makeDiagrams {
+    doLast {
+        description 'Converts dot to SVG'
 
-    def dir = 'docs/'
+        def dir = 'docs/'
 
-    def convertDot = {
-        format, fn ->
-            println "Converting ${fn} to ${format} ..."
-            exec {
-                commandLine 'dot', '-O', '-T' + format, fn + '.dot'
-            }
-    }
+        def convertDot = {
+            format, fn ->
+                println "Converting ${fn} to ${format} ..."
+                exec {
+                    commandLine 'dot', '-O', '-T' + format, fn + '.dot'
+                }
+        }
 
-    def diagrams = ['RecognizerService', 'components', 'intents']
-    diagrams.each {
-        dia -> convertDot('svg', dir + dia)
+        def diagrams = ['RecognizerService', 'components', 'intents']
+        diagrams.each {
+            dia -> convertDot('svg', dir + dia)
+        }
     }
 }

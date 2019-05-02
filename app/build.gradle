@@ -20,8 +20,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1703
-        versionName '1.7.03'
+        versionCode 1704
+        versionName '1.7.04'
     }
 
     compileOptions {
@@ -67,31 +67,33 @@ if (project.hasProperty('storePassword') &&
 }
 
 
-task(deploy) << {
-    description 'Copy the APK and the ProGuard mapping file to the deploy directory'
+task deploy {
+    doLast {
+        description 'Copy the APK and the ProGuard mapping file to the deploy directory'
 
-    def deploy_dir = System.getenv('APK_DEPLOY_DIR')
+        def deploy_dir = System.getenv('APK_DEPLOY_DIR')
 
-    def version = android.defaultConfig.versionName
+        def version = android.defaultConfig.versionName
 
-    def outputs = 'build/outputs/'
-    def apk1 = outputs + 'apk/release/app-release.apk'
-    def apk2 = "${deploy_dir}K6nele-${version}.apk"
-    def mapping1 = outputs + 'mapping/release/mapping.txt'
-    def mapping2 = "${deploy_dir}K6nele-mapping-${version}.txt"
+        def outputs = 'build/outputs/'
+        def apk1 = outputs + 'apk/release/app-release.apk'
+        def apk2 = "${deploy_dir}K6nele-${version}.apk"
+        def mapping1 = outputs + 'mapping/release/mapping.txt'
+        def mapping2 = "${deploy_dir}K6nele-mapping-${version}.txt"
 
-    exec {
-        commandLine 'cp', '--verbose', apk1, apk2
+        exec {
+            commandLine 'cp', '--verbose', apk1, apk2
+        }
+
+        exec {
+            commandLine 'cp', '--verbose', mapping1, mapping2
+        }
+
+        exec {
+            commandLine 'ls', '-l', deploy_dir
+        }
+
+        println "adb uninstall ${android.defaultConfig.applicationId}"
+        println "adb install ${apk2}"
     }
-
-    exec {
-        commandLine 'cp', '--verbose', mapping1, mapping2
-    }
-
-    exec {
-        commandLine 'ls', '-l', deploy_dir
-    }
-
-    println "adb uninstall ${android.defaultConfig.applicationId}"
-    println "adb install ${apk2}"
 }

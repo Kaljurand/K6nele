@@ -44,8 +44,12 @@ Point to the Android SDK directory by setting the environment variable
 
     ANDROID_HOME=${HOME}/myapps/android-sdk/
 
+Create the file `gradle.properties` containing the lines:
 
-Build the Kõnele app (tested with Gradle v4.10.3)
+    android.enableD8=true
+    android.enableR8=false
+
+Build the Kõnele app (tested with Gradle v5.1.1)
 
     gradle assemble
 
@@ -58,7 +62,7 @@ If you have access to a release keystore then
 
   - point to its location by setting the environment variable `KEYSTORE`
   - set `KEY_ALIAS` to the key alias
-  - create the file `gradle.properties` containing the lines:
+  - add these lines to `gradle.properties`:
 
         storePassword=<password1>
         keyPassword=<password2>
