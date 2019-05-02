@@ -91,6 +91,8 @@ public class Rewrites {
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_SUBJECT, mId);
         intent.putExtra(Intent.EXTRA_TEXT, ur.toTsv());
+        // EXTRA_TITLE is shown in Android Q
+        intent.putExtra(Intent.EXTRA_TITLE, mRes.getString(R.string.labelRewritesShare));
         intent.setType("text/tab-separated-values");
         return intent;
     }
