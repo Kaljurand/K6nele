@@ -76,7 +76,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/labelApp"
         android:supportsRtl="true"
-        android:theme="@style/Theme.K6nele">
+        android:theme="@style/Theme.K6nele"
+        android:usesCleartextTraffic="true">
 
         <!--
         <meta-data
