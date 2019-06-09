@@ -56,6 +56,6 @@ class SimpleDemo : AbstractRecognizerDemoActivity() {
     override fun onSuccess(intent: Intent?) {
         val matches = intent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
         (findViewById(R.id.list_matches) as ListView).adapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, matches)
+                ArrayAdapter(this, android.R.layout.simple_list_item_1, matches as ArrayList<String>)
     }
 }

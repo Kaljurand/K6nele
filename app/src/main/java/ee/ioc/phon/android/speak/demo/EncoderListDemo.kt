@@ -12,8 +12,9 @@ class EncoderListDemo : ListActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val info = ArrayList<String>()
-        info.add("FLAC encoders: " + AudioUtils.getEncoderNamesForType("audio/flac").toString())
-        info.addAll(AudioUtils.getAvailableEncoders(16000))
+        val mime = "audio/flac"
+        info.add(mime + " encoders: " + AudioUtils.getEncoderNamesForType(mime).toString())
+        info.addAll(AudioUtils.getAvailableEncoders(mime, 16000))
         listAdapter = ArrayAdapter(this, R.layout.list_item_detail, info.toTypedArray())
     }
 }
