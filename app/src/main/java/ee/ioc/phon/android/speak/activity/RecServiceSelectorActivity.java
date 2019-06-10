@@ -14,6 +14,7 @@ import ee.ioc.phon.android.speak.adapter.RecServiceAdapter;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.RecService;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
+import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 
 public class RecServiceSelectorActivity extends Activity {
 
@@ -47,7 +48,7 @@ public class RecServiceSelectorActivity extends Activity {
             if (intent == null) {
                 toast(getString(R.string.errorRecognizerSettingsNotPresent));
             } else {
-                startActivity(intent);
+                IntentUtils.startActivityWithCatch(getActivity(), intent);
             }
 
             // TODO: context menu based add/remove to IME/search plain service (i.e. no languages)
