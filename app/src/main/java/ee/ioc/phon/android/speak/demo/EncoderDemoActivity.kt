@@ -24,7 +24,6 @@ class EncoderDemoActivity : Activity() {
 
     private var mRecorder: AudioRecorder? = null
     private val mStopHandler = Handler()
-    private var mStopTask: Runnable? = null
 
     private var mRecording: ByteArray? = null
 
@@ -44,8 +43,8 @@ class EncoderDemoActivity : Activity() {
         })
 
 
-        mBTest1 = findViewById(R.id.buttonTest1) as Button
-        (findViewById(R.id.buttonTest1) as Button).setOnClickListener {
+        mBTest1 = findViewById<Button>(R.id.buttonTest1)
+        mBTest1?.setOnClickListener {
             mBTest1?.setText(R.string.buttonImeStopByPause)
             try {
                 recordUntilPause(EncodedAudioRecorder(16000))
@@ -78,11 +77,14 @@ class EncoderDemoActivity : Activity() {
         }
 
         // Check if we should stop recording
-        mStopTask = object : Runnable {
+        var mStopTask = object : Runnable {
             override fun run() {
                 if (mRecorder != null) {
                     if (mRecorder!!.isPausing) {
-                        onEndOfSpeech()
+                        if (mRecorder != null) {
+                            mRecording = mRecorder!!.consumeRecording()
+                        }
+                        stopRecording0(this)
                     } else {
                         mStopHandler.postDelayed(this, 1000)
                     }
@@ -93,16 +95,9 @@ class EncoderDemoActivity : Activity() {
         mStopHandler.postDelayed(mStopTask, 500)
     }
 
-    protected fun onEndOfSpeech() {
-        if (mRecorder != null) {
-            mRecording = mRecorder!!.consumeRecording()
-        }
-        stopRecording0()
-    }
-
-    private fun stopRecording0() {
+    private fun stopRecording0(task: Runnable) {
         releaseRecorder()
-        mStopHandler.removeCallbacks(mStopTask)
+        mStopHandler.removeCallbacks(task)
         val recordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, 2.toShort(), 1.toShort())
         mBTest1?.setText(R.string.buttonImeSpeak)
 
