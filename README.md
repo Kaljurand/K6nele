@@ -47,7 +47,7 @@ Point to the Android SDK directory by setting the environment variable
 Create the file `gradle.properties` containing the lines:
 
     android.enableD8=true
-    android.enableR8=true
+    android.enableR8=false
 
 Build the Kõnele app (tested with Gradle v5.1.1)
 
