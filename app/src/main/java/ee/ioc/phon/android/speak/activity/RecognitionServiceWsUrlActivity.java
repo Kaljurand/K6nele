@@ -59,7 +59,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         mEtUrl.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 String serverUri = mEtUrl.getText().toString();
-                setUrl(getBaseUri(serverUri));
+                setUrl(serverUri);
             }
             return false;
         });
@@ -104,8 +104,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         });
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String serverUri = PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyWsServer, R.string.defaultWsServer);
-        setUrl(getBaseUri(serverUri));
+        setUrl(PreferenceUtils.getPrefString(prefs, getResources(), R.string.keyWsServer, R.string.defaultWsServer));
     }
 
     @Override
@@ -114,15 +113,20 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         closeSocket();
     }
 
-    private String getBaseUri(String serverUri) {
-        return serverUri.substring(0, serverUri.lastIndexOf('/') + 1);
-    }
-
-    private void setUrl(String url) {
+    /**
+     * Shows the given server URI and the server status.
+     * In order to construct the status URI, removes the file name and the query string from the given URI, e.g.
+     * ws://10.0.0.11:8080/client/ws/speech?key=1/2 -> ws://10.0.0.11:8080/client/ws/
+     */
+    private void setUrl(String uri) {
         if (mEtUrl != null) {
-            mEtUrl.setText(String.format(getString(R.string.wsUrlSuffixSpeech), url));
+            mEtUrl.setText(uri);
             mTvServerStatus.setText(getString(R.string.statusServerStatus));
-            setSummaryWithStatus(String.format(getString(R.string.wsUrlSuffixStatus), url));
+            int last = uri.lastIndexOf('?');
+            if (last > 0) {
+                uri = uri.substring(0, last);
+            }
+            setSummaryWithStatus(uri.substring(0, uri.lastIndexOf('/') + 1) + "status");
         }
     }
 
@@ -252,16 +256,16 @@ public class RecognitionServiceWsUrlActivity extends Activity {
     private class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHolder> {
         private List<String> mDataset;
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            public Button mView;
+        private class MyViewHolder extends RecyclerView.ViewHolder {
+            private Button mView;
 
-            public MyViewHolder(Button v) {
+            private MyViewHolder(Button v) {
                 super(v);
                 mView = v;
             }
         }
 
-        public ServerAdapter(List<String> myDataset) {
+        private ServerAdapter(List<String> myDataset) {
             mDataset = myDataset;
         }
 
@@ -275,7 +279,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         @Override
         public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
             holder.mView.setText(mDataset.get(position));
-            holder.mView.setOnClickListener(view -> setUrl("ws://" + holder.mView.getText() + ":8080/client/ws/"));
+            holder.mView.setOnClickListener(view -> setUrl("ws://" + holder.mView.getText() + ":8080/client/ws/speech"));
         }
 
         @Override
@@ -307,7 +311,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
                     mTvServerStatus.post(() -> mTvServerStatus.setText(getResources().
                             getQuantityString(R.plurals.summaryWsServerWithStatus, numOfWorkers, numOfWorkers)));
                 } catch (JSONException e) {
-                    mTvServerStatus.post(() -> mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatusError), ex.getLocalizedMessage())));
+                    mTvServerStatus.post(() -> mTvServerStatus.setText(String.format(getString(R.string.summaryWsServerWithStatusError), e.getLocalizedMessage())));
                 }
             });
         });

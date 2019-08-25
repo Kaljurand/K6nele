@@ -6,8 +6,6 @@
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
-    <string name="wsUrlSuffixSpeech" translatable="false">%1$sspeech</string>
-    <string name="wsUrlSuffixStatus" translatable="false">%1$sstatus</string>
 
     <string name="descriptionApp" translatable="false">speech-to-text services for Android apps</string>
 
@@ -46,7 +44,7 @@
     <string name="labelSearch">Search"</string>
     <string name="titleSearchRewrites">Filter rewrites</string>
     <string name="hintName">name</string>
-    <string name="hintLocalServer" translatable="false">192.168.0.0</string>
+    <string name="hintLocalServer" translatable="false">10.0.0.2</string>
 
     <!-- Preferences activity -->
     <string name="titleDefaultServiceHttp">Server URL</string>

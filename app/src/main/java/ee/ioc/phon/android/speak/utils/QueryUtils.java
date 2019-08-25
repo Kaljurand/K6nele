@@ -14,10 +14,15 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speechutils.Extras;
 
 public final class QueryUtils {
+    private static final String QUERY_STRING_MARKER = "?";
     private static final String PARAMETER_SEPARATOR = "&";
     private static final String NAME_VALUE_SEPARATOR = "=";
 
     private QueryUtils() {
+    }
+
+    public static String combine(String server, String part) {
+        return server + (server.indexOf(QUERY_STRING_MARKER) > 0 ? PARAMETER_SEPARATOR : QUERY_STRING_MARKER) + part;
     }
 
     /**
@@ -25,7 +30,7 @@ public final class QueryUtils {
      * ChunkedWebRecSessionBuilder to extract some additional extras.
      * TODO: unify this better
      */
-    public static String getQueryParams(Intent intent, ChunkedWebRecSessionBuilder builder, String encoding) throws UnsupportedEncodingException {
+    public static List<Pair<String, String>> getQueryParams(Intent intent, ChunkedWebRecSessionBuilder builder) {
         if (Log.DEBUG) Log.i(builder.toStringArrayList());
         List<Pair<String, String>> list = new ArrayList<>();
         flattenBundle("editorInfo_", list, intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO));
@@ -36,10 +41,7 @@ public final class QueryUtils {
         listAdd(list, "calling-package", builder.getCaller());
         listAdd(list, "user-id", builder.getDeviceId());
         listAdd(list, "partial", "" + builder.isPartialResults());
-        if (list.size() == 0) {
-            return "";
-        }
-        return PARAMETER_SEPARATOR + encodeKeyValuePairs(list, encoding);
+        return list;
     }
 
     private static boolean listAdd(List<Pair<String, String>> list, String key, String value) {

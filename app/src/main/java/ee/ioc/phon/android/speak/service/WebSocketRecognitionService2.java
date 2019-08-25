@@ -1,8 +1,10 @@
 package ee.ioc.phon.android.speak.service;
 
 import android.content.Intent;
+import android.util.Pair;
 
 import java.io.IOException;
+import java.util.List;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.R;
@@ -22,8 +24,10 @@ public class WebSocketRecognitionService2 extends WebSocketRecognitionService {
     @Override
     protected void configure(Intent recognizerIntent) throws IOException {
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, recognizerIntent.getExtras(), null);
-        mUrl = "ws://localhost:82/duplex-speech-api/ws/speech"
-                + getAudioRecorder().getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
+        List<Pair<String, String>> list = QueryUtils.getQueryParams(recognizerIntent, builder);
+        list.add(new Pair<>("content-type", getAudioRecorder().getContentType()));
+        mUrl = QueryUtils.combine("ws://localhost:82/duplex-speech-api/ws/speech?key1=val1",
+                QueryUtils.encodeKeyValuePairs(list, "UTF-8"));
         configureHandler(false, false);
     }
 
@@ -31,5 +35,4 @@ public class WebSocketRecognitionService2 extends WebSocketRecognitionService {
     protected void connect() {
         startSocket(mUrl);
     }
-
 }

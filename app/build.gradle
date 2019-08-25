@@ -20,8 +20,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1709
-        versionName '1.7.09'
+        versionCode 1710
+        versionName '1.7.10'
     }
 
     compileOptions {

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.os.Process;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.util.Pair;
 
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
@@ -15,6 +16,7 @@ import com.koushikdutta.async.http.WebSocket;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
@@ -67,8 +69,11 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
     @Override
     protected void configure(Intent recognizerIntent) throws IOException {
         ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
-        mUrl = getServerUrl(R.string.keyWsServer, R.string.defaultWsServer)
-                + getAudioRecorder().getWsArgs() + QueryUtils.getQueryParams(recognizerIntent, builder, "UTF-8");
+        List<Pair<String, String>> list = QueryUtils.getQueryParams(recognizerIntent, builder);
+        list.add(new Pair<>("content-type", getAudioRecorder().getContentType()));
+        mUrl = QueryUtils.combine(
+                getServerUrl(R.string.keyWsServer, R.string.defaultWsServer),
+                QueryUtils.encodeKeyValuePairs(list, "UTF-8"));
         boolean isUnlimitedDuration = getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false)
                 || getExtras().getBoolean(Extras.EXTRA_DICTATION_MODE, false);
         configureHandler(isUnlimitedDuration,
@@ -223,7 +228,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
         private final boolean mIsUnlimitedDuration;
         private final boolean mIsPartialResults;
 
-        public MyHandler(WebSocketRecognitionService c, boolean isUnlimitedDuration, boolean isPartialResults) {
+        private MyHandler(WebSocketRecognitionService c, boolean isUnlimitedDuration, boolean isPartialResults) {
             mRef = new WeakReference<>(c);
             mIsUnlimitedDuration = isUnlimitedDuration;
             mIsPartialResults = isPartialResults;
