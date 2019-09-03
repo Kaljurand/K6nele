@@ -9,7 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/checkout-submodules@v2.0.0
+    #- uses: actions/checkout-submodules@v2.0.0
+    - name: Pull submodules
+      run: |
+        git submodule update --init --recursive
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
