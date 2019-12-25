@@ -10,6 +10,8 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 
 import java.util.ArrayList;
@@ -51,6 +53,11 @@ public class ComboSelectorActivity extends Activity {
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    public void onClicked(View view) {
+        CheckBox cb = view.findViewById(R.id.check);
+        cb.setChecked(!cb.isChecked());
     }
 
     public static class ComboSelectorFragment extends ListFragment {
