@@ -221,6 +221,12 @@
                         android:targetClass="ee.ioc.phon.android.speak.demo.ImeListDemo"
                         android:targetPackage="ee.ioc.phon.android.speak" />
                 </Preference>
+                <!-- TODO: localize -->
+                <Preference
+                    android:summary="Switch on if background audio does not stop during recognition"
+                    android:title="Do Not Disturb access">
+                    <intent android:action="android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS" />
+                </Preference>
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>

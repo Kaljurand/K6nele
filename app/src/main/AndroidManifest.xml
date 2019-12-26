@@ -37,6 +37,10 @@
     -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
+    <!-- TODO: investigate if we need this permission (and enable it during runtime), to
+    mute the audio stream during recognition. -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
     <!--
     <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" />
