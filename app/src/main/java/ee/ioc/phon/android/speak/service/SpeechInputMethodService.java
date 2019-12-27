@@ -154,7 +154,7 @@ public class SpeechInputMethodService extends InputMethodService {
         mRes = getResources();
         mInputView.init(
                 R.array.keysIme,
-                new CallerInfo(makeExtras(mPrefs, mRes), editorInfo, getPackageName()),
+                new CallerInfo(makeExtras(), editorInfo, getPackageName()),
                 PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyImeMode, R.string.defaultImeMode));
 
         // TODO: update this less often (in onStart)
@@ -281,12 +281,10 @@ public class SpeechInputMethodService extends InputMethodService {
         return "";
     }
 
-    private static Bundle makeExtras(SharedPreferences prefs, Resources res) {
+    private static Bundle makeExtras() {
         Bundle extras = new Bundle();
-        boolean isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(prefs, res,
-                R.string.keyImeAutoStopAfterPause, R.bool.defaultImeAutoStopAfterPause);
-        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, isUnlimitedDuration);
-        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, isUnlimitedDuration);
+        extras.putBoolean(Extras.EXTRA_UNLIMITED_DURATION, true);
+        extras.putBoolean(Extras.EXTRA_DICTATION_MODE, true);
         return extras;
     }
 

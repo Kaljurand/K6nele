@@ -2,6 +2,7 @@
 <resources>
 
     <!-- Defaults. IME. -->
+    <bool name="defaultImeAutoStart">false</bool>
     <bool name="defaultImeHelpText">true</bool>
     <bool name="defaultImeShowPartialResults">true</bool>
 
@@ -20,9 +21,8 @@ locale but assume Estonian even if the app does not specify it (e.g. Arvutaja v4
 -->
     <bool name="defaultRespectLocale">false</bool>
 
-    <!-- Defaults. WebSocket-based service. -->
-    <bool name="defaultImeAutoStart">false</bool>
-    <bool name="defaultImeAutoStopAfterPause">false</bool>
+    <!-- Defaults. WebSocket-based service. TODO: rename Ime to Ws -->
+    <bool name="defaultWsAutoStopAfterPause">true</bool>
     <!-- Google always beeps and it cannot be switched off,
 thus, when using Google's service, the user would want to have the beep off anyway. -->
     <bool name="defaultImeAudioCues">false</bool>

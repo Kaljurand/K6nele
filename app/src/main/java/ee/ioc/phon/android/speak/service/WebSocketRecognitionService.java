@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak.service;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -68,16 +69,28 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     @Override
     protected void configure(Intent recognizerIntent) throws IOException {
-        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, getExtras(), null);
+        Bundle bundle = getExtras();
+        ChunkedWebRecSessionBuilder builder = new ChunkedWebRecSessionBuilder(this, bundle, null);
         List<Pair<String, String>> list = QueryUtils.getQueryParams(recognizerIntent, builder);
         list.add(new Pair<>("content-type", getAudioRecorder().getContentType()));
         mUrl = QueryUtils.combine(
                 getServerUrl(R.string.keyWsServer, R.string.defaultWsServer),
                 QueryUtils.encodeKeyValuePairs(list, "UTF-8"));
-        boolean isUnlimitedDuration = getExtras().getBoolean(Extras.EXTRA_UNLIMITED_DURATION, false)
-                || getExtras().getBoolean(Extras.EXTRA_DICTATION_MODE, false);
-        configureHandler(isUnlimitedDuration,
-                getExtras().getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false));
+
+        // Extra overrides the preferences
+        boolean isUnlimitedDuration;
+        Object obj = bundle.get(Extras.EXTRA_UNLIMITED_DURATION);
+        if (obj == null) {
+            obj = bundle.get(Extras.EXTRA_DICTATION_MODE);
+        }
+        if (obj == null) {
+            isUnlimitedDuration = !PreferenceUtils.getPrefBoolean(getSharedPreferences(), getResources(),
+                    R.string.keyWsAutoStopAfterPause, R.bool.defaultWsAutoStopAfterPause);
+        } else {
+            isUnlimitedDuration = (Boolean) obj;
+        }
+
+        configureHandler(isUnlimitedDuration, bundle.getBoolean(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false));
     }
 
     @Override
