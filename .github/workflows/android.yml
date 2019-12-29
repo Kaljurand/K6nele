@@ -8,11 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    #- uses: actions/checkout-submodules@v2.0.0
-    - name: Pull submodules
+    - uses: actions/checkout@v2
+    - name: Checkout submodules
+      shell: bash
       run: |
-        git submodule update --init --recursive
+        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+        git submodule sync --recursive
+        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
