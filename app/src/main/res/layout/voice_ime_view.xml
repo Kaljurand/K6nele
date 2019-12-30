@@ -65,7 +65,7 @@
             android:src="@drawable/ic_search" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvClipboard"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layoutHeightClipboard"
