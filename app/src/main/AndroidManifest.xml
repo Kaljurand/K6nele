@@ -318,17 +318,17 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".activity.FetchUrlActivity"
             android:exported="true"
             android:permission="ee.ioc.phon.android.speak.permission.FETCH_URL"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <!-- TODO: require: ee.ioc.phon.android.speak.permission.GET_PUT_SETTING -->
         <activity
             android:name=".activity.GetPutPreferenceActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".activity.QuickSettingsActivity"
             android:label="@string/labelActivityQuickSettings"
@@ -340,11 +340,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".demo.SimpleDemo"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".demo.ExtrasDemo"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".demo.HandsfreeDemoActivity"
             android:label="@string/labelActivityHandsfreeDemo">

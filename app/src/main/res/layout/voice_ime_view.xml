@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ee.ioc.phon.android.speak.view.SpeechInputView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,7 +28,7 @@
             android:paddingEnd="@dimen/layoutMargin2"
             android:paddingRight="@dimen/layoutMargin2"
             android:paddingBottom="@dimen/layoutMargin2"
-            app:srcCompat="@drawable/ic_ime" />
+            android:src="@drawable/ic_ime" />
 
         <TextView
             android:id="@+id/tvMessage"
@@ -63,7 +62,7 @@
             android:paddingStart="@dimen/layoutMargin2"
             android:paddingLeft="@dimen/layoutMargin2"
             android:paddingBottom="@dimen/layoutMargin2"
-            app:srcCompat="@drawable/ic_search" />
+            android:src="@drawable/ic_search" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -121,7 +120,7 @@
                 android:paddingEnd="@dimen/layoutMargin3"
                 android:paddingRight="@dimen/layoutMargin3"
                 android:paddingBottom="@dimen/layoutMargin3"
-                app:srcCompat="@drawable/ic_backspace" />
+                android:src="@drawable/ic_backspace" />
         </LinearLayout>
     </RelativeLayout>
 

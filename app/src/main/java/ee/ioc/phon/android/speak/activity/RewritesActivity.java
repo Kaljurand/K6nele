@@ -29,6 +29,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.preference.PreferenceManager;
@@ -119,9 +120,10 @@ public class RewritesActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.rewrites, menu);
-
-        /*
-        SwitchPreferenceCompat abSwitch = MenuItemCompat.getActionView(menu.findItem(R.id.menuRewritesToggle)).findViewById(R.id.abSwitch);
+        MenuItem menuItem = menu.findItem(R.id.menuRewritesToggle);
+        // TODO
+        //SwitchCompat abSwitch = menuItem.getActionView().findViewById(R.id.abSwitch);
+        SwitchCompat abSwitch = (SwitchCompat) menuItem.getActionView();
         abSwitch.setChecked(mRewrites.isSelected());
         abSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             mRewrites.setSelected(isChecked);
@@ -131,7 +133,6 @@ public class RewritesActivity extends AppCompatActivity {
                 toast(String.format(getString(R.string.toastDeactivated), mRewrites.getId()));
             }
         });
-        */
 
         /*
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);

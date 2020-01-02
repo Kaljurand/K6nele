@@ -54,8 +54,8 @@
 
     </ee.ioc.phon.android.speak.view.SpeechInputView>
 
-    <ListView
-        android:id="@+id/list_matches"
+    <include
+        layout="@layout/list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/vSpeechInputView"

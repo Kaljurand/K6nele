@@ -73,7 +73,7 @@ public class DetailsActivity extends AppCompatActivity {
             setContentView(R.layout.list_view);
             String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
             if (stringArray != null) {
-                ListView lv = findViewById(R.id.list);
+                ListView lv = findViewById(android.R.id.list);
                 lv.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_detail, stringArray));
                 lv.setOnItemClickListener((parent, view, position, id) -> {
                     Intent intent1 = new Intent();

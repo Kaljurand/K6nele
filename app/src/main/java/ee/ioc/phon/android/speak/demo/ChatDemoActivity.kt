@@ -83,7 +83,6 @@ class ChatDemoActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_demo)
-        // Note that the Toolbar defined in the layout has the id "my_toolbar"
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -95,7 +94,7 @@ class ChatDemoActivity : AppCompatActivity() {
         siv.init(R.array.keysActivity, callerInfo, 0)
         siv.setListener(speechInputViewListener, null)
 
-        (findViewById(R.id.list_matches) as ListView).onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+        (findViewById(android.R.id.list) as ListView).onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             val entry = parent.adapter.getItem(position)
             startActivity(entry.toString())
         }
@@ -110,7 +109,7 @@ class ChatDemoActivity : AppCompatActivity() {
     }
 
     private fun updateListView(list: List<String>) {
-        (findViewById(R.id.list_matches) as ListView).adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        (findViewById(android.R.id.list) as ListView).adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
     }
 
     private fun toast(message: String) {

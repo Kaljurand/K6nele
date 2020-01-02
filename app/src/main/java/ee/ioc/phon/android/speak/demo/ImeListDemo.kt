@@ -1,6 +1,5 @@
 package ee.ioc.phon.android.speak.demo
 
-import android.app.ListActivity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,19 +7,23 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.R
 import java.util.*
 
-class ImeListDemo : ListActivity() {
+class ImeListDemo : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.list_view)
 
         val mngr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val info = getVoiceImeInputMethodInfo(packageManager, mngr)
 
-        listAdapter = ArrayAdapter(this, R.layout.list_item_detail, info.toTypedArray())
+        val listView = findViewById(android.R.id.list) as ListView
+        listView.adapter = ArrayAdapter(this, R.layout.list_item_detail, info.toTypedArray())
 
         listView.onItemClickListener = OnItemClickListener { _, view, _, _ ->
             val content = (view as TextView).text.toString()
