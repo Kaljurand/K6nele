@@ -17,8 +17,6 @@
 package ee.ioc.phon.android.speak.utils;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +43,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,7 +102,7 @@ public final class Utils {
      * TODO: note that we explicitly set the dialog style. This is because if the caller activity's style
      * is Theme.Translucent.NoTitleBar then the dialog is unstyled (maybe an Android bug?)
      */
-    public static AlertDialog getLaunchIntentDialog(final Activity activity, String msg, final Intent intent) {
+    public static AlertDialog getLaunchIntentDialog(final AppCompatActivity activity, String msg, final Intent intent) {
         return new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog)
                 .setPositiveButton(activity.getString(R.string.buttonGoToSettings), (dialog, id) -> {
                     activity.startActivity(intent);

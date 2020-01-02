@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -28,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,7 +63,7 @@ public abstract class RecognizerIntentListActivity extends ListActivity {
             final long key = cursor.getLong(cursor.getColumnIndex(columnName));
             Intent intent = new Intent();
             intent.setData(ContentUris.withAppendedId(contentUri, key));
-            setResult(Activity.RESULT_OK, intent);
+            setResult(AppCompatActivity.RESULT_OK, intent);
             finish();
         });
     }

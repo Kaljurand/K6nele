@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -32,6 +31,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -50,7 +51,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  * However, if the user explicitly launches a file picker from Kõnele, then any "text/*" files
  * can be picked.
  */
-public class RewritesLoaderActivity extends Activity {
+public class RewritesLoaderActivity extends AppCompatActivity {
 
     //private static final String TYPE = "text/tab-separated-values";
     private static final String TYPE = "text/*";
@@ -134,7 +135,8 @@ public class RewritesLoaderActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == RESULT_OK && resultData != null) {
             Uri uri = resultData.getData();
             if (uri != null) {
                 utteranceRewriter = loadFromUri(uri);

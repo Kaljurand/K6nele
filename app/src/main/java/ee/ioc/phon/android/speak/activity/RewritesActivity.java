@@ -16,22 +16,22 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.SearchView;
-import android.widget.Switch;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.preference.PreferenceManager;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
@@ -40,7 +40,7 @@ import ee.ioc.phon.android.speak.utils.Utils;
 
 // TODO: use CursorAdapter to be able to specify the filterting
 // TODO: make it possible to select multiple rows to convert them to a new table and test in Kõnele
-public class RewritesActivity extends Activity {
+public class RewritesActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "EXTRA_NAME";
     public static final String EXTRA_ERRORS = "EXTRA_ERRORS";
@@ -50,12 +50,12 @@ public class RewritesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setRewrites(extras.getString(EXTRA_NAME), extras.getStringArray(EXTRA_ERRORS));
-        getFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment()).commit();
     }
 
     @Override
@@ -120,7 +120,8 @@ public class RewritesActivity extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.rewrites, menu);
 
-        Switch abSwitch = menu.findItem(R.id.menuRewritesToggle).getActionView().findViewById(R.id.abSwitch);
+        /*
+        SwitchPreferenceCompat abSwitch = MenuItemCompat.getActionView(menu.findItem(R.id.menuRewritesToggle)).findViewById(R.id.abSwitch);
         abSwitch.setChecked(mRewrites.isSelected());
         abSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             mRewrites.setSelected(isChecked);
@@ -130,6 +131,7 @@ public class RewritesActivity extends Activity {
                 toast(String.format(getString(R.string.toastDeactivated), mRewrites.getId()));
             }
         });
+        */
 
         /*
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -162,7 +164,7 @@ public class RewritesActivity extends Activity {
                 subtitle += " · " + errorMessage;
             }
         }
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(name);
             actionBar.setSubtitle(subtitle);

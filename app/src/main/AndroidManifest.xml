@@ -114,7 +114,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:theme="@style/Theme.K6nele.Dialog">
+            android:theme="@style/Theme.K6nele.Dialog.NoActionBar">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
 

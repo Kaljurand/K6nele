@@ -1,21 +1,22 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public abstract class AbstractContentActivity extends Activity {
+public abstract class AbstractContentActivity extends AppCompatActivity {
 
     protected void returnIntent(Uri contentUri, long key) {
         Intent intent = new Intent();
         intent.setData(ContentUris.withAppendedId(contentUri, key));
-        setResult(Activity.RESULT_OK, intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

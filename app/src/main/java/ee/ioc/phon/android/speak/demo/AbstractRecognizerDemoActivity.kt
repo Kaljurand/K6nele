@@ -16,7 +16,7 @@
 
 package ee.ioc.phon.android.speak.demo
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.speech.RecognizerIntent
@@ -37,7 +37,7 @@ import java.util.*
  *
  * @author Kaarel Kaljurand
  */
-abstract class AbstractRecognizerDemoActivity : Activity() {
+abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
 
     private var mGrammarId: Long = 0
 
@@ -96,7 +96,7 @@ abstract class AbstractRecognizerDemoActivity : Activity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ACTIVITY_SELECT_GRAMMAR_URL) {
-            if (resultCode != Activity.RESULT_OK) {
+            if (resultCode != AppCompatActivity.RESULT_OK) {
                 return
             }
             val grammarUri = data?.data
@@ -108,9 +108,9 @@ abstract class AbstractRecognizerDemoActivity : Activity() {
                         Utils.idToValue(this, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.NAME, mGrammarId)))
             }
         } else if (requestCode == VOICE_RECOGNITION_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == AppCompatActivity.RESULT_OK) {
                 onSuccess(data)
-            } else if (resultCode == Activity.RESULT_CANCELED) {
+            } else if (resultCode == AppCompatActivity.RESULT_CANCELED) {
                 onCancel()
             } else {
                 onError(resultCode)

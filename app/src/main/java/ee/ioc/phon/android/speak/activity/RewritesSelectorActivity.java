@@ -1,7 +1,6 @@
 package ee.ioc.phon.android.speak.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,12 +30,12 @@ import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-public class RewritesSelectorActivity extends Activity {
+public class RewritesSelectorActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().add(android.R.id.content, new RewritesSelectorFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesSelectorFragment()).commit();
     }
 
     @Override

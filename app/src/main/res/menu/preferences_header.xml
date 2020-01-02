@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menuAbout"
         android:icon="@drawable/ic_menu_info"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menuAbout" />
+        android:title="@string/menuAbout"
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/menuHelp"
         android:icon="@drawable/ic_menu_help"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menuHelp" />
+        android:title="@string/menuHelp"
+        app:showAsAction="ifRoom|withText" />
 </menu>

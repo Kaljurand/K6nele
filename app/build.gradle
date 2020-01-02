@@ -7,6 +7,8 @@ dependencies {
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.preference:preference:1.1.0'
 }
 
 android {
@@ -20,8 +22,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1713
-        versionName '1.7.13'
+        versionCode 1714
+        versionName '1.7.14'
     }
 
     compileOptions {

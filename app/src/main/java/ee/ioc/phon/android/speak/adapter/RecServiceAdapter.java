@@ -1,17 +1,18 @@
 package ee.ioc.phon.android.speak.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.RecService;
 
 public class RecServiceAdapter extends ArrayAdapter<RecService> {
@@ -19,7 +20,7 @@ public class RecServiceAdapter extends ArrayAdapter<RecService> {
     private final List<RecService> list;
     private final Activity context;
 
-    public RecServiceAdapter(Fragment context, List<RecService> list) {
+    public RecServiceAdapter(K6neleListFragment context, List<RecService> list) {
         super(context.getActivity(), R.layout.list_item_recservice, list);
         this.context = context.getActivity();
         this.list = list;

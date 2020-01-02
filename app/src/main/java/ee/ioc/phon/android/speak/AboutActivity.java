@@ -16,12 +16,13 @@
 
 package ee.ioc.phon.android.speak;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import ee.ioc.phon.android.speak.utils.Utils;
 
@@ -34,14 +35,14 @@ import ee.ioc.phon.android.speak.utils.Utils;
  *
  * @author Kaarel Kaljurand
  */
-public class AboutActivity extends Activity {
+public class AboutActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
 
-        ActionBar ab = getActionBar();
+        ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setTitle(R.string.labelApp);
             ab.setSubtitle("v" + Utils.getVersionName(this));

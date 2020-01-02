@@ -1,6 +1,6 @@
 package ee.ioc.phon.android.speak.demo
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -19,7 +19,7 @@ import ee.ioc.phon.android.speechutils.AudioRecorder
 import ee.ioc.phon.android.speechutils.utils.AudioUtils
 import java.io.IOException
 
-class EncoderDemoActivity : Activity() {
+class EncoderDemoActivity : AppCompatActivity() {
 
     private var mRecorder: AudioRecorder? = null
     private val mStopHandler = Handler()
