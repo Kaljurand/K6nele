@@ -11,9 +11,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -24,8 +21,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,7 +195,7 @@ public class SpeechInputView extends LinearLayout {
             // If no action was defined, then we show the Enter icon,
             // even if we were allowed to override Enter.
             if (useEnter) {
-                mBImeAction.setImageResource(R.drawable.ic_newline);
+                mBImeAction.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_newline));
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
@@ -526,6 +529,15 @@ public class SpeechInputView extends LinearLayout {
         if (mRvClipboard != null) {
             final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
             mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher));
+            /*
+            TabLayout tabs = findViewById(R.id.tlClipboardTabs);
+            List<Integer> list = new ArrayList<>();
+            list.add(10);
+            list.add(20);
+            list.add(5);
+            new TabScrollAttacher(tabs, mRvClipboard, list);
+
+             */
         }
     }
 
@@ -559,9 +571,15 @@ public class SpeechInputView extends LinearLayout {
         mUiIsMinimized = true;
         setVisibilityKeyboard(View.GONE);
         showClipboard(false);
-        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
+        loadDrawable(mBImeKeyboard, R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
-        setBackgroundResource(R.drawable.rectangle_gradient_red);
+        //AppCompatResources.getDrawable(getContext(), R.drawable.rectangle_gradient_red);
+        //setBackgroundResource(R.drawable.rectangle_gradient_red);
+        setBackground(AppCompatResources.getDrawable(getContext(), R.drawable.rectangle_gradient_red));
+    }
+
+    private void loadDrawable(ImageView view, int res) {
+        view.setBackground(AppCompatResources.getDrawable(getContext(), res));
     }
 
     private void maximizeUi() {
@@ -569,7 +587,7 @@ public class SpeechInputView extends LinearLayout {
         setVisibilityKeyboard(View.VISIBLE);
         showClipboard(true);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
+            loadDrawable(mBImeKeyboard, R.drawable.ic_ime);
             mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
             mBImeKeyboard.setOnLongClickListener(v -> {
@@ -577,7 +595,7 @@ public class SpeechInputView extends LinearLayout {
                 return true;
             });
         } else {
-            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
+            loadDrawable(mBImeKeyboard, R.drawable.ic_arrow_downward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
         setBackgroundResource(R.drawable.rectangle_gradient);

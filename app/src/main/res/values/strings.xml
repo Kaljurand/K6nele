@@ -104,7 +104,7 @@
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
     <string name="titleSystemVoiceInputSettings">Recognition services (system UI)</string>
-    <string name="summarySystemVoiceInputSettings">System-wide settings panel for the installed speech recognition services, as well as the Assist-app</string>
+    <string name="summarySystemVoiceInputSettings">System-wide settings panel for the installed speech recognition services, as well as the Assist app</string>
 
     <string name="titleSelectRewrites">Rewrites</string>
     <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. (Works with any service.)</string>
@@ -117,13 +117,8 @@
     This allows rewrite rules, ADB scripts, or 3rd party apps to change Kõnele settings without
         the user having to confirm the change. Enable this setting only if you know what you are doing.</string>
 
-    <string name="titleMaxResults">Recognition hypotheses</string>
-
-    <plurals name="summaryMaxResults">
-        <item quantity="one">Output only the most likely recognition hypothesis</item>
-        <item quantity="other">Output at most %d recognition hypotheses</item>
-    </plurals>
-
+    <string name="titleMaxHypotheses">Recognition hypotheses</string>
+    <string name="summaryMaxHypotheses">Maximum number of returned recognition hypotheses. Depends also on the used service.</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
@@ -376,16 +371,6 @@
         <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;en-US</item>
     </string-array>
 
-    <string-array name="entryValuesMaxResults" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>4</item>
-        <item>8</item>
-        <item>16</item>
-    </string-array>
-
-    <string name="defaultMaxResults" translatable="false">1</string>
-
     <string-array name="entriesImeMode">
         <item>Left swipe deletes, right swipe adds newline</item>
         <item>Swiping moves cursor</item>
@@ -409,4 +394,8 @@
         <item>Lampjalgadega stampvambilgi on rambikramp.</item>
         <item>Anna õlu üle Ülo õe õla.</item>
     </string-array>
+
+    <integer name="defaultMaxHypotheses">1</integer>
+    <integer name="maxMaxHypotheses">16</integer>
+    <integer name="minMaxHypotheses">1</integer>
 </resources>

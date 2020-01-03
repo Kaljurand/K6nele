@@ -12,9 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
-import androidx.annotation.NonNull;
 import android.text.InputType;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -22,6 +22,8 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import java.util.List;
 
@@ -69,7 +71,10 @@ public class SpeechInputMethodService extends InputMethodService {
     @Override
     public View onCreateInputView() {
         Log.i("onCreateInputView");
-        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, null, false);
+        //ViewGroup view = (ViewGroup) findViewById(android.R.id.content);
+        //getWindow().getDecorView().getRootView();
+        ViewGroup view = (ViewGroup) getMyWindow().getDecorView().getRootView();
+        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, view, false);
         return mInputView;
     }
 

@@ -109,12 +109,9 @@ public class Preferences extends AppCompatActivity implements PreferenceFragment
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private String mKeyMaxResults;
-
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences, rootKey);
-            mKeyMaxResults = getString(R.string.keyMaxResults);
 
             PreferenceScreen prefScreen = getPreferenceScreen();
             PreferenceCategory category = prefScreen.findPreference(getString(R.string.keyCategoryIme));
@@ -152,10 +149,6 @@ public class Preferences extends AppCompatActivity implements PreferenceFragment
 
             showOrHideLinkToImeSettings(category, pref);
 
-            SharedPreferences sp = prefScreen.getSharedPreferences();
-            String maxResults = sp.getString(mKeyMaxResults, getString(R.string.defaultMaxResults));
-            updateSummaryInt(findPreference(mKeyMaxResults), R.plurals.summaryMaxResults, maxResults);
-
             Preference prefImeMode = findPreference(getString(R.string.keyImeMode));
             prefImeMode.setSummary(((ListPreference) prefImeMode).getEntry());
 
@@ -163,16 +156,11 @@ public class Preferences extends AppCompatActivity implements PreferenceFragment
             updateSummary(R.string.keyCombo, R.string.emptylistCombos);
         }
 
-
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             Preference pref = findPreference(key);
             if (pref instanceof ListPreference) {
                 ListPreference lp = (ListPreference) pref;
-                if (mKeyMaxResults.equals(key)) {
-                    updateSummaryInt(lp, R.plurals.summaryMaxResults, lp.getEntry().toString());
-                } else {
-                    pref.setSummary(lp.getEntry());
-                }
+                pref.setSummary(lp.getEntry());
             }
         }
 
@@ -192,11 +180,6 @@ public class Preferences extends AppCompatActivity implements PreferenceFragment
             }
             Collections.sort(combos, Combo.SORT_BY_LANGUAGE);
             return TextUtils.join("\n", combos);
-        }
-
-        private void updateSummaryInt(Preference pref, int pluralsResource, String countAsString) {
-            int count = Integer.parseInt(countAsString);
-            pref.setSummary(getResources().getQuantityString(pluralsResource, count, count));
         }
 
         private boolean isK6neleImeEnabled() {

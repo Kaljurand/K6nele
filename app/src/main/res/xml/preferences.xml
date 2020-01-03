@@ -100,14 +100,16 @@
             android:summary="@string/summaryReturnErrors"
             android:title="@string/titleReturnErrors"
             app:iconSpaceReserved="false" />
-        <ListPreference
-            android:defaultValue="@string/defaultMaxResults"
-            android:dialogTitle="@string/titleMaxResults"
-            android:entries="@array/entryValuesMaxResults"
-            android:entryValues="@array/entryValuesMaxResults"
-            android:key="@string/keyMaxResults"
-            android:title="@string/titleMaxResults"
-            app:iconSpaceReserved="false"></ListPreference>
+
+        <androidx.preference.SeekBarPreference
+            android:max="@integer/maxMaxHypotheses"
+            app:defaultValue="@integer/defaultMaxHypotheses"
+            app:iconSpaceReserved="false"
+            app:key="@string/keyMaxHypotheses"
+            app:min="@integer/minMaxHypotheses"
+            app:showSeekBarValue="true"
+            app:summary="@string/summaryMaxHypotheses"
+            app:title="@string/titleMaxHypotheses" />
 
     </PreferenceCategory>
 
@@ -165,7 +167,7 @@
         <Preference
             android:title="@string/titleScreenDevel"
             app:fragment="ee.ioc.phon.android.speak.activity.Preferences$DeveloperSettingsFragment"
-            app:iconSpaceReserved="false"></Preference>
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>

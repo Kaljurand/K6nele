@@ -120,10 +120,10 @@ public class RewritesActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.rewrites, menu);
+        // TODO: review (seems like a detour)
         MenuItem menuItem = menu.findItem(R.id.menuRewritesToggle);
-        // TODO
-        //SwitchCompat abSwitch = menuItem.getActionView().findViewById(R.id.abSwitch);
-        SwitchCompat abSwitch = (SwitchCompat) menuItem.getActionView();
+        menuItem.setActionView(R.layout.ab_switch);
+        SwitchCompat abSwitch = menuItem.getActionView().findViewById(R.id.abSwitch);
         abSwitch.setChecked(mRewrites.isSelected());
         abSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             mRewrites.setSelected(isChecked);

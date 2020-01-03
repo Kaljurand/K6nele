@@ -41,7 +41,7 @@ public class QuickSettingsManager {
         editor.putStringSet(mRes.getString(R.string.keyCombo), COMBOS_MULTILINGUAL);
         editor.putBoolean(mRes.getString(R.string.keyHelpText), false);
         editor.putBoolean(mRes.getString(R.string.keyAutoStart), false);
-        editor.putString(mRes.getString(R.string.keyMaxResults), "4");
+        editor.putInt(mRes.getString(R.string.keyMaxHypotheses), 4);
 
         // HTTP service
         editor.putString(mRes.getString(R.string.keyAudioFormat), "audio/x-flac");

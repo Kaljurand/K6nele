@@ -299,7 +299,7 @@
     <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage siia.</string>
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
     <string name="labelIme">Kõnele kõne &amp; svaip</string>
-    <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
+    <string name="titleMaxHypotheses">Tuvastushüpoteeside arv</string>
     <string name="titleServices">Kõnetuvastusteenused</string>
     <string name="summaryServices">Kõik paigaldatud kõnetuvastusteenused</string>
     <string name="titleQuickSettings">Kiirseaded</string>
@@ -316,10 +316,7 @@
     <string name="titleSystemVoiceInputSettings">Kõnetuvastusteenused (süsteemsed seaded)</string>
     <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>
 
-    <plurals name="summaryMaxResults">
-        <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
-        <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
-    </plurals>
+    <string name="summaryMaxHypotheses">Tagastatud tuvastushüpoteeside arv. Eeldab teenuse toetust.</string>
     <string name="labelActivityEncoderListDemo">Audioformaadid</string>
     <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>

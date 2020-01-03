@@ -268,7 +268,7 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
         // Note: the caller overrides the settings.
         if (!mExtras.containsKey(RecognizerIntent.EXTRA_MAX_RESULTS)) {
             mExtras.putInt(RecognizerIntent.EXTRA_MAX_RESULTS,
-                    PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
+                    prefs.getInt(getResources().getString(R.string.keyMaxHypotheses), R.integer.defaultMaxHypotheses));
         }
 
         if (!mExtras.isEmpty()) {
