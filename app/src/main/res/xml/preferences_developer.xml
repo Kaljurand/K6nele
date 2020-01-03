@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/titleScreenDevel">
 
     <!--
     <Preference
         android:summary="@string/summaryQuickSettings"
-        android:title="@string/titleQuickSettings">
+        android:title="@string/titleQuickSettings"
+        app:iconSpaceReserved="false">
         <intent
             android:targetClass="ee.ioc.phon.android.speak.activity.QuickSettingsActivity"
             android:targetPackage="ee.ioc.phon.android.speak" />
@@ -15,53 +17,63 @@
         android:defaultValue="@bool/defaultGetPutPrefSkipUi"
         android:key="@string/keyGetPutPrefSkipUi"
         android:summary="@string/summaryGetPutPrefSkipUi"
-        android:title="@string/titleGetPutPrefSkipUi" />
-    <PreferenceCategory android:title="@string/titleCategoryDemos">
+        android:title="@string/titleGetPutPrefSkipUi"
+        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:title="@string/titleCategoryDemos"
+        app:iconSpaceReserved="false">
         <Preference
             android:summary="@string/summarySimpleDemo"
-            android:title="@string/labelActivitySimpleDemo">
+            android:title="@string/labelActivitySimpleDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.SimpleDemo"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryExtrasDemo"
-            android:title="@string/labelActivityExtrasDemo">
+            android:title="@string/labelActivityExtrasDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.ExtrasDemo"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryHandsfreeDemo"
-            android:title="@string/labelActivityHandsfreeDemo">
+            android:title="@string/labelActivityHandsfreeDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.HandsfreeDemoActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryChatDemo"
-            android:title="@string/labelActivityChatDemo">
+            android:title="@string/labelActivityChatDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.ChatDemoActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryVoiceSearchDemo"
-            android:title="@string/labelActivityVoiceSearchDemo">
+            android:title="@string/labelActivityVoiceSearchDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.VoiceSearchDemo"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryFormDemo"
-            android:title="@string/labelActivityFormDemo">
+            android:title="@string/labelActivityFormDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.FormDemoActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryEncoderDemo"
-            android:title="@string/labelActivityEncoderDemo">
+            android:title="@string/labelActivityEncoderDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
@@ -69,7 +81,8 @@
 
         <Preference
             android:summary="@string/labelActivityEncoderListDemo"
-            android:title="@string/labelActivityEncoderListDemo">
+            android:title="@string/labelActivityEncoderListDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.EncoderListDemo"
                 android:targetPackage="ee.ioc.phon.android.speak" />
@@ -77,7 +90,8 @@
 
         <Preference
             android:summary="@string/labelActivityImeListDemo"
-            android:title="@string/labelActivityImeListDemo">
+            android:title="@string/labelActivityImeListDemo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.demo.ImeListDemo"
                 android:targetPackage="ee.ioc.phon.android.speak" />
@@ -85,7 +99,8 @@
         <!-- TODO: localize -->
         <Preference
             android:summary="Switch on if background audio does not stop during recognition"
-            android:title="Do Not Disturb access">
+            android:title="Do Not Disturb access"
+            app:iconSpaceReserved="false">
             <intent android:action="android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS" />
         </Preference>
     </PreferenceCategory>

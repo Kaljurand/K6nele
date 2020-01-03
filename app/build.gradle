@@ -24,8 +24,7 @@ android {
         targetSdkVersion 29
         versionCode 1714
         versionName '1.7.14'
-        // TODO: is this needed?
-        // vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = true
     }
 
     compileOptions {

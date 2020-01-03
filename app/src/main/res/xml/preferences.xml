@@ -10,7 +10,8 @@
     <Preference
         android:key="@string/keyEnableIme"
         android:summary="@string/summaryEnableIme"
-        android:title="@string/titleEnableIme">
+        android:title="@string/titleEnableIme"
+        app:iconSpaceReserved="false">
         <intent android:action="android.settings.INPUT_METHOD_SETTINGS" />
     </Preference>
     // Speech keyboard settings
@@ -19,11 +20,13 @@
     // the service menus because the UI cannot influence them.
     <PreferenceCategory
         android:key="@string/keyCategoryIme"
-        android:title="@string/titleCategoryIme">
+        android:title="@string/titleCategoryIme"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="@string/keyImeCombo"
             android:summary="@string/summaryImeCombo"
-            android:title="@string/titleCombo">
+            android:title="@string/titleCombo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.activity.ComboSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak">
@@ -43,27 +46,33 @@
             android:defaultValue="@bool/defaultImeShowPartialResults"
             android:key="@string/keyImeShowPartialResults"
             android:summary="@string/summaryImeShowPartialResults"
-            android:title="@string/titleImeShowPartialResults" />
+            android:title="@string/titleImeShowPartialResults"
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:defaultValue="@string/defaultImeMode"
             android:entries="@array/entriesImeMode"
             android:entryValues="@array/valuesImeMode"
             android:key="@string/keyImeMode"
-            android:title="@string/titleImeMode" />
+            android:title="@string/titleImeMode"
+            app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
-            android:title="@string/titleImeHelpText" />
+            android:title="@string/titleImeHelpText"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)
     // These settings are specific to the UI
-    <PreferenceCategory android:title="@string/titleCategoryUi">
+    <PreferenceCategory
+        android:title="@string/titleCategoryUi"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="@string/keyCombo"
             android:summary="@string/summaryImeCombo"
-            android:title="@string/titleCombo">
+            android:title="@string/titleCombo"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.activity.ComboSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak">
@@ -77,54 +86,63 @@
             android:defaultValue="@bool/defaultAutoStart"
             android:key="@string/keyAutoStart"
             android:summary="@string/summaryAutoStart"
-            android:title="@string/titleAutoStart" />
+            android:title="@string/titleAutoStart"
+            app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultHelpText"
             android:key="@string/keyHelpText"
             android:summary="@string/summaryHelpText"
-            android:title="@string/titleHelpText" />
+            android:title="@string/titleHelpText"
+            app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultReturnErrors"
             android:key="@string/keyReturnErrors"
             android:summary="@string/summaryReturnErrors"
-            android:title="@string/titleReturnErrors" />
+            android:title="@string/titleReturnErrors"
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:defaultValue="@string/defaultMaxResults"
             android:dialogTitle="@string/titleMaxResults"
             android:entries="@array/entryValuesMaxResults"
             android:entryValues="@array/entryValuesMaxResults"
             android:key="@string/keyMaxResults"
-            android:title="@string/titleMaxResults"></ListPreference>
+            android:title="@string/titleMaxResults"
+            app:iconSpaceReserved="false"></ListPreference>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/keyCategoryDependencies"
-        android:title="@string/titleCategoryDependencies">
+        android:title="@string/titleCategoryDependencies"
+        app:iconSpaceReserved="false">
         <Preference
             android:summary="@string/summaryAppList"
-            android:title="@string/labelActivityAppList">
+            android:title="@string/labelActivityAppList"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.AppListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryGrammarList"
-            android:title="@string/labelActivityGrammarList">
+            android:title="@string/labelActivityGrammarList"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.activity.GrammarListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summarySelectRewrites"
-            android:title="@string/titleSelectRewrites">
+            android:title="@string/titleSelectRewrites"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
             android:summary="@string/summaryServices"
-            android:title="@string/titleServices">
+            android:title="@string/titleServices"
+            app:iconSpaceReserved="false">
             <intent
                 android:targetClass="ee.ioc.phon.android.speak.activity.RecServiceSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
@@ -135,15 +153,19 @@
         <Preference
             android:key="@string/keySystemVoiceInputSettings"
             android:summary="@string/summarySystemVoiceInputSettings"
-            android:title="@string/titleSystemVoiceInputSettings">
+            android:title="@string/titleSystemVoiceInputSettings"
+            app:iconSpaceReserved="false">
             <intent android:action="android.settings.VOICE_INPUT_SETTINGS" />
         </Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/titleCategoryDevel">
+    <PreferenceCategory
+        android:title="@string/titleCategoryDevel"
+        app:iconSpaceReserved="false">
         <Preference
             android:title="@string/titleScreenDevel"
-            app:fragment="ee.ioc.phon.android.speak.activity.Preferences$DeveloperSettingsFragment"></Preference>
+            app:fragment="ee.ioc.phon.android.speak.activity.Preferences$DeveloperSettingsFragment"
+            app:iconSpaceReserved="false"></Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

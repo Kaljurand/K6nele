@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     // Settings that apply to the WebSocket-based server (also denoted as "fast" and "continuous")
     // These cannot be configured using standard extras.
     // TODO: rename Ime -> Ws
     <Preference
         android:key="@string/keyWsServer"
         android:summary="@string/defaultWsServer"
-        android:title="@string/titleWsServer">
+        android:title="@string/titleWsServer"
+        app:iconSpaceReserved="false">
         <intent
             android:targetClass="ee.ioc.phon.android.speak.activity.RecognitionServiceWsUrlActivity"
             android:targetPackage="ee.ioc.phon.android.speak" />
@@ -15,17 +17,20 @@
         android:defaultValue="@bool/defaultWsAutoStopAfterPause"
         android:key="@string/keyWsAutoStopAfterPause"
         android:summary="@string/summaryAutoStopAfterPause"
-        android:title="@string/titleAutoStopAfterPause" />
+        android:title="@string/titleAutoStopAfterPause"
+        app:iconSpaceReserved="false" />
     <CheckBoxPreference
         android:defaultValue="@bool/defaultImeAudioCues"
         android:key="@string/keyImeAudioCues"
         android:summary="@string/summaryAudioCues"
-        android:title="@string/titleAudioCues" />
+        android:title="@string/titleAudioCues"
+        app:iconSpaceReserved="false" />
     <ListPreference
         android:defaultValue="@string/defaultAudioFormat"
         android:entries="@array/entriesAudioFormat"
         android:entryValues="@array/valuesAudioFormat"
         android:key="@string/keyImeAudioFormat"
         android:summary="@string/summaryAudioFormat"
-        android:title="@string/titleAudioFormat" />
+        android:title="@string/titleAudioFormat"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>
