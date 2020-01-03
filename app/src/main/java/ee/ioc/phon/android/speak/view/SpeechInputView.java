@@ -30,6 +30,9 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.tabs.TabLayout;
+import com.iammert.tabscrollattacherlib.TabScrollAttacher;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -528,16 +531,16 @@ public class SpeechInputView extends LinearLayout {
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
         if (mRvClipboard != null) {
             final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
-            mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher));
-            /*
+            ClipboardAdapter cba = new ClipboardAdapter(commandMatcher);
+            mRvClipboard.setAdapter(cba);
             TabLayout tabs = findViewById(R.id.tlClipboardTabs);
-            List<Integer> list = new ArrayList<>();
-            list.add(10);
-            list.add(20);
-            list.add(5);
-            new TabScrollAttacher(tabs, mRvClipboard, list);
-
-             */
+            tabs.removeAllTabs();
+            for (String tabName : cba.getTabNames()) {
+                TabLayout.Tab tab = tabs.newTab();
+                tab.setText(tabName);
+                tabs.addTab(tab);
+            }
+            new TabScrollAttacher(tabs, mRvClipboard, cba.getTabSizes());
         }
     }
 
@@ -866,6 +869,8 @@ public class SpeechInputView extends LinearLayout {
         private final Map<String, String> mClipboard;
         private final SharedPreferences mPrefs;
         private final Resources mRes;
+        private final String[] mTabNames;
+        private final List<Integer> mTabSizes;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView mView;
@@ -887,18 +892,19 @@ public class SpeechInputView extends LinearLayout {
             mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             mRes = getResources();
             mDataset = new ArrayList<>();
+            mTabSizes = new ArrayList<>();
             mClipboard = new HashMap<>();
             Set<String> defaults = PreferenceUtils.getPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables);
-            final String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
+            mTabNames = defaults.toArray(EMPTY_STRING_ARRAY);
             // TODO: defaults should be a list (not a set that needs to be sorted)
-            Arrays.sort(names);
-            for (String def : names) {
+            Arrays.sort(mTabNames);
+            int count = 0;
+            for (String def : mTabNames) {
+                mTabSizes.add(count);
                 String rewritesAsStr = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, def);
                 if (rewritesAsStr == null) {
-                    // TODO: show error
-                    mDataset.add("☞ " + def + " (null)");
+                    // TODO
                 } else {
-                    mDataset.add("☞ " + def);
                     UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
                     for (Command command : ur.getCommands()) {
                         String key = command.get(UtteranceRewriter.HEADER_COMMENT);
@@ -908,6 +914,7 @@ public class SpeechInputView extends LinearLayout {
                         Log.i("save to clipboard: " + key + "->" + val);
                         mDataset.add(key);
                         mClipboard.put(key, val);
+                        count++;
                     }
                 }
             }
@@ -940,6 +947,14 @@ public class SpeechInputView extends LinearLayout {
         @Override
         public int getItemCount() {
             return mDataset.size();
+        }
+
+        public String[] getTabNames() {
+            return mTabNames;
+        }
+
+        public List<Integer> getTabSizes() {
+            return mTabSizes;
         }
     }
 }

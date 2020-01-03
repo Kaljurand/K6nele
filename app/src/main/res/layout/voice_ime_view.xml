@@ -66,13 +66,13 @@
             app:srcCompat="@drawable/ic_search" />
     </RelativeLayout>
 
-    <!--
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlClipboardTabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.google.android.material.tabs.TabLayout>
--->
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MaterialComponents.Bridge"
+        app:tabMode="scrollable" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvClipboard"
         android:layout_width="match_parent"
