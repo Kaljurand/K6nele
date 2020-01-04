@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,7 @@ public class SpeechInputView extends LinearLayout {
     private TextView mTvInstruction;
     private TextView mTvMessage;
     private RecyclerView mRvClipboard;
+    private RelativeLayout mRlClipboard;
 
     private ComponentName mApp;
     private SpeechInputViewListener mListener;
@@ -299,7 +301,7 @@ public class SpeechInputView extends LinearLayout {
             public void onDown() {
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
                 mBImeAction.setVisibility(View.INVISIBLE);
-                if (mRvClipboard.getVisibility() == View.GONE) {
+                if (mRlClipboard.getVisibility() == View.GONE) {
                     mBImeStartStop.setVisibility(View.INVISIBLE);
                     setVisibility(mTvInstruction, View.INVISIBLE);
                     if (mBComboSelector != null) {
@@ -307,7 +309,7 @@ public class SpeechInputView extends LinearLayout {
                     }
                     setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                 } else {
-                    setVisibility(mRvClipboard, View.INVISIBLE);
+                    setVisibility(mRlClipboard, View.INVISIBLE);
                 }
                 showMessage("");
             }
@@ -317,7 +319,7 @@ public class SpeechInputView extends LinearLayout {
                 showMessage("");
                 mBImeKeyboard.setVisibility(View.VISIBLE);
                 mBImeAction.setVisibility(View.VISIBLE);
-                if (mRvClipboard.getVisibility() == View.GONE) {
+                if (mRlClipboard.getVisibility() == View.GONE) {
                     mBImeStartStop.setVisibility(View.VISIBLE);
                     setVisibility(mTvInstruction, View.VISIBLE);
                     if (mBComboSelector != null) {
@@ -325,7 +327,7 @@ public class SpeechInputView extends LinearLayout {
                     }
                     setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
                 } else {
-                    setVisibility(mRvClipboard, View.VISIBLE);
+                    setVisibility(mRlClipboard, View.VISIBLE);
                 }
                 setBackgroundResource(R.drawable.rectangle_gradient);
             }
@@ -356,6 +358,7 @@ public class SpeechInputView extends LinearLayout {
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
+        mRlClipboard = findViewById(R.id.rlClipboard);
 
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -363,7 +366,7 @@ public class SpeechInputView extends LinearLayout {
         if (mRvClipboard != null) {
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
-            mRvClipboard.setLayoutManager(new GridLayoutManager(context, 3));
+            mRvClipboard.setLayoutManager(new GridLayoutManager(context, 2));
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
@@ -516,14 +519,14 @@ public class SpeechInputView extends LinearLayout {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             if (prefs.getBoolean(context.getString(R.string.prefIsClipboard), false)) {
                 setVisibilityKeyboard(View.GONE);
-                mRvClipboard.setVisibility(View.VISIBLE);
+                mRlClipboard.setVisibility(View.VISIBLE);
             } else {
-                mRvClipboard.setVisibility(View.GONE);
+                mRlClipboard.setVisibility(View.GONE);
                 setVisibilityKeyboard(View.VISIBLE);
             }
         } else {
             setVisibilityKeyboard(View.GONE);
-            mRvClipboard.setVisibility(View.GONE);
+            mRlClipboard.setVisibility(View.GONE);
         }
     }
 

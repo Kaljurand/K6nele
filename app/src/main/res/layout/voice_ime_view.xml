@@ -66,21 +66,27 @@
             app:srcCompat="@drawable/ic_search" />
     </RelativeLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tlClipboardTabs"
+    <RelativeLayout
+        android:id="@+id/rlClipboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.MaterialComponents.Bridge"
-        app:tabMode="scrollable" />
+        android:layout_below="@+id/tvMessage">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvClipboard"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layoutHeightClipboard"
-        android:layout_below="@+id/tvMessage"
-        android:layout_centerHorizontal="true"
-        android:scrollbars="vertical"
-        android:visibility="gone" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tlClipboardTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.MaterialComponents.Bridge"
+            app:tabMode="scrollable" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvClipboard"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layoutHeightClipboard"
+            android:layout_below="@+id/tlClipboardTabs"
+            android:layout_centerHorizontal="true"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/centralButtons"
