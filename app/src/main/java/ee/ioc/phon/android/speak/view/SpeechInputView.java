@@ -366,7 +366,7 @@ public class SpeechInputView extends LinearLayout {
         if (mRvClipboard != null) {
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
-            mRvClipboard.setLayoutManager(new GridLayoutManager(context, 2));
+            mRvClipboard.setLayoutManager(new GridLayoutManager(context, 3));
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
@@ -872,7 +872,7 @@ public class SpeechInputView extends LinearLayout {
         private final Map<String, String> mClipboard;
         private final SharedPreferences mPrefs;
         private final Resources mRes;
-        private final String[] mTabNames;
+        private final List<String> mTabNames;
         private final List<Integer> mTabSizes;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -895,15 +895,16 @@ public class SpeechInputView extends LinearLayout {
             mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             mRes = getResources();
             mDataset = new ArrayList<>();
+            mTabNames = new ArrayList<>();
             mTabSizes = new ArrayList<>();
             mClipboard = new HashMap<>();
             Set<String> defaults = PreferenceUtils.getPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables);
-            mTabNames = defaults.toArray(EMPTY_STRING_ARRAY);
+            String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
             // TODO: defaults should be a list (not a set that needs to be sorted)
-            Arrays.sort(mTabNames);
+            Arrays.sort(names);
             int count = 0;
-            for (String def : mTabNames) {
-                mTabSizes.add(count);
+            int oldCount = 0;
+            for (String def : names) {
                 String rewritesAsStr = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, def);
                 if (rewritesAsStr == null) {
                     // TODO
@@ -919,6 +920,12 @@ public class SpeechInputView extends LinearLayout {
                         mClipboard.put(key, val);
                         count++;
                     }
+                }
+                if (count > oldCount) {
+                    mTabSizes.add(oldCount);
+                    mTabNames.add(def);
+                    oldCount = count;
+
                 }
             }
         }
@@ -952,7 +959,7 @@ public class SpeechInputView extends LinearLayout {
             return mDataset.size();
         }
 
-        public String[] getTabNames() {
+        public List<String> getTabNames() {
             return mTabNames;
         }
 

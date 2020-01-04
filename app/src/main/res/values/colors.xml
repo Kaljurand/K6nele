@@ -4,6 +4,8 @@
     <color name="primary">#ffc400</color>
     <color name="primaryDark">#ffa000</color>
     <color name="accent">#ffa000</color>
+
+    <!-- TODO: delete hard-coded colors -->
     <color name="orange">#ff6600</color>
     <color name="orange1">#ffcc99</color>
     <!-- sand(Safe Hex3) -->
@@ -23,5 +25,11 @@
     <color name="grey900">#212121</color>
     <color name="transparent_blue">#990099cc</color>
     <color name="transparent_grey800">#99424242</color>
+
+    <color name="panel_gradient_end">#e0e0e0</color>
+    <color name="panel_gradient_start">#bdbdbd</color>
+
+    <color name="panel_pressed_gradient_end">#eeeeee</color>
+    <color name="panel_pressed_gradient_start">#e0e0e0</color>
 
 </resources>

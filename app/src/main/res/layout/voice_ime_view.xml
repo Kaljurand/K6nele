@@ -45,7 +45,7 @@
             android:ellipsize="start"
             android:gravity="center"
             android:singleLine="true"
-            android:textColor="@color/grey300"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize2"
             android:visibility="visible"
             tools:text="@string/summaryEnableIme" />
@@ -77,6 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.MaterialComponents.Bridge"
+            app:tabIndicatorColor="@color/accent"
             app:tabMode="scrollable" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -145,7 +146,7 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/layoutMargin4dp"
         android:gravity="center"
-        android:textColor="@color/grey200"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/textSize3"
         tools:text="@string/buttonImeSpeak" />
 
@@ -161,7 +162,7 @@
         android:minWidth="@dimen/layoutMargin3"
         android:minHeight="@dimen/layoutMargin3"
         android:singleLine="true"
-        android:textColor="@color/grey100"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/textSize10sp"
         tools:text="@string/testComboLabel" />
 
