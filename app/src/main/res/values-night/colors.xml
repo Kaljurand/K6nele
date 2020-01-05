@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="transparent_grey800">#99424242</color>
     <color name="panel_gradient_end">#424242</color>
     <color name="panel_gradient_start">#212121</color>
     <color name="panel_pressed_gradient_end">#616161</color>

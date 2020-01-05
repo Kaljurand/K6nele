@@ -3,11 +3,8 @@ package ee.ioc.phon.android.speak.model;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.speech.RecognizerIntent;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.Base64;
 
 import java.util.ArrayList;
@@ -200,11 +197,10 @@ public class Rewrites {
         ssb.append(ppMatcher(map));
         ssb.append('\n');
         // Utterance
-        int start = ssb.length();
+        // int start = ssb.length();
         ssb.append(map.get(UtteranceRewriter.HEADER_UTTERANCE));
-        // Other text is 0xffBDBDBD (400)
-        // TODO: use the accent color
-        ssb.setSpan(new ForegroundColorSpan(0xffFAFAFA), start, ssb.length(), 0);
+        // Use a layout file to make it easier to style the output
+        // ssb.setSpan(new ForegroundColorSpan(0xffFAFAFA), start, ssb.length(), 0);
         ssb.append('\n');
         // Replacement
         ssb.append(toPp(map.get(UtteranceRewriter.HEADER_REPLACEMENT))
@@ -218,9 +214,9 @@ public class Rewrites {
         String comment = map.get(UtteranceRewriter.HEADER_COMMENT);
         if (comment != null && !comment.isEmpty()) {
             ssb.append("\n\n");
-            start = ssb.length();
+            // start = ssb.length();
             ssb.append(comment);
-            ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, ssb.length(), 0);
+            // ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, ssb.length(), 0);
         }
         return ssb;
     }

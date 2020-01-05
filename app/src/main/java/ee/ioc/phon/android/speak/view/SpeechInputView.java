@@ -21,13 +21,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,7 +55,7 @@ import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
-public class SpeechInputView extends LinearLayout {
+public class SpeechInputView extends LinearLayoutCompat {
 
     private static final String[] EMPTY_STRING_ARRAY = {};
 
@@ -200,7 +198,7 @@ public class SpeechInputView extends LinearLayout {
             // If no action was defined, then we show the Enter icon,
             // even if we were allowed to override Enter.
             if (useEnter) {
-                mBImeAction.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_newline));
+                mBImeAction.setImageResource(R.drawable.ic_newline);
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
@@ -216,6 +214,7 @@ public class SpeechInputView extends LinearLayout {
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
         if (buttonDelete != null) {
+            buttonDelete.setImageResource(R.drawable.ic_backspace);
             buttonDelete.setOnTouchListener(new OnPressAndHoldListener() {
                 @Override
                 public void onAction() {
@@ -577,23 +576,23 @@ public class SpeechInputView extends LinearLayout {
         mUiIsMinimized = true;
         setVisibilityKeyboard(View.GONE);
         showClipboard(false);
-        loadDrawable(mBImeKeyboard, R.drawable.ic_arrow_upward);
+        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
-        //AppCompatResources.getDrawable(getContext(), R.drawable.rectangle_gradient_red);
-        //setBackgroundResource(R.drawable.rectangle_gradient_red);
-        setBackground(AppCompatResources.getDrawable(getContext(), R.drawable.rectangle_gradient_red));
+        setBackgroundResource(R.drawable.rectangle_gradient_red);
     }
 
+    /*
     private void loadDrawable(ImageView view, int res) {
         view.setBackground(AppCompatResources.getDrawable(getContext(), res));
     }
+    */
 
     private void maximizeUi() {
         mUiIsMinimized = false;
         setVisibilityKeyboard(View.VISIBLE);
         showClipboard(true);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            loadDrawable(mBImeKeyboard, R.drawable.ic_ime);
+            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
             mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
             mBImeKeyboard.setOnLongClickListener(v -> {
@@ -601,7 +600,7 @@ public class SpeechInputView extends LinearLayout {
                 return true;
             });
         } else {
-            loadDrawable(mBImeKeyboard, R.drawable.ic_arrow_downward);
+            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
         setBackgroundResource(R.drawable.rectangle_gradient);

@@ -8,5 +8,5 @@
     android:gravity="start"
     android:padding="4dp"
     android:singleLine="true"
-    android:textColor="@color/grey100"
+    android:textColor="?android:attr/textColorPrimary"
     android:textSize="@dimen/textSize3" />
