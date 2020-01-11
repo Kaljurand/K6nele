@@ -21,4 +21,6 @@
 
     <string name="defaultUrlPrefix" translatable="false">http://</string>
 
+    <integer name="spanCount">3</integer>
+
 </resources>

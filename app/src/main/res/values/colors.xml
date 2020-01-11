@@ -6,8 +6,6 @@
     <color name="accent">#ffa000</color>
 
     <!-- TODO: delete hard-coded colors -->
-    <color name="orange">#ff6600</color>
-    <color name="orange1">#ffcc99</color>
     <!-- sand(Safe Hex3) -->
     <color name="green1">#99cc33</color>
     <color name="green3">#669900</color>

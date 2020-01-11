@@ -23,5 +23,8 @@
         android:layout_centerHorizontal="true"
         android:scrollbars="vertical"
         android:textColor="?android:attr/textColorPrimary"
-        android:theme="@style/Theme.MaterialComponents.Bridge" />
+        android:theme="@style/Theme.MaterialComponents.Bridge"
+        app:layoutManager="GridLayoutManager"
+        app:spanCount="@integer/spanCount" />
+
 </RelativeLayout>

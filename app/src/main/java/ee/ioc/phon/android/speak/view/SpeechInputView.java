@@ -21,11 +21,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +49,7 @@ import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
+import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
@@ -90,6 +95,11 @@ public class SpeechInputView extends LinearLayoutCompat {
     private final static String DASH_CUR = "――――――――――――――――――――";
     private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
+    private final float SPRING_START_VALUE = 150f;
+    private final float SPRING_OVERSHOOT = 10f;
+    private final SpringForce SPRING = new SpringForce(0)
+            .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY)
+            .setStiffness(SpringForce.STIFFNESS_LOW);
 
     public interface SpeechInputViewListener {
 
@@ -403,21 +413,33 @@ public class SpeechInputView extends LinearLayoutCompat {
             @Override
             public void onSwipeLeft() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_LEFT");
+                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_X)
+                        .setMaxValue(SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(-1 * SPRING_START_VALUE);
+                anim.start();
             }
 
             @Override
             public void onSwipeRight() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_RIGHT");
+                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_X)
+                        .setMinValue(-1 * SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(SPRING_START_VALUE);
+                anim.start();
             }
 
             @Override
             public void onSwipeUp() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_UP");
+                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_Y)
+                        .setMaxValue(SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(-1 * SPRING_START_VALUE);
+                anim.start();
             }
 
             @Override
             public void onSwipeDown() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_DOWN");
+                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_Y)
+                        .setMinValue(-1 * SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(SPRING_START_VALUE);
+                anim.start();
             }
 
             @Override
@@ -541,6 +563,19 @@ public class SpeechInputView extends LinearLayoutCompat {
                 TabLayout.Tab tab = tabs.newTab();
                 tab.setText(tabName);
                 tabs.addTab(tab);
+            }
+            // Long-click on tab opens the rewrite rule table
+            LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
+            for (int i = 0; i < tabStrip.getChildCount(); i++) {
+                final int fi = i;
+                tabStrip.getChildAt(i).setOnLongClickListener(v -> {
+                    Context context = getContext();
+                    Intent intent = new Intent(context, RewritesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(RewritesActivity.EXTRA_NAME, tabs.getTabAt(fi).getText());
+                    context.startActivity(intent);
+                    return false;
+                });
             }
             new TabScrollAttacher(tabs, mRvClipboard, cba.getTabSizes());
         }
