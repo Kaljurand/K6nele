@@ -27,9 +27,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.dynamicanimation.animation.DynamicAnimation;
-import androidx.dynamicanimation.animation.SpringAnimation;
-import androidx.dynamicanimation.animation.SpringForce;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
@@ -95,11 +93,6 @@ public class SpeechInputView extends LinearLayoutCompat {
     private final static String DASH_CUR = "――――――――――――――――――――";
     private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
-    private final float SPRING_START_VALUE = 150f;
-    private final float SPRING_OVERSHOOT = 10f;
-    private final SpringForce SPRING = new SpringForce(0)
-            .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY)
-            .setStiffness(SpringForce.STIFFNESS_LOW);
 
     public interface SpeechInputViewListener {
 
@@ -375,7 +368,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         if (mRvClipboard != null) {
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
-            mRvClipboard.setLayoutManager(new GridLayoutManager(context, 3));
+            mRvClipboard.setLayoutManager(new GridLayoutManager(context, getResources().getInteger(R.integer.spanCount)));
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
@@ -408,38 +401,26 @@ public class SpeechInputView extends LinearLayoutCompat {
             }
         }
 
-        mBImeStartStop.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+        mBImeStartStop.setOnTouchListener(new OnSwipeTouchListener(getContext(), mBImeStartStop) {
 
             @Override
             public void onSwipeLeft() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_LEFT");
-                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_X)
-                        .setMaxValue(SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(-1 * SPRING_START_VALUE);
-                anim.start();
             }
 
             @Override
             public void onSwipeRight() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_RIGHT");
-                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_X)
-                        .setMinValue(-1 * SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(SPRING_START_VALUE);
-                anim.start();
             }
 
             @Override
             public void onSwipeUp() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_UP");
-                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_Y)
-                        .setMaxValue(SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(-1 * SPRING_START_VALUE);
-                anim.start();
             }
 
             @Override
             public void onSwipeDown() {
                 mListener.onCommand("K6_" + mBtnType + "_BTN_MIC_DOWN");
-                final SpringAnimation anim = new SpringAnimation(mBImeStartStop, DynamicAnimation.TRANSLATION_Y)
-                        .setMinValue(-1 * SPRING_OVERSHOOT).setSpring(SPRING).setStartValue(SPRING_START_VALUE);
-                anim.start();
             }
 
             @Override
@@ -541,9 +522,11 @@ public class SpeechInputView extends LinearLayoutCompat {
             if (prefs.getBoolean(context.getString(R.string.prefIsClipboard), false)) {
                 setVisibilityKeyboard(View.GONE);
                 mRlClipboard.setVisibility(View.VISIBLE);
+                mBImeKeyboard.setImageResource(R.drawable.ic_mic);
             } else {
                 mRlClipboard.setVisibility(View.GONE);
                 setVisibilityKeyboard(View.VISIBLE);
+                mBImeKeyboard.setImageResource(R.drawable.ic_clipboard);
             }
         } else {
             setVisibilityKeyboard(View.GONE);
@@ -627,13 +610,23 @@ public class SpeechInputView extends LinearLayoutCompat {
         setVisibilityKeyboard(View.VISIBLE);
         showClipboard(true);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
-            mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
+            if (false) {
+                mBImeKeyboard.setImageResource(R.drawable.ic_ime);
+                mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
-            mBImeKeyboard.setOnLongClickListener(v -> {
-                mListener.onSwitchIme(false);
-                return true;
-            });
+                mBImeKeyboard.setOnLongClickListener(v -> {
+                    mListener.onSwitchIme(false);
+                    return true;
+                });
+            } else {
+                mBImeKeyboard.setOnClickListener(v -> {
+                    Context context = getContext();
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                    boolean b = prefs.getBoolean(context.getString(R.string.prefIsClipboard), false);
+                    PreferenceUtils.putPrefBoolean(prefs, getResources(), R.string.prefIsClipboard, !b);
+                    showClipboard(true);
+                });
+            }
         } else {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
@@ -919,10 +912,14 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
 
         /**
+         * The comment-field is used as the button label (clip), and the Utterance-field is returned via
+         * onFinalResult when the button is pressed.
+         * <p>
          * TODO: improve specification of header (load only the columns that are needed)
          * TODO: implement putPrefMapMap (takes map instead of key and val)
          * TODO: improve dealing with nulls
          * TODO: support named clipboards
+         * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
          */
         public ClipboardAdapter(CommandMatcher commandMatcher) {
             Context context = getContext();
@@ -945,14 +942,15 @@ public class SpeechInputView extends LinearLayoutCompat {
                 } else {
                     UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
                     for (Command command : ur.getCommands()) {
-                        String key = command.get(UtteranceRewriter.HEADER_COMMENT);
-                        String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
-                        key = key == null ? val : key;
-                        val = val == null ? key : val;
-                        Log.i("save to clipboard: " + key + "->" + val);
-                        mDataset.add(key);
-                        mClipboard.put(key, val);
-                        count++;
+                        String val = makeUtt(command);
+                        if (val != null) {
+                            String key = command.get(UtteranceRewriter.HEADER_COMMENT);
+                            key = key == null ? val : key;
+                            Log.i("Clipboard: " + key + "->" + val);
+                            mDataset.add(key);
+                            mClipboard.put(key, val);
+                            count++;
+                        }
                     }
                 }
                 if (count > oldCount) {
@@ -999,6 +997,19 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         public List<Integer> getTabSizes() {
             return mTabSizes;
+        }
+
+        /**
+         * Work in progress.
+         * Map the Utterance-field (regex) to a string that is matched by this regex.
+         * TODO: return an iterator over all possible matches
+         */
+        private String makeUtt(Command command) {
+            String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
+            if (val != null && Pattern.matches(val, val)) {
+                return val;
+            }
+            return null;
         }
     }
 }

@@ -5,13 +5,27 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
+
 // Copied from http://stackoverflow.com/a/19506010/12547
 public class OnSwipeTouchListener implements View.OnTouchListener {
 
+    private final SpringForce SPRING = new SpringForce(0)
+            .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY)
+            .setStiffness(SpringForce.STIFFNESS_LOW);
+
     private final GestureDetector mGestureDetector;
+    private final View mView;
 
     public OnSwipeTouchListener(Context context) {
+        this(context, null);
+    }
+
+    public OnSwipeTouchListener(Context context, View view) {
         mGestureDetector = new GestureDetector(context, new GestureListener());
+        mView = view;
     }
 
     public void onSwipeLeft() {
@@ -68,12 +82,22 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
                 } else {
                     onSwipeLeft();
                 }
+                if (mView != null) {
+                    final SpringAnimation anim = new SpringAnimation(mView, DynamicAnimation.TRANSLATION_X)
+                            .setSpring(SPRING).setStartValue(changeX);
+                    anim.start();
+                }
                 return true;
             } else if (distanceY > distanceX && distanceY > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                 if (changeY > 0) {
                     onSwipeDown();
                 } else {
                     onSwipeUp();
+                }
+                if (mView != null) {
+                    final SpringAnimation anim = new SpringAnimation(mView, DynamicAnimation.TRANSLATION_Y)
+                            .setSpring(SPRING).setStartValue(changeY);
+                    anim.start();
                 }
                 return true;
             }
