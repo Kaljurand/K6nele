@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
-import com.iammert.tabscrollattacherlib.TabScrollAttacher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -534,33 +533,58 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
+    /**
+     * TODO: hide tabs without rewrites
+     */
     private void makeComboChange() {
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
         if (mRvClipboard != null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Resources res = getResources();
             final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
-            ClipboardAdapter cba = new ClipboardAdapter(commandMatcher);
-            mRvClipboard.setAdapter(cba);
+            Context context = getContext();
+            Set<String> defaults =
+                    PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
+            String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
+            // TODO: defaults should be a list (not a set that needs to be sorted)
+            Arrays.sort(names);
             TabLayout tabs = findViewById(R.id.tlClipboardTabs);
             tabs.removeAllTabs();
-            for (String tabName : cba.getTabNames()) {
+            String selectedTabName = prefs.getString(res.getString(R.string.prefClipboardTabName), null);
+            Log.i("TabName (load): " + selectedTabName);
+            for (String tabName : names) {
                 TabLayout.Tab tab = tabs.newTab();
                 tab.setText(tabName);
                 tabs.addTab(tab);
+                if (tabName.equals(selectedTabName)) {
+                    tab.select();
+                    String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, tabName);
+                    if (rewritesAsStr != null) {
+                        mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
+                    }
+                }
             }
-            // Long-click on tab opens the rewrite rule table
             LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
             for (int i = 0; i < tabStrip.getChildCount(); i++) {
-                final int fi = i;
+                String name = tabs.getTabAt(i).getText().toString();
+                // Long-click on tab opens the rewrite rule table
                 tabStrip.getChildAt(i).setOnLongClickListener(v -> {
-                    Context context = getContext();
-                    Intent intent = new Intent(context, RewritesActivity.class);
+                    Intent intent = new Intent(getContext(), RewritesActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(RewritesActivity.EXTRA_NAME, tabs.getTabAt(fi).getText());
+                    intent.putExtra(RewritesActivity.EXTRA_NAME, name);
                     context.startActivity(intent);
                     return false;
                 });
+                // Short-click loads the corresponding clipboard
+                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, name);
+                if (rewritesAsStr != null) {
+                    tabStrip.getChildAt(i).setOnClickListener(v -> {
+                        Log.i("TabName (save): " + name);
+                        mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
+                        PreferenceUtils.putPrefString(prefs, res, R.string.prefClipboardTabName, name);
+                    });
+                }
             }
-            new TabScrollAttacher(tabs, mRvClipboard, cba.getTabSizes());
         }
     }
 
@@ -897,10 +921,6 @@ public class SpeechInputView extends LinearLayoutCompat {
     private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
         private final List<String> mDataset;
         private final Map<String, String> mClipboard;
-        private final SharedPreferences mPrefs;
-        private final Resources mRes;
-        private final List<String> mTabNames;
-        private final List<Integer> mTabSizes;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView mView;
@@ -921,43 +941,18 @@ public class SpeechInputView extends LinearLayoutCompat {
          * TODO: support named clipboards
          * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
          */
-        public ClipboardAdapter(CommandMatcher commandMatcher) {
-            Context context = getContext();
-            mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-            mRes = getResources();
+        public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {
             mDataset = new ArrayList<>();
-            mTabNames = new ArrayList<>();
-            mTabSizes = new ArrayList<>();
             mClipboard = new HashMap<>();
-            Set<String> defaults = PreferenceUtils.getPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables);
-            String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
-            // TODO: defaults should be a list (not a set that needs to be sorted)
-            Arrays.sort(names);
-            int count = 0;
-            int oldCount = 0;
-            for (String def : names) {
-                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, def);
-                if (rewritesAsStr == null) {
-                    // TODO
-                } else {
-                    UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
-                    for (Command command : ur.getCommands()) {
-                        String val = makeUtt(command);
-                        if (val != null) {
-                            String key = command.get(UtteranceRewriter.HEADER_COMMENT);
-                            key = key == null ? val : key;
-                            Log.i("Clipboard: " + key + "->" + val);
-                            mDataset.add(key);
-                            mClipboard.put(key, val);
-                            count++;
-                        }
-                    }
-                }
-                if (count > oldCount) {
-                    mTabSizes.add(oldCount);
-                    mTabNames.add(def);
-                    oldCount = count;
-
+            UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
+            for (Command command : ur.getCommands()) {
+                String val = makeUtt(command);
+                if (val != null) {
+                    String key = command.get(UtteranceRewriter.HEADER_COMMENT);
+                    key = key == null ? val : key;
+                    Log.i("Clipboard: " + key + "->" + val);
+                    mDataset.add(key);
+                    mClipboard.put(key, val);
                 }
             }
         }
@@ -989,14 +984,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         @Override
         public int getItemCount() {
             return mDataset.size();
-        }
-
-        public List<String> getTabNames() {
-            return mTabNames;
-        }
-
-        public List<Integer> getTabSizes() {
-            return mTabSizes;
         }
 
         /**
