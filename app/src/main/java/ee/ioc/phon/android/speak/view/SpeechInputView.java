@@ -550,7 +550,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             Arrays.sort(names);
             TabLayout tabs = findViewById(R.id.tlClipboardTabs);
             tabs.removeAllTabs();
-            String selectedTabName = prefs.getString(res.getString(R.string.prefClipboardTabName), null);
+            String selectedTabName = getTabName(prefs, res, mApp);
             Log.i("TabName (load): " + selectedTabName);
             for (String tabName : names) {
                 TabLayout.Tab tab = tabs.newTab();
@@ -581,11 +581,19 @@ public class SpeechInputView extends LinearLayoutCompat {
                     tabStrip.getChildAt(i).setOnClickListener(v -> {
                         Log.i("TabName (save): " + name);
                         mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
-                        PreferenceUtils.putPrefString(prefs, res, R.string.prefClipboardTabName, name);
+                        setTabName(prefs, res, mApp, name);
                     });
                 }
             }
         }
+    }
+
+    private String getTabName(SharedPreferences prefs, Resources res, ComponentName app) {
+        return PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapClipboardTabName, app.flattenToShortString());
+    }
+
+    private void setTabName(SharedPreferences prefs, Resources res, ComponentName app, String name) {
+        PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapClipboardTabName, app.flattenToShortString(), name);
     }
 
     private void nextCombo() {

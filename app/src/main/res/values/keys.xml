@@ -2,7 +2,7 @@
 <resources>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
     <string name="prefIsClipboard" translatable="false">prefIsClipboard</string>
-    <string name="prefClipboardTabName" translatable="false">prefClipboardTabName</string>
+    <string name="mapClipboardTabName" translatable="false">mapClipboardTabName</string>
     <string name="keyHttpServer" translatable="false">keyHttpServer</string>
     <string name="keyWsServer" translatable="false">keyWsServer</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
