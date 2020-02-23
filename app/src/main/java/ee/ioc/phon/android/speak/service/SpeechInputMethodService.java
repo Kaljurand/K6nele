@@ -25,7 +25,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -35,8 +37,10 @@ import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
+import ee.ioc.phon.android.speechutils.editor.Constants;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
 import ee.ioc.phon.android.speechutils.editor.Op;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
@@ -239,11 +243,7 @@ public class SpeechInputMethodService extends InputMethodService {
         if (dialog == null) {
             return null;
         }
-        final Window window = dialog.getWindow();
-        if (window == null) {
-            return null;
-        }
-        return window;
+        return dialog.getWindow();
     }
 
     /**
@@ -314,6 +314,18 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
             }
 
+            private void addRule(String text) {
+                Calendar cal = Calendar.getInstance();
+                long uttId = cal.getTimeInMillis();
+                String uttAsStr = "^!#Recent_" + uttId + "$";
+                Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
+                Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
+                // cal.getTime().toString()
+                Command command = new Command(text, null, null, app, utt, text, null, null);
+                runOp(mCommandEditor.addRule("#Recent", command));
+                Log.i("onCommand: addRule: " + command);
+            }
+
             @Override
             public void onComboChange(String language, ComponentName service) {
                 // TODO: name of the rewrites table configurable
@@ -336,9 +348,15 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
+                String text = getText(results);
+                Log.i("onCommand: " + text);
+                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
                 if (editorResult != null && mInputView != null && editorResult.isCommand()) {
                     mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
+                }
+                // TODO: clean up
+                if (!text.startsWith("!#Recent")) {
+                    addRule(text);
                 }
                 setKeepScreenOn(false);
             }

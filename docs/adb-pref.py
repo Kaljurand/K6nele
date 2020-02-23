@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -11,7 +11,7 @@ Usage:
 - Enable developer options on the device and connect to the device via adb.
   See: https://developer.android.com/studio/command-line/adb.html
   For Wear, see: https://developer.android.com/training/wearables/apps/debugging.html
-- (Optional) Check the Kõnele developer option "Run GetPutPreference without confirmation" to suppress the
+- (Optional) Switch on the Kõnele developer option "Run GetPutPreference without confirmation" to suppress the
   confirmation dialog.
 - The input to this script is a list of YAML preference definitions.
 - The output of this script should be piped into "sh".
@@ -22,8 +22,6 @@ Usage:
     adb-pref.py prefs_developer.yml prefs_user_guide_rewrites.yml prefs_private.yml | sh
 
 """
-
-from __future__ import division, unicode_literals, print_function
 
 import sys
 import argparse
@@ -44,7 +42,7 @@ def get_args():
     parser.add_argument('fns', metavar='FILE', type=str, nargs='*',
                         help='preference file')
     parser.add_argument('--disable-confirmation', action='store_true', dest='disable_confirmation')
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s v0.0.1')
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s v0.0.2')
     return parser.parse_args()
 
 def create_adb(pref):
@@ -91,7 +89,7 @@ def main():
     for fn in args.fns:
         with open(fn, 'r') as stream:
             try:
-                prefs = yaml.load(stream)
+                prefs = yaml.load(stream, Loader=yaml.BaseLoader)
                 process(prefs)
             except yaml.YAMLError as exc:
                 print(exc, file=sys.stderr)
