@@ -1,8 +1,7 @@
 Locale	Utterance	Replacement	Comment	Command	Arg1
-en	load (main|default) skill	{"component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity"}
 et	läti ?tõlg[ei] (.+)	{ "action": "android.intent.action.SEND", "component": "com.tilde.translator/.MainActivity", "type": "text/plain", "extras": {     "android.intent.extra.TEXT": "$1"   } }	Ütle nt "läti tõlgi kuidas käsi käib". Tõlge avaneb Tilde tõlkerakenduses, seal eelnevalt valitud keelte vahel.
-et	tõlg[ei] (.+) keelde (.+)	{ "action": "android.intent.action.VIEW", "component": "com.google.android.apps.translate/.TranslateActivity", "package": "com.google.android.apps.translate", "data": "http://translate.google.com/m/translate?client=ob&hl=et&ie=UTF8&oe=UTF8&sl=et&tl=<$1>&q=$2" }	Ütle nt "tõlgi vene keelde kuidas käsi käib". Tõlge vene keelde avaneb Google'i tõlkerakenduses.
-et	tõlg[ei] (.+)	{ "action": "android.intent.action.SEND", "component": "com.google.android.apps.translate/.TranslateActivity", "package": "com.google.android.apps.translate", "type": "text/plain", "extras": {     "android.intent.extra.TEXT": "$1"   } }	Ütle nt "tõlgi kuidas käsi käib". Tõlge avaneb Google'i tõlkerakenduses, seal eelnevalt valitud keelte vahel.
+et	tõl[gk][^ ]+ (.+) keelde (.+)	{ "action": "android.intent.action.VIEW", "component": "com.google.android.apps.translate/.TranslateActivity", "package": "com.google.android.apps.translate", "data": "http://translate.google.com/m/translate?client=ob&hl=et&ie=UTF8&oe=UTF8&sl=et&tl=<$1>&q=$2" }	Ütle nt "tõlgi vene keelde kuidas käsi käib". Tõlge vene keelde avaneb Google'i tõlkerakenduses.
+et	tõl[gk][^ ]+ (.+)	{ "action": "android.intent.action.SEND", "component": "com.google.android.apps.translate/.TranslateActivity", "package": "com.google.android.apps.translate", "type": "text/plain", "extras": {     "android.intent.extra.TEXT": "$1"   } }	Ütle nt "tõlgi kuidas käsi käib". Tõlge avaneb Google'i tõlkerakenduses, seal eelnevalt valitud keelte vahel.
 de	übersetze ins ([^ ]+) (.+)	{ "action": "android.intent.action.VIEW", "component": "com.google.android.apps.translate/.TranslateActivity", "package": "com.google.android.apps.translate", "data": "http://translate.google.com/m/translate?client=ob&hl=de&ie=UTF8&oe=UTF8&sl=de&tl=<$1>&q=$2" }	zB: übersetze ins Estnische ...
 en	translate into ([^ ]+) (.+)	{ "action": "android.intent.action.VIEW", "component": "com.google.android.apps.translate/.TranslateActivity", "package": "com.google.android.apps.translate", "data": "http://translate.google.com/m/translate?client=ob&hl=en&ie=UTF8&oe=UTF8&sl=en&tl=<$1>&q=$2" }	e.g.: translate into Estonian ...
 et	<inglise>	en
@@ -15,7 +14,13 @@ et	<rootsi>	sv
 de	<Estnische>	et
 de	<Englische>	en
 en	<Estonian>	et
+en	<English>	en
 en	<German>	de
+en	<Finnish>	fi
+en	<Hungarian>	hu
+en	<Dutch|Flemish>	nl
+en	<Russian>	ru
+en	<Swedish>	sv
 	^([^{].+)	{ "component": "ee.ioc.phon.android.speak/.activity.SpeechActionActivity", "extras": {     "ee.ioc.phon.android.extra.VOICE_PROMPT": "K6_VPROMPT_WRONG_COMMAND<$1>",     "android.speech.extra.LANGUAGE": "K6_LOCALE",     "android.speech.extra.PROMPT": "K6_PROMPT_WRONG_COMMAND<$1>",     "android.speech.extra.MAX_RESULTS": 1,     "ee.ioc.phon.android.extra.AUTO_START": True,     "ee.ioc.phon.android.extra.RESULT_REWRITES": ["Translate"]   } }	If the command was not understood, then launch Kõnele to provide a help message. // Kui oli tundmatu käsk, siis käivita abisõnumi ette lugemiseks Kõnele.
 et	K6_LOCALE	et-EE
 et	K6_PROMPT_WRONG_COMMAND<(.*?)>	Tundmatu käsk \\"$1\\". Öelge: tõlgi <keele nimi> keelde <lause>

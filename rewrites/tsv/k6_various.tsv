@@ -35,7 +35,4 @@ et	:	^vali number (.+)$	{ "action": "android.intent.action.DIAL", "data": "tel:$
 et	:	^mängi muusikat (.+)$	{ "action": "android.media.action.MEDIA_PLAY_FROM_SEARCH", "extras": {     "android.intent.extra.focus": "vnd.android.cursor.item/*",     "query": "$1"     }, "flags": [4096] }				intent, alarm
 et		(\d+(\.\d+)?) korda (?=\d+(\.\d+)?)	$1 * 			Using lookahead. "korda" is ambiguous, but between numbers and in VimTouch it is written as "*".
 		^Pealkiri (.+)	# $1
-et	[^:]	muster (1|üks)	Tere,\n\n				template
-et	[^:]	muster (2|kaks)	Nimi: []\n\nIsikukood: []\n\nAadress: []\n\n				template
-et	[^:]	^vastuse vorm müügipakkumisele$	Lugupeetud []\n \n Täname Teid, et vastasite meie\n \n Lugupidamisega\n Heikki Papper\n müügijuht				template
 		^([{].+)		activity	$1	Launch activity if the Utterance starts with "{".
