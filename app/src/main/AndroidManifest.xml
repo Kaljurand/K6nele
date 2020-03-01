@@ -259,7 +259,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/titleServices"
             android:parentActivityName=".activity.Preferences" />
         <activity
-            android:name=".AppListActivity"
+            android:name=".activity.AppListActivity"
             android:label="@string/labelActivityAppList"
             android:parentActivityName=".activity.Preferences" />
         <activity

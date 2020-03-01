@@ -122,7 +122,7 @@
             android:title="@string/labelActivityAppList"
             app:iconSpaceReserved="false">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.AppListActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.AppListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
