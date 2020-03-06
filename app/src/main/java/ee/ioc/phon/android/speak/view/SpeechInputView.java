@@ -928,7 +928,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
         private final List<String> mDataset;
-        private final Map<String, String> mClipboard;
+        private final Map<String, Command> mClipboard;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView mView;
@@ -940,8 +940,8 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
 
         /**
-         * The comment-field is used as the button label (clip), and the Utterance-field is returned via
-         * onFinalResult when the button is pressed.
+         * List of button/clip labels (currently derived from the rewrites rule comment) mapped to
+         * utterances. Clicking on a clip will return the utterance via onFinalResult.
          * <p>
          * TODO: improve specification of header (load only the columns that are needed)
          * TODO: implement putPrefMapMap (takes map instead of key and val)
@@ -954,14 +954,10 @@ public class SpeechInputView extends LinearLayoutCompat {
             mClipboard = new HashMap<>();
             UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
             for (Command command : ur.getCommands()) {
-                String val = makeUtt(command);
-                if (val != null) {
-                    String key = command.get(UtteranceRewriter.HEADER_COMMENT);
-                    key = key == null ? val : key;
-                    Log.i("Clipboard: " + key + "->" + val);
-                    mDataset.add(key);
-                    mClipboard.put(key, val);
-                }
+                String key = command.getComment();
+                key = key == null ? command.toString() : key;
+                mDataset.add(key);
+                mClipboard.put(key, command);
             }
         }
 
@@ -974,17 +970,18 @@ public class SpeechInputView extends LinearLayoutCompat {
         @Override
         public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
             final String key = mDataset.get(position);
-            final String val = mClipboard.get(key);
+            final Command command = mClipboard.get(key);
             holder.mView.setText(key);
-            holder.mView.setOnClickListener(view -> mListener.onFinalResult(
-                    Collections.singletonList(val), new Bundle()));
+            holder.mView.setOnClickListener(view -> {
+                        String val = makeUtt(command);
+                        if (val != null) {
+                            mListener.onFinalResult(Collections.singletonList(val), new Bundle());
+                        }
+                    }
+            );
             holder.mView.setOnLongClickListener(v -> {
                 // TODO: delete with confirmation
-                if (key.equals(val)) {
-                    showMessage(key + "=");
-                } else {
-                    showMessage(key + "->" + val);
-                }
+                showMessage(key + "|" + command.toString());
                 return true;
             });
         }

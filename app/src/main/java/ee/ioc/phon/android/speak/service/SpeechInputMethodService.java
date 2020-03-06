@@ -43,9 +43,14 @@ import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
 import ee.ioc.phon.android.speechutils.editor.Constants;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
 import ee.ioc.phon.android.speechutils.editor.Op;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
+
+    // TODO: move somewhere else and make end-user configurable
+    private static final String REWRITES_RECENT_NAME = "#Recent";
+    private static final int REWRITES_RECENT_SIZE = 99;
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
@@ -314,16 +319,60 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
             }
 
-            private void addRule(String text) {
+            /**
+             * Creates a rule where the utterance is a unique pattern based on the timestamp.
+             * and the given text is replacement as well as the comment (i.e. clip label).
+             * Clicking on a Recent clip will just push it to the top of the list, i.e. make it most recent.
+             * @param text Spoken input, used as the clipboard label, as well as the replacement if command == null
+             * @param command Command (if spoken input triggered a command). Used to populate the clips's
+             *                replacement, and command.
+             */
+            private void addRule(String text, Command command) {
+                Log.i("Add rule: " + text + " " + command);
                 Calendar cal = Calendar.getInstance();
                 long uttId = cal.getTimeInMillis();
-                String uttAsStr = "^!#Recent_" + uttId + "$";
+                String uttAsStr = "^" + REWRITES_RECENT_NAME + uttId + "$";
                 Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
                 Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
                 // cal.getTime().toString()
-                Command command = new Command(text, null, null, app, utt, text, null, null);
-                runOp(mCommandEditor.addRule("#Recent", command));
-                Log.i("onCommand: addRule: " + command);
+                Command newCommand;
+                if (command == null) {
+                    newCommand = new Command(text, null, null, app, utt, text, null, null);
+                } else {
+                    // We store the matched command, but change the utterance, comment, and the command matcher.
+                    // TODO: review this
+                    newCommand = new Command(command.getComment(), null, null, app, utt, command.getReplacement(), command.getId(), command.getArgs());
+                }
+                addRuleHelper(REWRITES_RECENT_NAME, newCommand);
+            }
+
+            private void addRuleHelper(String name, Command command) {
+                // Load the existing rewrite rule table
+                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, name);
+                UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+                List<Command> commands = ur.getCommands();
+                // Delete commands that produce the same result.
+                // TODO: perform this as part of UtteranceRewriter
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    commands.removeIf(x -> command.equalsCommand(x));
+                }
+                // Add a rule
+                commands.add(0, command);
+                UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(REWRITES_RECENT_SIZE, commands.size())),
+                        UtteranceRewriter.DEFAULT_HEADER);
+                // Save it again
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, name, newUr.toTsv());
+            }
+
+            private void commitResults(List<String> results) {
+                String text = getText(results);
+                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
+                if (editorResult != null && mInputView != null && editorResult.isCommand()) {
+                    mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
+                    addRule(text, editorResult.getCommand());
+                } else {
+                    addRule(text, null);
+                }
             }
 
             @Override
@@ -335,10 +384,7 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onPartialResult(List<String> results, boolean isSemiFinal) {
                 if (isSemiFinal) {
-                    CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
-                    if (editorResult != null && mInputView != null && editorResult.isCommand()) {
-                        mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
-                    }
+                    commitResults(results);
                 } else {
                     if (mShowPartialResults) {
                         mCommandEditor.commitPartialResult(getText(results));
@@ -348,16 +394,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                String text = getText(results);
-                Log.i("onCommand: " + text);
-                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
-                if (editorResult != null && mInputView != null && editorResult.isCommand()) {
-                    mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
-                }
-                // TODO: clean up
-                if (!text.startsWith("!#Recent")) {
-                    addRule(text);
-                }
+                commitResults(results);
                 setKeepScreenOn(false);
             }
 
