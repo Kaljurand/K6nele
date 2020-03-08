@@ -35,9 +35,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -927,8 +925,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
 
     private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
-        private final List<String> mDataset;
-        private final Map<String, Command> mClipboard;
+        private final List<Command> mDataset;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView mView;
@@ -951,13 +948,9 @@ public class SpeechInputView extends LinearLayoutCompat {
          */
         public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {
             mDataset = new ArrayList<>();
-            mClipboard = new HashMap<>();
             UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
             for (Command command : ur.getCommands()) {
-                String key = command.getComment();
-                key = key == null ? command.toString() : key;
-                mDataset.add(key);
-                mClipboard.put(key, command);
+                mDataset.add(command);
             }
         }
 
@@ -969,9 +962,8 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         @Override
         public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
-            final String key = mDataset.get(position);
-            final Command command = mClipboard.get(key);
-            holder.mView.setText(key);
+            final Command command = mDataset.get(position);
+            holder.mView.setText(getLabel(command));
             holder.mView.setOnClickListener(view -> {
                         String val = makeUtt(command);
                         if (val != null) {
@@ -981,7 +973,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             );
             holder.mView.setOnLongClickListener(v -> {
                 // TODO: delete with confirmation
-                showMessage(key + "|" + command.toString());
+                showMessage(command.toString());
                 return true;
             });
         }
@@ -1002,6 +994,18 @@ public class SpeechInputView extends LinearLayoutCompat {
                 return val;
             }
             return null;
+        }
+
+        // TODO: move into Command?
+        private String getLabel(Command command) {
+            String label = command.getLabel();
+            if (label == null) {
+                label = command.getComment();
+            }
+            if (label == null) {
+                label = command.toString();
+            }
+            return label;
         }
     }
 }

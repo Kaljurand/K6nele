@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -320,48 +321,58 @@ public class SpeechInputMethodService extends InputMethodService {
             }
 
             /**
-             * Creates a rule where the utterance is a unique pattern based on the timestamp.
-             * and the given text is replacement as well as the comment (i.e. clip label).
+             * Creates a rule where the utterance is a new unique pattern based on the timestamp.
+             * The replacement and the possible command with arguments are based on the rewriting results.
+             * In case of commands the clip label is the command's comment or, if missing, the pretty-printed command.
+             * For a simple replacement the clip label is the replacement.
              * Clicking on a Recent clip will just push it to the top of the list, i.e. make it most recent.
+             *
+             * TODO: review and update doc
+             * TODO: do we need to generate the utterance field at all?
+             *
              * @param text Spoken input, used as the clipboard label, as well as the replacement if command == null
-             * @param command Command (if spoken input triggered a command). Used to populate the clips's
+             * @param editorResult Command (if spoken input triggered a command). Used to populate the clips's
              *                replacement, and command.
              */
-            private void addRule(String text, Command command) {
-                Log.i("Add rule: " + text + " " + command);
+            private void addRule(String text, CommandEditorResult editorResult) {
+                Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + editorResult.getCommand());
                 Calendar cal = Calendar.getInstance();
                 long uttId = cal.getTimeInMillis();
                 String uttAsStr = "^" + REWRITES_RECENT_NAME + uttId + "$";
                 Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
                 Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
                 // cal.getTime().toString()
+                UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
                 Command newCommand;
-                if (command == null) {
-                    newCommand = new Command(text, null, null, app, utt, text, null, null);
-                } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String comment = sdf.format(cal.getTime()) + ", " + text;
+                if (rewrite.isCommand()) {
                     // We store the matched command, but change the utterance, comment, and the command matcher.
                     // TODO: review this
-                    newCommand = new Command(command.getComment(), null, null, app, utt, command.getReplacement(), command.getId(), command.getArgs());
+                    String label = rewrite.getCommand().getLabel();
+                    if (label == null) {
+                        label = rewrite.ppCommand();
+                    }
+                    newCommand = new Command(label, comment, null, null, app, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
+                } else {
+                    newCommand = new Command(rewrite.mStr, comment, null, null, app, utt, rewrite.mStr, null);
                 }
-                addRuleHelper(REWRITES_RECENT_NAME, newCommand);
-            }
 
-            private void addRuleHelper(String name, Command command) {
                 // Load the existing rewrite rule table
-                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, name);
+                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME);
                 UtteranceRewriter ur = new UtteranceRewriter(rewrites);
                 List<Command> commands = ur.getCommands();
                 // Delete commands that produce the same result.
                 // TODO: perform this as part of UtteranceRewriter
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    commands.removeIf(x -> command.equalsCommand(x));
+                    commands.removeIf(newCommand::equalsCommand);
                 }
                 // Add a rule
-                commands.add(0, command);
+                commands.add(0, newCommand);
                 UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(REWRITES_RECENT_SIZE, commands.size())),
                         UtteranceRewriter.DEFAULT_HEADER);
                 // Save it again
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, name, newUr.toTsv());
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME, newUr.toTsv());
             }
 
             private void commitResults(List<String> results) {
@@ -369,9 +380,9 @@ public class SpeechInputMethodService extends InputMethodService {
                 CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
                 if (editorResult != null && mInputView != null && editorResult.isCommand()) {
                     mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
-                    addRule(text, editorResult.getCommand());
-                } else {
-                    addRule(text, null);
+                }
+                if (editorResult != null) {
+                    addRule(text, editorResult);
                 }
             }
 

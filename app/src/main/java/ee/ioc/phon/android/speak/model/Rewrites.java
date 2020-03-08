@@ -210,6 +210,12 @@ public class Rewrites {
                 .replace("   ", "\n\t"));
         // Command with arguments
         ssb.append(ppCommand(map));
+        // Label
+        String label = map.get(UtteranceRewriter.HEADER_LABEL);
+        if (label != null && !label.isEmpty()) {
+            ssb.append("\n\n");
+            ssb.append(label);
+        }
         // Comment
         String comment = map.get(UtteranceRewriter.HEADER_COMMENT);
         if (comment != null && !comment.isEmpty()) {
