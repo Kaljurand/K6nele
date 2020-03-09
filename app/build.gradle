@@ -7,7 +7,7 @@ dependencies {
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
@@ -24,8 +24,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1718
-        versionName '1.7.18'
+        versionCode 1719
+        versionName '1.7.19'
         vectorDrawables.useSupportLibrary = true
     }
 

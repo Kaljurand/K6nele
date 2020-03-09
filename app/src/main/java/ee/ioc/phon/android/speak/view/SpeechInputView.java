@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
@@ -925,7 +924,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
 
     private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
-        private final List<Command> mDataset;
+        private final UtteranceRewriter mUr;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView mView;
@@ -947,11 +946,7 @@ public class SpeechInputView extends LinearLayoutCompat {
          * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
          */
         public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {
-            mDataset = new ArrayList<>();
-            UtteranceRewriter ur = new UtteranceRewriter(rewritesAsStr, commandMatcher);
-            for (Command command : ur.getCommands()) {
-                mDataset.add(command);
-            }
+            mUr = new UtteranceRewriter(rewritesAsStr, commandMatcher);
         }
 
         @Override
@@ -962,10 +957,10 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         @Override
         public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
-            final Command command = mDataset.get(position);
-            holder.mView.setText(getLabel(command));
+            final Command command = mUr.getCommands().get(position);
+            holder.mView.setText(command.getLabelOrCommentOrString());
             holder.mView.setOnClickListener(view -> {
-                        String val = makeUtt(command);
+                        String val = command.makeUtt();
                         if (val != null) {
                             mListener.onFinalResult(Collections.singletonList(val), new Bundle());
                         }
@@ -980,32 +975,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         @Override
         public int getItemCount() {
-            return mDataset.size();
-        }
-
-        /**
-         * Work in progress.
-         * Map the Utterance-field (regex) to a string that is matched by this regex.
-         * TODO: return an iterator over all possible matches
-         */
-        private String makeUtt(Command command) {
-            String val = command.get(UtteranceRewriter.HEADER_UTTERANCE);
-            if (val != null && Pattern.matches(val, val)) {
-                return val;
-            }
-            return null;
-        }
-
-        // TODO: move into Command?
-        private String getLabel(Command command) {
-            String label = command.getLabel();
-            if (label == null) {
-                label = command.getComment();
-            }
-            if (label == null) {
-                label = command.toString();
-            }
-            return label;
+            return mUr.getCommandHolder().size();
         }
     }
 }

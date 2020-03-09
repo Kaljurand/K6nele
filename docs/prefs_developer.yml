@@ -27,8 +27,8 @@
   val: false
 
 # Note that the integer value needs to be passed as string
-- key: keyMaxResults
-  val: '4'
+- key: keyMaxHypotheses
+  val: 4
 
 #
 # HTTP service

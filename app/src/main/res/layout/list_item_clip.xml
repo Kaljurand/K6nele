@@ -6,7 +6,7 @@
     android:background="@drawable/button_clip"
     android:ellipsize="middle"
     android:gravity="start"
-    android:padding="4dp"
+    android:padding="@dimen/layoutMargin4dp"
     android:singleLine="true"
-    android:textColor="?android:attr/textColorPrimary"
-    android:textSize="@dimen/textSize3" />
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textColor="?android:attr/textColorPrimary" />
