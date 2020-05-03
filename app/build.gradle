@@ -24,8 +24,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1719
-        versionName '1.7.19'
+        versionCode 1720
+        versionName '1.7.20'
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -57,10 +57,15 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     lintOptions {
         // TODO: in the future check for Kotlin-Java interop
         //check 'Interoperability'
         disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill'
+    }
+
+    viewBinding {
+        enabled = true
     }
 }
 
