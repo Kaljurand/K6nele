@@ -56,6 +56,8 @@ import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayoutCompat {
 
+    // Show IME button in the top left corner, instead of the clipboard button.
+    private static final boolean SHOW_IME_BUTTON = true;
     private static final String[] EMPTY_STRING_ARRAY = {};
 
     private View mCentralButtons;
@@ -202,11 +204,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             }
 
             mBImeAction.setOnLongClickListener(v -> {
-                Context context = getContext();
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean b = prefs.getBoolean(context.getString(R.string.prefIsClipboard), false);
-                PreferenceUtils.putPrefBoolean(prefs, getResources(), R.string.prefIsClipboard, !b);
-                showClipboard(true);
+                showClipboardAux();
                 return true;
             });
         }
@@ -301,7 +299,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setVisibility(View.INVISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
                     mBImeStartStop.setVisibility(View.INVISIBLE);
-                    setVisibility(mTvInstruction, View.INVISIBLE);
                     if (mBComboSelector != null) {
                         mBComboSelector.setVisibility(View.INVISIBLE);
                     }
@@ -319,7 +316,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setVisibility(View.VISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
                     mBImeStartStop.setVisibility(View.VISIBLE);
-                    setVisibility(mTvInstruction, View.VISIBLE);
                     if (mBComboSelector != null) {
                         mBComboSelector.setVisibility(View.VISIBLE);
                     }
@@ -365,6 +361,11 @@ public class SpeechInputView extends LinearLayoutCompat {
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
             mRvClipboard.setLayoutManager(new GridLayoutManager(context, getResources().getInteger(R.integer.spanCount)));
+        }
+
+        if (mSwipeType == 2) {
+            // Turning from GONE to VISIBLE
+            findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
@@ -511,18 +512,30 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
+    private void updateTouchListener(int type) {
+        if (type == 1) {
+            setOnTouchListener(mOstl);
+        } else if (type == 2) {
+            setOnTouchListener(mOctl);
+        } else {
+            setOnTouchListener(null);
+        }
+    }
+
     private void showClipboard(boolean b) {
         if (b) {
             Context context = getContext();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             if (prefs.getBoolean(context.getString(R.string.prefIsClipboard), false)) {
+                // Remove touch listener
+                updateTouchListener(0);
                 setVisibilityKeyboard(View.GONE);
                 mRlClipboard.setVisibility(View.VISIBLE);
-                mBImeKeyboard.setImageResource(R.drawable.ic_mic);
             } else {
+                // Restore touch listener
+                updateTouchListener(mSwipeType);
                 mRlClipboard.setVisibility(View.GONE);
                 setVisibilityKeyboard(View.VISIBLE);
-                mBImeKeyboard.setImageResource(R.drawable.ic_clipboard);
             }
         } else {
             setVisibilityKeyboard(View.GONE);
@@ -530,57 +543,60 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    /**
-     * TODO: hide tabs without rewrites
-     */
     private void makeComboChange() {
         mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
         if (mRvClipboard != null) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            Resources res = getResources();
-            final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
-            Context context = getContext();
-            Set<String> defaults =
-                    PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
-            String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
-            // TODO: defaults should be a list (not a set that needs to be sorted)
-            Arrays.sort(names);
-            TabLayout tabs = findViewById(R.id.tlClipboardTabs);
-            tabs.removeAllTabs();
-            String selectedTabName = getTabName(prefs, res, mApp);
-            Log.i("TabName (load): " + selectedTabName);
-            for (String tabName : names) {
-                TabLayout.Tab tab = tabs.newTab();
-                tab.setText(tabName);
-                tabs.addTab(tab);
-                if (tabName.equals(selectedTabName)) {
-                    tab.select();
-                    String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, tabName);
-                    if (rewritesAsStr != null) {
-                        mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
-                    }
+            CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
+            updateClipboard(getContext(), commandMatcher);
+        }
+    }
+
+    /**
+     * TODO: hide tabs without rewrites
+     */
+    private void updateClipboard(Context context, CommandMatcher commandMatcher) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Resources res = getResources();
+        Set<String> defaults =
+                PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
+        String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
+        // TODO: defaults should be a list (not a set that needs to be sorted)
+        Arrays.sort(names);
+        TabLayout tabs = findViewById(R.id.tlClipboardTabs);
+        tabs.removeAllTabs();
+        String selectedTabName = getTabName(prefs, res, mApp);
+        Log.i("TabName (load): " + selectedTabName);
+        for (String tabName : names) {
+            TabLayout.Tab tab = tabs.newTab();
+            tab.setText(tabName);
+            tabs.addTab(tab);
+            if (tabName.equals(selectedTabName)) {
+                tab.select();
+                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, tabName);
+                if (rewritesAsStr != null) {
+                    mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
                 }
             }
-            LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
-            for (int i = 0; i < tabStrip.getChildCount(); i++) {
-                String name = tabs.getTabAt(i).getText().toString();
-                // Long-click on tab opens the rewrite rule table
-                tabStrip.getChildAt(i).setOnLongClickListener(v -> {
-                    Intent intent = new Intent(getContext(), RewritesActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(RewritesActivity.EXTRA_NAME, name);
-                    context.startActivity(intent);
-                    return false;
+        }
+        LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
+        for (int i = 0; i < tabStrip.getChildCount(); i++) {
+            String name = tabs.getTabAt(i).getText().toString();
+            // Long-click on tab opens the rewrite rule table
+            tabStrip.getChildAt(i).setOnLongClickListener(v -> {
+                Intent intent = new Intent(getContext(), RewritesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(RewritesActivity.EXTRA_NAME, name);
+                context.startActivity(intent);
+                return false;
+            });
+            // Short-click loads the corresponding clipboard
+            String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, name);
+            if (rewritesAsStr != null) {
+                tabStrip.getChildAt(i).setOnClickListener(v -> {
+                    Log.i("TabName (save): " + name);
+                    mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
+                    setTabName(prefs, res, mApp, name);
                 });
-                // Short-click loads the corresponding clipboard
-                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, name);
-                if (rewritesAsStr != null) {
-                    tabStrip.getChildAt(i).setOnClickListener(v -> {
-                        Log.i("TabName (save): " + name);
-                        mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
-                        setTabName(prefs, res, mApp, name);
-                    });
-                }
             }
         }
     }
@@ -621,7 +637,6 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void minimizeUi() {
         mUiIsMinimized = true;
-        setVisibilityKeyboard(View.GONE);
         showClipboard(false);
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
@@ -634,12 +649,20 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
     */
 
+    private void showClipboardAux() {
+        Context context = getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean b = prefs.getBoolean(context.getString(R.string.prefIsClipboard), false);
+        PreferenceUtils.putPrefBoolean(prefs, getResources(), R.string.prefIsClipboard, !b);
+        showClipboard(true);
+    }
+
     private void maximizeUi() {
         mUiIsMinimized = false;
         setVisibilityKeyboard(View.VISIBLE);
         showClipboard(true);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            if (false) {
+            if (SHOW_IME_BUTTON) {
                 mBImeKeyboard.setImageResource(R.drawable.ic_ime);
                 mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
@@ -648,13 +671,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     return true;
                 });
             } else {
-                mBImeKeyboard.setOnClickListener(v -> {
-                    Context context = getContext();
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                    boolean b = prefs.getBoolean(context.getString(R.string.prefIsClipboard), false);
-                    PreferenceUtils.putPrefBoolean(prefs, getResources(), R.string.prefIsClipboard, !b);
-                    showClipboard(true);
-                });
+                mBImeKeyboard.setOnClickListener(v -> showClipboardAux());
             }
         } else {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
@@ -700,13 +717,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
-        if (mSwipeType == 1) {
-            setOnTouchListener(mOstl);
-        } else if (mSwipeType == 2) {
-            // Turning from GONE to VISIBLE
-            findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
-            setOnTouchListener(mOctl);
-        }
+        updateTouchListener(mSwipeType);
         if (mBImeKeyboard != null) {
             maximizeUi();
         }

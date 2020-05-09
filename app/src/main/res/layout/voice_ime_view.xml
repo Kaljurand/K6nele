@@ -100,7 +100,8 @@
             android:layout_toEndOf="@+id/bImeStartStop"
             android:layout_toRightOf="@+id/bImeStartStop"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageButton
                 android:id="@+id/bImeDelete"
@@ -117,18 +118,18 @@
                 android:paddingBottom="@dimen/layoutMargin3"
                 app:srcCompat="@drawable/ic_backspace" />
         </LinearLayout>
-    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tvInstruction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/layoutMargin4dp"
-        android:gravity="center"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/textSize3"
-        tools:text="@string/buttonImeSpeak" />
+        <TextView
+            android:id="@+id/tvInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bImeStartStop"
+            android:layout_margin="@dimen/layoutMargin4dp"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/textSize3"
+            tools:text="@string/buttonImeSpeak" />
+    </RelativeLayout>
 
     <include layout="@layout/button_combo_selector" />
 
