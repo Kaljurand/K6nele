@@ -1,1 +1,1 @@
-include ':app', ':speechutils:app', ':net-speech-api'
+include ':app', ':speechutils:app'

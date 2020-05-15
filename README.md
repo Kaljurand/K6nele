@@ -34,7 +34,7 @@ For documentation, APKs, app store links, news etc. see <http://kaljurand.github
 Building the APK from source
 ----------------------------
 
-Clone the source code including the `net-speech-api` and `speechutils` submodules:
+Clone the source code including the `speechutils` submodule:
 
     git clone --recursive git@github.com:Kaljurand/K6nele.git
 

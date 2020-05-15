@@ -30,12 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ee.ioc.phon.android.recsession.ChunkedWebRecSession;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.utils.BundleUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
-import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
 
 /**
  * <p>Builds a query for the speech recognizer server combing information from

@@ -3,7 +3,8 @@ apply plugin: 'kotlin-android'
 
 dependencies {
     implementation project(':speechutils:app')
-    implementation project(':net-speech-api')
+    // TODO: use Android's JSON library instead
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -24,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1721
-        versionName '1.7.21'
+        versionCode 1722
+        versionName '1.7.22'
         vectorDrawables.useSupportLibrary = true
     }
 
