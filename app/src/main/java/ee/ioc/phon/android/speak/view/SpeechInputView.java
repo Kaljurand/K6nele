@@ -544,17 +544,27 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
 
     private void makeComboChange() {
-        mListener.onComboChange(mSlc.getLanguage(), mSlc.getService());
+        String language = mSlc.getLanguage();
+        ComponentName service = mSlc.getService();
+        mListener.onComboChange(language, service);
         if (mRvClipboard != null) {
-            CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(mSlc.getLanguage(), mSlc.getService(), mApp);
-            updateClipboard(getContext(), commandMatcher);
+            updateClipboard(getContext(), language, service, mApp);
         }
+    }
+
+    private ClipboardAdapter getClipboardAdapter(SharedPreferences prefs, Resources res, String tabName, CommandMatcher commandMatcher) {
+        String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, tabName);
+        if (rewritesAsStr == null) {
+            return null;
+        }
+        return new ClipboardAdapter(commandMatcher, rewritesAsStr);
     }
 
     /**
      * TODO: hide tabs without rewrites
      */
-    private void updateClipboard(Context context, CommandMatcher commandMatcher) {
+    private void updateClipboard(Context context, String language, ComponentName service, ComponentName app) {
+        CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = getResources();
         Set<String> defaults =
@@ -572,32 +582,29 @@ public class SpeechInputView extends LinearLayoutCompat {
             tabs.addTab(tab);
             if (tabName.equals(selectedTabName)) {
                 tab.select();
-                String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, tabName);
-                if (rewritesAsStr != null) {
-                    mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
-                }
+                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, tabName, commandMatcher));
             }
         }
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
         for (int i = 0; i < tabStrip.getChildCount(); i++) {
             String name = tabs.getTabAt(i).getText().toString();
-            // Long-click on tab opens the rewrite rule table
+            // Long click loads the rewrites view (without populating the tab)
             tabStrip.getChildAt(i).setOnLongClickListener(v -> {
                 Intent intent = new Intent(getContext(), RewritesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(RewritesActivity.EXTRA_NAME, name);
+                intent.putExtra(RewritesActivity.EXTRA_LOCALE, language);
+                intent.putExtra(RewritesActivity.EXTRA_APP, app.flattenToString());
+                intent.putExtra(RewritesActivity.EXTRA_SERVICE, service.flattenToString());
                 context.startActivity(intent);
                 return false;
             });
-            // Short-click loads the corresponding clipboard
-            String rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, name);
-            if (rewritesAsStr != null) {
-                tabStrip.getChildAt(i).setOnClickListener(v -> {
-                    Log.i("TabName (save): " + name);
-                    mRvClipboard.setAdapter(new ClipboardAdapter(commandMatcher, rewritesAsStr));
-                    setTabName(prefs, res, mApp, name);
-                });
-            }
+            // Short click populates the tab with the rewrites as a clipboard
+            tabStrip.getChildAt(i).setOnClickListener(v -> {
+                Log.i("TabName (save): " + name);
+                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
+                setTabName(prefs, res, mApp, name);
+            });
         }
     }
 

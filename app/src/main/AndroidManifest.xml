@@ -246,9 +246,10 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.DetailsActivity"
             android:theme="@style/Theme.K6nele.Dialog" />
+        <!-- TODO: remove Light (once style inheritance works) -->
         <activity
             android:name=".activity.RewritesErrorsActivity"
-            android:theme="@style/Theme.K6nele.Dialog" />
+            android:theme="@style/Theme.K6nele.Light.Dialog" />
         <activity
             android:name=".activity.ComboSelectorActivity"
             android:label="@string/dialogTitleCombo"

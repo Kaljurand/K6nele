@@ -20,6 +20,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.Command;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -105,8 +106,8 @@ public class Rewrites {
         return intent;
     }
 
-    public SpannableStringBuilder[] getRules() {
-        UtteranceRewriter.CommandHolder holder = getCommandHolder();
+    public SpannableStringBuilder[] getRules(CommandMatcher commandMatcher) {
+        UtteranceRewriter.CommandHolder holder = getCommandHolder(commandMatcher);
         Collection<String> header = holder.getHeader().values();
         SpannableStringBuilder[] array = new SpannableStringBuilder[holder.size()];
         int i = 0;
@@ -114,10 +115,6 @@ public class Rewrites {
             array[i++] = pp(command.toMap(header));
         }
         return array;
-    }
-
-    public int size() {
-        return getCommandHolder().size();
     }
 
     public void rename(String newName) {
@@ -144,9 +141,9 @@ public class Rewrites {
         rename(null);
     }
 
-    private UtteranceRewriter.CommandHolder getCommandHolder() {
+    private UtteranceRewriter.CommandHolder getCommandHolder(CommandMatcher matcher) {
         String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        UtteranceRewriter ur = new UtteranceRewriter(rewrites, matcher);
         return ur.getCommandHolder();
     }
 

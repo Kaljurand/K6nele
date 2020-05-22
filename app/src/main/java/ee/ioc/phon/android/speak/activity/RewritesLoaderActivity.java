@@ -162,8 +162,17 @@ public class RewritesLoaderActivity extends AppCompatActivity {
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter.toTsv());
             Intent intent = new Intent(this, RewritesActivity.class);
             intent.putExtra(RewritesActivity.EXTRA_NAME, name);
-            intent.putExtra(RewritesActivity.EXTRA_ERRORS, utteranceRewriter.getErrorsAsStringArray());
             startActivity(intent);
+
+            // If there were errors then we load another activity to show them.
+            // TODO: verify that this is a correct way to start multiple activities
+            String[] errors = utteranceRewriter.getErrorsAsStringArray();
+            if (errors.length > 0) {
+                Intent searchIntent = new Intent(this, RewritesErrorsActivity.class);
+                searchIntent.putExtra(RewritesErrorsActivity.EXTRA_TITLE, name);
+                searchIntent.putExtra(RewritesErrorsActivity.EXTRA_STRING_ARRAY, errors);
+                startActivity(searchIntent);
+            }
         }
         finish();
     }

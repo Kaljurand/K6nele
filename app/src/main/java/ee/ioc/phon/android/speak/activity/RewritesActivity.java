@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2015-2020, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -38,26 +39,43 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 
 // TODO: use CursorAdapter to be able to specify the filterting
 // TODO: make it possible to select multiple rows to convert them to a new table and test in Kõnele
 public class RewritesActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "EXTRA_NAME";
-    public static final String EXTRA_ERRORS = "EXTRA_ERRORS";
+    public static final String EXTRA_LOCALE = "EXTRA_LOCALE";
+    public static final String EXTRA_APP = "EXTRA_APP";
+    public static final String EXTRA_SERVICE = "EXTRA_SERVICE";
     private Rewrites mRewrites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
+        /*
         // TODO: do we need this?
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setRewrites(extras.getString(EXTRA_NAME), extras.getStringArray(EXTRA_ERRORS));
-        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment()).commit();
+        */
+        setRewrites(extras.getString(EXTRA_NAME));
+        String locale = extras.getString(EXTRA_LOCALE);
+        String service = extras.getString(EXTRA_SERVICE);
+        String app = extras.getString(EXTRA_APP);
+        CommandMatcher commandMatcher = null;
+        if (locale != null || service != null || app != null) {
+            commandMatcher = CommandMatcherFactory.createCommandFilter(
+                    locale,
+                    service == null ? null : ComponentName.unflattenFromString(service),
+                    app == null ? null : ComponentName.unflattenFromString(app)
+            );
+        }
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment(commandMatcher)).commit();
     }
 
     @Override
@@ -97,7 +115,7 @@ public class RewritesActivity extends AppCompatActivity {
                         newName -> {
                             if (!newName.isEmpty()) {
                                 mRewrites.rename(newName);
-                                setRewrites(newName, null);
+                                setRewrites(newName);
                             }
                         }
                 ).show();
@@ -151,26 +169,14 @@ public class RewritesActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void setRewrites(String name, String[] errors) {
+    private void setRewrites(String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Resources res = getResources();
         mRewrites = new Rewrites(prefs, res, name);
 
-        int ruleCount = mRewrites.size();
-        String subtitle = res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
-
-        if (errors != null) {
-            int errorCount = errors.length;
-            if (errorCount > 0) {
-                String errorMessage = res.getQuantityString(R.plurals.statusLoadRewritesErrors, errorCount, errorCount);
-                showErrors(errorMessage, errors);
-                subtitle += " · " + errorMessage;
-            }
-        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(name);
-            actionBar.setSubtitle(subtitle);
         }
     }
 
@@ -178,22 +184,30 @@ public class RewritesActivity extends AppCompatActivity {
         return mRewrites;
     }
 
-    private void showErrors(String title, String[] errors) {
-        Intent searchIntent = new Intent(this, RewritesErrorsActivity.class);
-        searchIntent.putExtra(RewritesErrorsActivity.EXTRA_TITLE, title);
-        searchIntent.putExtra(RewritesErrorsActivity.EXTRA_STRING_ARRAY, errors);
-        startActivity(searchIntent);
-    }
-
     public static class RewritesFragment extends K6neleListFragment implements SearchView.OnQueryTextListener {
+
+        private final CommandMatcher mCommandMatcher;
+
+        RewritesFragment(CommandMatcher commandMatcher) {
+            mCommandMatcher = commandMatcher;
+        }
 
         @Override
         public void onResume() {
             super.onResume();
-            Rewrites rewrites = ((RewritesActivity) getActivity()).getRewrites();
-            setListAdapter(new ArrayAdapter<>(getActivity(), R.layout.list_item_rewrite, rewrites.getRules()));
+            RewritesActivity activity = (RewritesActivity) getActivity();
+            Rewrites rewrites = activity.getRewrites();
+            setListAdapter(new ArrayAdapter<>(activity, R.layout.list_item_rewrite, rewrites.getRules(mCommandMatcher)));
             getListView().setFastScrollEnabled(true);
             setEmptyView(getString(R.string.emptylistRewriteRules));
+            int ruleCount = getListView().getAdapter().getCount();
+            String subtitle = getResources().getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
+            if (mCommandMatcher == null) {
+                activity.getSupportActionBar().setSubtitle(subtitle);
+            } else {
+                // TODO: localize "filtered"
+                activity.getSupportActionBar().setSubtitle(subtitle + " (filtered)");
+            }
         }
 
         @Override
