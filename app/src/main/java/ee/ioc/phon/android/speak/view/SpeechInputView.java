@@ -69,6 +69,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private TextView mTvMessage;
     private RecyclerView mRvClipboard;
     private RelativeLayout mRlClipboard;
+    private TextView mTvEmpty;
 
     private ComponentName mApp;
     private SpeechInputViewListener mListener;
@@ -353,6 +354,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
         mRlClipboard = findViewById(R.id.rlClipboard);
+        mTvEmpty = findViewById(R.id.empty);
 
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -564,27 +566,46 @@ public class SpeechInputView extends LinearLayoutCompat {
      * TODO: hide tabs without rewrites
      */
     private void updateClipboard(Context context, String language, ComponentName service, ComponentName app) {
-        CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+        TabLayout tabs = findViewById(R.id.tlClipboardTabs);
+        tabs.removeAllTabs();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = getResources();
         Set<String> defaults =
                 PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
+        if (defaults.isEmpty()) {
+            mTvEmpty.setVisibility(View.VISIBLE);
+            mRvClipboard.setVisibility(View.GONE);
+            tabs.setVisibility(View.GONE);
+            return;
+        } else {
+            mTvEmpty.setVisibility(View.GONE);
+            mRvClipboard.setVisibility(View.VISIBLE);
+            tabs.setVisibility(View.VISIBLE);
+        }
+        CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+
         String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
         // TODO: defaults should be a list (not a set that needs to be sorted)
         Arrays.sort(names);
-        TabLayout tabs = findViewById(R.id.tlClipboardTabs);
-        tabs.removeAllTabs();
         String selectedTabName = getTabName(prefs, res, mApp);
         Log.i("TabName (load): " + selectedTabName);
         for (String tabName : names) {
             TabLayout.Tab tab = tabs.newTab();
             tab.setText(tabName);
+            // This should happen before selecting, otherwise the selection is not shown
             tabs.addTab(tab);
             if (tabName.equals(selectedTabName)) {
                 tab.select();
-                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, tabName, commandMatcher));
             }
         }
+        // If the previously selected rewrites table is not among the defaults anymore then
+        // we select the first one (but do not save it).
+        if (tabs.getSelectedTabPosition() == -1) {
+            selectedTabName = names[0];
+            tabs.getTabAt(0).select();
+        }
+        mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, selectedTabName, commandMatcher));
+
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
         for (int i = 0; i < tabStrip.getChildCount(); i++) {
             String name = tabs.getTabAt(i).getText().toString();

@@ -11,7 +11,7 @@
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:theme="@style/Theme.MaterialComponents.Bridge">
+    android:theme="@style/Theme.K6nele">
 
     <RelativeLayout
         android:layout_width="match_parent"

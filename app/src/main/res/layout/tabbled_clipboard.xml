@@ -9,7 +9,6 @@
         android:id="@+id/tlClipboardTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.MaterialComponents.Bridge"
         app:tabIndicatorColor="@color/accent"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="?android:attr/textColorPrimary"
@@ -23,8 +22,18 @@
         android:layout_centerHorizontal="true"
         android:scrollbars="vertical"
         android:textColor="?android:attr/textColorPrimary"
-        android:theme="@style/Theme.MaterialComponents.Bridge"
         app:layoutManager="GridLayoutManager"
         app:spanCount="@integer/spanCount" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layoutHeightClipboard"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="@dimen/layoutMargin1"
+        android:text="@string/emptylistClipboard"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorSecondary" />
 
 </RelativeLayout>

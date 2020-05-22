@@ -138,6 +138,7 @@
 		abil.</string>
     <string name="emptylistRewrites">Ümberkirjutusreeglistikke pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil või eksportides see tabelarvutusrakendusest TSV-formaadis.</string>
     <string name="emptylistRewriteRules">Ümberkirjutusreegleid ei leitud. Veenduge, et sisendfaili veerud on eraldatud tabulaatori abil ja esimene rida on päiseks.</string>
+    <string name="emptylistClipboard">Klippe pole. Lisa ümberkirjutusreegleid. Sisselülitatud reeglistikud ilmuvad siia klippidena.</string>
     <string name="menuAppsSort">Järjesta …</string>
     <string name="menuAppsSortByName">rakenduse paki nime järgi</string>
     <string name="menuAppsSortByCount">kasutussageduse järgi</string>

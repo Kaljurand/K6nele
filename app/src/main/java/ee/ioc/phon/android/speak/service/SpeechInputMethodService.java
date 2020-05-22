@@ -412,7 +412,13 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onCommand(String text) {
                 Op op = mCommandEditor.getOpOrNull(text, false);
-                if (op != null) {
+                if (op == null) {
+                    // Mic button swipe did not match any rule, so we show the swipe crossed out.
+                    // TODO: maybe just clear the status bar
+                    if (mInputView != null) {
+                        mInputView.showMessage(text, false);
+                    }
+                } else {
                     boolean success = mCommandEditor.runOp(op);
                     if (mInputView != null) {
                         // TODO: show executed command or replacement text, not op.toString()
