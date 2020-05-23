@@ -276,6 +276,7 @@
     <string name="labelActivityEncoderListDemo">Audio encoders</string>
     <string name="labelActivityImeListDemo">Voice IMEs</string>
     <string name="buttonApplyDeveloperDefaults">Apply developer defaults</string>
+    <string name="buttonLaunchRewrites">Open rewrite rule tables</string>
 
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Press this button and speak</string>

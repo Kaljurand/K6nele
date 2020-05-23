@@ -44,6 +44,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
+import ee.ioc.phon.android.speak.activity.RewritesSelectorActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
@@ -69,7 +70,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private TextView mTvMessage;
     private RecyclerView mRvClipboard;
     private RelativeLayout mRlClipboard;
-    private TextView mTvEmpty;
+    private LinearLayout mLlEmpty;
 
     private ComponentName mApp;
     private SpeechInputViewListener mListener;
@@ -354,7 +355,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
         mRlClipboard = findViewById(R.id.rlClipboard);
-        mTvEmpty = findViewById(R.id.empty);
+        mLlEmpty = findViewById(R.id.empty);
 
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -573,38 +574,61 @@ public class SpeechInputView extends LinearLayoutCompat {
         Set<String> defaults =
                 PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
         if (defaults.isEmpty()) {
-            mTvEmpty.setVisibility(View.VISIBLE);
+            mLlEmpty.setVisibility(View.VISIBLE);
             mRvClipboard.setVisibility(View.GONE);
             tabs.setVisibility(View.GONE);
+            findViewById(R.id.buttonOpenRewrites).setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), RewritesSelectorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            });
             return;
         } else {
-            mTvEmpty.setVisibility(View.GONE);
+            mLlEmpty.setVisibility(View.GONE);
             mRvClipboard.setVisibility(View.VISIBLE);
             tabs.setVisibility(View.VISIBLE);
         }
         CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                String name = tab.getText().toString();
+                Log.i("TabName (save): " + name);
+                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
+                setTabName(prefs, res, mApp, name);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
 
         String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
         // TODO: defaults should be a list (not a set that needs to be sorted)
         Arrays.sort(names);
         String selectedTabName = getTabName(prefs, res, mApp);
         Log.i("TabName (load): " + selectedTabName);
+
+        // If the previously selected rewrites table is not among the defaults anymore then
+        // we select the first one (but do not save it).
+        int selectedPosition = 0;
+        int position = -1;
         for (String tabName : names) {
             TabLayout.Tab tab = tabs.newTab();
             tab.setText(tabName);
             // This should happen before selecting, otherwise the selection is not shown
             tabs.addTab(tab);
+            position++;
             if (tabName.equals(selectedTabName)) {
-                tab.select();
+                selectedPosition = position;
             }
         }
-        // If the previously selected rewrites table is not among the defaults anymore then
-        // we select the first one (but do not save it).
-        if (tabs.getSelectedTabPosition() == -1) {
-            selectedTabName = names[0];
-            tabs.getTabAt(0).select();
-        }
-        mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, selectedTabName, commandMatcher));
+        tabs.getTabAt(selectedPosition).select();
 
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
         for (int i = 0; i < tabStrip.getChildCount(); i++) {
@@ -619,12 +643,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 intent.putExtra(RewritesActivity.EXTRA_SERVICE, service.flattenToString());
                 context.startActivity(intent);
                 return false;
-            });
-            // Short click populates the tab with the rewrites as a clipboard
-            tabStrip.getChildAt(i).setOnClickListener(v -> {
-                Log.i("TabName (save): " + name);
-                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
-                setTabName(prefs, res, mApp, name);
             });
         }
     }
@@ -975,13 +993,12 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
 
         /**
-         * List of button/clip labels (currently derived from the rewrites rule comment) mapped to
+         * List of button/clip labels mapped to
          * utterances. Clicking on a clip will return the utterance via onFinalResult.
          * <p>
          * TODO: improve specification of header (load only the columns that are needed)
          * TODO: implement putPrefMapMap (takes map instead of key and val)
          * TODO: improve dealing with nulls
-         * TODO: support named clipboards
          * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
          */
         public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {

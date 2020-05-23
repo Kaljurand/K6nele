@@ -323,6 +323,7 @@
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
     <string name="buttonApplyDeveloperDefaults">Arendaja seaded</string>
+    <string name="buttonLaunchRewrites">Ava ümberkirjutusreeglid</string>
 
     <string name="labelActivityImeListDemo">Kõneklaviatuurid</string>
     <string name="buttonApply">Rakenda</string>
