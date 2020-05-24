@@ -3,13 +3,13 @@
     android:id="@+id/rlClipboard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/tvMessage">
+    android:layout_below="@+id/tvMessage"
+    android:layout_marginBottom="@dimen/layoutMargin4dp">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlClipboardTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:tabIndicatorColor="@color/accent"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="?android:attr/textColorPrimary"
@@ -23,7 +23,6 @@
         android:layout_centerHorizontal="true"
         android:scrollbars="vertical"
         android:textColor="?android:attr/textColorPrimary"
-        android:visibility="gone"
         app:layoutManager="GridLayoutManager"
         app:spanCount="@integer/spanCount" />
 
@@ -32,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layoutHeightClipboard"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"

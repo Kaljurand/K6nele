@@ -63,30 +63,6 @@
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_search" />
 
-        <TextView
-            android:id="@+id/tvInstruction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/centralButtons"
-            android:padding="@dimen/layoutMargin1"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/textSize3"
-            tools:text="@string/buttonImeSpeak" />
-
-
-        <!-- TODO: reset these:
-                android:layout_gravity="center"
-                android:gravity="center"
-        -->
-
-        <include
-            layout="@layout/button_combo_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvMessage"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
-
         <RelativeLayout
             android:id="@+id/centralButtons"
             android:layout_width="match_parent"
@@ -97,11 +73,23 @@
             android:gravity="end"
             android:padding="@dimen/layoutMargin4dp">
 
+            <TextView
+                android:id="@+id/tvInstruction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/layoutMargin1"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/textSize3"
+                tools:text="@string/buttonImeSpeak" />
+
             <ee.ioc.phon.android.speechutils.view.MicButton
                 android:id="@+id/bImeStartStop"
                 android:layout_width="@dimen/layoutHeightButtonMicrophoneIme"
                 android:layout_height="@dimen/layoutHeightButtonMicrophoneIme"
                 android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/tvInstruction"
+                android:layout_toRightOf="@+id/tvInstruction"
                 android:background="@drawable/button_mic"
                 android:contentDescription="@string/cdMicrophone"
                 app:srcCompat="@drawable/ic_voice_search_api_material" />
@@ -135,5 +123,7 @@
         <include layout="@layout/tabbled_clipboard" />
 
     </RelativeLayout>
+
+    <include layout="@layout/button_combo_selector" />
 
 </ee.ioc.phon.android.speak.view.SpeechInputView>

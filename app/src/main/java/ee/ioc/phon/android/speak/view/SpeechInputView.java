@@ -57,8 +57,6 @@ import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayoutCompat {
 
-    // Show IME button in the top left corner, instead of the clipboard button.
-    private static final boolean SHOW_IME_BUTTON = true;
     private static final String[] EMPTY_STRING_ARRAY = {};
 
     private View mCentralButtons;
@@ -300,11 +298,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
                 mBImeAction.setVisibility(View.INVISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
-                    mBImeStartStop.setVisibility(View.INVISIBLE);
+                    setVisibilityKeyboard(View.INVISIBLE);
                     if (mBComboSelector != null) {
                         mBComboSelector.setVisibility(View.INVISIBLE);
                     }
-                    setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
                 } else {
                     setVisibility(mRlClipboard, View.INVISIBLE);
                 }
@@ -317,11 +314,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeKeyboard.setVisibility(View.VISIBLE);
                 mBImeAction.setVisibility(View.VISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
-                    mBImeStartStop.setVisibility(View.VISIBLE);
+                    setVisibilityKeyboard(View.VISIBLE);
                     if (mBComboSelector != null) {
                         mBComboSelector.setVisibility(View.VISIBLE);
                     }
-                    setVisibility(findViewById(R.id.rlKeyButtons), View.VISIBLE);
                 } else {
                     setVisibility(mRlClipboard, View.VISIBLE);
                 }
@@ -568,6 +564,7 @@ public class SpeechInputView extends LinearLayoutCompat {
      */
     private void updateClipboard(Context context, String language, ComponentName service, ComponentName app) {
         TabLayout tabs = findViewById(R.id.tlClipboardTabs);
+        tabs.clearOnTabSelectedListeners();
         tabs.removeAllTabs();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = getResources();
@@ -590,29 +587,10 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
         CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
 
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                String name = tab.getText().toString();
-                Log.i("TabName (save): " + name);
-                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
-                setTabName(prefs, res, mApp, name);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-
         String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
         // TODO: defaults should be a list (not a set that needs to be sorted)
         Arrays.sort(names);
         String selectedTabName = getTabName(prefs, res, mApp);
-        Log.i("TabName (load): " + selectedTabName);
 
         // If the previously selected rewrites table is not among the defaults anymore then
         // we select the first one (but do not save it).
@@ -628,6 +606,24 @@ public class SpeechInputView extends LinearLayoutCompat {
                 selectedPosition = position;
             }
         }
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                String name = tab.getText().toString();
+                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
+                setTabName(prefs, res, mApp, name);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
         tabs.getTabAt(selectedPosition).select();
 
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
@@ -708,17 +704,13 @@ public class SpeechInputView extends LinearLayoutCompat {
         setVisibilityKeyboard(View.VISIBLE);
         showClipboard(true);
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            if (SHOW_IME_BUTTON) {
-                mBImeKeyboard.setImageResource(R.drawable.ic_ime);
-                mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
+            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
+            mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
 
-                mBImeKeyboard.setOnLongClickListener(v -> {
-                    mListener.onSwitchIme(false);
-                    return true;
-                });
-            } else {
-                mBImeKeyboard.setOnClickListener(v -> showClipboardAux());
-            }
+            mBImeKeyboard.setOnLongClickListener(v -> {
+                mListener.onSwitchIme(false);
+                return true;
+            });
         } else {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
@@ -1002,7 +994,9 @@ public class SpeechInputView extends LinearLayoutCompat {
          * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
          */
         public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {
+            Log.i("New adapter: " + commandMatcher);
             mUr = new UtteranceRewriter(rewritesAsStr, commandMatcher);
+            Log.i("Number of commands (constr): " + mUr.getCommands().size());
         }
 
         @Override

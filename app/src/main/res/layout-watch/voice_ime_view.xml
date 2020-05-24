@@ -75,6 +75,17 @@
         android:layout_gravity="center"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/tvInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/layoutMargin4dp"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/textSize3"
+            tools:text="@string/buttonImeSpeak" />
+
         <ee.ioc.phon.android.speechutils.view.MicButton
             android:id="@+id/bImeStartStop"
             android:layout_width="@dimen/layoutHeightButtonMicrophoneIme"
@@ -107,17 +118,6 @@
                 app:srcCompat="@drawable/ic_backspace" />
         </RelativeLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvInstruction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/layoutMargin4dp"
-        android:gravity="center"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/textSize3"
-        tools:text="@string/buttonImeSpeak" />
 
     <include layout="@layout/button_combo_selector" />
 
