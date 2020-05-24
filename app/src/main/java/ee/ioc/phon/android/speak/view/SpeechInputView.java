@@ -204,7 +204,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             }
 
             mBImeAction.setOnLongClickListener(v -> {
-                showClipboardAux();
+                toggleClipboardAux();
                 return true;
             });
         }
@@ -521,24 +521,18 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
+    /**
+     * @param b Show clipboard and disable swipes iff true
+     */
     private void showClipboard(boolean b) {
         if (b) {
-            Context context = getContext();
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            if (prefs.getBoolean(context.getString(R.string.prefIsClipboard), false)) {
-                // Remove touch listener
-                updateTouchListener(0);
-                setVisibilityKeyboard(View.GONE);
-                mRlClipboard.setVisibility(View.VISIBLE);
-            } else {
-                // Restore touch listener
-                updateTouchListener(mSwipeType);
-                mRlClipboard.setVisibility(View.GONE);
-                setVisibilityKeyboard(View.VISIBLE);
-            }
-        } else {
+            updateTouchListener(0);
             setVisibilityKeyboard(View.GONE);
+            mRlClipboard.setVisibility(View.VISIBLE);
+        } else {
+            updateTouchListener(mSwipeType);
             mRlClipboard.setVisibility(View.GONE);
+            setVisibilityKeyboard(View.VISIBLE);
         }
     }
 
@@ -590,7 +584,8 @@ public class SpeechInputView extends LinearLayoutCompat {
         String[] names = defaults.toArray(EMPTY_STRING_ARRAY);
         // TODO: defaults should be a list (not a set that needs to be sorted)
         Arrays.sort(names);
-        String selectedTabName = getTabName(prefs, res, mApp);
+        String appId = app.flattenToShortString();
+        String selectedTabName = getTabName(prefs, res, appId);
 
         // If the previously selected rewrites table is not among the defaults anymore then
         // we select the first one (but do not save it).
@@ -612,7 +607,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             public void onTabSelected(TabLayout.Tab tab) {
                 String name = tab.getText().toString();
                 mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
-                setTabName(prefs, res, mApp, name);
+                setTabName(prefs, res, appId, name);
             }
 
             @Override
@@ -635,20 +630,20 @@ public class SpeechInputView extends LinearLayoutCompat {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(RewritesActivity.EXTRA_NAME, name);
                 intent.putExtra(RewritesActivity.EXTRA_LOCALE, language);
-                intent.putExtra(RewritesActivity.EXTRA_APP, app.flattenToString());
-                intent.putExtra(RewritesActivity.EXTRA_SERVICE, service.flattenToString());
+                intent.putExtra(RewritesActivity.EXTRA_APP, appId);
+                intent.putExtra(RewritesActivity.EXTRA_SERVICE, service.flattenToShortString());
                 context.startActivity(intent);
                 return false;
             });
         }
     }
 
-    private String getTabName(SharedPreferences prefs, Resources res, ComponentName app) {
-        return PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapClipboardTabName, app.flattenToShortString());
+    private String getTabName(SharedPreferences prefs, Resources res, String appId) {
+        return PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapClipboardTabName, appId);
     }
 
-    private void setTabName(SharedPreferences prefs, Resources res, ComponentName app, String name) {
-        PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapClipboardTabName, app.flattenToShortString(), name);
+    private void setTabName(SharedPreferences prefs, Resources res, String appId, String name) {
+        PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapClipboardTabName, appId, name);
     }
 
     private void nextCombo() {
@@ -679,7 +674,8 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void minimizeUi() {
         mUiIsMinimized = true;
-        showClipboard(false);
+        setVisibilityKeyboard(View.GONE);
+        mRlClipboard.setVisibility(View.GONE);
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
         setBackgroundResource(R.drawable.rectangle_gradient_red);
@@ -691,18 +687,18 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
     */
 
-    private void showClipboardAux() {
+    private void toggleClipboardAux() {
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean b = prefs.getBoolean(context.getString(R.string.prefIsClipboard), false);
-        PreferenceUtils.putPrefBoolean(prefs, getResources(), R.string.prefIsClipboard, !b);
-        showClipboard(true);
+        showClipboard(PreferenceUtils.togglePrefStringSetEntry(prefs, getResources(), R.string.setClipboardApps, mApp.flattenToShortString()));
     }
 
     private void maximizeUi() {
         mUiIsMinimized = false;
         setVisibilityKeyboard(View.VISIBLE);
-        showClipboard(true);
+        Context context = getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        showClipboard(mApp != null && PreferenceUtils.getPrefStringSet(prefs, getResources(), R.string.setClipboardApps).contains(mApp.flattenToShortString()));
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             mBImeKeyboard.setImageResource(R.drawable.ic_ime);
             mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
@@ -994,9 +990,7 @@ public class SpeechInputView extends LinearLayoutCompat {
          * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
          */
         public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {
-            Log.i("New adapter: " + commandMatcher);
             mUr = new UtteranceRewriter(rewritesAsStr, commandMatcher);
-            Log.i("Number of commands (constr): " + mUr.getCommands().size());
         }
 
         @Override

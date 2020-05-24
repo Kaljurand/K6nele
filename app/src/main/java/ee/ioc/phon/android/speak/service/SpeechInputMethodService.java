@@ -335,14 +335,14 @@ public class SpeechInputMethodService extends InputMethodService {
              *                replacement, and command.
              */
             private void addRule(String text, CommandEditorResult editorResult) {
-                Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + editorResult.getCommand());
+                UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
+                Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
                 Calendar cal = Calendar.getInstance();
                 long uttId = cal.getTimeInMillis();
                 String uttAsStr = "^" + REWRITES_RECENT_NAME + uttId + "$";
                 Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
                 Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
                 // cal.getTime().toString()
-                UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
                 Command newCommand;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String comment = sdf.format(cal.getTime()) + ", " + text;
@@ -353,6 +353,7 @@ public class SpeechInputMethodService extends InputMethodService {
                     if (label == null) {
                         label = rewrite.ppCommand();
                     }
+                    // Rewrite args is the output of command.parse, i.e. the evaluated args
                     newCommand = new Command(label, comment, null, null, app, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
                 } else {
                     newCommand = new Command(rewrite.mStr, comment, null, null, app, utt, rewrite.mStr, null);
@@ -379,7 +380,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 String text = getText(results);
                 CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
                 if (editorResult != null && mInputView != null && editorResult.isCommand()) {
-                    mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
+                    mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
                 }
                 if (editorResult != null) {
                     addRule(text, editorResult);
