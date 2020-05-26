@@ -51,7 +51,6 @@ public class SpeechInputMethodService extends InputMethodService {
 
     // TODO: move somewhere else and make end-user configurable
     private static final String REWRITES_RECENT_NAME = "#Recent";
-    private static final int REWRITES_RECENT_SIZE = 99;
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
@@ -341,7 +340,8 @@ public class SpeechInputMethodService extends InputMethodService {
                 long uttId = cal.getTimeInMillis();
                 String uttAsStr = "^" + REWRITES_RECENT_NAME + uttId + "$";
                 Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
-                Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
+                //Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
+                Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
                 // cal.getTime().toString()
                 Command newCommand;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -354,9 +354,9 @@ public class SpeechInputMethodService extends InputMethodService {
                         label = rewrite.ppCommand();
                     }
                     // Rewrite args is the output of command.parse, i.e. the evaluated args
-                    newCommand = new Command(label, comment, null, null, app, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
+                    newCommand = new Command(label, comment, null, null, appPattern, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
                 } else {
-                    newCommand = new Command(rewrite.mStr, comment, null, null, app, utt, rewrite.mStr, null);
+                    newCommand = new Command(rewrite.mStr, comment, null, null, appPattern, utt, rewrite.mStr, null);
                 }
 
                 // Load the existing rewrite rule table
@@ -370,7 +370,9 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
                 // Add a rule
                 commands.add(0, newCommand);
-                UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(REWRITES_RECENT_SIZE, commands.size())),
+
+                int rewritesRecentsize = mPrefs.getInt(getResources().getString(R.string.keyRecents), R.integer.defaultRecents);
+                UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(rewritesRecentsize, commands.size())),
                         UtteranceRewriter.DEFAULT_HEADER);
                 // Save it again
                 PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME, newUr.toTsv());

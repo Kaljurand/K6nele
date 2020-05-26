@@ -120,6 +120,9 @@
     <string name="titleMaxHypotheses">Recognition hypotheses</string>
     <string name="summaryMaxHypotheses">Maximum number of returned recognition hypotheses. Depends also on the used service.</string>
 
+    <string name="titleRecents">Recents utterances</string>
+    <string name="summaryRecents">Maximum number of recent utterances to remember</string>
+
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
     <string name="buttonImeSpeak">Tap &amp; Speak</string>
@@ -400,4 +403,8 @@
     <integer name="defaultMaxHypotheses">1</integer>
     <integer name="maxMaxHypotheses">16</integer>
     <integer name="minMaxHypotheses">1</integer>
+
+    <integer name="defaultRecents">0</integer>
+    <integer name="maxRecents">100</integer>
+    <integer name="minRecents">0</integer>
 </resources>

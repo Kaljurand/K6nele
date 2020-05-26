@@ -46,7 +46,13 @@ Point to the Android SDK directory by setting the environment variable
 
 Create the file `gradle.properties` containing the lines:
 
+    org.gradle.jvmargs=-Xmx1536m
+    org.gradle.parallel=true
     android.enableD8=true
+    android.useAndroidX=true
+    android.enableJetifier=true
+    # Using the default ("false") for now because "true" actually makes the APK bigger for some reason
+    # android.enableR8.fullMode=true
 
 Build the Kõnele app
 

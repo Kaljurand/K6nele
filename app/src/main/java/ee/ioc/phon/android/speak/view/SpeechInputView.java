@@ -554,7 +554,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
 
     /**
-     * TODO: hide tabs without rewrites
+     * TODO: hide tabs without rewrites, or at least block the long press on an empty rewrites tab
      */
     private void updateClipboard(Context context, String language, ComponentName service, ComponentName app) {
         TabLayout tabs = findViewById(R.id.tlClipboardTabs);
