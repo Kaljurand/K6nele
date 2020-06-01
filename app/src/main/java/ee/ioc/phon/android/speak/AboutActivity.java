@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2015, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2020, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package ee.ioc.phon.android.speak;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import ee.ioc.phon.android.speak.databinding.AboutBinding;
 import ee.ioc.phon.android.speak.utils.Utils;
 
 /**
@@ -40,19 +40,19 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
+        AboutBinding binding = AboutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setTitle(R.string.labelApp);
             ab.setSubtitle("v" + Utils.getVersionName(this));
         }
-        TextView tvAbout = findViewById(R.id.tvAbout);
-        tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
+        binding.tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
         String about = String.format(
                 getString(R.string.tvAbout),
                 getString(R.string.labelApp)
         );
-        tvAbout.setText(Html.fromHtml(about));
+        binding.tvAbout.setText(Html.fromHtml(about));
     }
 }

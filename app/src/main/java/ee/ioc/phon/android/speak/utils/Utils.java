@@ -47,12 +47,15 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
@@ -62,8 +65,11 @@ import ee.ioc.phon.android.speak.activity.SpeechActionActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.Command;
+import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
+import ee.ioc.phon.android.speechutils.editor.Constants;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -251,6 +257,60 @@ public final class Utils {
                 return new UtteranceRewriter(rewritesAsStr, commandMatcher);
             }
         };
+    }
+
+    /**
+     * Creates a rule where the utterance is a new unique pattern based on the timestamp.
+     * The replacement and the possible command with arguments are based on the rewriting results.
+     * In case of commands the clip label is the command's comment or, if missing, the pretty-printed command.
+     * For a simple replacement the clip label is the replacement.
+     * Clicking on a Recent clip will just push it to the top of the list, i.e. make it most recent.
+     * <p>
+     * TODO: review and update doc
+     * TODO: do we need to generate the utterance field at all?
+     *
+     * @param text         Spoken input, used as the clipboard label, as well as the replacement if command == null
+     * @param editorResult Command (if spoken input triggered a command). Used to populate the clips's
+     *                     replacement, and command.
+     */
+    public static List<Command> addRule(String text, CommandEditorResult editorResult, String rewrites, ComponentName app) {
+        UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
+        Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
+        Calendar cal = Calendar.getInstance();
+        long uttId = cal.getTimeInMillis();
+        // TODO: come up with a better utterance
+        String uttAsStr = "^<" + uttId + ">$";
+        Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
+        Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
+        // TODO
+        Pattern localePattern = null;
+        Pattern servicePattern = null;
+        // cal.getTime().toString()
+        Command newCommand;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String comment = sdf.format(cal.getTime()) + ", " + text;
+        if (rewrite.isCommand()) {
+            // We store the matched command, but change the utterance, comment, and the command matcher.
+            // TODO: review this
+            String label = rewrite.getCommand().getLabel();
+            if (label == null) {
+                label = rewrite.ppCommand();
+            }
+            // Rewrite args is the output of command.parse, i.e. the evaluated args
+            newCommand = new Command(label, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
+        } else {
+            newCommand = new Command(rewrite.mStr, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, null);
+        }
+        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        List<Command> commands = ur.getCommands();
+        // Delete commands that produce the same result.
+        // TODO: perform this as part of UtteranceRewriter
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            commands.removeIf(newCommand::equalsCommand);
+        }
+        // Add a rule
+        commands.add(0, newCommand);
+        return commands;
     }
 
     public static <E> List<E> makeList(Iterable<E> iter) {

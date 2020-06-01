@@ -9,6 +9,7 @@
         app:iconSpaceReserved="false"
         app:key="@string/keyRecents"
         app:min="@integer/minRecents"
+        app:seekBarIncrement="10"
         app:showSeekBarValue="true"
         app:summary="@string/summaryRecents"
         app:title="@string/titleRecents" />

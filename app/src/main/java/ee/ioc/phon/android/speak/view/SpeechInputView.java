@@ -463,6 +463,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
+    // TODO: this does not make sense if the UI is in the clipboard mode
     public void start() {
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
@@ -587,21 +588,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         String appId = app.flattenToShortString();
         String selectedTabName = getTabName(prefs, res, appId);
 
-        // If the previously selected rewrites table is not among the defaults anymore then
-        // we select the first one (but do not save it).
-        int selectedPosition = 0;
-        int position = -1;
-        for (String tabName : names) {
-            TabLayout.Tab tab = tabs.newTab();
-            tab.setText(tabName);
-            // This should happen before selecting, otherwise the selection is not shown
-            tabs.addTab(tab);
-            position++;
-            if (tabName.equals(selectedTabName)) {
-                selectedPosition = position;
-            }
-        }
-
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -619,7 +605,16 @@ public class SpeechInputView extends LinearLayoutCompat {
             }
         });
 
-        tabs.getTabAt(selectedPosition).select();
+        for (String tabName : names) {
+            TabLayout.Tab tab = tabs.newTab();
+            tab.setText(tabName);
+            tabs.addTab(tab, tabName.equals(selectedTabName));
+        }
+        // If the previously selected rewrites table is not among the defaults anymore then
+        // we select the first one (but do not save it).
+        if (tabs.getSelectedTabPosition() == -1) {
+            tabs.getTabAt(0).select();
+        }
 
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
         for (int i = 0; i < tabStrip.getChildCount(); i++) {

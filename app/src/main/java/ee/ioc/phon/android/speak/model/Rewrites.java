@@ -155,6 +155,11 @@ public class Rewrites {
         PreferenceUtils.putPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables, set);
     }
 
+    public static String ppComboMatcher(String app, String locale, String service) {
+        // The middot is between U+202F (NARROW NO-BREAK SPACE)
+        return toPp(app) + " • " + toPp(locale) + " • " + toPp(service);
+    }
+
     public static Set<String> getDefaults(SharedPreferences prefs, Resources res) {
         return PreferenceUtils.getPrefStringSet(prefs, res, R.string.defaultRewriteTables);
     }
@@ -235,10 +240,7 @@ public class Rewrites {
     }
 
     private static String ppMatcher(Map<String, String> map) {
-        // The middot is between U+202F (NARROW NO-BREAK SPACE)
-        return toPp(map.get(UtteranceRewriter.HEADER_APP)) + " • " +
-                toPp(map.get(UtteranceRewriter.HEADER_LOCALE)) + " • " +
-                toPp(map.get(UtteranceRewriter.HEADER_SERVICE));
+        return ppComboMatcher(map.get(UtteranceRewriter.HEADER_APP), map.get(UtteranceRewriter.HEADER_LOCALE), map.get(UtteranceRewriter.HEADER_SERVICE));
     }
 
     private static String toPp(String str) {

@@ -23,4 +23,12 @@
 
     <integer name="spanCount">3</integer>
 
+    <integer name="defaultMaxHypotheses">1</integer>
+    <integer name="maxMaxHypotheses">16</integer>
+    <integer name="minMaxHypotheses">1</integer>
+
+    <integer name="defaultRecents">0</integer>
+    <integer name="maxRecents">999</integer>
+    <integer name="minRecents">0</integer>
+
 </resources>

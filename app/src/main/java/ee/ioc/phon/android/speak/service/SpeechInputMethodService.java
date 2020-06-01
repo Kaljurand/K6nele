@@ -25,10 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -41,7 +38,6 @@ import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
-import ee.ioc.phon.android.speechutils.editor.Constants;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
 import ee.ioc.phon.android.speechutils.editor.Op;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
@@ -334,48 +330,17 @@ public class SpeechInputMethodService extends InputMethodService {
              *                replacement, and command.
              */
             private void addRule(String text, CommandEditorResult editorResult) {
-                UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
-                Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
-                Calendar cal = Calendar.getInstance();
-                long uttId = cal.getTimeInMillis();
-                String uttAsStr = "^" + REWRITES_RECENT_NAME + uttId + "$";
-                Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
-                //Pattern app = Pattern.compile("[^:]", Constants.REWRITE_PATTERN_FLAGS);
-                Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
-                // cal.getTime().toString()
-                Command newCommand;
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String comment = sdf.format(cal.getTime()) + ", " + text;
-                if (rewrite.isCommand()) {
-                    // We store the matched command, but change the utterance, comment, and the command matcher.
-                    // TODO: review this
-                    String label = rewrite.getCommand().getLabel();
-                    if (label == null) {
-                        label = rewrite.ppCommand();
-                    }
-                    // Rewrite args is the output of command.parse, i.e. the evaluated args
-                    newCommand = new Command(label, comment, null, null, appPattern, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
-                } else {
-                    newCommand = new Command(rewrite.mStr, comment, null, null, appPattern, utt, rewrite.mStr, null);
+                int rewritesRecentsize = mPrefs.getInt(mRes.getString(R.string.keyRecents), R.integer.defaultRecents);
+                String newRewrites = "";
+                if (rewritesRecentsize > 0) {
+                    // Load the existing rewrite rule table
+                    String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME);
+                    List<Command> commands = Utils.addRule(text, editorResult, rewrites, app);
+                    UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(rewritesRecentsize, commands.size())), UtteranceRewriter.DEFAULT_HEADER);
+                    newRewrites = newUr.toTsv();
                 }
-
-                // Load the existing rewrite rule table
-                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME);
-                UtteranceRewriter ur = new UtteranceRewriter(rewrites);
-                List<Command> commands = ur.getCommands();
-                // Delete commands that produce the same result.
-                // TODO: perform this as part of UtteranceRewriter
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    commands.removeIf(newCommand::equalsCommand);
-                }
-                // Add a rule
-                commands.add(0, newCommand);
-
-                int rewritesRecentsize = mPrefs.getInt(getResources().getString(R.string.keyRecents), R.integer.defaultRecents);
-                UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(rewritesRecentsize, commands.size())),
-                        UtteranceRewriter.DEFAULT_HEADER);
                 // Save it again
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME, newUr.toTsv());
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME, newRewrites);
             }
 
             private void commitResults(List<String> results) {

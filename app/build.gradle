@@ -25,8 +25,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1726
-        versionName '1.7.26'
+        versionCode 1727
+        versionName '1.7.27'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs "en", "et"
@@ -68,9 +68,12 @@ android {
         disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill'
     }
 
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding {
+            enabled = true
+        }
     }
+
 }
 
 

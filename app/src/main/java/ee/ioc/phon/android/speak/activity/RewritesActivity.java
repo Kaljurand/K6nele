@@ -68,14 +68,22 @@ public class RewritesActivity extends AppCompatActivity {
         String service = extras.getString(EXTRA_SERVICE);
         String app = extras.getString(EXTRA_APP);
         CommandMatcher commandMatcher = null;
+        String emptyList;
+        int resSubtitle = R.plurals.statusLoadRewrites;
         if (locale != null || service != null || app != null) {
             commandMatcher = CommandMatcherFactory.createCommandFilter(
                     locale,
                     service == null ? null : ComponentName.unflattenFromString(service),
                     app == null ? null : ComponentName.unflattenFromString(app)
             );
+
+            emptyList = String.format(getString(R.string.emptylistRewriteRulesFiltered), Rewrites.ppComboMatcher(app, locale, service));
+            resSubtitle = R.plurals.statusLoadRewritesFiltered;
+        } else {
+            emptyList = getString(R.string.emptylistRewriteRules);
+
         }
-        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment(commandMatcher)).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment(commandMatcher, emptyList, resSubtitle)).commit();
     }
 
     @Override
@@ -187,9 +195,13 @@ public class RewritesActivity extends AppCompatActivity {
     public static class RewritesFragment extends K6neleListFragment implements SearchView.OnQueryTextListener {
 
         private final CommandMatcher mCommandMatcher;
+        private final String mEmptyList;
+        private final int mResSubtitle;
 
-        RewritesFragment(CommandMatcher commandMatcher) {
+        RewritesFragment(CommandMatcher commandMatcher, String emptyList, int resSubtitle) {
             mCommandMatcher = commandMatcher;
+            mEmptyList = emptyList;
+            mResSubtitle = resSubtitle;
         }
 
         @Override
@@ -199,15 +211,10 @@ public class RewritesActivity extends AppCompatActivity {
             Rewrites rewrites = activity.getRewrites();
             setListAdapter(new ArrayAdapter<>(activity, R.layout.list_item_rewrite, rewrites.getRules(mCommandMatcher)));
             getListView().setFastScrollEnabled(true);
-            setEmptyView(getString(R.string.emptylistRewriteRules));
             int ruleCount = getListView().getAdapter().getCount();
-            String subtitle = getResources().getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
-            if (mCommandMatcher == null) {
-                activity.getSupportActionBar().setSubtitle(subtitle);
-            } else {
-                // TODO: localize "filtered"
-                activity.getSupportActionBar().setSubtitle(subtitle + " (filtered)");
-            }
+            setEmptyView(mEmptyList);
+            String subtitle = getResources().getQuantityString(mResSubtitle, ruleCount, ruleCount);
+            activity.getSupportActionBar().setSubtitle(subtitle);
         }
 
         @Override

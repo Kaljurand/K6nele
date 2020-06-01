@@ -10,6 +10,7 @@
         android:id="@+id/tlClipboardTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabIndicatorAnimationDuration="0"
         app:tabIndicatorColor="@color/accent"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="?android:attr/textColorPrimary"
