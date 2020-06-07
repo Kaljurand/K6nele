@@ -120,7 +120,7 @@
     <string name="titleMaxHypotheses">Recognition hypotheses</string>
     <string name="summaryMaxHypotheses">Maximum number of returned recognition hypotheses. Depends also on the used service.</string>
 
-    <string name="titleRecents">Recents utterances</string>
+    <string name="titleRecents">Recent utterances</string>
     <string name="summaryRecents">Maximum number of recent utterances to remember</string>
 
     <!-- RecognizerIntent activity -->

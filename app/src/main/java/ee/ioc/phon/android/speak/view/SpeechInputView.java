@@ -997,19 +997,32 @@ public class SpeechInputView extends LinearLayoutCompat {
         @Override
         public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
             final Command command = mUr.getCommands().get(position);
-            holder.mView.setText(command.getLabelOrCommentOrString());
-            holder.mView.setOnClickListener(view -> {
-                        String val = command.makeUtt();
+            holder.mView.setText(command.getLabelOrString());
+            String val = command.makeUtt();
+            // TODO: Note that "press and hold" buttons are not compatible with scrolling the keyboard
+            // TODO: show them with a different background
+            if (command.isRepeatable()) {
+                holder.mView.setOnTouchListener(new OnPressAndHoldListener() {
+                    @Override
+                    public void onAction() {
                         if (val != null) {
                             mListener.onFinalResult(Collections.singletonList(val), new Bundle());
                         }
                     }
-            );
-            holder.mView.setOnLongClickListener(v -> {
-                // TODO: delete with confirmation
-                showMessage(command.toString());
-                return true;
-            });
+                });
+            } else {
+                holder.mView.setOnClickListener(view -> {
+                            if (val != null) {
+                                mListener.onFinalResult(Collections.singletonList(val), new Bundle());
+                            }
+                        }
+                );
+                // TODO: launch regex generator picker instead
+                holder.mView.setOnLongClickListener(v -> {
+                    showMessage(command.toString());
+                    return true;
+                });
+            }
         }
 
         @Override

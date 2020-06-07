@@ -31,6 +31,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
@@ -325,22 +326,24 @@ public class SpeechInputMethodService extends InputMethodService {
              * TODO: review and update doc
              * TODO: do we need to generate the utterance field at all?
              *
-             * @param text Spoken input, used as the clipboard label, as well as the replacement if command == null
+             * @param text Spoken input, used as the clipboard label, as well as the replacement
              * @param editorResult Command (if spoken input triggered a command). Used to populate the clips's
              *                replacement, and command.
              */
             private void addRule(String text, CommandEditorResult editorResult) {
                 int rewritesRecentsize = mPrefs.getInt(mRes.getString(R.string.keyRecents), R.integer.defaultRecents);
-                String newRewrites = "";
-                if (rewritesRecentsize > 0) {
-                    // Load the existing rewrite rule table
-                    String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME);
-                    List<Command> commands = Utils.addRule(text, editorResult, rewrites, app);
-                    UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(rewritesRecentsize, commands.size())), UtteranceRewriter.DEFAULT_HEADER);
-                    newRewrites = newUr.toTsv();
+                Rewrites rewrites = new Rewrites(mPrefs, mRes, REWRITES_RECENT_NAME);
+                if (rewritesRecentsize == 0) {
+                    rewrites.delete();
+                    return;
                 }
+                String newRewrites = "";
+                // Load the existing rewrite rule table
+                List<Command> commands = Utils.addRule(text, editorResult, rewrites.getRewrites(), app);
+                UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(rewritesRecentsize, commands.size())), UtteranceRewriter.DEFAULT_HEADER);
+                newRewrites = newUr.toTsv();
                 // Save it again
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, ee.ioc.phon.android.speechutils.R.string.keyClipboardMap, REWRITES_RECENT_NAME, newRewrites);
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_RECENT_NAME, newRewrites);
             }
 
             private void commitResults(List<String> results) {

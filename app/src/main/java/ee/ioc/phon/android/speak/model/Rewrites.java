@@ -83,8 +83,7 @@ public class Rewrites {
     }
 
     public Intent getSendIntent() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        UtteranceRewriter ur = new UtteranceRewriter(getRewrites());
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_SUBJECT, mId);
@@ -96,8 +95,7 @@ public class Rewrites {
     }
 
     public Intent getIntentSendBase64() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        UtteranceRewriter ur = new UtteranceRewriter(getRewrites());
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_SUBJECT, mId);
@@ -120,8 +118,7 @@ public class Rewrites {
     public void rename(String newName) {
         if (!mId.equals(newName)) {
             if (newName != null) {
-                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, getRewrites());
             }
             Set<String> deleteKeys = new HashSet<>();
             deleteKeys.add(mId);
@@ -141,9 +138,12 @@ public class Rewrites {
         rename(null);
     }
 
+    public String getRewrites() {
+        return PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+    }
+
     private UtteranceRewriter.CommandHolder getCommandHolder(CommandMatcher matcher) {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites, matcher);
+        UtteranceRewriter ur = new UtteranceRewriter(getRewrites(), matcher);
         return ur.getCommandHolder();
     }
 
