@@ -1002,6 +1002,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             // TODO: Note that "press and hold" buttons are not compatible with scrolling the keyboard
             // TODO: show them with a different background
             if (command.isRepeatable()) {
+                holder.mView.setOnClickListener(null);
                 holder.mView.setOnTouchListener(new OnPressAndHoldListener() {
                     @Override
                     public void onAction() {
@@ -1011,6 +1012,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     }
                 });
             } else {
+                holder.mView.setOnTouchListener(null);
                 holder.mView.setOnClickListener(view -> {
                             if (val != null) {
                                 mListener.onFinalResult(Collections.singletonList(val), new Bundle());

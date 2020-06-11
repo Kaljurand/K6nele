@@ -47,7 +47,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 public class SpeechInputMethodService extends InputMethodService {
 
     // TODO: move somewhere else and make end-user configurable
-    private static final String REWRITES_RECENT_NAME = "#Recent";
+    private static final String REWRITES_RECENT_NAME = "#r";
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
