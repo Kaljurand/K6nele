@@ -14,7 +14,7 @@ Requires Android 4.1+
 New in this release:
 
 - remove IME command ``saveClip``
-- make IME command ``makeRelSel`` callable from rewrite rules
+- make IME command ``moveRelSel`` callable from rewrite rules
 - action bar now appears on all platforms (incl. Watch)
 - improve support for TV (untested)
 - make some touch targets a bit bigger, e.g. the combo selector looks more like a button

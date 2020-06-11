@@ -407,6 +407,41 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 - __Arg1__ = `[.?!]\\s*()[^.?!]+[.?!]`
 - __Arg2__ = `2`
 
+### Lausung kui nupuvajutus (alates Kõnele v1.7.28)
+
+Mõningaid toimingud on mõistlikum kõneliidese asemel nuppudele vajutades läbi viia (klaveri mängimine, liftis korruse valimine, jms).
+Lisaks eelkirjeldatud nuppudele ("action" nupp, kustutamisnupp, ...) ja kursori liigutamisele Kõnele paneelil, toetab
+Kõnele puutetundlikust veel kahel moel, mis on mõlemad tihedalt reeglistikega seotud.
+
+Esiteks genereerib Kõnele mikrofoninupp lausungeid kujul nt `K6_Y_BTN_MIC_RIGHT`, kui seda svaipida (`UP`, `DOWN`, `LEFT`, `RIGHT`),
+kahekordselt vajutada (`DOUBLETAP`), või pikalt vajutada (`LONGPRESS`).
+Samuti sõltub genereeritud lausung nupu olekust: kollane (`Y`) või punane (`R`). Reeglid võimaldavad (juba eelkirjeldatud moel)
+siduda käske selliste mikrofoninupupuudutustega.
+
+Näide. Paremele svaip postitab sõnumirakenduses tekstiväljal parasjagu oleva teksti.
+
+- __App__ = `(talk|fireball|teams)`
+- __Utterance__ = `^K6_._BTN_MIC_RIGHT$`
+- __Command__ = `imeActionSend`
+
+Teiseks on võimalik kõiki aktiivseid reegleid nuppudena kuvada. Ühest küljest annab see parema
+ülevaate, millised reeglid on antud kontekstis (rakenduses, keeles) aktiivsed. Kuid
+lisaks saab nüüd reegleid nupuvajutusega käivitada. Ning võib disainida reeglistikke, mida polegi
+plaanis kõne abil käivitada (PIN-koodi sisestamispaneel, lemmik emotikonid, kalkulaator, jms).
+Lisaveerg __Label__ määrab nupu ikooni.
+
+Näide. Nupp emotikoni sisestamiseks.
+
+- __Utterance__ = `^button_001$`
+- __Command__ = `replaceSel`
+- __Arg1__ = `🙂`
+- __Label__ = `🙂`
+
+Nupud laotakse ekraanile kolmes veerus ja iga reeglistik on eraldi _tabis_. Allolev ekraanipilt näitab võimalikku
+kalkulaatoridisaini.
+
+<img title="Ekraanipilt: klahvistik Kalkulaator" alt="Ekraanipilt: klahvistik Kalkulaator." src="{{ site.baseurl }}/images/et/Screenshot_20200612-012835.png">
+
 ### Reeglite tegemine ja paigaldamine
 
 Reeglifaili loomiseks ja salvestamiseks sobib iga tabelarvutusprogramm. Nt [Google'i Arvutustabelid](https://www.google.com/intl/et/sheets/about/) (_Google Sheets_) võimaldab selliseid tabeleid luua nii lauaarvutis kui ka mobiiliseadmes, ning siis erinevate seadmete ja kasutajate vahel TSV-kujul jagada. Faili laadimiseks Kõnele rakendusse on erinevaid võimalusi:
