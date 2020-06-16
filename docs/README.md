@@ -39,6 +39,15 @@ The arguments can reference expression groups by `$1`, `$2`, ... and the current
 
 ### Changing preferences
 
+In order to change multiple preferences automatically, you can use the ``adb-pref.py`` script
+which reads the set of preferences' key-value pairs from a set of YAML-files, and sends commands
+to Kõnele to change the respective preferences.
+
     ./adb-pref.py --disable-confirmation | sh
     read
     ./adb-pref.py prefs_{clips,developer,user_guide_rewrites,private}.yml | sh
+
+Note that every preference has a type (Boolean, String, ...). If the type of a preference listed in the YAML-file
+does not match with the one expected by Kõnele, a crash can occur (``ClassCastException``), and part of Kõnele might
+become unusable (e.g. the Settings-activity does not open). In this case clear all Kõnele data via Android's system
+settings (app-specific ``Clear storage`` or ``Clear data``, depending on your Android version), and fix the type in your YAML file.

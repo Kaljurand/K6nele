@@ -138,6 +138,8 @@
 		abil.</string>
     <string name="emptylistRewrites">Ümberkirjutusreeglistikke pole. Lisa ümberkirjutusreeglite tabel Lisa-nupu abil või eksportides see tabelarvutusrakendusest TSV-formaadis.</string>
     <string name="emptylistRewriteRules">Ümberkirjutusreegleid ei leitud. Veenduge, et sisendfaili veerud on eraldatud tabulaatori abil ja esimene rida on päiseks.</string>
+    <string name="emptylistRewriteRulesFiltered">Ümberkirjutusreegleid ei leitud, mis vastaks filtrile\n%1$s</string>
+    <string name="emptylistClipboard">Klahvistikke pole. Lisa ümberkirjutusreegleid. Sisselülitatud reeglistikud ilmuvad siia klahvistikena.</string>
     <string name="menuAppsSort">Järjesta …</string>
     <string name="menuAppsSortByName">rakenduse paki nime järgi</string>
     <string name="menuAppsSortByCount">kasutussageduse järgi</string>
@@ -196,6 +198,10 @@
     <plurals name="statusLoadRewrites">
         <item quantity="one">1 reegel</item>
         <item quantity="other">%d reeglit</item>
+    </plurals>
+    <plurals name="statusLoadRewritesFiltered">
+        <item quantity="one">1 reegel (filtreeritud)</item>
+        <item quantity="other">%d reeglit (filtreeritud)</item>
     </plurals>
     <plurals name="statusLoadRewritesErrors">
         <item quantity="one">1 viga</item>
@@ -299,7 +305,7 @@
     <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage siia.</string>
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
     <string name="labelIme">Kõnele kõne &amp; svaip</string>
-    <string name="titleMaxResults">Tuvastushüpoteeside arv</string>
+    <string name="titleMaxHypotheses">Tuvastushüpoteeside arv</string>
     <string name="titleServices">Kõnetuvastusteenused</string>
     <string name="summaryServices">Kõik paigaldatud kõnetuvastusteenused</string>
     <string name="titleQuickSettings">Kiirseaded</string>
@@ -316,15 +322,13 @@
     <string name="titleSystemVoiceInputSettings">Kõnetuvastusteenused (süsteemsed seaded)</string>
     <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>
 
-    <plurals name="summaryMaxResults">
-        <item quantity="one">Väljasta ainult kõige tõenäolisem tuvastushüpotees</item>
-        <item quantity="other">Väljasta maksimaalselt %d tuvastushüpoteesi</item>
-    </plurals>
+    <string name="summaryMaxHypotheses">Tagastatud tuvastushüpoteeside arv. Eeldab teenuse toetust.</string>
     <string name="labelActivityEncoderListDemo">Audioformaadid</string>
     <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
     <string name="buttonImeStopByPause">Lõpetamiseks tehke paus</string>
     <string name="buttonApplyDeveloperDefaults">Arendaja seaded</string>
+    <string name="buttonLaunchRewrites">Ava ümberkirjutusreeglid</string>
 
     <string name="labelActivityImeListDemo">Kõneklaviatuurid</string>
     <string name="buttonApply">Rakenda</string>

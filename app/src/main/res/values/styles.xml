@@ -1,27 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.K6nele" parent="@android:style/Theme.DeviceDefault" />
-
-    <style name="Theme.K6nele.NoActionBar" parent="@android:style/Theme.DeviceDefault.NoActionBar" />
-
-    <style name="Theme.K6nele.Dialog" parent="@android:style/Theme.DeviceDefault.Dialog" />
-
-    <style name="Theme.K6nele.Dialog.NoActionBar" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
-
-    <style name="Theme.K6nele.DialogWhenLarge" parent="@android:style/Theme.DeviceDefault.DialogWhenLarge" />
-
-    <style name="Theme.K6nele.DialogWhenLarge.NoActionBar" parent="@android:style/Theme.DeviceDefault.DialogWhenLarge.NoActionBar" />
-
-    <style name="Theme.K6nele.Light" parent="@android:style/Theme.Holo.Light" />
+    <style name="Theme.K6nele" parent="Theme.AppCompat.DayNight">
+        <item name="colorAccent">@color/accent</item>
+    </style>
 
     <!--
-    TODO: this allows more flexible styling, but action bar disappeared
-    implementation 'com.android.support:design:' + rootProject.supportLibVersion
-    <style name="Theme.K6nele" parent="Theme.AppCompat">
-        <item name="colorPrimary">#FFC400</item>
-        <item name="colorPrimaryDark">#FFA000</item>
-        <item name="colorAccent">#FFA000</item>
+    <style name="Theme.K6nele.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar" />
+-->
+    <style name="Theme.K6nele.Dialog" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="colorAccent">@color/accent</item>
     </style>
-     -->
+
+    <style name="Theme.K6nele.Dialog.NoActionBar" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="colorAccent">@color/accent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--
+    <style name="Theme.K6nele.DialogWhenLarge" parent="Theme.AppCompat.DayNight.DialogWhenLarge" />
+
+    <style name="Theme.K6nele.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.DayNight.DialogWhenLarge" />
+-->
+
+    <style name="Theme.K6nele.Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="Theme.K6nele.Light.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="Theme.K6nele.Translucent" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
 </resources>

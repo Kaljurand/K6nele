@@ -114,7 +114,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:exported="true"
             android:label="@string/labelActivityRecognizerIntent"
             android:launchMode="standard"
-            android:theme="@style/Theme.K6nele.Dialog">
+            android:theme="@style/Theme.K6nele.Dialog.NoActionBar">
             <intent-filter>
                 <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
 
@@ -246,9 +246,10 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.DetailsActivity"
             android:theme="@style/Theme.K6nele.Dialog" />
+        <!-- TODO: remove Light (once style inheritance works) -->
         <activity
             android:name=".activity.RewritesErrorsActivity"
-            android:theme="@style/Theme.K6nele.Dialog" />
+            android:theme="@style/Theme.K6nele.Light.Dialog" />
         <activity
             android:name=".activity.ComboSelectorActivity"
             android:label="@string/dialogTitleCombo"
@@ -259,7 +260,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/titleServices"
             android:parentActivityName=".activity.Preferences" />
         <activity
-            android:name=".AppListActivity"
+            android:name=".activity.AppListActivity"
             android:label="@string/labelActivityAppList"
             android:parentActivityName=".activity.Preferences" />
         <activity
@@ -307,9 +308,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.RewritesActivity"
             android:parentActivityName=".activity.RewritesSelectorActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.RewritesSelectorActivity" />
             <!--
             <meta-data
                 android:name="android.app.searchable"
@@ -318,17 +316,17 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".activity.FetchUrlActivity"
             android:exported="true"
             android:permission="ee.ioc.phon.android.speak.permission.FETCH_URL"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <!-- TODO: require: ee.ioc.phon.android.speak.permission.GET_PUT_SETTING -->
         <activity
             android:name=".activity.GetPutPreferenceActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".activity.QuickSettingsActivity"
             android:label="@string/labelActivityQuickSettings"
@@ -340,11 +338,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".demo.SimpleDemo"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".demo.ExtrasDemo"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".demo.HandsfreeDemoActivity"
             android:label="@string/labelActivityHandsfreeDemo">

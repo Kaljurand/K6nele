@@ -1,17 +1,18 @@
 package ee.ioc.phon.android.speak.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Rewrites;
 
 public class RewritesAdapter extends ArrayAdapter<Rewrites> {
@@ -19,7 +20,7 @@ public class RewritesAdapter extends ArrayAdapter<Rewrites> {
     private final List<Rewrites> list;
     private final Activity context;
 
-    public RewritesAdapter(Fragment context, List<Rewrites> list) {
+    public RewritesAdapter(K6neleListFragment context, List<Rewrites> list) {
         super(context.getActivity(), R.layout.list_item_rewrites, list);
         this.context = context.getActivity();
         this.list = list;

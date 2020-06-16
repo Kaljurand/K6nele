@@ -78,7 +78,7 @@
         android:ellipsize="middle"
         android:maxLines="1"
         android:text="@string/keyWsServer"
-        android:textColor="@color/orange1"
+        android:textColor="@color/accent"
         android:textSize="@dimen/textSize2" />
 
     <TextView
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemAppGrammar"
         android:text="@string/defaultHttpServer"
-        android:textColor="@color/orange"
+        android:textColor="@color/accent"
         android:textSize="@dimen/textSize2" />
 
 </RelativeLayout>

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlClipboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/tvMessage"
+    android:layout_marginBottom="@dimen/layoutMargin4dp">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tlClipboardTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorAnimationDuration="0"
+        app:tabIndicatorColor="@color/accent"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="?android:attr/textColorPrimary"
+        app:tabTextColor="?android:attr/textColorSecondary" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvClipboard"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layoutHeightClipboard"
+        android:layout_below="@+id/tlClipboardTabs"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="vertical"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layoutManager="GridLayoutManager"
+        app:spanCount="@integer/spanCount" />
+
+    <LinearLayout
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layoutHeightClipboard"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/layoutMargin1"
+            android:text="@string/emptylistClipboard"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:textColorSecondary" />
+
+        <Button
+            android:id="@+id/buttonOpenRewrites"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/buttonLaunchRewrites" />
+
+    </LinearLayout>
+
+</RelativeLayout>

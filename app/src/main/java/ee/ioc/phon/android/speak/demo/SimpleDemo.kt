@@ -36,7 +36,7 @@ class SimpleDemo : AbstractRecognizerDemoActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.simple_demo)
+        setContentView(R.layout.list_view)
 
         val intent = createRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
@@ -55,7 +55,7 @@ class SimpleDemo : AbstractRecognizerDemoActivity() {
      */
     override fun onSuccess(intent: Intent?) {
         val matches = intent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-        (findViewById(R.id.list_matches) as ListView).adapter =
+        (findViewById(android.R.id.list) as ListView).adapter =
                 ArrayAdapter(this, android.R.layout.simple_list_item_1, matches as ArrayList<String>)
     }
 }

@@ -3,11 +3,8 @@ package ee.ioc.phon.android.speak.model;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.speech.RecognizerIntent;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.Base64;
 
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.Command;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -85,8 +83,7 @@ public class Rewrites {
     }
 
     public Intent getSendIntent() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        UtteranceRewriter ur = new UtteranceRewriter(getRewrites());
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_SUBJECT, mId);
@@ -98,8 +95,7 @@ public class Rewrites {
     }
 
     public Intent getIntentSendBase64() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+        UtteranceRewriter ur = new UtteranceRewriter(getRewrites());
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_SUBJECT, mId);
@@ -108,8 +104,8 @@ public class Rewrites {
         return intent;
     }
 
-    public SpannableStringBuilder[] getRules() {
-        UtteranceRewriter.CommandHolder holder = getCommandHolder();
+    public SpannableStringBuilder[] getRules(CommandMatcher commandMatcher) {
+        UtteranceRewriter.CommandHolder holder = getCommandHolder(commandMatcher);
         Collection<String> header = holder.getHeader().values();
         SpannableStringBuilder[] array = new SpannableStringBuilder[holder.size()];
         int i = 0;
@@ -119,15 +115,10 @@ public class Rewrites {
         return array;
     }
 
-    public int size() {
-        return getCommandHolder().size();
-    }
-
     public void rename(String newName) {
         if (!mId.equals(newName)) {
             if (newName != null) {
-                String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, rewrites);
+                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, newName, getRewrites());
             }
             Set<String> deleteKeys = new HashSet<>();
             deleteKeys.add(mId);
@@ -147,9 +138,12 @@ public class Rewrites {
         rename(null);
     }
 
-    private UtteranceRewriter.CommandHolder getCommandHolder() {
-        String rewrites = PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
+    public String getRewrites() {
+        return PreferenceUtils.getPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, mId);
+    }
+
+    private UtteranceRewriter.CommandHolder getCommandHolder(CommandMatcher matcher) {
+        UtteranceRewriter ur = new UtteranceRewriter(getRewrites(), matcher);
         return ur.getCommandHolder();
     }
 
@@ -159,6 +153,11 @@ public class Rewrites {
 
     private void putDefaults(Set<String> set) {
         PreferenceUtils.putPrefStringSet(mPrefs, mRes, R.string.defaultRewriteTables, set);
+    }
+
+    public static String ppComboMatcher(String app, String locale, String service) {
+        // The middot is between U+202F (NARROW NO-BREAK SPACE)
+        return toPp(app) + " • " + toPp(locale) + " • " + toPp(service);
     }
 
     public static Set<String> getDefaults(SharedPreferences prefs, Resources res) {
@@ -200,11 +199,10 @@ public class Rewrites {
         ssb.append(ppMatcher(map));
         ssb.append('\n');
         // Utterance
-        int start = ssb.length();
+        // int start = ssb.length();
         ssb.append(map.get(UtteranceRewriter.HEADER_UTTERANCE));
-        // Other text is 0xffBDBDBD (400)
-        // TODO: use the accent color
-        ssb.setSpan(new ForegroundColorSpan(0xffFAFAFA), start, ssb.length(), 0);
+        // Use a layout file to make it easier to style the output
+        // ssb.setSpan(new ForegroundColorSpan(0xffFAFAFA), start, ssb.length(), 0);
         ssb.append('\n');
         // Replacement
         ssb.append(toPp(map.get(UtteranceRewriter.HEADER_REPLACEMENT))
@@ -214,13 +212,19 @@ public class Rewrites {
                 .replace("   ", "\n\t"));
         // Command with arguments
         ssb.append(ppCommand(map));
+        // Label
+        String label = map.get(UtteranceRewriter.HEADER_LABEL);
+        if (label != null && !label.isEmpty()) {
+            ssb.append("\n\n");
+            ssb.append(label);
+        }
         // Comment
         String comment = map.get(UtteranceRewriter.HEADER_COMMENT);
         if (comment != null && !comment.isEmpty()) {
             ssb.append("\n\n");
-            start = ssb.length();
+            // start = ssb.length();
             ssb.append(comment);
-            ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, ssb.length(), 0);
+            // ssb.setSpan(new StyleSpan(Typeface.ITALIC), start, ssb.length(), 0);
         }
         return ssb;
     }
@@ -236,10 +240,7 @@ public class Rewrites {
     }
 
     private static String ppMatcher(Map<String, String> map) {
-        // The middot is between U+202F (NARROW NO-BREAK SPACE)
-        return toPp(map.get(UtteranceRewriter.HEADER_APP)) + " • " +
-                toPp(map.get(UtteranceRewriter.HEADER_LOCALE)) + " • " +
-                toPp(map.get(UtteranceRewriter.HEADER_SERVICE));
+        return ppComboMatcher(map.get(UtteranceRewriter.HEADER_APP), map.get(UtteranceRewriter.HEADER_LOCALE), map.get(UtteranceRewriter.HEADER_SERVICE));
     }
 
     private static String toPp(String str) {

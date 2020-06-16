@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menuRewritesToggle"
         android:actionLayout="@layout/ab_switch"
-        android:showAsAction="always"
-        android:title="" />
+        android:title=""
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menuRewritesTest"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/cmTest" />
+        android:title="@string/cmTest"
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/menuRewritesShare"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/cmShare" />
+        android:title="@string/cmShare"
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/menuRewritesSendBase64"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/cmSendBase64" />
+        android:title="@string/cmSendBase64"
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/menuRewritesRename"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/cmRename" />
+        android:title="@string/cmRename"
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/menuRewritesDelete"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/cmDelete" />
+        android:title="@string/cmDelete"
+        app:showAsAction="ifRoom|withText" />
 
     <!--
     <item
         android:id="@+id/search"
         android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_input_extract_action_search"
-        android:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="collapseActionView|ifRoom"
         android:title="@string/titleSearchRewrites" />
      -->
 </menu>

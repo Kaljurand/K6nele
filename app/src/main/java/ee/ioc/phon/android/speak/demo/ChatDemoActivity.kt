@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.demo
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -27,6 +26,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.model.CallerInfo
 import ee.ioc.phon.android.speak.utils.Utils
@@ -43,7 +43,7 @@ import org.json.JSONException
  * TODO: each list item should have at least 3 components: spoken input,
  * pretty-printed output (JSON, or parts of it), formal output (JSON that can be executed)
  */
-class ChatDemoActivity : Activity() {
+class ChatDemoActivity : AppCompatActivity() {
 
     private val mMatches = ArrayList<String>()
 
@@ -83,6 +83,7 @@ class ChatDemoActivity : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_demo)
+        setSupportActionBar(findViewById(R.id.my_toolbar))
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this)
         mRes = resources
@@ -93,7 +94,7 @@ class ChatDemoActivity : Activity() {
         siv.init(R.array.keysActivity, callerInfo, 0)
         siv.setListener(speechInputViewListener, null)
 
-        (findViewById(R.id.list_matches) as ListView).onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+        (findViewById(android.R.id.list) as ListView).onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             val entry = parent.adapter.getItem(position)
             startActivity(entry.toString())
         }
@@ -108,7 +109,7 @@ class ChatDemoActivity : Activity() {
     }
 
     private fun updateListView(list: List<String>) {
-        (findViewById(R.id.list_matches) as ListView).adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        (findViewById(android.R.id.list) as ListView).adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
     }
 
     private fun toast(message: String) {

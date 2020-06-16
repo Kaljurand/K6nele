@@ -1,11 +1,7 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ListFragment;
-import android.app.LoaderManager;
 import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +14,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.provider.Grammar;
 import ee.ioc.phon.android.speak.provider.Server;
 import ee.ioc.phon.android.speak.utils.Utils;
@@ -66,7 +69,7 @@ public class GrammarListActivity extends AbstractContentActivity {
         super.onCreate(savedInstanceState);
         GrammarListActivity.CursorLoaderListFragment fragment = new GrammarListActivity.CursorLoaderListFragment();
         fragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     @Override
@@ -172,8 +175,7 @@ public class GrammarListActivity extends AbstractContentActivity {
         }
     }
 
-    public static class CursorLoaderListFragment extends ListFragment
-            implements LoaderManager.LoaderCallbacks<Cursor> {
+    public static class CursorLoaderListFragment extends K6neleListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
         private SimpleCursorAdapter mAdapter;
 
         @Override
@@ -191,7 +193,7 @@ public class GrammarListActivity extends AbstractContentActivity {
             );
             setListAdapter(mAdapter);
             registerForContextMenu(getListView());
-            getLoaderManager().initLoader(0, null, this);
+            LoaderManager.getInstance(this).initLoader(0, null, this);
         }
 
         @Override
@@ -213,7 +215,9 @@ public class GrammarListActivity extends AbstractContentActivity {
             return success || super.onContextItemSelected(item);
         }
 
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        @NonNull
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
             return new CursorLoader(getActivity(),
                     CONTENT_URI,
                     COLUMNS,
@@ -222,11 +226,13 @@ public class GrammarListActivity extends AbstractContentActivity {
                     SORT_ORDER);
         }
 
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        @Override
+        public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
             mAdapter.swapCursor(data);
         }
 
-        public void onLoaderReset(Loader<Cursor> loader) {
+        @Override
+        public void onLoaderReset(@NonNull Loader<Cursor> loader) {
             mAdapter.swapCursor(null);
         }
     }

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +18,14 @@ import ee.ioc.phon.android.speak.model.RecService;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 
-public class RecServiceSelectorActivity extends Activity {
+public class RecServiceSelectorActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SelectorFragment fragment = new SelectorFragment();
         fragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     public static class SelectorFragment extends K6neleListFragment {
@@ -36,7 +38,7 @@ public class RecServiceSelectorActivity extends Activity {
             for (String comboAsString : mngr.getServices(activity.getPackageManager())) {
                 list.add(new RecService(activity, comboAsString));
             }
-            RecServiceAdapter adapter = new RecServiceAdapter(SelectorFragment.this, list);
+            RecServiceAdapter adapter = new RecServiceAdapter(this, list);
             setListAdapter(adapter);
             //getActivity().getActionBar().setSubtitle("" + adapter.getCount());
         }

@@ -21,4 +21,10 @@
 
     <string name="defaultUrlPrefix" translatable="false">http://</string>
 
+    <integer name="spanCount">3</integer>
+
+    <integer name="defaultMaxHypotheses">1</integer>
+    <integer name="maxMaxHypotheses">16</integer>
+    <integer name="minMaxHypotheses">1</integer>
+
 </resources>

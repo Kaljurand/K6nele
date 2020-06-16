@@ -34,7 +34,7 @@ For documentation, APKs, app store links, news etc. see <http://kaljurand.github
 Building the APK from source
 ----------------------------
 
-Clone the source code including the `net-speech-api` and `speechutils` submodules:
+Clone the source code including the `speechutils` submodule:
 
     git clone --recursive git@github.com:Kaljurand/K6nele.git
 
@@ -46,8 +46,13 @@ Point to the Android SDK directory by setting the environment variable
 
 Create the file `gradle.properties` containing the lines:
 
+    org.gradle.jvmargs=-Xmx1536m
+    org.gradle.parallel=true
     android.enableD8=true
-    android.enableR8=false
+    android.useAndroidX=true
+    android.enableJetifier=true
+    # Using the default ("false") for now because "true" actually makes the APK bigger for some reason
+    # android.enableR8.fullMode=true
 
 Build the Kõnele app
 

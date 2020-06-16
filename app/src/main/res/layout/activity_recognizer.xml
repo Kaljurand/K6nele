@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -28,7 +29,7 @@
             android:layout_toLeftOf="@+id/bSettings"
             android:ellipsize="end"
             android:lines="3"
-            android:textColor="@color/grey200"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize2"
             tools:text="@string/testComboLabel" />
 
@@ -41,7 +42,8 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdSettings"
-            android:src="@drawable/ic_settings" />
+            app:srcCompat="@drawable/ic_settings" />
+
         <!--
         <ImageButton
             android:id="@+id/bEnterPip"
@@ -52,9 +54,9 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/button_go"
             android:contentDescription="Enter Picture-in-picture mode"
-            android:src="@drawable/ic_picture_in_picture"
+            app:srcCompat="@drawable/ic_picture_in_picture"
             tools:targetApi="O" />
-        -->
+         -->
     </RelativeLayout>
 
     <ee.ioc.phon.android.speak.view.SpeechInputView
@@ -79,7 +81,7 @@
                 android:ellipsize="start"
                 android:gravity="center"
                 android:singleLine="true"
-                android:textColor="@color/grey300"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/textSize2"
                 tools:text="@string/testComboLabel" />
 
@@ -95,7 +97,7 @@
                 android:background="@drawable/button_mic"
                 android:contentDescription="@string/cdMicrophone"
                 android:gravity="center"
-                android:src="@drawable/ic_voice_search_api_material" />
+                app:srcCompat="@drawable/ic_voice_search_api_material" />
 
             <TextView
                 android:id="@+id/tvInstruction"
@@ -104,29 +106,20 @@
                 android:layout_below="@+id/bImeStartStop"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/grey300"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/textSize3"
                 tools:text="@string/buttonImeStop" />
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/tvComboSelector"
+        <include
+            layout="@layout/button_combo_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_margin="@dimen/layoutMargin4dp"
-            android:background="@drawable/button_combo"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:focusable="true"
             android:gravity="center"
-            android:minWidth="@dimen/layoutMargin3"
-            android:minHeight="@dimen/layoutMargin3"
-            android:singleLine="true"
-            android:textColor="@color/grey100"
-            android:textSize="@dimen/textSize10sp"
             tools:text="@string/testComboLabels" />
 
     </ee.ioc.phon.android.speak.view.SpeechInputView>

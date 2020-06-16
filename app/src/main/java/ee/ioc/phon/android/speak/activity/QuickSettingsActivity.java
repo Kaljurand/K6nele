@@ -1,13 +1,14 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import ee.ioc.phon.android.speak.QuickSettingsManager;
 import ee.ioc.phon.android.speak.R;
 
-public class QuickSettingsActivity extends Activity {
+public class QuickSettingsActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

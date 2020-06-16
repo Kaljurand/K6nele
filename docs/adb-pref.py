@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -11,7 +11,7 @@ Usage:
 - Enable developer options on the device and connect to the device via adb.
   See: https://developer.android.com/studio/command-line/adb.html
   For Wear, see: https://developer.android.com/training/wearables/apps/debugging.html
-- (Optional) Check the Kõnele developer option "Run GetPutPreference without confirmation" to suppress the
+- (Optional) Switch on the Kõnele developer option "Run GetPutPreference without confirmation" to suppress the
   confirmation dialog.
 - The input to this script is a list of YAML preference definitions.
 - The output of this script should be piped into "sh".
@@ -20,10 +20,9 @@ Usage:
 Usage:
 
     adb-pref.py prefs_developer.yml prefs_user_guide_rewrites.yml prefs_private.yml | sh
+    adb-pref.py prefs_private.yml | fgrep "#Recent" | sh
 
 """
-
-from __future__ import division, unicode_literals, print_function
 
 import sys
 import argparse
@@ -38,37 +37,46 @@ DEFAULT_PREF_DISABLE_CONFIRMATION = {
     'val': True
 }
 
+# Escape for sh.
+# TODO: incomplete + should escape for adb as well (e.g. the comma)
+RE_SUB_ESCAPE_ESA = [
+    (';', '\\;'),
+    ('#', '\\#'),
+]
+
+RE_SUB_ESCAPE_S = [
+    ('\n', '\\\n'),
+    ('\t', '\\\t'),
+    (' ', '\\ '),
+]
+
+def apply_sub(rewriter, text):
+    for x, y in rewriter:
+        text = re.sub(x, y, text)
+    return text
+
 def get_args():
     """Get command line arguments"""
     parser = argparse.ArgumentParser(description='Converts a YAML list of preferences to ADB calls that set these preferences using GetPutPreferenceActivity.')
     parser.add_argument('fns', metavar='FILE', type=str, nargs='*',
                         help='preference file')
     parser.add_argument('--disable-confirmation', action='store_true', dest='disable_confirmation')
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s v0.0.1')
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s v0.0.3')
     return parser.parse_args()
 
 def create_adb(pref):
     """Return the preference as an ADB call"""
     def escape_esa(text):
-        """Escape for sh.
-        TODO: incomplete + should escape for adb as well (e.g. the comma)
-        """
-        return re.sub(';', '\\;', text)
+        return apply_sub(RE_SUB_ESCAPE_ESA, text)
     def escape_s(text):
-        """Escape for sh.
-        TODO: incomplete + should escape for adb as well (e.g. the comma)
-        """
-        text = re.sub('\n', '\\\n', text)
-        text = re.sub('\t', '\\\t', text)
-        text = re.sub(' ', '\\ ', text)
-        return text
+        return apply_sub(RE_SUB_ESCAPE_S, text)
 
     key = escape_s(pref['key'])
     val = pref.get('val')
     if val is None:
         val_str = '--esn val'
     elif type(val) is list:
-        val_str = '--esa val "{}"'.format(','.join([escape_esa(text) for text in val]))
+        val_str = '--esa val "{}"'.format(','.join(escape_esa(text) for text in val))
     elif type(val) is bool:
         val_str = '--ez val {}'.format(val)
     else:
@@ -91,7 +99,7 @@ def main():
     for fn in args.fns:
         with open(fn, 'r') as stream:
             try:
-                prefs = yaml.load(stream)
+                prefs = yaml.load(stream, Loader=yaml.BaseLoader)
                 process(prefs)
             except yaml.YAMLError as exc:
                 print(exc, file=sys.stderr)

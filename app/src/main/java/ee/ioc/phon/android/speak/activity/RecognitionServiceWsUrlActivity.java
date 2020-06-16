@@ -1,15 +1,11 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -18,6 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
@@ -37,7 +38,7 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-public class RecognitionServiceWsUrlActivity extends Activity {
+public class RecognitionServiceWsUrlActivity extends AppCompatActivity {
 
     private static final int TIMEOUT_PING = 100;
     private List<String> mList = new ArrayList<>();
@@ -99,7 +100,7 @@ public class RecognitionServiceWsUrlActivity extends Activity {
         findViewById(R.id.bApplyUrl).setOnClickListener(view -> {
             Intent intent = new Intent();
             intent.setData(Uri.parse(mEtUrl.getText().toString()));
-            setResult(Activity.RESULT_OK, intent);
+            setResult(RESULT_OK, intent);
             finish();
         });
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2015-2020, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,52 +16,81 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.SearchView;
-import android.widget.Switch;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.preference.PreferenceManager;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 
 // TODO: use CursorAdapter to be able to specify the filterting
 // TODO: make it possible to select multiple rows to convert them to a new table and test in Kõnele
-public class RewritesActivity extends Activity {
+public class RewritesActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "EXTRA_NAME";
-    public static final String EXTRA_ERRORS = "EXTRA_ERRORS";
+    public static final String EXTRA_LOCALE = "EXTRA_LOCALE";
+    public static final String EXTRA_APP = "EXTRA_APP";
+    public static final String EXTRA_SERVICE = "EXTRA_SERVICE";
     private Rewrites mRewrites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        ActionBar actionBar = getActionBar();
+        /*
+        // TODO: do we need this?
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setRewrites(extras.getString(EXTRA_NAME), extras.getStringArray(EXTRA_ERRORS));
-        getFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment()).commit();
+        */
+        setRewrites(extras.getString(EXTRA_NAME));
+        String locale = extras.getString(EXTRA_LOCALE);
+        String service = extras.getString(EXTRA_SERVICE);
+        String app = extras.getString(EXTRA_APP);
+        CommandMatcher commandMatcher = null;
+        String emptyList;
+        int resSubtitle = R.plurals.statusLoadRewrites;
+        if (locale != null || service != null || app != null) {
+            commandMatcher = CommandMatcherFactory.createCommandFilter(
+                    locale,
+                    service == null ? null : ComponentName.unflattenFromString(service),
+                    app == null ? null : ComponentName.unflattenFromString(app)
+            );
+
+            emptyList = String.format(getString(R.string.emptylistRewriteRulesFiltered), Rewrites.ppComboMatcher(app, locale, service));
+            resSubtitle = R.plurals.statusLoadRewritesFiltered;
+        } else {
+            emptyList = getString(R.string.emptylistRewriteRules);
+
+        }
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new RewritesFragment(commandMatcher, emptyList, resSubtitle)).commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                // TODO: does not go up when this activity is launched from the clipboard
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
                     // This activity is NOT part of this app's task, so create a new task
@@ -94,7 +123,7 @@ public class RewritesActivity extends Activity {
                         newName -> {
                             if (!newName.isEmpty()) {
                                 mRewrites.rename(newName);
-                                setRewrites(newName, null);
+                                setRewrites(newName);
                             }
                         }
                 ).show();
@@ -119,8 +148,10 @@ public class RewritesActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.rewrites, menu);
-
-        Switch abSwitch = menu.findItem(R.id.menuRewritesToggle).getActionView().findViewById(R.id.abSwitch);
+        // TODO: review (seems like a detour)
+        MenuItem menuItem = menu.findItem(R.id.menuRewritesToggle);
+        menuItem.setActionView(R.layout.ab_switch);
+        SwitchCompat abSwitch = menuItem.getActionView().findViewById(R.id.abSwitch);
         abSwitch.setChecked(mRewrites.isSelected());
         abSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             mRewrites.setSelected(isChecked);
@@ -146,26 +177,14 @@ public class RewritesActivity extends Activity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void setRewrites(String name, String[] errors) {
+    private void setRewrites(String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Resources res = getResources();
         mRewrites = new Rewrites(prefs, res, name);
 
-        int ruleCount = mRewrites.size();
-        String subtitle = res.getQuantityString(R.plurals.statusLoadRewrites, ruleCount, ruleCount);
-
-        if (errors != null) {
-            int errorCount = errors.length;
-            if (errorCount > 0) {
-                String errorMessage = res.getQuantityString(R.plurals.statusLoadRewritesErrors, errorCount, errorCount);
-                showErrors(errorMessage, errors);
-                subtitle += " · " + errorMessage;
-            }
-        }
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(name);
-            actionBar.setSubtitle(subtitle);
         }
     }
 
@@ -173,22 +192,29 @@ public class RewritesActivity extends Activity {
         return mRewrites;
     }
 
-    private void showErrors(String title, String[] errors) {
-        Intent searchIntent = new Intent(this, RewritesErrorsActivity.class);
-        searchIntent.putExtra(RewritesErrorsActivity.EXTRA_TITLE, title);
-        searchIntent.putExtra(RewritesErrorsActivity.EXTRA_STRING_ARRAY, errors);
-        startActivity(searchIntent);
-    }
-
     public static class RewritesFragment extends K6neleListFragment implements SearchView.OnQueryTextListener {
+
+        private final CommandMatcher mCommandMatcher;
+        private final String mEmptyList;
+        private final int mResSubtitle;
+
+        RewritesFragment(CommandMatcher commandMatcher, String emptyList, int resSubtitle) {
+            mCommandMatcher = commandMatcher;
+            mEmptyList = emptyList;
+            mResSubtitle = resSubtitle;
+        }
 
         @Override
         public void onResume() {
             super.onResume();
-            Rewrites rewrites = ((RewritesActivity) getActivity()).getRewrites();
-            setListAdapter(new ArrayAdapter<>(getActivity(), R.layout.list_item_rewrite, rewrites.getRules()));
+            RewritesActivity activity = (RewritesActivity) getActivity();
+            Rewrites rewrites = activity.getRewrites();
+            setListAdapter(new ArrayAdapter<>(activity, R.layout.list_item_rewrite, rewrites.getRules(mCommandMatcher)));
             getListView().setFastScrollEnabled(true);
-            setEmptyView(getString(R.string.emptylistRewriteRules));
+            int ruleCount = getListView().getAdapter().getCount();
+            setEmptyView(mEmptyList);
+            String subtitle = getResources().getQuantityString(mResSubtitle, ruleCount, ruleCount);
+            activity.getSupportActionBar().setSubtitle(subtitle);
         }
 
         @Override

@@ -1,7 +1,5 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -14,6 +12,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,19 +22,20 @@ import java.util.Set;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.adapter.ComboAdapter;
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-public class ComboSelectorActivity extends Activity {
+public class ComboSelectorActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ComboSelectorFragment fragment = new ComboSelectorFragment();
         fragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     @Override
@@ -60,7 +61,7 @@ public class ComboSelectorActivity extends Activity {
         cb.setChecked(!cb.isChecked());
     }
 
-    public static class ComboSelectorFragment extends ListFragment {
+    public static class ComboSelectorFragment extends K6neleListFragment {
 
         int mKey = R.string.keyImeCombo;
         int mDefaultCombos = R.array.defaultImeCombos;
@@ -125,7 +126,7 @@ public class ComboSelectorActivity extends Activity {
                 }
                 Collections.sort(list, Combo.SORT_BY_SELECTED_BY_LANGUAGE);
 
-                ComboAdapter adapter = new ComboAdapter(ComboSelectorFragment.this, list);
+                ComboAdapter adapter = new ComboAdapter(this, list);
                 setListAdapter(adapter);
 
                 // TODO: the fast scroll handle overlaps with the checkboxes

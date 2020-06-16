@@ -1,9 +1,5 @@
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ListFragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,9 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+
 import java.net.MalformedURLException;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.provider.Server;
 import ee.ioc.phon.android.speak.utils.Utils;
 
@@ -41,7 +42,7 @@ public class ServerListActivity extends AbstractContentActivity {
         super.onCreate(savedInstanceState);
         ServerListActivity.CursorLoaderListFragment fragment = new ServerListActivity.CursorLoaderListFragment();
         fragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     @Override
@@ -105,7 +106,7 @@ public class ServerListActivity extends AbstractContentActivity {
         }
     }
 
-    public static class CursorLoaderListFragment extends ListFragment
+    public static class CursorLoaderListFragment extends K6neleListFragment
             implements LoaderManager.LoaderCallbacks<Cursor> {
         private SimpleCursorAdapter mAdapter;
 
@@ -124,7 +125,7 @@ public class ServerListActivity extends AbstractContentActivity {
             );
             setListAdapter(mAdapter);
             registerForContextMenu(getListView());
-            getLoaderManager().initLoader(0, null, this);
+            androidx.loader.app.LoaderManager.getInstance(this).initLoader(0, null, this);
         }
 
         @Override
@@ -146,8 +147,10 @@ public class ServerListActivity extends AbstractContentActivity {
             return success || super.onContextItemSelected(item);
         }
 
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getActivity(),
+        @NonNull
+        @Override
+        public androidx.loader.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+            return new androidx.loader.content.CursorLoader(getActivity(),
                     CONTENT_URI,
                     COLUMNS,
                     null,
@@ -155,11 +158,13 @@ public class ServerListActivity extends AbstractContentActivity {
                     SORT_ORDER);
         }
 
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        @Override
+        public void onLoadFinished(@NonNull androidx.loader.content.Loader<Cursor> loader, Cursor data) {
             mAdapter.swapCursor(data);
         }
 
-        public void onLoaderReset(Loader<Cursor> loader) {
+        @Override
+        public void onLoaderReset(@NonNull androidx.loader.content.Loader<Cursor> loader) {
             mAdapter.swapCursor(null);
         }
     }

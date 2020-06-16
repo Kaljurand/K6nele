@@ -22,18 +22,20 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,12 +53,12 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  *
  * @author Kaarel Kaljurand
  */
-public class Preferences extends PreferenceActivity {
+public class Preferences extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
     }
@@ -87,18 +89,36 @@ public class Preferences extends PreferenceActivity {
         }
     }
 
+    @Override
+    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+        // Instantiate the new Fragment
+        final Bundle args = pref.getExtras();
+        final Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(
+                getClassLoader(),
+                pref.getFragment());
+        fragment.setArguments(args);
+        fragment.setTargetFragment(caller, 0);
+        // Replace the existing Fragment with the new Fragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
+        return true;
+    }
 
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private String mKeyMaxResults;
+    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
-            mKeyMaxResults = getString(R.string.keyMaxResults);
-        }
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.preferences, rootKey);
 
+            PreferenceScreen prefScreen = getPreferenceScreen();
+            PreferenceCategory category = prefScreen.findPreference(getString(R.string.keyCategoryIme));
+            Preference pref = prefScreen.findPreference(getString(R.string.keyEnableIme));
+
+            showOrHideLinkToImeSettings(category, pref);
+        }
 
         @Override
         public void onPause() {
@@ -116,34 +136,18 @@ public class Preferences extends PreferenceActivity {
             // exist pre Android v5.
             // TODO: also remove it on Wear
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.keyCategoryDependencies));
+                PreferenceCategory category = findPreference(getString(R.string.keyCategoryDependencies));
                 Preference pref = category.findPreference(getString(R.string.keySystemVoiceInputSettings));
                 if (pref != null) {
                     category.removePreference(pref);
                 }
             }
 
-            // If the K6nele IME is enabled then we remove the link to the IME settings,
-            // if not already removed.
-            // If the IME is not enabled then we add the link. The position of the link seems
-            // to respect the position in preferences.xml.
             PreferenceScreen prefScreen = getPreferenceScreen();
-            PreferenceCategory category = (PreferenceCategory) prefScreen.findPreference(getString(R.string.keyCategoryIme));
+            PreferenceCategory category = prefScreen.findPreference(getString(R.string.keyCategoryIme));
             Preference pref = prefScreen.findPreference(getString(R.string.keyEnableIme));
 
-            if (isK6neleImeEnabled()) {
-                category.setEnabled(true);
-                if (pref != null) {
-                    prefScreen.removePreference(pref);
-                }
-            } else {
-                category.setEnabled(false);
-                prefScreen.addPreference(pref);
-            }
-
-            SharedPreferences sp = prefScreen.getSharedPreferences();
-            String maxResults = sp.getString(mKeyMaxResults, getString(R.string.defaultMaxResults));
-            updateSummaryInt(findPreference(mKeyMaxResults), R.plurals.summaryMaxResults, maxResults);
+            showOrHideLinkToImeSettings(category, pref);
 
             Preference prefImeMode = findPreference(getString(R.string.keyImeMode));
             prefImeMode.setSummary(((ListPreference) prefImeMode).getEntry());
@@ -152,16 +156,11 @@ public class Preferences extends PreferenceActivity {
             updateSummary(R.string.keyCombo, R.string.emptylistCombos);
         }
 
-
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             Preference pref = findPreference(key);
             if (pref instanceof ListPreference) {
                 ListPreference lp = (ListPreference) pref;
-                if (mKeyMaxResults.equals(key)) {
-                    updateSummaryInt(lp, R.plurals.summaryMaxResults, lp.getEntry().toString());
-                } else {
-                    pref.setSummary(lp.getEntry());
-                }
+                pref.setSummary(lp.getEntry());
             }
         }
 
@@ -183,11 +182,6 @@ public class Preferences extends PreferenceActivity {
             return TextUtils.join("\n", combos);
         }
 
-        private void updateSummaryInt(Preference pref, int pluralsResource, String countAsString) {
-            int count = Integer.parseInt(countAsString);
-            pref.setSummary(getResources().getQuantityString(pluralsResource, count, count));
-        }
-
         private boolean isK6neleImeEnabled() {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -198,6 +192,23 @@ public class Preferences extends PreferenceActivity {
             }
 
             return false;
+        }
+
+        /**
+         * If the K6nele IME is not enabled then we show a link to the IME settings,
+         * otherwise we hide this link.
+         */
+        private void showOrHideLinkToImeSettings(PreferenceCategory category, Preference pref) {
+            boolean b = isK6neleImeEnabled();
+            category.setEnabled(b);
+            pref.setVisible(!b);
+        }
+    }
+
+    public static class DeveloperSettingsFragment extends PreferenceFragmentCompat {
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.preferences_developer, rootKey);
         }
     }
 }

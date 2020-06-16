@@ -1,18 +1,19 @@
 package ee.ioc.phon.android.speak.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.utils.Utils;
 
-public class PermissionsRequesterActivity extends Activity {
+public class PermissionsRequesterActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
 

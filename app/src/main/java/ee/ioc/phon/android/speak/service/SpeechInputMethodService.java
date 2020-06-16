@@ -12,9 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
-import androidx.annotation.NonNull;
 import android.text.InputType;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -23,23 +23,31 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
+import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.CommandEditor;
 import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
 import ee.ioc.phon.android.speechutils.editor.InputConnectionCommandEditor;
 import ee.ioc.phon.android.speechutils.editor.Op;
+import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class SpeechInputMethodService extends InputMethodService {
+
+    // TODO: move somewhere else and make end-user configurable
+    private static final String REWRITES_NAME_RECENT = "#r";
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
@@ -69,7 +77,10 @@ public class SpeechInputMethodService extends InputMethodService {
     @Override
     public View onCreateInputView() {
         Log.i("onCreateInputView");
-        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, null, false);
+        //ViewGroup view = (ViewGroup) findViewById(android.R.id.content);
+        //getWindow().getDecorView().getRootView();
+        ViewGroup view = (ViewGroup) getMyWindow().getDecorView().getRootView();
+        mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, view, false);
         return mInputView;
     }
 
@@ -234,11 +245,7 @@ public class SpeechInputMethodService extends InputMethodService {
         if (dialog == null) {
             return null;
         }
-        final Window window = dialog.getWindow();
-        if (window == null) {
-            return null;
-        }
-        return window;
+        return dialog.getWindow();
     }
 
     /**
@@ -309,6 +316,43 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
             }
 
+            /**
+             * Creates a rule where the utterance is a new unique pattern based on the timestamp.
+             * The replacement and the possible command with arguments are based on the rewriting results.
+             * In case of commands the button label is the command's comment or, if missing, the pretty-printed command.
+             * For a simple replacement the button label is the replacement.
+             * Clicking on a Recent button will just push it to the top of the list, i.e. make it most recent.
+             *
+             * TODO: review and update doc
+             * TODO: do we need to generate the utterance field at all?
+             *
+             * @param text Spoken input, used as the button label, as well as the replacement
+             * @param editorResult Command (if spoken input triggered a command). Used to populate the button's
+             *                replacement, and command.
+             */
+            private void addRule(String text, CommandEditorResult editorResult, String rewritesName) {
+                Rewrites rewrites = new Rewrites(mPrefs, mRes, rewritesName);
+                String rewritesAsStr = rewrites.getRewrites();
+                if (rewritesAsStr != null) {
+                    // Load the existing rewrite rule table
+                    List<Command> commands = Utils.addRule(text, editorResult, rewritesAsStr, app);
+                    UtteranceRewriter newUr = new UtteranceRewriter(commands, UtteranceRewriter.DEFAULT_HEADER);
+                    // Save it again
+                    PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, rewritesName, newUr.toTsv());
+                }
+            }
+
+            private void commitResults(List<String> results) {
+                String text = getText(results);
+                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
+                if (editorResult != null && mInputView != null && editorResult.isCommand()) {
+                    mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
+                }
+                if (editorResult != null) {
+                    addRule(text, editorResult, REWRITES_NAME_RECENT);
+                }
+            }
+
             @Override
             public void onComboChange(String language, ComponentName service) {
                 // TODO: name of the rewrites table configurable
@@ -318,10 +362,7 @@ public class SpeechInputMethodService extends InputMethodService {
             @Override
             public void onPartialResult(List<String> results, boolean isSemiFinal) {
                 if (isSemiFinal) {
-                    CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
-                    if (editorResult != null && mInputView != null && editorResult.isCommand()) {
-                        mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
-                    }
+                    commitResults(results);
                 } else {
                     if (mShowPartialResults) {
                         mCommandEditor.commitPartialResult(getText(results));
@@ -331,17 +372,20 @@ public class SpeechInputMethodService extends InputMethodService {
 
             @Override
             public void onFinalResult(List<String> results, Bundle bundle) {
-                CommandEditorResult editorResult = mCommandEditor.commitFinalResult(getText(results));
-                if (editorResult != null && mInputView != null && editorResult.isCommand()) {
-                    mInputView.showMessage(editorResult.ppCommand(), editorResult.isSuccess());
-                }
+                commitResults(results);
                 setKeepScreenOn(false);
             }
 
             @Override
             public void onCommand(String text) {
                 Op op = mCommandEditor.getOpOrNull(text, false);
-                if (op != null) {
+                if (op == null) {
+                    // Mic button swipe did not match any rule, so we show the swipe crossed out.
+                    // TODO: maybe just clear the status bar
+                    if (mInputView != null) {
+                        mInputView.showMessage(text, false);
+                    }
+                } else {
                     boolean success = mCommandEditor.runOp(op);
                     if (mInputView != null) {
                         // TODO: show executed command or replacement text, not op.toString()

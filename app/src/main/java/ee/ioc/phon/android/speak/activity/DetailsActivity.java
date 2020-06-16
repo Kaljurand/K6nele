@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -24,8 +23,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import ee.ioc.phon.android.speak.R;
 
@@ -36,7 +38,7 @@ import ee.ioc.phon.android.speak.R;
  *
  * @author Kaarel Kaljurand
  */
-public class DetailsActivity extends ListActivity {
+public class DetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_TITLE = "EXTRA_TITLE";
     public static final String EXTRA_STRING_ARRAY = "EXTRA_STRING_ARRAY";
@@ -68,11 +70,12 @@ public class DetailsActivity extends ListActivity {
             } else {
                 setTitle(title);
             }
+            setContentView(R.layout.list_view);
             String[] stringArray = extras.getStringArray(EXTRA_STRING_ARRAY);
             if (stringArray != null) {
-                setListAdapter(new ArrayAdapter<>(this, R.layout.list_item_detail, stringArray));
-
-                getListView().setOnItemClickListener((parent, view, position, id) -> {
+                ListView lv = findViewById(android.R.id.list);
+                lv.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_detail, stringArray));
+                lv.setOnItemClickListener((parent, view, position, id) -> {
                     Intent intent1 = new Intent();
                     intent1.putExtra(SearchManager.QUERY, ((TextView) view).getText());
                     setResult(RESULT_OK, intent1);

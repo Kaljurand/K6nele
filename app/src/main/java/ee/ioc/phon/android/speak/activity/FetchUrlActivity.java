@@ -16,13 +16,14 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.util.Map;
@@ -39,7 +40,7 @@ import ee.ioc.phon.android.speechutils.utils.IntentUtils;
  *
  * @author Kaarel Kaljurand
  */
-public class FetchUrlActivity extends Activity {
+public class FetchUrlActivity extends AppCompatActivity {
 
     public static final String EXTRA_HTTP_METHOD = "ee.ioc.phon.android.extra.HTTP_METHOD";
     public static final String EXTRA_HTTP_BODY = "ee.ioc.phon.android.extra.HTTP_BODY";

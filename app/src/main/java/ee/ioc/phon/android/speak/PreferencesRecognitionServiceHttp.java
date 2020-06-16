@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2016, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2020, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,26 +21,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import ee.ioc.phon.android.speak.provider.Server;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-public class PreferencesRecognitionServiceHttp extends PreferenceActivity {
+public class PreferencesRecognitionServiceHttp extends AppCompatActivity {
 
     private static final int ACTIVITY_SELECT_SERVER_URL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
     }
@@ -75,11 +76,10 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity {
     }
 
 
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences_server_http);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.preferences_server_http, rootKey);
 
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
@@ -94,13 +94,11 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity {
                     sp.getString(getString(R.string.keyRecordingRate), "?"));
         }
 
-
         @Override
         public void onPause() {
             super.onPause();
             getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         }
-
 
         @Override
         public void onResume() {
@@ -117,7 +115,7 @@ public class PreferencesRecognitionServiceHttp extends PreferenceActivity {
             });
         }
 
-
+        @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Preference pref = findPreference(key);
             if (pref instanceof EditTextPreference) {

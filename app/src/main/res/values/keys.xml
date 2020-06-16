@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="prefIsClipboard" translatable="false">prefIsClipboard</string>
+    <string name="setClipboardApps" translatable="false">prefIsClipboard</string>
+    <string name="mapClipboardTabName" translatable="false">mapClipboardTabName</string>
     <string name="keyHttpServer" translatable="false">keyHttpServer</string>
     <string name="keyWsServer" translatable="false">keyWsServer</string>
     <string name="keyRecordingRate" translatable="false">keyRecordingRate</string>
@@ -23,7 +24,7 @@
     <string name="keyImeAudioFormat" translatable="false">keyImeAudioFormat</string>
     <string name="keyImeMode" translatable="false">keyImeMode</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
-    <string name="keyMaxResults" translatable="false">keyMaxResults</string>
+    <string name="keyMaxHypotheses" translatable="false">keyMaxHypotheses</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keyGetPutPrefSkipUi" translatable="false">keyGetPutPrefSkipUi</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>

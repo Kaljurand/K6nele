@@ -1,8 +1,6 @@
 package ee.ioc.phon.android.speak.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,9 +8,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
 import ee.ioc.phon.android.speak.model.Combo;
 
 public class ComboAdapter extends ArrayAdapter<Combo> {
@@ -20,7 +21,7 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
     private final List<Combo> list;
     private final Activity context;
 
-    public ComboAdapter(Fragment context, List<Combo> list) {
+    public ComboAdapter(K6neleListFragment context, List<Combo> list) {
         super(context.getActivity(), R.layout.list_item_combo, list);
         this.context = context.getActivity();
         this.list = list;

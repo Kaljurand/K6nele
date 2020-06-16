@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     // Settings that apply to the HTTP-based server (also denoted as "grammar supporting")
     // These cannot be configured using standard extras
     <Preference
         android:key="@string/keyHttpServer"
         android:summary="@string/defaultHttpServer"
-        android:title="@string/titleDefaultServiceHttp">
+        android:title="@string/titleDefaultServiceHttp"
+        app:iconSpaceReserved="false">
         <intent
             android:targetClass="ee.ioc.phon.android.speak.activity.ServerListActivity"
             android:targetPackage="ee.ioc.phon.android.speak" />
@@ -14,36 +16,42 @@
         android:defaultValue="@bool/defaultAutoStopAfterPause"
         android:key="@string/keyAutoStopAfterPause"
         android:summary="@string/summaryAutoStopAfterPause"
-        android:title="@string/titleAutoStopAfterPause" />
+        android:title="@string/titleAutoStopAfterPause"
+        app:iconSpaceReserved="false" />
     <CheckBoxPreference
         android:defaultValue="@bool/defaultAudioCues"
         android:key="@string/keyAudioCues"
         android:summary="@string/summaryAudioCues"
-        android:title="@string/titleAudioCues" />
+        android:title="@string/titleAudioCues"
+        app:iconSpaceReserved="false" />
     <CheckBoxPreference
         android:defaultValue="@bool/defaultRespectLocale"
         android:key="@string/keyRespectLocale"
         android:summary="@string/summaryRespectLocale"
-        android:title="@string/titleRespectLocale" />
+        android:title="@string/titleRespectLocale"
+        app:iconSpaceReserved="false" />
     <ListPreference
         android:defaultValue="@string/defaultAudioFormat"
         android:entries="@array/entriesAudioFormat"
         android:entryValues="@array/valuesAudioFormat"
         android:key="@string/keyAudioFormat"
         android:summary="@string/summaryAudioFormat"
-        android:title="@string/titleAudioFormat" />
+        android:title="@string/titleAudioFormat"
+        app:iconSpaceReserved="false" />
     <ListPreference
         android:defaultValue="@string/defaultAutoStopAfterTime"
         android:entries="@array/entriesAutoStopAfterTime"
         android:entryValues="@array/valuesAutoStopAfterTime"
         android:key="@string/keyAutoStopAfterTime"
         android:summary="@string/summaryAutoStopAfterTime"
-        android:title="@string/titleAutoStopAfterTime" />
+        android:title="@string/titleAutoStopAfterTime"
+        app:iconSpaceReserved="false" />
     <ListPreference
         android:defaultValue="@string/defaultRecordingRate"
         android:entries="@array/entriesRecordingRate"
         android:entryValues="@array/valuesRecordingRate"
         android:key="@string/keyRecordingRate"
         android:summary="@string/summaryRecordingRate"
-        android:title="@string/titleRecordingRate" />
+        android:title="@string/titleRecordingRate"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>

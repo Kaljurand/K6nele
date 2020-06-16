@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -24,6 +23,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  * TODO: add a String EXTRA "OP". If defined then the given operation is used to combine the existing
  * value with the new value. The operation can be set add, list append, arithmetical add, Boolean XOR, etc.
  */
-public class GetPutPreferenceActivity extends Activity {
+public class GetPutPreferenceActivity extends AppCompatActivity {
 
     public static final String EXTRA_KEY = "key";
     public static final String EXTRA_VAL = "val";

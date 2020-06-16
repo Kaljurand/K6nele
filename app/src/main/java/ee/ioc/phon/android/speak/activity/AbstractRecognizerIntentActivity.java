@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -33,7 +32,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import androidx.annotation.NonNull;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
@@ -43,6 +41,9 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -66,7 +67,7 @@ import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
-public abstract class AbstractRecognizerIntentActivity extends Activity {
+public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity {
 
     public static final String AUDIO_FILENAME = "audio.wav";
 
@@ -191,10 +192,8 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     protected void setUpActivity(int layout) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && isInPictureInPictureMode()) {
-            setTheme(R.style.Theme_K6nele_NoActionBar);
             setContentView(R.layout.activity_recognizer_pip);
         } else {
-            setTheme(R.style.Theme_K6nele_Dialog);
             setContentView(layout);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -202,8 +201,6 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
     */
 
     protected void setUpActivity(int layout) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setTheme(R.style.Theme_K6nele_Dialog);
         setContentView(layout);
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_WATCH)) {
@@ -271,7 +268,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         // Note: the caller overrides the settings.
         if (!mExtras.containsKey(RecognizerIntent.EXTRA_MAX_RESULTS)) {
             mExtras.putInt(RecognizerIntent.EXTRA_MAX_RESULTS,
-                    PreferenceUtils.getPrefInt(prefs, getResources(), R.string.keyMaxResults, R.string.defaultMaxResults));
+                    prefs.getInt(getResources().getString(R.string.keyMaxHypotheses), R.integer.defaultMaxHypotheses));
         }
 
         if (!mExtras.isEmpty()) {
@@ -400,7 +397,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
         }
 
         intent.putStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS, new ArrayList<>(matches));
-        setResult(Activity.RESULT_OK, intent);
+        setResult(AppCompatActivity.RESULT_OK, intent);
     }
 
     protected void toast(String message) {
@@ -512,7 +509,7 @@ public abstract class AbstractRecognizerIntentActivity extends Activity {
             // Display a toast with the transcription.
             handler.sendMessage(createMessage(MSG_TOAST, String.format(getString(R.string.toastForwardedMatches), message)));
             try {
-                getExtraResultsPendingIntent().send(this, Activity.RESULT_OK, intent);
+                getExtraResultsPendingIntent().send(this, AppCompatActivity.RESULT_OK, intent);
             } catch (PendingIntent.CanceledException e) {
                 handler.sendMessage(createMessage(MSG_TOAST, e.getMessage()));
             }

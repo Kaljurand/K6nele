@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="layoutHeightButtonMicrophoneIme">48dp</dimen>
+    <dimen name="layoutHeightClipboard">48dp</dimen>
 </resources>

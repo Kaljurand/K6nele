@@ -3,10 +3,15 @@ apply plugin: 'kotlin-android'
 
 dependencies {
     implementation project(':speechutils:app')
-    implementation project(':net-speech-api')
+    // TODO: use Android's JSON library instead
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
-    implementation 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
 }
 
 android {
@@ -20,8 +25,11 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1713
-        versionName '1.7.13'
+        versionCode 1729
+        versionName '1.7.29'
+        vectorDrawables.useSupportLibrary = true
+        // Keep only en and et resources
+        resConfigs "en", "et"
     }
 
     compileOptions {
@@ -34,6 +42,7 @@ android {
     }
 
     packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
@@ -52,11 +61,19 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     lintOptions {
         // TODO: in the future check for Kotlin-Java interop
         //check 'Interoperability'
         disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill'
     }
+
+    buildFeatures {
+        viewBinding {
+            enabled = true
+        }
+    }
+
 }
 
 

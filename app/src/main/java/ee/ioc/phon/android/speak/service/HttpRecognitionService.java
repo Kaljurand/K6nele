@@ -32,6 +32,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ee.ioc.phon.android.recsession.ChunkedWebRecSession;
+import ee.ioc.phon.android.recsession.Hypothesis;
+import ee.ioc.phon.android.recsession.Linearization;
+import ee.ioc.phon.android.recsession.NotAvailableException;
+import ee.ioc.phon.android.recsession.RecSession;
+import ee.ioc.phon.android.recsession.RecSessionResult;
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
@@ -41,12 +47,6 @@ import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.service.AbstractRecognitionService;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
-import ee.ioc.phon.netspeechapi.recsession.ChunkedWebRecSession;
-import ee.ioc.phon.netspeechapi.recsession.Hypothesis;
-import ee.ioc.phon.netspeechapi.recsession.Linearization;
-import ee.ioc.phon.netspeechapi.recsession.NotAvailableException;
-import ee.ioc.phon.netspeechapi.recsession.RecSession;
-import ee.ioc.phon.netspeechapi.recsession.RecSessionResult;
 
 /**
  * Implements RecognitionService, connects to the server via HTTP.

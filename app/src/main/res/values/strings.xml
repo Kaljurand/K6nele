@@ -104,7 +104,7 @@
     <string name="titleCombo">Recognition languages &amp; services</string>
     <string name="dialogTitleCombo">Languages &amp; services</string>
     <string name="titleSystemVoiceInputSettings">Recognition services (system UI)</string>
-    <string name="summarySystemVoiceInputSettings">System-wide settings panel for the installed speech recognition services, as well as the Assist-app</string>
+    <string name="summarySystemVoiceInputSettings">System-wide settings panel for the installed speech recognition services, as well as the Assist app</string>
 
     <string name="titleSelectRewrites">Rewrites</string>
     <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. (Works with any service.)</string>
@@ -117,13 +117,8 @@
     This allows rewrite rules, ADB scripts, or 3rd party apps to change Kõnele settings without
         the user having to confirm the change. Enable this setting only if you know what you are doing.</string>
 
-    <string name="titleMaxResults">Recognition hypotheses</string>
-
-    <plurals name="summaryMaxResults">
-        <item quantity="one">Output only the most likely recognition hypothesis</item>
-        <item quantity="other">Output at most %d recognition hypotheses</item>
-    </plurals>
-
+    <string name="titleMaxHypotheses">Recognition hypotheses</string>
+    <string name="summaryMaxHypotheses">Maximum number of returned recognition hypotheses. Depends also on the used service.</string>
 
     <!-- RecognizerIntent activity -->
     <string name="buttonSpeak">Tap &amp; Speak</string>
@@ -175,6 +170,9 @@
     <string name="emptylistServers">No servers. Add a new server via the Add-menu.</string>
     <string name="emptylistRewrites">No rewrite rule tables. Add a table via the Add-menu or by exporting it from a spreadsheet app as a TSV-file.</string>
     <string name="emptylistRewriteRules">No rewrite rules were found. Make sure the input file is in the correct format, i.e. the columns are tab-separated and the first line is a header.</string>
+    <string name="emptylistRewriteRulesFiltered">No rewrite rules were found under filter:\n%1$s</string>
+
+    <string name="emptylistClipboard">No buttons. Add and enable rewrite rules, which then become available here as buttons.</string>
     <string name="toastForwardedMatches">Recognized: %1$s</string>
     <string name="toastAssignGrammar">Assigned grammar: %1$s</string>
     <string name="toastActivated">Activated: %1$s</string>
@@ -190,6 +188,11 @@
         <item quantity="zero">No rules</item>
         <item quantity="one">1 rule</item>
         <item quantity="other">%d rules</item>
+    </plurals>
+    <plurals name="statusLoadRewritesFiltered">
+        <item quantity="zero">No rules (filtered)</item>
+        <item quantity="one">1 rule (filtered)</item>
+        <item quantity="other">%d rules (filtered)</item>
     </plurals>
     <plurals name="statusLoadRewritesErrors">
         <item quantity="zero">No errors</item>
@@ -280,6 +283,7 @@
     <string name="labelActivityEncoderListDemo">Audio encoders</string>
     <string name="labelActivityImeListDemo">Voice IMEs</string>
     <string name="buttonApplyDeveloperDefaults">Apply developer defaults</string>
+    <string name="buttonLaunchRewrites">Open rewrite rule tables</string>
 
     <!-- Content description of images and buttons -->
     <string name="cdMicrophone">Press this button and speak</string>
@@ -375,16 +379,6 @@
     <string-array name="defaultCombosExcluded" translatable="false">
         <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;en-US</item>
     </string-array>
-
-    <string-array name="entryValuesMaxResults" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>4</item>
-        <item>8</item>
-        <item>16</item>
-    </string-array>
-
-    <string name="defaultMaxResults" translatable="false">1</string>
 
     <string-array name="entriesImeMode">
         <item>Left swipe deletes, right swipe adds newline</item>

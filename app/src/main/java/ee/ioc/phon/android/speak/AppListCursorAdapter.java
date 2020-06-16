@@ -132,7 +132,7 @@ public class AppListCursorAdapter extends CursorAdapter {
             if (serverUrl.equals(mDefaultServerUrl)) {
                 itemAppServer.setTextColor(context.getResources().getColor(R.color.green3));
             } else {
-                itemAppServer.setTextColor(context.getResources().getColor(R.color.orange));
+                itemAppServer.setTextColor(context.getResources().getColor(R.color.accent));
             }
             itemAppServer.setText(serverUrl);
         }

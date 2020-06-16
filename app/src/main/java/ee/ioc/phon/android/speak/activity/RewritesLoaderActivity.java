@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2015-2020, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package ee.ioc.phon.android.speak.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -27,11 +26,9 @@ import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -40,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ee.ioc.phon.android.speak.R;
+import ee.ioc.phon.android.speak.databinding.ActivityRewritesLoaderBinding;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -50,7 +48,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
  * However, if the user explicitly launches a file picker from Kõnele, then any "text/*" files
  * can be picked.
  */
-public class RewritesLoaderActivity extends Activity {
+public class RewritesLoaderActivity extends AppCompatActivity {
 
     //private static final String TYPE = "text/tab-separated-values";
     private static final String TYPE = "text/*";
@@ -58,22 +56,23 @@ public class RewritesLoaderActivity extends Activity {
 
     private UtteranceRewriter utteranceRewriter;
 
+    private ActivityRewritesLoaderBinding binding;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rewrites_loader);
+        binding = ActivityRewritesLoaderBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final Resources res = getResources();
-        final Button bRewritesLoader = findViewById(R.id.bRewritesNameOk);
-        final AutoCompleteTextView et = findViewById(R.id.etRewritesNameText);
-        et.setOnEditorActionListener((v, actionId, event) -> {
+        binding.etRewritesNameText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                bRewritesLoader.performClick();
+                binding.bRewritesNameOk.performClick();
                 return true;
             }
             return false;
         });
-        bRewritesLoader.setOnClickListener(view -> saveAndShow(prefs, res, et.getText().toString()));
+        binding.bRewritesNameOk.setOnClickListener(view -> saveAndShow(prefs, res, binding.etRewritesNameText.getText().toString()));
         List<String> keysSorted = new ArrayList<>(PreferenceUtils.getPrefMapKeys(prefs, res, R.string.keyRewritesMap));
 
         // If there are already some rewrites then we show their names as well
@@ -82,15 +81,13 @@ public class RewritesLoaderActivity extends Activity {
             String[] names = keysSorted.toArray(new String[0]);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
-            et.setAdapter(adapter);
+            binding.etRewritesNameText.setAdapter(adapter);
 
-            final LinearLayout ll = findViewById(R.id.llRewritesChooser);
-            ll.setVisibility(View.VISIBLE);
-            final ListView lv = findViewById(R.id.lvRewrites);
-            lv.setAdapter(new ArrayAdapter<>(this,
+            binding.llRewritesChooser.setVisibility(View.VISIBLE);
+            binding.lvRewrites.setAdapter(new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, names));
 
-            lv.setOnItemClickListener((parent, view, position, id) -> saveAndShow(prefs, res, (String) lv.getItemAtPosition(position)));
+            binding.lvRewrites.setOnItemClickListener((parent, view, position, id) -> saveAndShow(prefs, res, (String) binding.lvRewrites.getItemAtPosition(position)));
         }
 
         Intent intent = getIntent();
@@ -105,8 +102,8 @@ public class RewritesLoaderActivity extends Activity {
             // Responding to SEND and VIEW actions
             String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
             if (subject != null) {
-                et.setText(subject);
-                et.setSelection(subject.length());
+                binding.etRewritesNameText.setText(subject);
+                binding.etRewritesNameText.setSelection(subject.length());
             }
             String text = intent.getStringExtra(Intent.EXTRA_TEXT);
             if (text == null) {
@@ -134,7 +131,8 @@ public class RewritesLoaderActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == RESULT_OK && resultData != null) {
             Uri uri = resultData.getData();
             if (uri != null) {
                 utteranceRewriter = loadFromUri(uri);
@@ -164,8 +162,17 @@ public class RewritesLoaderActivity extends Activity {
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter.toTsv());
             Intent intent = new Intent(this, RewritesActivity.class);
             intent.putExtra(RewritesActivity.EXTRA_NAME, name);
-            intent.putExtra(RewritesActivity.EXTRA_ERRORS, utteranceRewriter.getErrorsAsStringArray());
             startActivity(intent);
+
+            // If there were errors then we load another activity to show them.
+            // TODO: verify that this is a correct way to start multiple activities
+            String[] errors = utteranceRewriter.getErrorsAsStringArray();
+            if (errors.length > 0) {
+                Intent searchIntent = new Intent(this, RewritesErrorsActivity.class);
+                searchIntent.putExtra(RewritesErrorsActivity.EXTRA_TITLE, name);
+                searchIntent.putExtra(RewritesErrorsActivity.EXTRA_STRING_ARRAY, errors);
+                startActivity(searchIntent);
+            }
         }
         finish();
     }

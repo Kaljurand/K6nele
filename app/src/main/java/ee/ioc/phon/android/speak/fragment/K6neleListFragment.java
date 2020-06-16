@@ -16,12 +16,13 @@ package ee.ioc.phon.android.speak.fragment;
  * limitations under the License.
  */
 
-import android.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.ListFragment;
 
 import ee.ioc.phon.android.speak.R;
 
