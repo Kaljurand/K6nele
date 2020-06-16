@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -273,7 +274,7 @@ public final class Utils {
      * @param editorResult Command (if spoken input triggered a command). Used to populate the clips's
      *                     replacement, and command.
      */
-    public static List<Command> addRule(String text, CommandEditorResult editorResult, String rewrites, ComponentName app) {
+    public static List<Command> addRule(String text, CommandEditorResult editorResult, @NonNull String rewrites, ComponentName app) {
         UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
         Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
         Calendar cal = Calendar.getInstance();

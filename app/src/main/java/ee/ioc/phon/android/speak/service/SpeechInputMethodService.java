@@ -47,7 +47,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 public class SpeechInputMethodService extends InputMethodService {
 
     // TODO: move somewhere else and make end-user configurable
-    private static final String REWRITES_RECENT_NAME = "#r";
+    private static final String REWRITES_NAME_RECENT = "#r";
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
@@ -319,31 +319,27 @@ public class SpeechInputMethodService extends InputMethodService {
             /**
              * Creates a rule where the utterance is a new unique pattern based on the timestamp.
              * The replacement and the possible command with arguments are based on the rewriting results.
-             * In case of commands the clip label is the command's comment or, if missing, the pretty-printed command.
-             * For a simple replacement the clip label is the replacement.
-             * Clicking on a Recent clip will just push it to the top of the list, i.e. make it most recent.
+             * In case of commands the button label is the command's comment or, if missing, the pretty-printed command.
+             * For a simple replacement the button label is the replacement.
+             * Clicking on a Recent button will just push it to the top of the list, i.e. make it most recent.
              *
              * TODO: review and update doc
              * TODO: do we need to generate the utterance field at all?
              *
-             * @param text Spoken input, used as the clipboard label, as well as the replacement
-             * @param editorResult Command (if spoken input triggered a command). Used to populate the clips's
+             * @param text Spoken input, used as the button label, as well as the replacement
+             * @param editorResult Command (if spoken input triggered a command). Used to populate the button's
              *                replacement, and command.
              */
-            private void addRule(String text, CommandEditorResult editorResult) {
-                int rewritesRecentsize = mPrefs.getInt(mRes.getString(R.string.keyRecents), R.integer.defaultRecents);
-                Rewrites rewrites = new Rewrites(mPrefs, mRes, REWRITES_RECENT_NAME);
-                if (rewritesRecentsize == 0) {
-                    rewrites.delete();
-                    return;
+            private void addRule(String text, CommandEditorResult editorResult, String rewritesName) {
+                Rewrites rewrites = new Rewrites(mPrefs, mRes, rewritesName);
+                String rewritesAsStr = rewrites.getRewrites();
+                if (rewritesAsStr != null) {
+                    // Load the existing rewrite rule table
+                    List<Command> commands = Utils.addRule(text, editorResult, rewritesAsStr, app);
+                    UtteranceRewriter newUr = new UtteranceRewriter(commands, UtteranceRewriter.DEFAULT_HEADER);
+                    // Save it again
+                    PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, rewritesName, newUr.toTsv());
                 }
-                String newRewrites = "";
-                // Load the existing rewrite rule table
-                List<Command> commands = Utils.addRule(text, editorResult, rewrites.getRewrites(), app);
-                UtteranceRewriter newUr = new UtteranceRewriter(commands.subList(0, Math.min(rewritesRecentsize, commands.size())), UtteranceRewriter.DEFAULT_HEADER);
-                newRewrites = newUr.toTsv();
-                // Save it again
-                PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_RECENT_NAME, newRewrites);
             }
 
             private void commitResults(List<String> results) {
@@ -353,7 +349,7 @@ public class SpeechInputMethodService extends InputMethodService {
                     mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
                 }
                 if (editorResult != null) {
-                    addRule(text, editorResult);
+                    addRule(text, editorResult, REWRITES_NAME_RECENT);
                 }
             }
 

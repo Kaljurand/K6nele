@@ -25,7 +25,6 @@
     <string name="keyImeMode" translatable="false">keyImeMode</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
     <string name="keyMaxHypotheses" translatable="false">keyMaxHypotheses</string>
-    <string name="keyRecents" translatable="false">keyRecents</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>
     <string name="keyGetPutPrefSkipUi" translatable="false">keyGetPutPrefSkipUi</string>
     <string name="keySystemVoiceInputSettings" translatable="false">keySystemVoiceInputSettings</string>

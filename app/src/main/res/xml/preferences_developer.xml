@@ -3,17 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/titleScreenDevel">
 
-    <androidx.preference.SeekBarPreference
-        android:max="@integer/maxRecents"
-        app:defaultValue="@integer/defaultRecents"
-        app:iconSpaceReserved="false"
-        app:key="@string/keyRecents"
-        app:min="@integer/minRecents"
-        app:seekBarIncrement="10"
-        app:showSeekBarValue="true"
-        app:summary="@string/summaryRecents"
-        app:title="@string/titleRecents" />
-
     <!--
     <Preference
         android:summary="@string/summaryQuickSettings"

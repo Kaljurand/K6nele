@@ -323,10 +323,6 @@
     <string name="summarySystemVoiceInputSettings">Kõikide paigaldatud kõnetuvastusteenuste ning nn \"Abirakenduse\" seaded</string>
 
     <string name="summaryMaxHypotheses">Tagastatud tuvastushüpoteeside arv. Eeldab teenuse toetust.</string>
-
-    <string name="titleRecents">Lausungimälu</string>
-    <string name="summaryRecents">Kui mitu viimast lausungit meelde jätta?</string>
-
     <string name="labelActivityEncoderListDemo">Audioformaadid</string>
     <string name="summaryAudioFormat">%1$s\n(Mitte-raw formaadi kasutamine vähendab võrguliiklust 2 korda. Kõikidel seadmetel ei pruugi toimida.)</string>
     <string name="titleAudioFormat">Audioformaat</string>
