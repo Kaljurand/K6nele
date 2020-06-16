@@ -41,6 +41,16 @@
     mute the audio stream during recognition. -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
+    <!-- TODO: try to avoid having to request this permission.
+    We query packages for 2 reasons:
+    1) finding speech recognizer providers (this query is declared below in the queries-section)
+    2) listing apps (with icon and launch intent) that have previously launched Kõnele
+    It is unclear if the latter use-case can be declared via the queries-section.
+    -->
+    <!--
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    -->
+
     <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
     <!--
     <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" />
@@ -72,6 +82,13 @@
         android:required="false" />
 
     <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
+
+    <queries>
+        <intent>
+            <!-- Packages that provide speech recognition services -->
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
