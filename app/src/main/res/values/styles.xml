@@ -42,4 +42,8 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
+
+    <style name="K6nele.TextAppearance.Design.Tab" parent="TextAppearance.Design.Tab">
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

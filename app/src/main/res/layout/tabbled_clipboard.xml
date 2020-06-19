@@ -14,6 +14,7 @@
         app:tabIndicatorColor="@color/accent"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="?android:attr/textColorPrimary"
+        app:tabTextAppearance="@style/K6nele.TextAppearance.Design.Tab"
         app:tabTextColor="?android:attr/textColorSecondary" />
 
     <androidx.recyclerview.widget.RecyclerView
