@@ -27,6 +27,7 @@ Svaibid ja klahvistikud (eeldab Kõnele v1.7.28+)
 1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs	Mikrofoninupu svaip-käsud (mikrofoninupp kui _joystick_)
 1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc	Kalkulaator
 1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw	Tekstitöötlusnupud (kursori liigutamine, kopeeri/kleebi, jms)
+126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU	Tühi tabel. Salvestades selle `#r` või `#f` nime all, käivitab vastaval kõige viimaste või kõige sagedastemate käskude kogumise.
 
 Testid/Eksperimendid
 --------------------

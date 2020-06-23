@@ -28,7 +28,9 @@ New in this release:
 - rewrite rule tables now support a Label-column, meant for button-sized labels and icons
 - the mic button now generates utterances like ``K6_Y_BTN_MIC_UP`` when pressed/swiped. Rewrite rules can map these to (app-dependent) actions, e.g. left swipe selects text on the left, right swipe posts current text (in a chat app).
 - (experimental) Long pressing the IME action button now opens a tabbed "keyboard" where the selected rewrite rules are available as buttons. This allows one to implement custom keyboards for entering numbers/punctuation, commonly used emoji, text editing commands etc., where buttons are a more natural modality than speech.
-- (experimental) recent utterances are saved into the ``#Recent`` rewrites table (disabled by default, can be enabled in the developer settings)
+- (experimental) recent and frequent utterances are saved into the ``#r`` and ``#f`` rewrite tables if these tables exist,
+  i.e. this logging has to be manually enabled by first creating the empty tables, and can be turned off by deleting
+  the tables
 - migrate to AndroidX (~1 MB larger APK)
 - remove dependency on net-speech-api
 

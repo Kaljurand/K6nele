@@ -32,6 +32,7 @@ Svaibid ja klahvistikud (eeldab Kõnele v1.7.28+)
 - [[TSV](https://docs.google.com/spreadsheets/d/1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs/edit?usp=sharing), [Paigalda](1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs.html)] Mikrofoninupu svaip-käsud (mikrofoninupp kui _joystick_)
 - [[TSV](https://docs.google.com/spreadsheets/d/1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc/edit?usp=sharing), [Paigalda](1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc.html)] Kalkulaator
 - [[TSV](https://docs.google.com/spreadsheets/d/1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw/edit?usp=sharing), [Paigalda](1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw.html)] Tekstitöötlusnupud (kursori liigutamine, kopeeri/kleebi, jms)
+- [[TSV](https://docs.google.com/spreadsheets/d/126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU/edit?usp=sharing), [Paigalda](126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU.html)] Tühi tabel. Salvestades selle `#r` või `#f` nime all, käivitab vastaval kõige viimaste või kõige sagedastemate käskude kogumise.
 
 Testid/Eksperimendid
 --------------------

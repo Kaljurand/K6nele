@@ -425,7 +425,7 @@ Näide. Paremele svaip postitab sõnumirakenduses tekstiväljal parasjagu oleva 
 - __Command__ = `imeActionSend`
 
 Teiseks on võimalik kõiki aktiivseid reegleid nuppudena kuvada. Ühest küljest annab see parema
-ülevaate, millised reeglid on antud kontekstis (rakenduses, keeles) aktiivsed. Kuid
+ülevaate, millised reeglid on antud kontekstis (rakenduses, keeles, teenuses) aktiivsed. Kuid
 lisaks saab nüüd reegleid nupuvajutusega käivitada. Ning võib disainida reeglistikke, mida polegi
 plaanis kõne abil käivitada (PIN-koodi sisestamispaneel, lemmik emotikonid, kalkulaator, jms).
 Lisaveerg __Label__ määrab nupu ikooni.
