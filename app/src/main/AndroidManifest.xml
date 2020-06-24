@@ -404,6 +404,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".service.WebSocketRecognitionService"
             android:description="@string/summaryServiceWs"
             android:exported="true"
+            android:foregroundServiceType="microphone"
             android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceWs"
             android:permission="android.permission.RECORD_AUDIO">
@@ -424,6 +425,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".service.HttpRecognitionService"
             android:description="@string/summaryServiceHttp"
             android:exported="true"
+            android:foregroundServiceType="microphone"
             android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceHttp"
             android:permission="android.permission.RECORD_AUDIO">
@@ -459,6 +461,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         -->
         <service
             android:name=".service.SpeechInputMethodService"
+            android:foregroundServiceType="microphone"
             android:label="@string/labelIme"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
