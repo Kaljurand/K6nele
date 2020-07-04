@@ -260,6 +260,42 @@ public final class Utils {
         };
     }
 
+    private static int getCount(Command command) {
+        try {
+            return Integer.parseInt(command.getComment());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private static Pattern makeUtt(Calendar cal) {
+        long uttId = cal.getTimeInMillis();
+        // TODO: come up with a better utterance
+        String uttAsStr = "^<" + uttId + ">$";
+        return Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
+    }
+
+    private static Command makeCommand(UtteranceRewriter.Rewrite rewrite, ComponentName app, String comment) {
+        Calendar cal = Calendar.getInstance();
+        Pattern utt = makeUtt(cal);
+        Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
+        // TODO
+        Pattern localePattern = null;
+        Pattern servicePattern = null;
+        if (rewrite.isCommand()) {
+            // We store the matched command, but change the utterance, comment, and the command matcher.
+            // TODO: review this
+            String label = rewrite.getCommand().getLabel();
+            if (label == null) {
+                label = rewrite.ppCommand();
+            }
+            // Rewrite args is the output of command.parse, i.e. the evaluated args
+            return new Command(label, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
+        } else {
+            return new Command(rewrite.mStr, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, null);
+        }
+    }
+
     /**
      * Creates a rule where the utterance is a new unique pattern based on the timestamp.
      * The replacement and the possible command with arguments are based on the rewriting results.
@@ -278,40 +314,57 @@ public final class Utils {
         UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
         Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
         Calendar cal = Calendar.getInstance();
-        long uttId = cal.getTimeInMillis();
-        // TODO: come up with a better utterance
-        String uttAsStr = "^<" + uttId + ">$";
-        Pattern utt = Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
-        Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
-        // TODO
-        Pattern localePattern = null;
-        Pattern servicePattern = null;
-        // cal.getTime().toString()
-        Command newCommand;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String comment = sdf.format(cal.getTime()) + ", " + text;
-        if (rewrite.isCommand()) {
-            // We store the matched command, but change the utterance, comment, and the command matcher.
-            // TODO: review this
-            String label = rewrite.getCommand().getLabel();
-            if (label == null) {
-                label = rewrite.ppCommand();
-            }
-            // Rewrite args is the output of command.parse, i.e. the evaluated args
-            newCommand = new Command(label, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
-        } else {
-            newCommand = new Command(rewrite.mStr, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, null);
-        }
-        UtteranceRewriter ur = new UtteranceRewriter(rewrites);
-        List<Command> commands = ur.getCommands();
+        Command newCommand = makeCommand(rewrite, app, comment);
+        List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
         // Delete commands that produce the same result.
         // TODO: perform this as part of UtteranceRewriter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            commands.removeIf(newCommand::equalsCommand);
+            oldList.removeIf(newCommand::equalsCommand);
         }
         // Add a rule
-        commands.add(0, newCommand);
-        return commands;
+        oldList.add(0, newCommand);
+        return oldList;
+    }
+
+    public static List<Command> addRuleFreq(String text, CommandEditorResult editorResult, @NonNull String rewrites, ComponentName app) {
+        UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
+        Log.i("Add rule (freq): " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
+        Command newCommand = makeCommand(rewrite, app, "1");
+        List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
+        Log.i("Number of rules (old): " + oldList.size());
+        List<Command> newList = new ArrayList<>();
+        boolean isNewCommand = true;
+        for (Command c : oldList) {
+            // TODO: do not require command to exist yet, compare directly the relevant attributes
+            // TODO: include locale and service in the equivalence test
+            if (isNewCommand && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
+                Log.i("MATCH: " + c + " " + newCommand);
+                int count = getCount(c) + 1;
+                newList.add(makeCommand(rewrite, app, "" + count));
+                isNewCommand = false;
+            } else {
+                newList.add(c);
+            }
+        }
+        if (isNewCommand) {
+            Log.i("NEW: " + newCommand);
+            newList.add(newCommand);
+        }
+
+        Log.i("Number of rules (new): " + newList.size());
+        Collections.sort(newList, (c1, c2) -> {
+            int count1 = getCount(c1);
+            int count2 = getCount(c2);
+            if (count1 > count2)
+                return -1;
+            if (count1 < count2)
+                return 1;
+            return 0;
+        });
+
+        return newList;
     }
 
     public static <E> List<E> makeList(Iterable<E> iter) {

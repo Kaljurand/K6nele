@@ -48,6 +48,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
     // TODO: move somewhere else and make end-user configurable
     private static final String REWRITES_NAME_RECENT = "#r";
+    private static final String REWRITES_NAME_FREQUENT = "#f";
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
@@ -335,7 +336,12 @@ public class SpeechInputMethodService extends InputMethodService {
                 String rewritesAsStr = rewrites.getRewrites();
                 if (rewritesAsStr != null) {
                     // Load the existing rewrite rule table
-                    List<Command> commands = Utils.addRule(text, editorResult, rewritesAsStr, app);
+                    List<Command> commands;
+                    if (REWRITES_NAME_RECENT.equals(rewritesName)) {
+                        commands = Utils.addRule(text, editorResult, rewritesAsStr, app);
+                    } else {
+                        commands = Utils.addRuleFreq(text, editorResult, rewritesAsStr, app);
+                    }
                     UtteranceRewriter newUr = new UtteranceRewriter(commands, UtteranceRewriter.DEFAULT_HEADER);
                     // Save it again
                     PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, rewritesName, newUr.toTsv());
@@ -350,6 +356,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
                 if (editorResult != null) {
                     addRule(text, editorResult, REWRITES_NAME_RECENT);
+                    addRule(text, editorResult, REWRITES_NAME_FREQUENT);
                 }
             }
 
