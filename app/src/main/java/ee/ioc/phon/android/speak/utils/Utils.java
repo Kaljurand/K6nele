@@ -275,9 +275,7 @@ public final class Utils {
         return Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
     }
 
-    private static Command makeCommand(UtteranceRewriter.Rewrite rewrite, ComponentName app, String comment) {
-        Calendar cal = Calendar.getInstance();
-        Pattern utt = makeUtt(cal);
+    private static Command makeCommand(UtteranceRewriter.Rewrite rewrite, Pattern utt, ComponentName app, String comment) {
         Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
         // TODO
         Pattern localePattern = null;
@@ -312,48 +310,54 @@ public final class Utils {
      */
     public static List<Command> addRule(String text, CommandEditorResult editorResult, @NonNull String rewrites, ComponentName app) {
         UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
-        Log.i("Add rule: " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
+        Log.i("Add rule (rec): " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String comment = sdf.format(cal.getTime()) + ", " + text;
-        Command newCommand = makeCommand(rewrite, app, comment);
+        Command newCommand = makeCommand(rewrite, makeUtt(cal), app, comment);
         List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
-        // Delete commands that produce the same result.
-        // TODO: perform this as part of UtteranceRewriter
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            oldList.removeIf(newCommand::equalsCommand);
+        List<Command> newList = new ArrayList<>();
+
+        Command oldCommand = null;
+        for (Command c : oldList) {
+            if (oldCommand == null && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
+                oldCommand = c;
+            } else {
+                newList.add(c);
+            }
         }
-        // Add a rule
-        oldList.add(0, newCommand);
-        return oldList;
+        if (oldCommand == null) {
+            newList.add(0, newCommand);
+        } else {
+            // TODO: update the timestamp (comment field)
+            newList.add(0, oldCommand);
+        }
+
+        return newList;
     }
 
     public static List<Command> addRuleFreq(String text, CommandEditorResult editorResult, @NonNull String rewrites, ComponentName app) {
         UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
         Log.i("Add rule (freq): " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
-        Command newCommand = makeCommand(rewrite, app, "1");
+        Command newCommand = makeCommand(rewrite, makeUtt(Calendar.getInstance()), app, "1");
         List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
-        Log.i("Number of rules (old): " + oldList.size());
         List<Command> newList = new ArrayList<>();
         boolean isNewCommand = true;
         for (Command c : oldList) {
             // TODO: do not require command to exist yet, compare directly the relevant attributes
             // TODO: include locale and service in the equivalence test
             if (isNewCommand && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
-                Log.i("MATCH: " + c + " " + newCommand);
                 int count = getCount(c) + 1;
-                newList.add(makeCommand(rewrite, app, "" + count));
+                newList.add(makeCommand(rewrite, c.getUtterance(), app, "" + count));
                 isNewCommand = false;
             } else {
                 newList.add(c);
             }
         }
         if (isNewCommand) {
-            Log.i("NEW: " + newCommand);
             newList.add(newCommand);
         }
 
-        Log.i("Number of rules (new): " + newList.size());
         Collections.sort(newList, (c1, c2) -> {
             int count1 = getCount(c1);
             int count2 = getCount(c2);
