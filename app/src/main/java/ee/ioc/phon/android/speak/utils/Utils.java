@@ -371,6 +371,33 @@ public final class Utils {
         return newList;
     }
 
+    public static List<Command> addRuleClip(String text, @NonNull String rewrites, ComponentName app) {
+        Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String comment = sdf.format(cal.getTime()) + ", clip: " + text;
+        Command newCommand = new Command(text, comment, null, null, appPattern, makeUtt(cal), text, null);
+        List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
+        List<Command> newList = new ArrayList<>();
+
+        Command oldCommand = null;
+        for (Command c : oldList) {
+            if (oldCommand == null && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
+                oldCommand = c;
+            } else {
+                newList.add(c);
+            }
+        }
+        if (oldCommand == null) {
+            newList.add(0, newCommand);
+        } else {
+            // TODO: update the timestamp (comment field)
+            newList.add(0, oldCommand);
+        }
+
+        return newList;
+    }
+
     public static <E> List<E> makeList(Iterable<E> iter) {
         List<E> list = new ArrayList<>();
         for (E item : iter) {

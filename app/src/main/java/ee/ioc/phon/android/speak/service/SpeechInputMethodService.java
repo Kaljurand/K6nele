@@ -2,7 +2,9 @@ package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -49,6 +51,7 @@ public class SpeechInputMethodService extends InputMethodService {
     // TODO: move somewhere else and make end-user configurable
     private static final String REWRITES_NAME_RECENT = "#r";
     private static final String REWRITES_NAME_FREQUENT = "#f";
+    private static final String REWRITES_NAME_CLIP = "#c";
 
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
@@ -296,6 +299,41 @@ public class SpeechInputMethodService extends InputMethodService {
         return extras;
     }
 
+    /**
+     * Creates a rule where the utterance is a new unique pattern based on the timestamp.
+     * The replacement and the possible command with arguments are based on the rewriting results.
+     * In case of commands the button label is the command's comment or, if missing, the pretty-printed command.
+     * For a simple replacement the button label is the replacement.
+     * Clicking on a Recent button will just push it to the top of the list, i.e. make it most recent.
+     * <p>
+     * TODO: review and update doc
+     * TODO: do we need to generate the utterance field at all?
+     *
+     * @param text         Spoken input, used as the button label, as well as the replacement
+     * @param editorResult Command (if spoken input triggered a command). Used to populate the button's
+     *                     replacement, and command.
+     */
+    private boolean addRule(String text, CommandEditorResult editorResult, String rewritesName, ComponentName app) {
+        Rewrites rewrites = new Rewrites(mPrefs, mRes, rewritesName);
+        String rewritesAsStr = rewrites.getRewrites();
+        if (rewritesAsStr == null) {
+            return false;
+        }
+        // Load the existing rewrite rule table
+        List<Command> commands;
+        if (REWRITES_NAME_RECENT.equals(rewritesName)) {
+            commands = Utils.addRule(text, editorResult, rewritesAsStr, app);
+        } else if (REWRITES_NAME_FREQUENT.equals(rewritesName)) {
+            commands = Utils.addRuleFreq(text, editorResult, rewritesAsStr, app);
+        } else {
+            commands = Utils.addRuleClip(text, rewritesAsStr, app);
+        }
+        UtteranceRewriter newUr = new UtteranceRewriter(commands, UtteranceRewriter.DEFAULT_HEADER);
+        // Save it again
+        PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, rewritesName, newUr.toTsv());
+        return true;
+    }
+
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final Window window, final String packageName) {
         return new AbstractSpeechInputViewListener() {
 
@@ -317,37 +355,6 @@ public class SpeechInputMethodService extends InputMethodService {
                 }
             }
 
-            /**
-             * Creates a rule where the utterance is a new unique pattern based on the timestamp.
-             * The replacement and the possible command with arguments are based on the rewriting results.
-             * In case of commands the button label is the command's comment or, if missing, the pretty-printed command.
-             * For a simple replacement the button label is the replacement.
-             * Clicking on a Recent button will just push it to the top of the list, i.e. make it most recent.
-             *
-             * TODO: review and update doc
-             * TODO: do we need to generate the utterance field at all?
-             *
-             * @param text Spoken input, used as the button label, as well as the replacement
-             * @param editorResult Command (if spoken input triggered a command). Used to populate the button's
-             *                replacement, and command.
-             */
-            private void addRule(String text, CommandEditorResult editorResult, String rewritesName) {
-                Rewrites rewrites = new Rewrites(mPrefs, mRes, rewritesName);
-                String rewritesAsStr = rewrites.getRewrites();
-                if (rewritesAsStr != null) {
-                    // Load the existing rewrite rule table
-                    List<Command> commands;
-                    if (REWRITES_NAME_RECENT.equals(rewritesName)) {
-                        commands = Utils.addRule(text, editorResult, rewritesAsStr, app);
-                    } else {
-                        commands = Utils.addRuleFreq(text, editorResult, rewritesAsStr, app);
-                    }
-                    UtteranceRewriter newUr = new UtteranceRewriter(commands, UtteranceRewriter.DEFAULT_HEADER);
-                    // Save it again
-                    PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, rewritesName, newUr.toTsv());
-                }
-            }
-
             private void commitResults(List<String> results) {
                 String text = getText(results);
                 CommandEditorResult editorResult = mCommandEditor.commitFinalResult(text);
@@ -355,8 +362,10 @@ public class SpeechInputMethodService extends InputMethodService {
                     mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
                 }
                 if (editorResult != null) {
-                    addRule(text, editorResult, REWRITES_NAME_RECENT);
-                    addRule(text, editorResult, REWRITES_NAME_FREQUENT);
+                    addRule(text, editorResult, REWRITES_NAME_RECENT, app);
+                    addRule(text, editorResult, REWRITES_NAME_FREQUENT, app);
+                    // TODO: update rewriters because the tables have changed
+                    //mCommandEditor.setRewriters(Utils.makeList(Utils.genRewriters(mPrefs, mRes, null, language, service, app)));
                 }
             }
 
@@ -364,6 +373,17 @@ public class SpeechInputMethodService extends InputMethodService {
             public void onComboChange(String language, ComponentName service) {
                 // TODO: name of the rewrites table configurable
                 mCommandEditor.setRewriters(Utils.makeList(Utils.genRewriters(mPrefs, mRes, null, language, service, app)));
+
+                // TODO: remove the listener if "#c" is deleted
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.addPrimaryClipChangedListener(() -> {
+                    CharSequence clip = clipboard.getPrimaryClip().getItemAt(0).getText();
+                    if (clip != null) {
+                        addRule(clip.toString(), null, REWRITES_NAME_CLIP, app);
+                        // TODO: update rewriters because the tables have changed
+                        //mCommandEditor.setRewriters(Utils.makeList(Utils.genRewriters(mPrefs, mRes, null, language, service, app)));
+                    }
+                });
             }
 
             @Override
