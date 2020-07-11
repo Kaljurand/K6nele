@@ -32,6 +32,7 @@ import ee.ioc.phon.android.speak.model.CallerInfo
 import ee.ioc.phon.android.speak.utils.Utils
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener
 import ee.ioc.phon.android.speak.view.SpeechInputView
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter
 import ee.ioc.phon.android.speechutils.utils.IntentUtils
 import ee.ioc.phon.android.speechutils.utils.JsonUtils
@@ -56,7 +57,8 @@ class ChatDemoActivity : AppCompatActivity() {
             private var mRewriters: Iterable<UtteranceRewriter>? = null
 
             override fun onComboChange(language: String, service: ComponentName) {
-                mRewriters = Utils.genRewriters(mPrefs, mRes, arrayOf("Base", "Commands"), language, service, componentName)
+                mRewriters = Utils.genRewriters(mPrefs, mRes, arrayOf("Base", "Commands"),
+                        CommandMatcherFactory.createCommandFilter(language, service, componentName))
             }
 
             override fun onFinalResult(results: List<String>, bundle: Bundle) {

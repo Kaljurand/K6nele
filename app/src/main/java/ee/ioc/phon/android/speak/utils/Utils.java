@@ -17,7 +17,6 @@
 package ee.ioc.phon.android.speak.utils;
 
 import android.annotation.TargetApi;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,19 +43,15 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import ee.ioc.phon.android.speak.Executable;
 import ee.ioc.phon.android.speak.ExecutableString;
@@ -66,11 +61,7 @@ import ee.ioc.phon.android.speak.activity.SpeechActionActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.editor.Command;
-import ee.ioc.phon.android.speechutils.editor.CommandEditorResult;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
-import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
-import ee.ioc.phon.android.speechutils.editor.Constants;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
@@ -218,9 +209,7 @@ public final class Utils {
     public static Iterable<UtteranceRewriter> genRewriters(final SharedPreferences prefs,
                                                            final Resources resources,
                                                            String[] rewritesByName,
-                                                           String language,
-                                                           ComponentName service,
-                                                           ComponentName app) {
+                                                           CommandMatcher commandMatcher) {
         final String[] names;
         if (rewritesByName == null) {
             Set<String> defaults = PreferenceUtils.getPrefStringSet(prefs, resources, R.string.defaultRewriteTables);
@@ -238,7 +227,6 @@ public final class Utils {
         if (length == 0) {
             return Collections.EMPTY_LIST;
         }
-        final CommandMatcher commandMatcher = CommandMatcherFactory.createCommandFilter(language, service, app);
 
         return () -> new Iterator<UtteranceRewriter>() {
 
@@ -258,144 +246,6 @@ public final class Utils {
                 return new UtteranceRewriter(rewritesAsStr, commandMatcher);
             }
         };
-    }
-
-    private static int getCount(Command command) {
-        try {
-            return Integer.parseInt(command.getComment());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
-    private static Pattern makeUtt(Calendar cal) {
-        long uttId = cal.getTimeInMillis();
-        // TODO: come up with a better utterance
-        String uttAsStr = "^<" + uttId + ">$";
-        return Pattern.compile(uttAsStr, Constants.REWRITE_PATTERN_FLAGS);
-    }
-
-    private static Command makeCommand(UtteranceRewriter.Rewrite rewrite, Pattern utt, ComponentName app, String comment) {
-        Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
-        // TODO
-        Pattern localePattern = null;
-        Pattern servicePattern = null;
-        if (rewrite.isCommand()) {
-            // We store the matched command, but change the utterance, comment, and the command matcher.
-            // TODO: review this
-            String label = rewrite.getCommand().getLabel();
-            if (label == null) {
-                label = rewrite.ppCommand();
-            }
-            // Rewrite args is the output of command.parse, i.e. the evaluated args
-            return new Command(label, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, rewrite.mId, rewrite.mArgs);
-        } else {
-            return new Command(rewrite.mStr, comment, localePattern, servicePattern, appPattern, utt, rewrite.mStr, null);
-        }
-    }
-
-    /**
-     * Creates a rule where the utterance is a new unique pattern based on the timestamp.
-     * The replacement and the possible command with arguments are based on the rewriting results.
-     * In case of commands the clip label is the command's comment or, if missing, the pretty-printed command.
-     * For a simple replacement the clip label is the replacement.
-     * Clicking on a Recent clip will just push it to the top of the list, i.e. make it most recent.
-     * <p>
-     * TODO: review and update doc
-     * TODO: do we need to generate the utterance field at all?
-     *
-     * @param text         Spoken input, used as the clipboard label, as well as the replacement if command == null
-     * @param editorResult Command (if spoken input triggered a command). Used to populate the clips's
-     *                     replacement, and command.
-     */
-    public static List<Command> addRule(String text, CommandEditorResult editorResult, @NonNull String rewrites, ComponentName app) {
-        UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
-        Log.i("Add rule (rec): " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String comment = sdf.format(cal.getTime()) + ", " + text;
-        Command newCommand = makeCommand(rewrite, makeUtt(cal), app, comment);
-        List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
-        List<Command> newList = new ArrayList<>();
-
-        Command oldCommand = null;
-        for (Command c : oldList) {
-            if (oldCommand == null && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
-                oldCommand = c;
-            } else {
-                newList.add(c);
-            }
-        }
-        if (oldCommand == null) {
-            newList.add(0, newCommand);
-        } else {
-            // TODO: update the timestamp (comment field)
-            newList.add(0, oldCommand);
-        }
-
-        return newList;
-    }
-
-    public static List<Command> addRuleFreq(String text, CommandEditorResult editorResult, @NonNull String rewrites, ComponentName app) {
-        UtteranceRewriter.Rewrite rewrite = editorResult.getRewrite();
-        Log.i("Add rule (freq): " + text + "|" + editorResult.getStr() + "|" + rewrite.getCommand());
-        Command newCommand = makeCommand(rewrite, makeUtt(Calendar.getInstance()), app, "1");
-        List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
-        List<Command> newList = new ArrayList<>();
-        boolean isNewCommand = true;
-        for (Command c : oldList) {
-            // TODO: do not require command to exist yet, compare directly the relevant attributes
-            // TODO: include locale and service in the equivalence test
-            if (isNewCommand && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
-                int count = getCount(c) + 1;
-                newList.add(makeCommand(rewrite, c.getUtterance(), app, "" + count));
-                isNewCommand = false;
-            } else {
-                newList.add(c);
-            }
-        }
-        if (isNewCommand) {
-            newList.add(newCommand);
-        }
-
-        Collections.sort(newList, (c1, c2) -> {
-            int count1 = getCount(c1);
-            int count2 = getCount(c2);
-            if (count1 > count2)
-                return -1;
-            if (count1 < count2)
-                return 1;
-            return 0;
-        });
-
-        return newList;
-    }
-
-    public static List<Command> addRuleClip(String text, @NonNull String rewrites, ComponentName app) {
-        Pattern appPattern = Pattern.compile(Pattern.quote(app.getPackageName()), Constants.REWRITE_PATTERN_FLAGS);
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String comment = sdf.format(cal.getTime()) + ", clip: " + text;
-        Command newCommand = new Command(text, comment, null, null, appPattern, makeUtt(cal), text, null);
-        List<Command> oldList = new UtteranceRewriter(rewrites).getCommands();
-        List<Command> newList = new ArrayList<>();
-
-        Command oldCommand = null;
-        for (Command c : oldList) {
-            if (oldCommand == null && newCommand.equalsCommand(c) && newCommand.getApp().pattern().equals(c.getApp().pattern())) {
-                oldCommand = c;
-            } else {
-                newList.add(c);
-            }
-        }
-        if (oldCommand == null) {
-            newList.add(0, newCommand);
-        } else {
-            // TODO: update the timestamp (comment field)
-            newList.add(0, oldCommand);
-        }
-
-        return newList;
     }
 
     public static <E> List<E> makeList(Iterable<E> iter) {

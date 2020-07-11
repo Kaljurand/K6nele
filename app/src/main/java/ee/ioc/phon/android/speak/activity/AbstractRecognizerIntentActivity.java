@@ -62,6 +62,7 @@ import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RawAudioRecorder;
 import ee.ioc.phon.android.speechutils.TtsProvider;
+import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.AudioUtils;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
@@ -643,7 +644,8 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
                 rewrites = new String[]{(String) rewritesAsObject};
             }
         }
-        mRewriters = Utils.genRewriters(prefs, getResources(), rewrites, language, service, getCallingActivity());
+        mRewriters = Utils.genRewriters(prefs, getResources(), rewrites,
+                CommandMatcherFactory.createCommandFilter(language, service, getCallingActivity()));
     }
 
     /**
