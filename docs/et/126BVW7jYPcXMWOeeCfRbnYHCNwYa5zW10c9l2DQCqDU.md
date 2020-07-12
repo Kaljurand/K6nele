@@ -2,6 +2,6 @@
 layout: page
 ---
 
-Tühi tabel. Salvestades selle `#r` või `#f` nime all, käivitab vastaval kõige viimaste või kõige sagedastemate käskude kogumise.
+Tühi tabel. Salvestades selle `#c`, `#f` või `#r` nime all, käivitab vastavalt lõikelaua klippide, kõige sagedastemate lausungite, või kõige viimaste lausungite kogumise.
 
 [PAIGALDA](k6://IyBFbXB0eSB0YWJsZQ==)

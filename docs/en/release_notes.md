@@ -13,24 +13,24 @@ Requires Android 4.1+
 
 New in this release:
 
-- remove IME command ``saveClip``
-- make IME command ``moveRelSel`` callable from rewrite rules
+- add support for the light theme, the theme now depends on the system theme (requires recent Android)
 - action bar now appears on all platforms (incl. Watch)
 - improve support for TV (untested)
-- make some touch targets a bit bigger, e.g. the combo selector looks more like a button
-- add support for the light theme, the theme now depends on the system theme (requires recent Android)
-- make IME landscape panel taller (only if the combo button is shown)
-- add developer setting to switch on Do Not Disturb access ([issue #73](https://github.com/Kaljurand/K6nele/issues/73))
-- support custom query string parts in WS URL, e.g. ``ws://10.0.0.11:8080/client/ws/speech?key1=val1&key2=val2`` ([issue #70](https://github.com/Kaljurand/K6nele/issues/70))
-- avoid the error "Cleartext HTTP traffic not permitted" when using the Lights.Hue rewrites table, on Android v8+
-- remove intent filter for ``RECORD_SOUND`` (did not work)
-- improve rewrites pretty-printing
 - rewrite rule tables now support a Label-column, meant for button-sized labels and icons
 - the mic button now generates utterances like ``K6_Y_BTN_MIC_UP`` when pressed/swiped. Rewrite rules can map these to (app-dependent) actions, e.g. left swipe selects text on the left, right swipe posts current text (in a chat app).
-- (experimental) Long pressing the IME action button now opens a tabbed "keyboard" where the selected rewrite rules are available as buttons. This allows one to implement custom keyboards for entering numbers/punctuation, commonly used emoji, text editing commands etc., where buttons are a more natural modality than speech.
-- (experimental) recent and frequent utterances are saved into the ``#r`` and ``#f`` rewrite tables if these tables exist,
+- (experimental) IME. Long pressing the IME action button now opens a tabbed "keyboard" where the selected rewrite rules are available as buttons, allowing one to implement custom keyboards for numbers/punctuation, commonly used emoji, text editing commands, calculators, app launchers, etc., where buttons are a more natural modality than speech
+- (experimental) IME. Clipboard items, recent utterances, and frequent utterances are logged into the ``#c``, ``#r`` and ``#f`` rewrite tables if these tables exist,
   i.e. this logging has to be manually enabled by first creating the empty tables, and can be turned off by deleting
   the tables
+- IME. Remove command ``saveClip``
+- IME. Make command ``moveRelSel`` callable from rewrite rules
+- IME. Make landscape panel taller (only if the combo button is shown)
+- improve rewrites pretty-printing
+- make some touch targets a bit bigger, e.g. the combo selector looks more like a button
+- support custom query string parts in WS URL, e.g. ``ws://10.0.0.11:8080/client/ws/speech?key1=val1&key2=val2`` ([issue #70](https://github.com/Kaljurand/K6nele/issues/70))
+- avoid the error "Cleartext HTTP traffic not permitted" when using the Lights.Hue rewrites table, on Android v8+
+- add developer setting to switch on Do Not Disturb access ([issue #73](https://github.com/Kaljurand/K6nele/issues/73))
+- remove intent filter for ``RECORD_SOUND`` (did not work)
 - migrate to AndroidX (~1 MB larger APK)
 - remove dependency on net-speech-api
 

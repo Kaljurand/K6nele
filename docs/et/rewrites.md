@@ -26,13 +26,14 @@ Dialoogisüsteemid
 - [[TSV](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/edit?usp=sharing), [Paigalda](1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ.html)] Mitmekeelne süsteem sisendkõne kordamiseks Androidi kõnesüntesaatoriga (nt häälduse harjutamiseks). (Kui eesti keele süntesaatorit pole installeeritud, siis kasutatakse soome või hispaania keele oma.)
 - [[TSV](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4/edit?usp=sharing), [Paigalda](1GvBl2Tq9sZRrQCRnsttpYliyR7vraDpMHReVyoOijq4.html)] Lihtne rakendus kõnekorpuse kogumiseks, mis koosneb valdavalt sisendfraasidest, mille Kõnele palub kasutajal järjest ette lugeda
 
-Svaibid ja klahvistikud (eeldab Kõnele v1.7.28+)
+Svaibid ja klahvistikud (eeldab Kõnele v1.7.32+)
 ------------------------------------------------
 
 - [[TSV](https://docs.google.com/spreadsheets/d/1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs/edit?usp=sharing), [Paigalda](1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs.html)] Mikrofoninupu svaip-käsud (mikrofoninupp kui _joystick_)
+- [[TSV](https://docs.google.com/spreadsheets/d/1zmeVsyvWD_R3z_IEsBcAYR81ILsiUNGtzPj1K7x74mM/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1zmeVsyvWD_R3z_IEsBcAYR81ILsiUNGtzPj1K7x74mM/edit?usp=sharing), [Paigalda](1zmeVsyvWD_R3z_IEsBcAYR81ILsiUNGtzPj1K7x74mM.html)] Rakenduste käivitaja (_app launcher_)
 - [[TSV](https://docs.google.com/spreadsheets/d/1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc/edit?usp=sharing), [Paigalda](1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc.html)] Kalkulaator
 - [[TSV](https://docs.google.com/spreadsheets/d/1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw/edit?usp=sharing), [Paigalda](1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw.html)] Tekstitöötlusnupud (kursori liigutamine, kopeeri/kleebi, jms)
-- [[TSV](https://docs.google.com/spreadsheets/d/126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU/edit?usp=sharing), [Paigalda](126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU.html)] Tühi tabel. Salvestades selle `#r` või `#f` nime all, käivitab vastaval kõige viimaste või kõige sagedastemate käskude kogumise.
+- [[TSV](https://docs.google.com/spreadsheets/d/126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU/export?format=tsv), [Sheets](https://docs.google.com/spreadsheets/d/126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU/edit?usp=sharing), [Paigalda](126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU.html)] Tühi tabel. Salvestades selle `#c`, `#f` või `#r` nime all, käivitab vastavalt lõikelaua klippide, kõige sagedastemate lausungite, või kõige viimaste lausungite kogumise.
 
 Testid/Eksperimendid
 --------------------
