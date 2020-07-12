@@ -115,6 +115,12 @@ public class Rewrites {
         return array;
     }
 
+    /**
+     * Saves the rewrites under a new name. If the new name equals the old name, then nothing is done.
+     * If the new name is null then the rewrites are deleted.
+     *
+     * @param newName New name of the rewrites or null if the rewrites should be deleted.
+     */
     public void rename(String newName) {
         if (!mId.equals(newName)) {
             if (newName != null) {
@@ -123,9 +129,9 @@ public class Rewrites {
             Set<String> deleteKeys = new HashSet<>();
             deleteKeys.add(mId);
             PreferenceUtils.clearPrefMap(mPrefs, mRes, R.string.keyRewritesMap, deleteKeys);
+            // Replace the name in the defaults
             Set<String> defaults = new HashSet<>(getDefaults());
-            if (defaults.contains(mId)) {
-                defaults.remove(mId);
+            if (defaults.remove(mId)) {
                 if (newName != null) {
                     defaults.add(newName);
                 }

@@ -80,8 +80,9 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (clip != null) {
                     UtteranceRewriter ur = mRuleManager.addRecent(clip.toString(), rewritesClip);
                     PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_CLIP, ur.toTsv());
-                    // TODO: update rewriters because the tables have changed
-                    //mCommandEditor.setRewriters(Utils.makeList(Utils.genRewriters(mPrefs, mRes, null, language, service, app)));
+                    mCommandEditor.setRewriters(
+                            Utils.makeList(
+                                    Utils.genRewriters(mPrefs, mRes, null, mRuleManager.getCommandMatcher())));
                 }
             });
         }
@@ -363,8 +364,12 @@ public class SpeechInputMethodService extends InputMethodService {
                         UtteranceRewriter ur = mRuleManager.addFrequent(editorResult, rewritesFreq);
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_FREQUENT, ur.toTsv());
                     }
-                    // TODO: update rewriters because the tables have changed
-                    //mCommandEditor.setRewriters(Utils.makeList(Utils.genRewriters(mPrefs, mRes, null, language, service, app)));
+                    // Update rewriters because the tables have changed
+                    if (rewritesRec != null || rewritesFreq != null) {
+                        mCommandEditor.setRewriters(
+                                Utils.makeList(
+                                        Utils.genRewriters(mPrefs, mRes, null, mRuleManager.getCommandMatcher())));
+                    }
                 }
             }
 

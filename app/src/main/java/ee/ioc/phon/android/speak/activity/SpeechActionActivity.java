@@ -115,7 +115,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         */
         setUpActivity(R.layout.activity_recognizer);
         registerPrompt(findViewById(R.id.tvPrompt));
-
     }
 
     @Override

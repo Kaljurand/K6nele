@@ -42,7 +42,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileNotFoundException;
@@ -312,20 +311,13 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_RECORD_AUDIO: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    showError("");
-                    setTvPrompt();
-                } else {
-                    setTvPrompt(getString(R.string.promptPermissionRationale));
-                }
-                break;
-            }
-            default: {
-                break;
+    public void onRequestPermissionsResults(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_RECORD_AUDIO) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showError("");
+                setTvPrompt();
+            } else {
+                setTvPrompt(getString(R.string.promptPermissionRationale));
             }
         }
     }
@@ -607,7 +599,8 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
     }
 
     // TODO: use it to speak errors if EXTRA_SPEAK_ERRORS
-    private void sayVoicePrompt(final String lang, final String prompt, final TtsProvider.Listener listener) {
+    private void sayVoicePrompt(final String lang, final String prompt,
+                                final TtsProvider.Listener listener) {
         mTts = new TtsProvider(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 Locale locale = mTts.chooseLanguage(lang);
