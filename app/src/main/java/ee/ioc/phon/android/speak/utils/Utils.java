@@ -101,7 +101,7 @@ public final class Utils {
      * is Theme.Translucent.NoTitleBar then the dialog is unstyled (maybe an Android bug?)
      */
     public static AlertDialog getLaunchIntentDialog(final AppCompatActivity activity, String msg, final Intent intent) {
-        return new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog)
+        return new AlertDialog.Builder(activity, R.style.Theme_K6nele_Dialog)
                 .setPositiveButton(activity.getString(R.string.buttonGoToSettings), (dialog, id) -> {
                     activity.startActivity(intent);
                     activity.finish();
@@ -127,7 +127,7 @@ public final class Utils {
     }
 
     public static AlertDialog getYesNoDialog(Context context, String confirmationMessage, final Executable ex1, final Executable ex2) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Theme_K6nele_Dialog);
         builder
                 .setMessage(confirmationMessage)
                 .setCancelable(false)

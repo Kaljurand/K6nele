@@ -26,8 +26,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1733
-        versionName '1.7.33'
+        versionCode 1734
+        versionName '1.7.34'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs "en", "et"
@@ -85,6 +85,7 @@ if (project.hasProperty('storePassword') &&
     android.signingConfigs.release.storePassword = storePassword
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
+    println "WARNING: The release will not be signed"
     android.buildTypes.release.signingConfig = null
 }
 
@@ -97,11 +98,13 @@ task deploy {
 
         def version = android.defaultConfig.versionName
 
+        def name = 'K6nele'
+
         def outputs = 'build/outputs/'
         def apk1 = outputs + 'apk/release/app-release.apk'
-        def apk2 = "${deploy_dir}K6nele-${version}.apk"
+        def apk2 = "${deploy_dir}${name}-${version}.apk"
         def mapping1 = outputs + 'mapping/release/mapping.txt'
-        def mapping2 = "${deploy_dir}K6nele-mapping-${version}.txt"
+        def mapping2 = "${deploy_dir}${name}-mapping-${version}.txt"
 
         exec {
             commandLine 'cp', '--verbose', apk1, apk2

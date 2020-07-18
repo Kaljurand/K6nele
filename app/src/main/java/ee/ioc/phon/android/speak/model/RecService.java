@@ -3,6 +3,7 @@ package ee.ioc.phon.android.speak.model;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
@@ -22,17 +23,23 @@ public class RecService {
     private final ComponentName mComponentName;
 
     public RecService(Context context, String id) {
+        String mDesc1 = "";
         // Can return <null, "">
         Pair<ComponentName, String> pair = RecognitionServiceManager.unflattenFromString(id);
         mComponentName = pair.first;
+
         mLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
         ServiceInfo si = RecognitionServiceManager.getServiceInfo(context, mComponentName);
         int resId = si.descriptionRes;
-        if (resId == 0) {
-            mDesc = "";
-        } else {
-            mDesc = context.getString(si.descriptionRes);
+        if (resId != 0) {
+            try {
+                PackageManager manager = context.getPackageManager();
+                mDesc1 = manager.getResourcesForApplication(mComponentName.getPackageName()).getString(resId);
+            } catch (PackageManager.NameNotFoundException e) {
+                // Should not happen
+            }
         }
+        mDesc = mDesc1;
         try {
             mSettingsActivity = RecognitionServiceManager.getSettingsActivity(context, si);
             Log.i(mSettingsActivity);
