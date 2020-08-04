@@ -12,7 +12,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     //implementation 'androidx.activity:activity:1.2.0-alpha06'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.0'
 }
 
 android {
@@ -26,8 +26,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1734
-        versionName '1.7.34'
+        versionCode 1736
+        versionName '1.7.36'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs "en", "et"
@@ -70,9 +70,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding {
-            enabled = true
-        }
+        viewBinding true
     }
 
 }
