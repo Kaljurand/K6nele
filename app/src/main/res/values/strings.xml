@@ -138,7 +138,7 @@
     <string name="statusServerStatus" translatable="false">…</string>
 
     <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
-        Many apps contain a text area or a text field (e.g. a search bar) that can be edited using the keyboard.
+        Many apps contain text fields (e.g. a search bar) that can be edited using the keyboard.
         %1$s provides a keyboard that allows text to be entered and edited via speech.
         Some apps (e.g. intelligent assistants, navigation apps) also contain a microphone button
         that is either linked to the &lt;b>standard Android speech recognition activity&lt;/b> or the
@@ -163,7 +163,9 @@
         For more information, see &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
 
 		&lt;p>For the documentation, source code, etc. see the &lt;a href="http://kaljurand.github.io/K6nele/">%1$s website&lt;/a>.
-        See also the &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">privacy policy&lt;/a>.&lt;/p></string>
+        See also the &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">privacy policy&lt;/a>.&lt;/p>
+        &lt;p>Installation ID: %2$s&lt;/p>
+    </string>
 
     <string name="emptylistApps">No apps yet. This list will be automatically populated with the apps where you have used speech input.</string>
     <string name="emptylistGrammars">No grammars. Add a new grammar via the Add-menu.</string>

@@ -97,7 +97,7 @@
 
         &lt;p>Kuidas töötab Kõnele klaviatuur? Mikrofoninupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
-        Svaipides saab kursori asukohta muuta. Pikalt vajutades ja siis svaipides saab teksti valida.
+        Svaipides saab kursori asukohta muuta. Pikalt vajutades ja seejärel svaipides saab teksti valida.
         Topeltvajutus lisab tühiku.
         Ümberkirjutusreeglite abil saab luua tekstiasendus- ja tekstitoimetuskäske.&lt;/p>
 
@@ -127,7 +127,9 @@
 		dokumentatsioon ja lähtekood on
 		&lt;a
 		href="http://kaljurand.github.io/K6nele/">%1$s veebilehel&lt;/a>.
-        Kasutajaandmete kaitse kohta lugege &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">siit&lt;/a>.&lt;/p>&lt;/p></string>
+        Kasutajaandmete kaitse kohta lugege &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">siit&lt;/a>.&lt;/p>
+        &lt;p>Paigalduse ID-kood: %2$s&lt;/p>
+    </string>
 
     <!-- List view -->
     <string name="emptylistApps">Siia ilmub automaatselt nimekiri rakendustest, kus

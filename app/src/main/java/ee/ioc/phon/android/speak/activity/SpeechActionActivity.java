@@ -3,7 +3,6 @@ package ee.ioc.phon.android.speak.activity;
 import android.Manifest;
 import android.content.ComponentName;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener;
 import ee.ioc.phon.android.speak.view.SpeechInputView;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.utils.BundleUtils;
-import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
  * <p>This activity responds to the following intent types:</p>
@@ -73,7 +71,8 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     }
 
     /**
-     * <p>Only for developers, i.e. we are not going to localize these strings.</p>
+     * <p>Details about the calling activity and the incoming EXTRAs.
+     * Only for developers, i.e. we are not going to localize these strings.</p>
      * TODO: fix
      */
     @Override
@@ -90,7 +89,6 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
             pendingIntentTargetPackage = getExtraResultsPendingIntent().getTargetPackage();
         }
         List<String> info = new ArrayList<>();
-        info.add("ID: " + PreferenceUtils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this)));
         //info.add("User-Agent comment: " + getRecSessionBuilder().getUserAgentComment());
         info.add("Calling activity class name: " + callingActivityClassName);
         info.add("Calling activity package name: " + callingActivityPackageName);

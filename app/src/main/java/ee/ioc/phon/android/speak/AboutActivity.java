@@ -22,9 +22,11 @@ import android.text.method.LinkMovementMethod;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import ee.ioc.phon.android.speak.databinding.AboutBinding;
 import ee.ioc.phon.android.speak.utils.Utils;
+import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 /**
  * <p>Simple activity that shows the info page (help page).
@@ -51,7 +53,8 @@ public class AboutActivity extends AppCompatActivity {
         binding.tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
         String about = String.format(
                 getString(R.string.tvAbout),
-                getString(R.string.labelApp)
+                getString(R.string.labelApp),
+                PreferenceUtils.getUniqueId(PreferenceManager.getDefaultSharedPreferences(this))
         );
         binding.tvAbout.setText(Html.fromHtml(about));
     }
