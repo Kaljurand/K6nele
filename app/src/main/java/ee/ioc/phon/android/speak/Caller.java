@@ -17,6 +17,7 @@
 package ee.ioc.phon.android.speak;
 
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
@@ -107,4 +108,20 @@ public class Caller {
         return null;
     }
 
+    /**
+     * <p>Returns the package name of the app that receives the transcription,
+     * or <code>null</code> if the package name could not be resolved.</p>
+     * <p>
+     * TODO: integrate this into the caller-object
+     */
+    public static String getCaller(ComponentName callingActivity, PendingIntent pendingIntent) {
+        if (pendingIntent == null) {
+            if (callingActivity != null) {
+                return callingActivity.getPackageName();
+            }
+        } else {
+            return pendingIntent.getTargetPackage();
+        }
+        return null;
+    }
 }

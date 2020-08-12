@@ -40,6 +40,7 @@ import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
+import ee.ioc.phon.android.speak.PackageNameRegistry;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
@@ -813,6 +814,12 @@ public class SpeechInputView extends LinearLayoutCompat {
     private void startListening(ServiceLanguageChooser slc) {
         setGuiState(MicButton.State.WAITING);
         updateServiceLanguage(slc.getSpeechRecognizer());
+        // Increases the counter of the app that calls the recognition service.
+        // TODO: we could define it slightly differently, e.g. only count successful recognitions,
+        // count also commands executed via swipes and/or buttons (but maybe not count every deletion
+        // and cursor movement).
+        // TODO: we could also count languages, services, etc.
+        PackageNameRegistry.increaseAppCount(getContext(), slc.getIntent().getExtras(), null);
         mRecognizer.startListening(slc.getIntent());
         mListener.onStartListening();
         setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
@@ -831,7 +838,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             mRecognizer = null;
         }
     }
-
 
     private class SpeechInputRecognitionListener implements RecognitionListener {
 

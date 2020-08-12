@@ -100,8 +100,7 @@ public class ChunkedWebRecSessionBuilder {
             mCaller = caller1.getActualCaller();
             setUserAgentComment(caller1.toString());
         } else {
-            // TODO: integrate this into the caller-object
-            mCaller = getCaller(callingActivity, pendingIntent);
+            mCaller = Caller.getCaller(callingActivity, pendingIntent);
             setUserAgentComment(mCaller);
         }
 
@@ -234,23 +233,6 @@ public class ChunkedWebRecSessionBuilder {
             mLmUrl = new URL(urlAsString);
         }
     }
-
-
-    /**
-     * <p>Returns the package name of the app that receives the transcription,
-     * or <code>null</code> if the package name could not be resolved.</p>
-     */
-    private static String getCaller(ComponentName callingActivity, PendingIntent pendingIntent) {
-        if (pendingIntent == null) {
-            if (callingActivity != null) {
-                return callingActivity.getPackageName();
-            }
-        } else {
-            return pendingIntent.getTargetPackage();
-        }
-        return null;
-    }
-
 
     private static String makeContentType(String mime, int sampleRate) {
         // little endian = 1234
