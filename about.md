@@ -79,7 +79,6 @@ the latest testing version is available on Google Play after joining
 
 Kõnele is part of the project that was awarded Estonian Language Deed (_Keeletegu_)
 for the year 2011.
-See more [here](http://plus.google.com/+KaarelKaljurand/posts/QMArF5Yvegs).
 
 
 [k6nele-play]:          http://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak
