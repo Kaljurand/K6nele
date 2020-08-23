@@ -158,8 +158,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         super(context, attrs);
     }
 
-    // TODO: change the content description when the button changes
-    // mBImeAction.setContentDescription(mContext.getString(R.string.cdImeNewline));
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
         // TODO: quick hack to add app to the matcher, not sure if we can access the
@@ -189,6 +187,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                     useEnter = true;
                 }
                 final boolean finalHide = hide;
+                // The content description is based on the text field's action label,
+                // which might not always be present, or be the best description of the content.
+                // TODO: fall back to a description like "go", "send" if action label is missing.
+                mBImeAction.setContentDescription(editorInfo.actionLabel);
                 mBImeAction.setOnClickListener(v -> {
                     if (finalHide) {
                         cancelOrDestroy();

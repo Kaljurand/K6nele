@@ -295,7 +295,6 @@
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
     <string name="cdImeDelete">Delete previous character</string>
-    <string name="cdImeNewline">Insert a newline</string>
     <string name="cdScan">Scan the (local) network and click through the found servers to try to replace the service address.</string>
 
     <string name="promptPermissionRationale">The audio recording permission is essential for Kõnele,

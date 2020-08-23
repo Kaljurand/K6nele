@@ -17,13 +17,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="text, actionNext"
+            android:imeActionLabel="NEXT"
             android:imeOptions="actionNext"
-            android:inputType="text" />
+            android:inputType="text"
+            android:privateImeOptions="privateImeOptions"
+            android:tag="tag"
+            android:textLocale="et-EE"
+            android:tooltipText="Tooltip, which seems to block the copy/paste menu" />
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="text, actionPrevious"
+            android:imeActionLabel="PREVIOUS"
             android:imeOptions="actionPrevious"
             android:inputType="text" />
 
@@ -31,6 +37,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="text, actionSend"
+            android:imeActionLabel="SEND"
             android:imeOptions="actionSend"
             android:inputType="text" />
 
@@ -38,6 +45,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="text, actionDone"
+            android:imeActionLabel="DONE"
             android:imeOptions="actionDone"
             android:inputType="text" />
 
@@ -45,6 +53,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="text, actionGo"
+            android:imeActionLabel="GO"
             android:imeOptions="actionGo"
             android:inputType="text" />
 
@@ -52,6 +61,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="text, actionNone"
+            android:imeActionLabel="NONE"
             android:imeOptions="actionNone"
             android:inputType="text" />
 
@@ -59,6 +69,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="textPassword, actionGo"
+            android:imeActionLabel="GO PASSWORD"
             android:imeOptions="actionGo"
             android:inputType="textPassword" />
 
@@ -67,6 +78,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="textMultiLine, actionSearch"
+            android:imeActionLabel="SEARCH MULTILINE"
             android:imeOptions="actionSearch"
             android:inputType="textMultiLine" />
 

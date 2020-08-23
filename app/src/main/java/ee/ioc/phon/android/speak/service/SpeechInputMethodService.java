@@ -102,7 +102,6 @@ public class SpeechInputMethodService extends InputMethodService {
     public View onCreateInputView() {
         Log.i("onCreateInputView");
         //ViewGroup view = (ViewGroup) findViewById(android.R.id.content);
-        //getWindow().getDecorView().getRootView();
         ViewGroup view = (ViewGroup) getMyWindow().getDecorView().getRootView();
         mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, view, false);
         return mInputView;
