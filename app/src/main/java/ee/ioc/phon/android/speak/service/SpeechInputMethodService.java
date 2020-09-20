@@ -53,6 +53,7 @@ public class SpeechInputMethodService extends InputMethodService {
     private static final String REWRITES_NAME_FREQUENT = "#f";
     private static final String REWRITES_NAME_CLIP = "#c";
 
+    private boolean mFlagPersonalizedLearning = true;
     private InputMethodManager mInputMethodManager;
     private SpeechInputView mInputView;
     private CommandEditor mCommandEditor;
@@ -123,6 +124,10 @@ public class SpeechInputMethodService extends InputMethodService {
         super.onStartInput(attribute, restarting);
         String type = "UNKNOWN";
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mFlagPersonalizedLearning = (attribute.imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING;
+        }
+
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:
                 type = "NUMBER";
@@ -163,7 +168,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
             default:
         }
-        Log.i("onStartInput: " + type + ", " + attribute.inputType + ", " + attribute.imeOptions + ", " + restarting);
+        Log.i("onStartInput: " + type + ", " + attribute.inputType + ", " + attribute.imeOptions + ", " + restarting + ", learning: " + mFlagPersonalizedLearning);
     }
 
     /**
@@ -352,7 +357,7 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (editorResult != null && mInputView != null && editorResult.isCommand()) {
                     mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
                 }
-                if (editorResult != null) {
+                if (editorResult != null && mFlagPersonalizedLearning) {
                     String rewritesRec = getRewrites(REWRITES_NAME_RECENT);
                     if (rewritesRec != null) {
                         UtteranceRewriter ur = mRuleManager.addRecent(editorResult, rewritesRec);

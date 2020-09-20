@@ -82,10 +82,16 @@
 
     <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
 
+    <!-- TODO: review -->
+
     <queries>
         <intent>
             <!-- Packages that provide speech recognition services -->
-            <action android:name="android.speech.RecognitionService" />
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+        <intent>
+            <!-- Packages that provide TTS services -->
+            <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
 

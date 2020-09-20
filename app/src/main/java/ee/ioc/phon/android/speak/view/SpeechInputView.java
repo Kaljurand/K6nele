@@ -166,6 +166,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             mApp = new ComponentName(editorInfo.packageName, editorInfo.packageName);
         }
         if (mBImeAction != null && editorInfo != null) {
+            // TODO: test
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
             boolean useEnter = !overrideEnter;
             final int imeAction = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;

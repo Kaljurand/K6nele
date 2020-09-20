@@ -16,6 +16,14 @@
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:hint="flagNoPersonalizedLearning"
+            android:imeActionLabel="NEXT"
+            android:imeOptions="flagNoPersonalizedLearning|actionNext"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:hint="text, actionNext"
             android:imeActionLabel="NEXT"
             android:imeOptions="actionNext"
