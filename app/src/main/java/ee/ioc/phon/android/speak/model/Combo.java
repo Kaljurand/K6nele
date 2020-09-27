@@ -32,7 +32,7 @@ public class Combo {
         mComponentName = pair.first;
         mLocaleAsStr = pair.second;
         mServiceLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
-        mLocaleShortLabel = RecognitionServiceManager.getDisplayLanguage(mLocaleAsStr);
+        mLocaleShortLabel = mLocaleAsStr;
         mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(mLocaleAsStr);
         mFormatLabelComboItem = context.getString(R.string.labelComboItem);
         mAsString = String.format(context.getString(R.string.labelComboListItem), mServiceLabel, mLocaleLongLabel);

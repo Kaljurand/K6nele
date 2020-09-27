@@ -141,7 +141,7 @@ public final class Utils {
 
     public static AlertDialog getTextEntryDialog(Context context, String title, String initialText, final ExecutableString ex) {
         final View textEntryView = LayoutInflater.from(context).inflate(R.layout.alert_dialog_url_entry, null);
-        final EditText et = (EditText) textEntryView.findViewById(R.id.url_edit);
+        final EditText et = textEntryView.findViewById(R.id.url_edit);
         if (initialText != null) {
             et.setText(initialText);
             et.setSelection(initialText.length());
@@ -299,6 +299,10 @@ public final class Utils {
         String[] names = rewriteTables.toArray(new String[rewriteTables.size()]);
         Arrays.sort(names);
         String rewritesId = TextUtils.join(", ", names);
+        String rewritesIdSuffix = "";
+        if (!rewritesId.isEmpty()) {
+            rewritesIdSuffix = "; " + rewritesId;
+        }
 
         for (Combo combo : selectedCombos) {
             Intent intent = new Intent(context, SpeechActionActivity.class);
@@ -314,8 +318,8 @@ public final class Utils {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             shortcuts.add(new ShortcutInfo.Builder(context, combo.getId() + rewritesId)
                     .setIntent(intent)
-                    .setShortLabel(combo.getShortLabel())
-                    .setLongLabel(combo.getLongLabel() + "; " + rewritesId)
+                    .setShortLabel(combo.getShortLabel() + rewritesIdSuffix)
+                    .setLongLabel(combo.getLongLabel() + rewritesIdSuffix)
                     .setIcon(Icon.createWithBitmap(drawableToBitmap(combo.getIcon(context))))
                     .build());
             counter++;
