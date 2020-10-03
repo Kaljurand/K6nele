@@ -129,8 +129,35 @@
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize3"
             tools:text="@string/buttonImeSpeak" />
+
     </RelativeLayout>
 
-    <include layout="@layout/button_combo_selector" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <include
+            layout="@layout/button_combo_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+        <ImageButton
+            android:id="@+id/bClipboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/button_go"
+            android:contentDescription="@string/cdChangeInputMethod"
+            android:minWidth="@dimen/layoutMargin3"
+            android:minHeight="@dimen/layoutMargin3"
+            android:padding="@dimen/layoutMargin1"
+            android:paddingStart="@dimen/layoutMargin2"
+            android:paddingLeft="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin2"
+            app:srcCompat="@drawable/ic_clipboard" />
+    </RelativeLayout>
 </ee.ioc.phon.android.speak.view.SpeechInputView>

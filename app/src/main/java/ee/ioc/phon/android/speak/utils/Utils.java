@@ -61,6 +61,7 @@ import ee.ioc.phon.android.speak.activity.SpeechActionActivity;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
+import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
@@ -329,6 +330,30 @@ public final class Utils {
             }
         }
         shortcutManager.setDynamicShortcuts(shortcuts);
+    }
+
+    /**
+     * TODO: call this in Panel, IME, and Settings
+     * TODO: take the first language offered by the service (maybe slow?)
+     */
+    public static void setUpDefaultCombos(SharedPreferences prefs, Resources res, PackageManager pm) {
+        Set<String> combos1 = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyCombo);
+        Set<String> combos2 = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyImeCombo);
+        if (combos1.isEmpty() || combos2.isEmpty()) {
+            RecognitionServiceManager mngr = new RecognitionServiceManager();
+            List<String> services = mngr.getServices(pm);
+            for (String service : res.getStringArray(R.array.fallbackServices)) {
+                if (services.contains(service)) {
+                    if (combos1.isEmpty()) {
+                        PreferenceUtils.putPrefStringSet(prefs, res, R.string.keyCombo, Collections.singleton(service));
+                    }
+                    if (combos2.isEmpty()) {
+                        PreferenceUtils.putPrefStringSet(prefs, res, R.string.keyImeCombo, Collections.singleton(service));
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     private static Bundle toBundle(EditorInfo attribute) {

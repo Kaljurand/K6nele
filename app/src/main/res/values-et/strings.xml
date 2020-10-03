@@ -303,7 +303,7 @@
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
     <string name="summaryImeCombo">Uuendan…</string>
-    <string name="emptylistImeCombos">Praegu kasutatakse eesti keelt ja Kõnele (kiire tuvastusega) teenust. Keelte ja teenuste lisamiseks või muutmiseks vajutage siia.</string>
+    <string name="emptylistImeCombos">Keelte ja teenuste lisamiseks või muutmiseks vajutage siia.</string>
     <string name="emptylistCombos">@string/emptylistImeCombos</string>
     <string name="labelIme">Kõnele kõne &amp; svaip</string>
     <string name="titleMaxHypotheses">Tuvastushüpoteeside arv</string>

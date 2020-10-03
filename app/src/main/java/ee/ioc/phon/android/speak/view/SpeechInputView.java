@@ -64,6 +64,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeAction;
+    private ImageButton mBClipboard;
     private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
@@ -211,6 +212,8 @@ public class SpeechInputView extends LinearLayoutCompat {
                 toggleClipboardAux();
                 return true;
             });
+
+            mBClipboard.setOnClickListener(v -> toggleClipboardAux());
         }
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
@@ -350,6 +353,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBImeAction = findViewById(R.id.bImeAction);
+        mBClipboard = findViewById(R.id.bClipboard);
         mBComboSelector = findViewById(R.id.tvComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
@@ -534,10 +538,12 @@ public class SpeechInputView extends LinearLayoutCompat {
             updateTouchListener(0);
             setVisibilityKeyboard(View.GONE);
             mRlClipboard.setVisibility(View.VISIBLE);
+            mBClipboard.setImageResource(R.drawable.ic_mic);
         } else {
             updateTouchListener(mSwipeType);
             mRlClipboard.setVisibility(View.GONE);
             setVisibilityKeyboard(View.VISIBLE);
+            mBClipboard.setImageResource(R.drawable.ic_clipboard);
         }
     }
 

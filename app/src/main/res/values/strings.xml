@@ -350,6 +350,12 @@
         <item>44100</item>
     </string-array>
 
+    <string-array name="fallbackServices" translatable="false">
+        <item>ee.ioc.phon.android.k6neleservice/.service.WebSocketRecognitionService</item>
+        <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService</item>
+        <item>com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService</item>
+    </string-array>
+
     <!-- When making changes here, you need to change the UI labels as well.
     Note also that none of the languages and services are
     initially selected in the UI, independent of what is selected here.
@@ -357,7 +363,10 @@
     <string-array name="defaultImeCombos" translatable="false">
         <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE</item>
     </string-array>
-    <string name="emptylistImeCombos">Currently using Estonian and Kõnele (fast recognition). Tap here to add or change languages and services.</string>
+
+    <!-- We try to pre-select a service from the list of fallbackServices. So this message
+     would be shown only if the device has none of the fallbackServices installed. -->
+    <string name="emptylistImeCombos">Tap here to add or change languages and services.</string>
 
     <string-array name="defaultCombos" translatable="false">
         <item>ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE</item>

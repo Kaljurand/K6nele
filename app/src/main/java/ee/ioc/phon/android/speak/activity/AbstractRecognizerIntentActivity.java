@@ -202,6 +202,9 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
 
     protected void setUpActivity(int layout) {
         setContentView(layout);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Utils.setUpDefaultCombos(prefs, getResources(), getPackageManager());
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_WATCH)) {
 
@@ -209,7 +212,6 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
             final WindowManager.LayoutParams wlp = window.getAttributes();
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             int x = prefs.getInt("keyDialogX", -1);
             int y = prefs.getInt("keyDialogY", -1);
             if (x != -1 && y != -1) {
