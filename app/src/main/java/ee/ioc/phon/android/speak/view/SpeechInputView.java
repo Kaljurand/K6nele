@@ -393,8 +393,8 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
         final int key = keysAsTypedArray.getResourceId(0, 0);
-        int keyHelpText = keysAsTypedArray.getResourceId(8, 0);
-        int defaultHelpText = keysAsTypedArray.getResourceId(9, 0);
+        int keyHelpText = keysAsTypedArray.getResourceId(7, 0);
+        int defaultHelpText = keysAsTypedArray.getResourceId(8, 0);
         keysAsTypedArray.recycle();
 
         if (mTvInstruction != null) {

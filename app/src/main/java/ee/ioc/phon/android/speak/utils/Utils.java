@@ -333,8 +333,9 @@ public final class Utils {
     }
 
     /**
+     * If either the search panel or the IME combos have not been selected, then set them based on
+     * the fallbackServices, using the "und" locale.
      * TODO: call this in Panel, IME, and Settings
-     * TODO: take the first language offered by the service (maybe slow?)
      */
     public static void setUpDefaultCombos(SharedPreferences prefs, Resources res, PackageManager pm) {
         Set<String> combos1 = PreferenceUtils.getPrefStringSet(prefs, res, R.string.keyCombo);
@@ -344,11 +345,12 @@ public final class Utils {
             List<String> services = mngr.getServices(pm);
             for (String service : res.getStringArray(R.array.fallbackServices)) {
                 if (services.contains(service)) {
+                    Set<String> combos = Collections.singleton(service + ";und");
                     if (combos1.isEmpty()) {
-                        PreferenceUtils.putPrefStringSet(prefs, res, R.string.keyCombo, Collections.singleton(service));
+                        PreferenceUtils.putPrefStringSet(prefs, res, R.string.keyCombo, combos);
                     }
                     if (combos2.isEmpty()) {
-                        PreferenceUtils.putPrefStringSet(prefs, res, R.string.keyImeCombo, Collections.singleton(service));
+                        PreferenceUtils.putPrefStringSet(prefs, res, R.string.keyImeCombo, combos);
                     }
                     break;
                 }

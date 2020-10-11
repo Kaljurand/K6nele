@@ -64,7 +64,6 @@ public class ComboSelectorActivity extends AppCompatActivity {
     public static class ComboSelectorFragment extends K6neleListFragment {
 
         int mKey = R.string.keyImeCombo;
-        int mDefaultCombos = R.array.defaultImeCombos;
         int mDefaultCombosExcluded = R.array.defaultImeCombosExcluded;
 
         public void onCreate(Bundle icicle) {
@@ -72,7 +71,6 @@ public class ComboSelectorActivity extends AppCompatActivity {
             Bundle args = getArguments();
             if (args != null && getString(R.string.keyCombo).equals(args.getString("key"))) {
                 mKey = R.string.keyCombo;
-                mDefaultCombos = R.array.defaultCombos;
                 mDefaultCombosExcluded = R.array.defaultCombosExcluded;
             }
             initModel();
@@ -108,12 +106,8 @@ public class ComboSelectorActivity extends AppCompatActivity {
         private void initModel() {
             Resources res = getResources();
             SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            Set<String> combos = PreferenceUtils.getPrefStringSet(mPrefs, res, mKey);
-            if (combos == null) {
-                combos = PreferenceUtils.getStringSetFromStringArray(res, mDefaultCombos);
-            }
             RecognitionServiceManager mngr = new RecognitionServiceManager();
-            mngr.setInitiallySelectedCombos(combos);
+            mngr.setInitiallySelectedCombos(PreferenceUtils.getPrefStringSet(mPrefs, res, mKey));
             mngr.setCombosExcluded(PreferenceUtils.getStringSetFromStringArray(res, mDefaultCombosExcluded));
             mngr.populateCombos(getActivity(), (combos1, selectedCombos) -> {
                 List<Combo> list = new ArrayList<>();
