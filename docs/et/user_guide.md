@@ -42,7 +42,7 @@ on Kõnele kasutuskiirus tüüpiliselt oluliselt parem kui 3G jms võrkudes.
 Järgnev juhend kirjeldab Kõnele seadistamist ja kasutamist eestikeelse kasutajaliidesega
 Android v5 (Lollipop) ja uuemates seadmetes. Androidi kasutajaliidese tõlge ja struktuur on seadmeti ja versiooniti mõnevõrra erinev, kuid mitte oluliselt.
 
-## Demovideo
+## Demovideod
 
 Järgnev video näitab
 (1) kõnepõhist veebiotsingut;
@@ -53,12 +53,23 @@ Järgnev video näitab
 (6) _Arvutaja_ rakenduse kasutamist (vahelduseks inglise keeles) äratuskella seadmiseks.
 Video on tehtud Kõnele versiooniga 0.8.56, uuemates versioonides on kasutajaliides natuke
 muutunud.
+(Samuti, _Arvutaja_ rakendust toetav teenus on praeguseks aegunud ning pole sellisel kujul enam kasutatav.)
 
 <iframe id="ytplayer" type="text/html" width="480" height="360"
 src="http://www.youtube.com/embed/gKFIWSA2GWc?origin=http://kaljurand.github.io"
 frameborder="0"> </iframe>
 
-Allpool tuleb kõikidest nendest kasutusolukordadest lähemalt juttu.
+Järgnev video näitab Kõnele paigaldamist Android v11 nutitelefoni, kus rakendusele
+mikrofoni kasutamise õiguse andmine on keerukam, ning kõnetuvastuskomponent tuleb
+paigaldada eraldi rakendusena
+[Kõnele service](https://github.com/Kaljurand/K6nele-service).
+Video on tehtud Kõnele
+beetaversiooniga v1.7.42, teistes versioonides on kasutajaliides natukene
+teistsugune.
+
+<iframe type="text/html" width="480" height="360"
+src="http://www.youtube.com/embed/VLjV8JulEow?origin=http://kaljurand.github.io"
+frameborder="0"> </iframe>
 
 ## Kõnele kui iseseisev rakendus
 
