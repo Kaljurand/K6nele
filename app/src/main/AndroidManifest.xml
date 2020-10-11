@@ -87,7 +87,7 @@
     <queries>
         <intent>
             <!-- Packages that provide speech recognition services -->
-            <action android:name="android.intent.action.TTS_SERVICE" />
+            <action android:name="android.speech.RecognitionService" />
         </intent>
         <intent>
             <!-- Packages that provide TTS services -->
