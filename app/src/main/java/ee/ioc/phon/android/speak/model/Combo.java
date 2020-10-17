@@ -17,12 +17,12 @@ public class Combo {
 
     private final String mId;
     private final String mServiceLabel;
-    private final String mLocaleShortLabel;
-    private final String mLocaleLongLabel;
     private final String mAsString;
-    private final String mFormatLabelComboItem;
     private final ComponentName mComponentName;
+    private final String mLocaleLongLabel;
     private final String mLocaleAsStr;
+    private final String mShortLabel;
+    private final String mLongLabel;
     private boolean mIsSelected;
 
     public Combo(Context context, String id) {
@@ -32,10 +32,18 @@ public class Combo {
         mComponentName = pair.first;
         mLocaleAsStr = pair.second;
         mServiceLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
-        mLocaleShortLabel = mLocaleAsStr;
-        mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(mLocaleAsStr);
-        mFormatLabelComboItem = context.getString(R.string.labelComboItem);
-        mAsString = String.format(context.getString(R.string.labelComboListItem), mServiceLabel, mLocaleLongLabel);
+        if (mLocaleAsStr.isEmpty() || "und".equals(mLocaleAsStr)) {
+            mLocaleLongLabel = "";
+            mAsString = String.format(context.getString(R.string.labelComboListItemWithoutLocale), mServiceLabel);
+            mShortLabel = mServiceLabel;
+            mLongLabel = mServiceLabel;
+        } else {
+            mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(mLocaleAsStr);
+            mAsString = String.format(context.getString(R.string.labelComboListItem), mServiceLabel, mLocaleLongLabel);
+            String mFormatLabelComboItem = context.getString(R.string.labelComboItem);
+            mShortLabel = String.format(mFormatLabelComboItem, mServiceLabel, mLocaleAsStr);
+            mLongLabel = String.format(mFormatLabelComboItem, mServiceLabel, mLocaleLongLabel);
+        }
     }
 
     public String getId() {
@@ -59,11 +67,11 @@ public class Combo {
     }
 
     public String getShortLabel() {
-        return String.format(mFormatLabelComboItem, mServiceLabel, mLocaleShortLabel);
+        return mShortLabel;
     }
 
     public String getLongLabel() {
-        return String.format(mFormatLabelComboItem, mServiceLabel, mLocaleLongLabel);
+        return mLongLabel;
     }
 
     public Drawable getIcon(Context context) {

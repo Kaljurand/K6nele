@@ -3,6 +3,7 @@
     <string name="labelApp" translatable="false">Kõnele</string>
 
     <string name="labelComboListItem" translatable="false">• %2$s · %1$s</string>
+    <string name="labelComboListItemWithoutLocale" translatable="false">• %1$s</string>
     <string name="labelComboItem" translatable="false">%2$s · %1$s</string>
     <string name="labelSpeechInputViewMessage" translatable="false">[ %1$s ]</string>
     <string name="middot" translatable="false">·</string>
@@ -386,7 +387,7 @@
     </string-array>
 
     <!-- Just for testing, won't appear in the product. -->
-    <string name="testComboLabel" translatable="false">English (United States) · Kõnele (grammar support)</string>
+    <string name="testComboLabel" translatable="false">Kõnele (grammar support)</string>
     <string name="testComboLabels" translatable="false">en-US(Kg) · en-X(G) · et-EE(Kf) · et-EE(Kg) · de-DE (G) · +/-</string>
 
     <string name="promptDemo">Say e.g.: %1$s</string>
