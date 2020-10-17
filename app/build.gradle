@@ -66,7 +66,7 @@ android {
     lintOptions {
         // TODO: in the future check for Kotlin-Java interop
         //check 'Interoperability'
-        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill'
+        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill', 'QueryAllPackagesPermission'
     }
 
     buildFeatures {

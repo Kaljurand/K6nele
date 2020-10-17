@@ -41,12 +41,13 @@
     mute the audio stream during recognition. -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
-    <!-- TODO: try to avoid having to request this permission.
-    Android v11. We query packages for 3 reasons:
+    <!-- TODO: try to avoid having to request this permission (and then enable QueryAllPackagesPermission)
+    Android v11. We query packages for several reasons:
     1) finding speech recognizer providers (this query is declared below in the queries-section)
-    2) listing apps (with icon and launch intent) that have previously launched Kõnele
-    3) launching intents (e.g. setting the alarm or opening maps) via rewrites
-    It is unclear if use-cases 2 and 3 could be instead declared via the queries-section.
+    2) finding TTS service providers (this query is declared below in the queries-section)
+    3) listing apps (with icon and launch intent) that have previously launched Kõnele
+    4) launching intents (e.g. setting the alarm or opening maps) via rewrites
+    It is unclear if use-cases 3 and 4 could be instead declared via the queries-section.
     -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
