@@ -157,7 +157,7 @@
             android:padding="@dimen/layoutMargin1"
             android:paddingStart="@dimen/layoutMargin2"
             android:paddingLeft="@dimen/layoutMargin2"
-            android:paddingBottom="@dimen/layoutMargin2"
+            android:paddingTop="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_clipboard" />
     </RelativeLayout>
 </ee.ioc.phon.android.speak.view.SpeechInputView>

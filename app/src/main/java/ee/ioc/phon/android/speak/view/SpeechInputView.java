@@ -208,11 +208,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
-            mBImeAction.setOnLongClickListener(v -> {
-                toggleClipboardAux();
-                return true;
-            });
-
             mBClipboard.setOnClickListener(v -> toggleClipboardAux());
         }
 

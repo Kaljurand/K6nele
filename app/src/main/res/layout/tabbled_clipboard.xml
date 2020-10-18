@@ -31,7 +31,7 @@
     <LinearLayout
         android:id="@+id/empty"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layoutHeightClipboard"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:visibility="gone">
@@ -42,7 +42,7 @@
             android:gravity="center"
             android:padding="@dimen/layoutMargin1"
             android:text="@string/emptylistClipboard"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:textColorSecondary" />
 
         <Button

@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak.view;
 
 import android.os.Handler;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -25,6 +26,7 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mHandler.postDelayed(mTask, TIMEOUT);
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                 onAction();
                 v.setPressed(true);
                 break;

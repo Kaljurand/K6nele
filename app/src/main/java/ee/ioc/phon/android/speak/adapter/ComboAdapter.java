@@ -58,7 +58,12 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
         ViewHolder holder = (ViewHolder) view.getTag();
         Combo item = list.get(position);
         holder.icon.setImageDrawable(item.getIcon(this.context));
-        holder.language.setText(item.getLanguage());
+        String language = item.getLanguage();
+        if (language.isEmpty()) {
+            holder.language.setText("—");
+        } else {
+            holder.language.setText(item.getLanguage());
+        }
         holder.service.setText(item.getService());
         holder.checkbox.setChecked(item.isSelected());
         return view;
