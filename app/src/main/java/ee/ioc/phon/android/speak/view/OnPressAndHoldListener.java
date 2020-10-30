@@ -11,8 +11,8 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
     private static final int TIMEOUT = ViewConfiguration.getKeyRepeatTimeout();
     private static final int DELAY = ViewConfiguration.getKeyRepeatDelay();
 
-    private Handler mHandler = new Handler();
-    private Runnable mTask = new Runnable() {
+    private final Handler mHandler = new Handler();
+    private final Runnable mTask = new Runnable() {
         public void run() {
             onAction();
             mHandler.postDelayed(this, DELAY);

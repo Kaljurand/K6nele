@@ -38,8 +38,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private int mCursorType = -1;
     private int mTapCounter = 0;
 
-    private Handler mHandler = new Handler();
-    private Runnable mTask1 = new Runnable() {
+    private final Handler mHandler = new Handler();
+    private final Runnable mTask1 = new Runnable() {
         public void run() {
             onMoveAux(-1, 0);
             mHandler.postDelayed(this, DELAY);

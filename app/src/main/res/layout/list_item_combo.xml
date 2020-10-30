@@ -41,7 +41,7 @@
         android:paddingEnd="@dimen/layoutMargin4dp"
         android:paddingRight="@dimen/layoutMargin4dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:textColorPrimary" />
+        android:textColor="?android:textColorSecondary" />
 
     <CheckBox
         android:id="@+id/check"

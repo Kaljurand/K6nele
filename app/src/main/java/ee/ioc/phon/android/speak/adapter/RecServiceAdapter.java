@@ -50,7 +50,12 @@ public class RecServiceAdapter extends ArrayAdapter<RecService> {
         RecService item = list.get(position);
         holder.icon.setImageDrawable(item.getIcon(this.context));
         holder.service.setText(item.getService());
-        holder.desc.setText(item.getDesc());
+        String desc = item.getDesc();
+        if (desc == null || desc.isEmpty()) {
+            holder.desc.setText(R.string.dash);
+        } else {
+            holder.desc.setText(desc);
+        }
         return view;
     }
 }

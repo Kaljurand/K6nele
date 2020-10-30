@@ -63,6 +63,8 @@
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_search" />
 
+        <include layout="@layout/tabbled_clipboard" />
+
         <RelativeLayout
             android:id="@+id/centralButtons"
             android:layout_width="match_parent"
@@ -119,8 +121,6 @@
                     app:srcCompat="@drawable/ic_backspace" />
             </LinearLayout>
         </RelativeLayout>
-
-        <include layout="@layout/tabbled_clipboard" />
 
     </RelativeLayout>
 

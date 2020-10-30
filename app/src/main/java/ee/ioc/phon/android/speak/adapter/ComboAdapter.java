@@ -59,10 +59,10 @@ public class ComboAdapter extends ArrayAdapter<Combo> {
         Combo item = list.get(position);
         holder.icon.setImageDrawable(item.getIcon(this.context));
         String language = item.getLanguage();
-        if (language.isEmpty()) {
-            holder.language.setText("—");
+        if (language == null || language.isEmpty()) {
+            holder.language.setText(R.string.dash);
         } else {
-            holder.language.setText(item.getLanguage());
+            holder.language.setText(language);
         }
         holder.service.setText(item.getService());
         holder.checkbox.setChecked(item.isSelected());

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -424,22 +425,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
             @Override
             public void onSingleTapMotion() {
-                Log.i("Microphone button pressed: state = " + mState);
-                switch (mState) {
-                    case INIT:
-                    case ERROR:
-                        startListening(mSlc);
-                        break;
-                    case RECORDING:
-                        stopListening();
-                        break;
-                    case LISTENING:
-                    case TRANSCRIBING:
-                        cancelOrDestroy();
-                        setGuiInitState(0);
-                        break;
-                    default:
-                }
+                changeState();
             }
 
             @Override
@@ -463,6 +449,25 @@ public class SpeechInputView extends LinearLayoutCompat {
                 comboSelector(key);
                 return true;
             });
+        }
+    }
+
+    private void changeState() {
+        Log.i("Microphone button pressed: state = " + mState);
+        switch (mState) {
+            case INIT:
+            case ERROR:
+                startListening(mSlc);
+                break;
+            case RECORDING:
+                stopListening();
+                break;
+            case LISTENING:
+            case TRANSCRIBING:
+                cancelOrDestroy();
+                setGuiInitState(0);
+                break;
+            default:
         }
     }
 
@@ -534,11 +539,16 @@ public class SpeechInputView extends LinearLayoutCompat {
             setVisibilityKeyboard(View.GONE);
             mRlClipboard.setVisibility(View.VISIBLE);
             mBClipboard.setImageResource(R.drawable.ic_mic);
+            mBClipboard.setOnLongClickListener(v -> {
+                changeState();
+                return true;
+            });
         } else {
             updateTouchListener(mSwipeType);
             mRlClipboard.setVisibility(View.GONE);
             setVisibilityKeyboard(View.VISIBLE);
             mBClipboard.setImageResource(R.drawable.ic_clipboard);
+            mBClipboard.setColorFilter(null);
         }
     }
 
@@ -678,7 +688,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mRlClipboard.setVisibility(View.GONE);
         mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
         mBImeKeyboard.setOnClickListener(v -> toggleUi());
-        setBackgroundResource(R.drawable.rectangle_gradient_red);
+        mBClipboard.setColorFilter(Color.argb(255, 204, 0, 0));
     }
 
     /*
@@ -711,7 +721,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         }
-        setBackgroundResource(R.drawable.rectangle_gradient);
     }
 
     private void setVisibilityKeyboard(int visibility) {
@@ -742,6 +751,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
 
     private void setGuiInitState(int message) {
+        mBClipboard.setColorFilter(null);
         if (message == 0) {
             // Do not clear a possible error message
             //showMessage("");
