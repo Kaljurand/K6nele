@@ -19,7 +19,7 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
         }
     };
 
-    abstract void onAction();
+    protected abstract void onAction();
 
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getActionMasked();
