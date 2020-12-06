@@ -210,7 +210,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
             mBClipboard.setOnClickListener(v -> toggleClipboardAux());
             // TODO: experimental: long press controls mic
-            mBClipboard.setOnLongClickListener(v -> {
+            mBImeAction.setOnLongClickListener(v -> {
                 changeState();
                 return true;
             });
@@ -306,7 +306,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setVisibility(View.INVISIBLE);
                 setVisibility(mBClipboard, View.INVISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
-                    setVisibilityKeyboard(View.INVISIBLE);
+                    setVisibility(mCentralButtons, View.INVISIBLE);
                     if (mBComboSelector != null) {
                         mBComboSelector.setVisibility(View.INVISIBLE);
                     }
@@ -323,7 +323,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setVisibility(View.VISIBLE);
                 setVisibility(mBClipboard, View.VISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
-                    setVisibilityKeyboard(View.VISIBLE);
+                    setVisibility(mCentralButtons, View.VISIBLE);
                     if (mBComboSelector != null) {
                         mBComboSelector.setVisibility(View.VISIBLE);
                     }
@@ -496,7 +496,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     // TODO: make public?
     private void stopListening() {
-        mBClipboard.setColorFilter(COLOR_TRANSCRIBING);
+        mBImeAction.setColorFilter(COLOR_TRANSCRIBING);
         if (mRecognizer != null) {
             mRecognizer.stopListening();
         }
@@ -552,13 +552,13 @@ public class SpeechInputView extends LinearLayoutCompat {
     private void showClipboard(boolean b) {
         if (b) {
             updateTouchListener(0);
-            setVisibilityKeyboard(View.GONE);
+            mCentralButtons.setVisibility(View.GONE);
             mRlClipboard.setVisibility(View.VISIBLE);
             mBClipboard.setImageResource(R.drawable.ic_mic);
         } else {
             updateTouchListener(mSwipeType);
             mRlClipboard.setVisibility(View.GONE);
-            setVisibilityKeyboard(View.VISIBLE);
+            mCentralButtons.setVisibility(View.VISIBLE);
             mBClipboard.setImageResource(R.drawable.ic_clipboard);
         }
     }
@@ -701,12 +701,12 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void showUi(boolean isMinimized, boolean isClipboard) {
         if (isMinimized) {
-            setVisibilityKeyboard(View.GONE);
+            mCentralButtons.setVisibility(View.GONE);
             mRlClipboard.setVisibility(View.GONE);
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
             mBImeKeyboard.setOnClickListener(v -> toggleUi());
         } else {
-            setVisibilityKeyboard(View.VISIBLE);
+            mCentralButtons.setVisibility(View.VISIBLE);
             showClipboard(isClipboard);
         }
     }
@@ -721,10 +721,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         showClipboard(PreferenceUtils.togglePrefStringSetEntry(prefs, getResources(), R.string.setClipboardApps, mAppId));
-    }
-
-    private void setVisibilityKeyboard(int visibility) {
-        mCentralButtons.setVisibility(visibility);
     }
 
     private void showMessageArrow(int numOfChars, String dash) {
@@ -763,8 +759,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
         updateTouchListener(mSwipeType);
-        if (mBClipboard != null) {
-            mBClipboard.setColorFilter(null);
+        if (mBImeAction != null) {
+            mBImeAction.setColorFilter(null);
         }
         if (mBImeKeyboard != null) {
             mBImeKeyboard.setImageResource(R.drawable.ic_ime);
@@ -831,8 +827,8 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void startListening(ServiceLanguageChooser slc) {
         setGuiState(MicButton.State.WAITING);
-        if (mBClipboard != null) {
-            mBClipboard.setColorFilter(COLOR_RECORDING);
+        if (mBImeAction != null) {
+            mBImeAction.setColorFilter(COLOR_RECORDING);
         }
         if (mBImeKeyboard != null) {
             mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);

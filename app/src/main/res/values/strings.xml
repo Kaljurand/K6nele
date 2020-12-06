@@ -272,10 +272,10 @@
     <string name="cmTest">Test</string>
     <string name="cmRename">Rename</string>
     <string name="cmDelete">Delete</string>
-    <string name="menuAppsSort">Sort …</string>
-    <string name="menuAppsSortByName">by package name</string>
-    <string name="menuAppsSortByCount">by usage frequency</string>
-    <string name="menuAppsSortByGrammar">by grammar URL</string>
+    <string name="menuAppsSort">Sort by …</string>
+    <string name="menuAppsSortByName">package name</string>
+    <string name="menuAppsSortByCount">usage frequency</string>
+    <string name="menuAppsSortByGrammar">grammar URL</string>
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuAbout">About</string>
