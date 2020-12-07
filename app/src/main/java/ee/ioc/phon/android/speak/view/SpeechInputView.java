@@ -83,6 +83,8 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private MicButton.State mState;
 
+    private String mUiState;
+
     // Y (yellow i.e. not-transcribing)
     // R (red, i.e. transcribing)
     private String mBtnType = "Y";
@@ -208,9 +210,21 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
-            mBClipboard.setOnClickListener(v -> toggleClipboardAux());
+            mBClipboard.setOnClickListener(v -> {
+                if (mUiState == null) {
+                    mUiState = "1";
+                } else if ("1".equals(mUiState)) {
+                    mUiState = "2";
+                } else {
+                    mUiState = null;
+                }
+                Context context = getContext();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                Resources res = getResources();
+                showUi(prefs, res, mUiState);
+            });
             // TODO: experimental: long press controls mic
-            mBImeAction.setOnLongClickListener(v -> {
+            mBClipboard.setOnLongClickListener(v -> {
                 changeState();
                 return true;
             });
@@ -365,6 +379,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Resources res = getResources();
 
         if (mRvClipboard != null) {
             mRvClipboard.setHasFixedSize(true);
@@ -393,14 +408,14 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
         showMessage("");
 
-        TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
+        TypedArray keysAsTypedArray = res.obtainTypedArray(keys);
         final int key = keysAsTypedArray.getResourceId(0, 0);
         int keyHelpText = keysAsTypedArray.getResourceId(7, 0);
         int defaultHelpText = keysAsTypedArray.getResourceId(8, 0);
         keysAsTypedArray.recycle();
 
         if (mTvInstruction != null) {
-            if (PreferenceUtils.getPrefBoolean(prefs, getResources(), keyHelpText, defaultHelpText)) {
+            if (PreferenceUtils.getPrefBoolean(prefs, res, keyHelpText, defaultHelpText)) {
                 mTvInstruction.setVisibility(View.VISIBLE);
             } else {
                 mTvInstruction.setVisibility(View.GONE);
@@ -460,7 +475,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         // if mBImeKeyboard is available then we are in the IME mode where toggling
         // the UI size is possible.
         if (mBImeKeyboard != null) {
-            showUi();
+            showUi(prefs, res);
         }
     }
 
@@ -496,7 +511,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     // TODO: make public?
     private void stopListening() {
-        mBImeAction.setColorFilter(COLOR_TRANSCRIBING);
+        mBClipboard.setColorFilter(COLOR_TRANSCRIBING);
         if (mRecognizer != null) {
             mRecognizer.stopListening();
         }
@@ -543,23 +558,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             setOnTouchListener(mOctl);
         } else {
             setOnTouchListener(null);
-        }
-    }
-
-    /**
-     * @param b Show clipboard and disable swipes iff true
-     */
-    private void showClipboard(boolean b) {
-        if (b) {
-            updateTouchListener(0);
-            mCentralButtons.setVisibility(View.GONE);
-            mRlClipboard.setVisibility(View.VISIBLE);
-            mBClipboard.setImageResource(R.drawable.ic_mic);
-        } else {
-            updateTouchListener(mSwipeType);
-            mRlClipboard.setVisibility(View.GONE);
-            mCentralButtons.setVisibility(View.VISIBLE);
-            mBClipboard.setImageResource(R.drawable.ic_clipboard);
         }
     }
 
@@ -685,29 +683,26 @@ public class SpeechInputView extends LinearLayoutCompat {
         context.startActivity(intent);
     }
 
-    private void showUi() {
-        Context context = getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean isClipboard = PreferenceUtils.getPrefStringSet(prefs, getResources(), R.string.setClipboardApps).contains(mAppId);
-        showUi(PreferenceUtils.getPrefStringSet(prefs, getResources(), R.string.setMinimizedApps).contains(mAppId), isClipboard);
+    private void showUi(SharedPreferences prefs, Resources res) {
+        String mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
+        mBClipboard.setImageResource(R.drawable.ic_mic);
+        showUi(prefs, res, mUiState);
     }
 
-    private void toggleUi() {
-        Context context = getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean isClipboard = PreferenceUtils.getPrefStringSet(prefs, getResources(), R.string.setClipboardApps).contains(mAppId);
-        showUi(PreferenceUtils.togglePrefStringSetEntry(prefs, getResources(), R.string.setMinimizedApps, mAppId), isClipboard);
-    }
+    private void showUi(SharedPreferences prefs, Resources res, String state) {
+        PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, state);
 
-    private void showUi(boolean isMinimized, boolean isClipboard) {
-        if (isMinimized) {
+        if (mUiState == null) {
+            updateTouchListener(mSwipeType);
+            mRlClipboard.setVisibility(View.GONE);
+            mCentralButtons.setVisibility(View.VISIBLE);
+        } else if ("1".equals(mUiState)) {
             mCentralButtons.setVisibility(View.GONE);
             mRlClipboard.setVisibility(View.GONE);
-            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
-            mBImeKeyboard.setOnClickListener(v -> toggleUi());
         } else {
-            mCentralButtons.setVisibility(View.VISIBLE);
-            showClipboard(isClipboard);
+            updateTouchListener(0);
+            mCentralButtons.setVisibility(View.GONE);
+            mRlClipboard.setVisibility(View.VISIBLE);
         }
     }
 
@@ -716,12 +711,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         view.setBackground(AppCompatResources.getDrawable(getContext(), res));
     }
     */
-
-    private void toggleClipboardAux() {
-        Context context = getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        showClipboard(PreferenceUtils.togglePrefStringSetEntry(prefs, getResources(), R.string.setClipboardApps, mAppId));
-    }
 
     private void showMessageArrow(int numOfChars, String dash) {
         if (numOfChars < 0) {
@@ -759,8 +748,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
         updateTouchListener(mSwipeType);
-        if (mBImeAction != null) {
-            mBImeAction.setColorFilter(null);
+        if (mBClipboard != null) {
+            mBClipboard.setColorFilter(null);
         }
         if (mBImeKeyboard != null) {
             mBImeKeyboard.setImageResource(R.drawable.ic_ime);
@@ -827,12 +816,8 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void startListening(ServiceLanguageChooser slc) {
         setGuiState(MicButton.State.WAITING);
-        if (mBImeAction != null) {
-            mBImeAction.setColorFilter(COLOR_RECORDING);
-        }
-        if (mBImeKeyboard != null) {
-            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
-            mBImeKeyboard.setOnClickListener(v -> toggleUi());
+        if (mBClipboard != null) {
+            mBClipboard.setColorFilter(COLOR_RECORDING);
         }
         updateServiceLanguage(slc.getSpeechRecognizer());
         // Increases the counter of the app that calls the recognition service.

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="setClipboardApps" translatable="false">prefIsClipboard</string>
-    <string name="setMinimizedApps" translatable="false">setMinimizedApps</string>
+    <string name="mapAppToMode" translatable="false">mapAppToMode</string>
     <string name="mapClipboardTabName" translatable="false">mapClipboardTabName</string>
     <string name="keyHttpServer" translatable="false">keyHttpServer</string>
     <string name="keyWsServer" translatable="false">keyWsServer</string>
