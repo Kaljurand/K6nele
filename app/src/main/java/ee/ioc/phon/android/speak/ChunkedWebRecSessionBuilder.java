@@ -71,15 +71,15 @@ public class ChunkedWebRecSessionBuilder {
 
     private URL mWsUrl;
     private URL mLmUrl;
-    private int mNbest;
+    final private int mNbest;
     private String mGrammarTargetLang;
     private String mLang;
     private boolean mPartialResults = false;
     private String mPhrase;
     private String mContentType;
     private String mUserAgentComment;
-    private String mDeviceId;
-    private String mCaller;
+    final private String mDeviceId;
+    final private String mCaller;
 
     public ChunkedWebRecSessionBuilder(Context context, Bundle extras, ComponentName callingActivity) throws MalformedURLException {
         mContext = context;
@@ -295,10 +295,7 @@ public class ChunkedWebRecSessionBuilder {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (prefs.getBoolean(mContext.getString(R.string.keyRespectLocale), false)) {
-            Locale locale = Locale.getDefault();
-            if (locale != null) {
-                return locale.toString();
-            }
+            return Locale.getDefault().toString();
         }
 
         return null;

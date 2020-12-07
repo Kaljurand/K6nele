@@ -14,8 +14,6 @@
     <string name="labelIme">Kõnele speak &amp; swipe</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
-    <string name="labelRecognitionServiceWs2">Kõnele (fast recognition 2)</string>
-    <string name="labelRecognitionServiceDemo" translatable="false">Kõnele (DEMO)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>

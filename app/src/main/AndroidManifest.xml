@@ -425,6 +425,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             <meta-data
                 android:name="android.speech"
                 android:resource="@xml/recognition_service_ws" />
+            <!--
+            <meta-data
+                android:name="k6nele.test"
+                android:value="123" />
+                -->
         </service>
 
         <service
@@ -447,24 +452,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 android:name="android.speech"
                 android:resource="@xml/recognition_service_http" />
         </service>
-        <!--
-                <service
-                    android:name=".service.WebSocketRecognitionService2"
-                    android:exported="true"
-                    android:label="@string/labelRecognitionServiceWs2"
-                    android:permission="android.permission.RECORD_AUDIO">
-                    <intent-filter>
 
-                        <action android:name="android.speech.RecognitionService" />
-
-                        <category android:name="android.intent.category.DEFAULT" />
-                    </intent-filter>
-
-                    <meta-data
-                        android:name="k6nele.test"
-                        android:value="123" />
-                </service>
-        -->
         <service
             android:name=".service.SpeechInputMethodService"
             android:foregroundServiceType="microphone"
