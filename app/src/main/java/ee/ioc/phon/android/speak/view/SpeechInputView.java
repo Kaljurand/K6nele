@@ -685,7 +685,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void showUi(SharedPreferences prefs, Resources res) {
         String mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
-        mBClipboard.setImageResource(R.drawable.ic_mic);
+        mBClipboard.setImageResource(R.drawable.ic_baseline_swap_vert_24);
         showUi(prefs, res, mUiState);
     }
 
@@ -697,12 +697,12 @@ public class SpeechInputView extends LinearLayoutCompat {
             mRlClipboard.setVisibility(View.GONE);
             mCentralButtons.setVisibility(View.VISIBLE);
         } else if ("1".equals(mUiState)) {
-            mCentralButtons.setVisibility(View.GONE);
-            mRlClipboard.setVisibility(View.GONE);
-        } else {
             updateTouchListener(0);
             mCentralButtons.setVisibility(View.GONE);
             mRlClipboard.setVisibility(View.VISIBLE);
+        } else {
+            mCentralButtons.setVisibility(View.GONE);
+            mRlClipboard.setVisibility(View.GONE);
         }
     }
 
