@@ -19,4 +19,4 @@ set color to be the icon color
     android:textAppearance="?android:attr/textAppearanceButton"
     android:textColor="?attr/colorControlNormal"
     android:textSize="@dimen/textSize10sp"
-    tools:text="@string/testComboLabel" />
+    tools:text="@string/testComboLabels" />

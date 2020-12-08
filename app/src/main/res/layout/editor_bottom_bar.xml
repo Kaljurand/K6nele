@@ -25,5 +25,5 @@
         android:paddingStart="@dimen/layoutMargin2"
         android:paddingLeft="@dimen/layoutMargin2"
         android:paddingTop="@dimen/layoutMargin2"
-        app:srcCompat="@drawable/ic_clipboard" />
+        app:srcCompat="@drawable/ic_baseline_swap_vert_24" />
 </RelativeLayout>

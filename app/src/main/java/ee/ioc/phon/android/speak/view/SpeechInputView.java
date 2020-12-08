@@ -210,24 +210,42 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
-            mBClipboard.setOnClickListener(v -> {
-                if (mUiState == null) {
-                    mUiState = "1";
-                } else if ("1".equals(mUiState)) {
-                    mUiState = "2";
-                } else {
-                    mUiState = null;
-                }
+            // if mBImeKeyboard is available then we are in the IME mode where changing
+            // the UI mode is possible.
+            if (mBImeKeyboard != null) {
                 Context context = getContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 Resources res = getResources();
-                showUi(prefs, res, mUiState);
-            });
-            // TODO: experimental: long press controls mic
-            mBClipboard.setOnLongClickListener(v -> {
-                changeState();
-                return true;
-            });
+
+                mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
+                mBClipboard.setImageResource(R.drawable.ic_baseline_swap_vert_24);
+                showUi(mUiState);
+
+                mBClipboard.setOnClickListener(v -> {
+                    if (mUiState == null) {
+                        mUiState = "1";
+                    } else if ("1".equals(mUiState)) {
+                        mUiState = "2";
+                    } else {
+                        mUiState = null;
+                    }
+
+                    PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
+                    showUi(mUiState);
+                });
+                // TODO: experimental: long press controls mic
+                mBClipboard.setOnLongClickListener(v -> {
+                    changeState();
+                    return true;
+                });
+
+                mBImeKeyboard.setImageResource(R.drawable.ic_ime);
+                mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
+                mBImeKeyboard.setOnLongClickListener(v -> {
+                    mListener.onSwitchIme(false);
+                    return true;
+                });
+            }
         }
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
@@ -321,12 +339,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 setVisibility(mBClipboard, View.INVISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
                     setVisibility(mCentralButtons, View.INVISIBLE);
-                    if (mBComboSelector != null) {
-                        mBComboSelector.setVisibility(View.INVISIBLE);
-                    }
                 } else {
                     setVisibility(mRlClipboard, View.INVISIBLE);
                 }
+                setVisibility(mBComboSelector, View.INVISIBLE);
                 showMessage("");
             }
 
@@ -338,12 +354,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 setVisibility(mBClipboard, View.VISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
                     setVisibility(mCentralButtons, View.VISIBLE);
-                    if (mBComboSelector != null) {
-                        mBComboSelector.setVisibility(View.VISIBLE);
-                    }
                 } else {
                     setVisibility(mRlClipboard, View.VISIBLE);
                 }
+                setVisibility(mBComboSelector, View.VISIBLE);
                 setBackgroundResource(R.drawable.rectangle_gradient);
             }
 
@@ -470,12 +484,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 comboSelector(key);
                 return true;
             });
-        }
-
-        // if mBImeKeyboard is available then we are in the IME mode where toggling
-        // the UI size is possible.
-        if (mBImeKeyboard != null) {
-            showUi(prefs, res);
         }
     }
 
@@ -683,21 +691,11 @@ public class SpeechInputView extends LinearLayoutCompat {
         context.startActivity(intent);
     }
 
-    private void showUi(SharedPreferences prefs, Resources res) {
-        String mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
-        mBClipboard.setImageResource(R.drawable.ic_baseline_swap_vert_24);
-        showUi(prefs, res, mUiState);
-    }
-
-    private void showUi(SharedPreferences prefs, Resources res, String state) {
-        PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, state);
-
-        if (mUiState == null) {
-            updateTouchListener(mSwipeType);
+    private void showUi(String state) {
+        if (state == null) {
             mRlClipboard.setVisibility(View.GONE);
             mCentralButtons.setVisibility(View.VISIBLE);
-        } else if ("1".equals(mUiState)) {
-            updateTouchListener(0);
+        } else if ("1".equals(state)) {
             mCentralButtons.setVisibility(View.GONE);
             mRlClipboard.setVisibility(View.VISIBLE);
         } else {
@@ -750,15 +748,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         updateTouchListener(mSwipeType);
         if (mBClipboard != null) {
             mBClipboard.setColorFilter(null);
-        }
-        if (mBImeKeyboard != null) {
-            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
-            mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
-
-            mBImeKeyboard.setOnLongClickListener(v -> {
-                mListener.onSwitchIme(false);
-                return true;
-            });
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }

@@ -119,6 +119,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <include layout="@layout/editor_bottom_bar" />
-
+    <include
+        layout="@layout/editor_bottom_bar"
+        android:gravity="center" />
 </ee.ioc.phon.android.speak.view.SpeechInputView>
