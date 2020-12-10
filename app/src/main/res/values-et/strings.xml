@@ -3,7 +3,6 @@
 
     <string name="labelRecognitionServiceHttp">Kõnele (grammatikatoega)</string>
     <string name="labelRecognitionServiceWs">Kõnele (kiire tuvastusega)</string>
-    <string name="labelRecognitionServiceWs2">Kõnele (kiire tuvastusega 2)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>

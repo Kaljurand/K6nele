@@ -16,9 +16,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -26,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,7 +32,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -47,19 +43,22 @@ import ee.ioc.phon.android.speak.ServiceLanguageChooser;
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speak.activity.RewritesSelectorActivity;
+import ee.ioc.phon.android.speak.adapter.ClipboardAdapter;
 import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
-import ee.ioc.phon.android.speechutils.editor.Command;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
-import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 import ee.ioc.phon.android.speechutils.view.MicButton;
 
 public class SpeechInputView extends LinearLayoutCompat {
 
     private static final String[] EMPTY_STRING_ARRAY = {};
+
+    // TODO: get the colors from speechutils
+    private static final int COLOR_RECORDING = Color.argb(255, 204, 0, 0);
+    private static final int COLOR_TRANSCRIBING = Color.argb(255, 153, 51, 204);
 
     private View mCentralButtons;
     private MicButton mBImeStartStop;
@@ -74,6 +73,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private LinearLayout mLlEmpty;
 
     private ComponentName mApp;
+    private String mAppId = "";
     private SpeechInputViewListener mListener;
     private SpeechRecognizer mRecognizer;
     private ServiceLanguageChooser mSlc;
@@ -83,11 +83,11 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private MicButton.State mState;
 
+    private String mUiState;
+
     // Y (yellow i.e. not-transcribing)
     // R (red, i.e. transcribing)
     private String mBtnType = "Y";
-
-    private boolean mUiIsMinimized = false;
 
     // TODO: make it an attribute
     private int mSwipeType = 0;
@@ -166,6 +166,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         // class name of the app
         if (editorInfo != null) {
             mApp = new ComponentName(editorInfo.packageName, editorInfo.packageName);
+            mAppId = mApp.flattenToShortString();
         }
         if (mBImeAction != null && editorInfo != null) {
             // TODO: test
@@ -209,7 +210,42 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
             }
 
-            mBClipboard.setOnClickListener(v -> toggleClipboardAux());
+            // if mBImeKeyboard is available then we are in the IME mode where changing
+            // the UI mode is possible.
+            if (mBImeKeyboard != null) {
+                Context context = getContext();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                Resources res = getResources();
+
+                mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
+                mBClipboard.setImageResource(R.drawable.ic_baseline_swap_vert_24);
+                showUi(mUiState);
+
+                mBClipboard.setOnClickListener(v -> {
+                    if (mUiState == null) {
+                        mUiState = "1";
+                    } else if ("1".equals(mUiState)) {
+                        mUiState = "2";
+                    } else {
+                        mUiState = null;
+                    }
+
+                    PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
+                    showUi(mUiState);
+                });
+                // TODO: experimental: long press controls mic
+                mBClipboard.setOnLongClickListener(v -> {
+                    changeState();
+                    return true;
+                });
+
+                mBImeKeyboard.setImageResource(R.drawable.ic_ime);
+                mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
+                mBImeKeyboard.setOnLongClickListener(v -> {
+                    mListener.onSwitchIme(false);
+                    return true;
+                });
+            }
         }
 
         ImageButton buttonDelete = findViewById(R.id.bImeDelete);
@@ -300,14 +336,13 @@ public class SpeechInputView extends LinearLayoutCompat {
             public void onDown() {
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
                 mBImeAction.setVisibility(View.INVISIBLE);
+                setVisibility(mBClipboard, View.INVISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
-                    setVisibilityKeyboard(View.INVISIBLE);
-                    if (mBComboSelector != null) {
-                        mBComboSelector.setVisibility(View.INVISIBLE);
-                    }
+                    setVisibility(mCentralButtons, View.INVISIBLE);
                 } else {
                     setVisibility(mRlClipboard, View.INVISIBLE);
                 }
+                setVisibility(mBComboSelector, View.INVISIBLE);
                 showMessage("");
             }
 
@@ -316,14 +351,13 @@ public class SpeechInputView extends LinearLayoutCompat {
                 showMessage("");
                 mBImeKeyboard.setVisibility(View.VISIBLE);
                 mBImeAction.setVisibility(View.VISIBLE);
+                setVisibility(mBClipboard, View.VISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
-                    setVisibilityKeyboard(View.VISIBLE);
-                    if (mBComboSelector != null) {
-                        mBComboSelector.setVisibility(View.VISIBLE);
-                    }
+                    setVisibility(mCentralButtons, View.VISIBLE);
                 } else {
                     setVisibility(mRlClipboard, View.VISIBLE);
                 }
+                setVisibility(mBComboSelector, View.VISIBLE);
                 setBackgroundResource(R.drawable.rectangle_gradient);
             }
 
@@ -359,6 +393,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Resources res = getResources();
 
         if (mRvClipboard != null) {
             mRvClipboard.setHasFixedSize(true);
@@ -387,14 +422,14 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
         showMessage("");
 
-        TypedArray keysAsTypedArray = getResources().obtainTypedArray(keys);
+        TypedArray keysAsTypedArray = res.obtainTypedArray(keys);
         final int key = keysAsTypedArray.getResourceId(0, 0);
         int keyHelpText = keysAsTypedArray.getResourceId(7, 0);
         int defaultHelpText = keysAsTypedArray.getResourceId(8, 0);
         keysAsTypedArray.recycle();
 
         if (mTvInstruction != null) {
-            if (PreferenceUtils.getPrefBoolean(prefs, getResources(), keyHelpText, defaultHelpText)) {
+            if (PreferenceUtils.getPrefBoolean(prefs, res, keyHelpText, defaultHelpText)) {
                 mTvInstruction.setVisibility(View.VISIBLE);
             } else {
                 mTvInstruction.setVisibility(View.GONE);
@@ -452,6 +487,9 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
+    /**
+     * Performs an action after a press on the mic button, and given a current state.
+     */
     private void changeState() {
         Log.i("Microphone button pressed: state = " + mState);
         switch (mState) {
@@ -481,6 +519,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     // TODO: make public?
     private void stopListening() {
+        mBClipboard.setColorFilter(COLOR_TRANSCRIBING);
         if (mRecognizer != null) {
             mRecognizer.stopListening();
         }
@@ -530,28 +569,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    /**
-     * @param b Show clipboard and disable swipes iff true
-     */
-    private void showClipboard(boolean b) {
-        if (b) {
-            updateTouchListener(0);
-            setVisibilityKeyboard(View.GONE);
-            mRlClipboard.setVisibility(View.VISIBLE);
-            mBClipboard.setImageResource(R.drawable.ic_mic);
-            mBClipboard.setOnLongClickListener(v -> {
-                changeState();
-                return true;
-            });
-        } else {
-            updateTouchListener(mSwipeType);
-            mRlClipboard.setVisibility(View.GONE);
-            setVisibilityKeyboard(View.VISIBLE);
-            mBClipboard.setImageResource(R.drawable.ic_clipboard);
-            mBClipboard.setColorFilter(null);
-        }
-    }
-
     private void makeComboChange() {
         String language = mSlc.getLanguage();
         ComponentName service = mSlc.getService();
@@ -566,7 +583,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         if (rewritesAsStr == null) {
             return null;
         }
-        return new ClipboardAdapter(commandMatcher, rewritesAsStr);
+        return new ClipboardAdapter(mListener, commandMatcher, rewritesAsStr);
     }
 
     /**
@@ -674,21 +691,17 @@ public class SpeechInputView extends LinearLayoutCompat {
         context.startActivity(intent);
     }
 
-    private void toggleUi() {
-        if (mUiIsMinimized) {
-            maximizeUi();
+    private void showUi(String state) {
+        if (state == null) {
+            mRlClipboard.setVisibility(View.GONE);
+            mCentralButtons.setVisibility(View.VISIBLE);
+        } else if ("1".equals(state)) {
+            mCentralButtons.setVisibility(View.GONE);
+            mRlClipboard.setVisibility(View.VISIBLE);
         } else {
-            minimizeUi();
+            mCentralButtons.setVisibility(View.GONE);
+            mRlClipboard.setVisibility(View.GONE);
         }
-    }
-
-    private void minimizeUi() {
-        mUiIsMinimized = true;
-        setVisibilityKeyboard(View.GONE);
-        mRlClipboard.setVisibility(View.GONE);
-        mBImeKeyboard.setImageResource(R.drawable.ic_arrow_upward);
-        mBImeKeyboard.setOnClickListener(v -> toggleUi());
-        mBClipboard.setColorFilter(Color.argb(255, 204, 0, 0));
     }
 
     /*
@@ -696,36 +709,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         view.setBackground(AppCompatResources.getDrawable(getContext(), res));
     }
     */
-
-    private void toggleClipboardAux() {
-        Context context = getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        showClipboard(PreferenceUtils.togglePrefStringSetEntry(prefs, getResources(), R.string.setClipboardApps, mApp.flattenToShortString()));
-    }
-
-    private void maximizeUi() {
-        mUiIsMinimized = false;
-        setVisibilityKeyboard(View.VISIBLE);
-        Context context = getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        showClipboard(mApp != null && PreferenceUtils.getPrefStringSet(prefs, getResources(), R.string.setClipboardApps).contains(mApp.flattenToShortString()));
-        if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
-            mBImeKeyboard.setImageResource(R.drawable.ic_ime);
-            mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
-
-            mBImeKeyboard.setOnLongClickListener(v -> {
-                mListener.onSwitchIme(false);
-                return true;
-            });
-        } else {
-            mBImeKeyboard.setImageResource(R.drawable.ic_arrow_downward);
-            mBImeKeyboard.setOnClickListener(v -> toggleUi());
-        }
-    }
-
-    private void setVisibilityKeyboard(int visibility) {
-        mCentralButtons.setVisibility(visibility);
-    }
 
     private void showMessageArrow(int numOfChars, String dash) {
         if (numOfChars < 0) {
@@ -747,11 +730,12 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void setGuiState(MicButton.State state) {
         mState = state;
-        setMicButtonState(mBImeStartStop, mState);
+        if (mBImeStartStop != null) {
+            mBImeStartStop.post(() -> mBImeStartStop.setState(mState));
+        }
     }
 
     private void setGuiInitState(int message) {
-        mBClipboard.setColorFilter(null);
         if (message == 0) {
             // Do not clear a possible error message
             //showMessage("");
@@ -762,8 +746,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
         updateTouchListener(mSwipeType);
-        if (mBImeKeyboard != null) {
-            maximizeUi();
+        if (mBClipboard != null) {
+            mBClipboard.setColorFilter(null);
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -802,12 +786,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    private static void setMicButtonState(final MicButton button, final MicButton.State state) {
-        if (button != null) {
-            button.post(() -> button.setState(state));
-        }
-    }
-
     private static void setVisibility(final View view, final int visibility) {
         if (view != null && view.getVisibility() != View.GONE) {
             view.post(() -> view.setVisibility(visibility));
@@ -827,6 +805,9 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void startListening(ServiceLanguageChooser slc) {
         setGuiState(MicButton.State.WAITING);
+        if (mBClipboard != null) {
+            mBClipboard.setColorFilter(COLOR_RECORDING);
+        }
         updateServiceLanguage(slc.getSpeechRecognizer());
         // Increases the counter of the app that calls the recognition service.
         // TODO: we could define it slightly differently, e.g. only count successful recognitions,
@@ -837,9 +818,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         mRecognizer.startListening(slc.getIntent());
         mListener.onStartListening();
         setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
-        if (mBImeKeyboard != null) {
-            maximizeUi();
-        }
     }
 
     /**
@@ -983,73 +961,4 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    private class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyViewHolder> {
-        private final UtteranceRewriter mUr;
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView mView;
-
-            public MyViewHolder(TextView v) {
-                super(v);
-                mView = v;
-            }
-        }
-
-        /**
-         * List of button/clip labels mapped to
-         * utterances. Clicking on a clip will return the utterance via onFinalResult.
-         * <p>
-         * TODO: improve specification of header (load only the columns that are needed)
-         * TODO: implement putPrefMapMap (takes map instead of key and val)
-         * TODO: improve dealing with nulls
-         * TODO: convert utterance (i.e. regex) to a string (e.g. the first string matched by the utterance)
-         */
-        public ClipboardAdapter(CommandMatcher commandMatcher, String rewritesAsStr) {
-            mUr = new UtteranceRewriter(rewritesAsStr, commandMatcher);
-        }
-
-        @Override
-        public ClipboardAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ClipboardAdapter.MyViewHolder((TextView) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item_clip, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final ClipboardAdapter.MyViewHolder holder, int position) {
-            final Command command = mUr.getCommands().get(position);
-            holder.mView.setText(command.getLabelOrString());
-            String val = command.makeUtt();
-            // TODO: Note that "press and hold" buttons are not compatible with scrolling the keyboard
-            // TODO: show them with a different background
-            if (command.isRepeatable()) {
-                holder.mView.setOnClickListener(null);
-                holder.mView.setOnTouchListener(new OnPressAndHoldListener() {
-                    @Override
-                    public void onAction() {
-                        if (val != null) {
-                            mListener.onFinalResult(Collections.singletonList(val), new Bundle());
-                        }
-                    }
-                });
-            } else {
-                holder.mView.setOnTouchListener(null);
-                holder.mView.setOnClickListener(view -> {
-                            if (val != null) {
-                                mListener.onFinalResult(Collections.singletonList(val), new Bundle());
-                            }
-                        }
-                );
-                // TODO: launch regex generator picker instead
-                holder.mView.setOnLongClickListener(v -> {
-                    showMessage(command.toString());
-                    return true;
-                });
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mUr.getCommandHolder().size();
-        }
-    }
 }

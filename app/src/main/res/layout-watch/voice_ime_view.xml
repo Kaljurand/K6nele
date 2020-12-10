@@ -66,7 +66,7 @@
             app:srcCompat="@drawable/ic_search" />
     </RelativeLayout>
 
-    <include layout="@layout/tabbled_clipboard" />
+    <include layout="@layout/editor_rewrites" />
 
     <LinearLayout
         android:id="@+id/centralButtons"
@@ -119,6 +119,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <include layout="@layout/button_combo_selector" />
-
+    <include
+        layout="@layout/editor_bottom_bar"
+        android:gravity="center" />
 </ee.ioc.phon.android.speak.view.SpeechInputView>

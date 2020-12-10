@@ -10,9 +10,10 @@
     <color name="green1">#99cc33</color>
     <color name="green3">#669900</color>
 
+    <!--
     <color name="buttonNormalStart">#cc0000</color>
     <color name="buttonNormalEnd">#660000</color>
-
+-->
     <color name="transparent_blue">#990099cc</color>
 
     <color name="transparent_grey800">#99f5f5f5</color>

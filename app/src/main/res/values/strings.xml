@@ -14,8 +14,6 @@
     <string name="labelIme">Kõnele speak &amp; swipe</string>
     <string name="labelRecognitionServiceHttp">Kõnele (grammar support)</string>
     <string name="labelRecognitionServiceWs">Kõnele (fast recognition)</string>
-    <string name="labelRecognitionServiceWs2">Kõnele (fast recognition 2)</string>
-    <string name="labelRecognitionServiceDemo" translatable="false">Kõnele (DEMO)</string>
 
     <!-- Activity labels -->
     <string name="labelActivityRecognizerIntent">@string/labelApp</string>
@@ -272,10 +270,10 @@
     <string name="cmTest">Test</string>
     <string name="cmRename">Rename</string>
     <string name="cmDelete">Delete</string>
-    <string name="menuAppsSort">Sort …</string>
-    <string name="menuAppsSortByName">by package name</string>
-    <string name="menuAppsSortByCount">by usage frequency</string>
-    <string name="menuAppsSortByGrammar">by grammar URL</string>
+    <string name="menuAppsSort">Sort by …</string>
+    <string name="menuAppsSortByName">package name</string>
+    <string name="menuAppsSortByCount">usage frequency</string>
+    <string name="menuAppsSortByGrammar">grammar URL</string>
     <string name="menuGrammarsAdd">Add</string>
     <string name="menuServersAdd">Add</string>
     <string name="menuAbout">About</string>
@@ -388,7 +386,6 @@
     </string-array>
 
     <!-- Just for testing, won't appear in the product. -->
-    <string name="testComboLabel" translatable="false">Kõnele (grammar support)</string>
     <string name="testComboLabels" translatable="false">en-US(Kg) · en-X(G) · et-EE(Kf) · et-EE(Kg) · de-DE (G) · +/-</string>
 
     <string name="promptDemo">Say e.g.: %1$s</string>
