@@ -64,7 +64,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeAction;
-    private ImageButton mBClipboard;
+    private ImageButton mBUiMode;
     private Button mBComboSelector;
     private TextView mTvInstruction;
     private TextView mTvMessage;
@@ -218,10 +218,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 Resources res = getResources();
 
                 mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
-                mBClipboard.setImageResource(R.drawable.ic_baseline_swap_vert_24);
+                mBUiMode.setImageResource(R.drawable.ic_baseline_swap_vert_24);
                 showUi(mUiState);
 
-                mBClipboard.setOnClickListener(v -> {
+                mBUiMode.setOnClickListener(v -> {
                     if (mUiState == null) {
                         mUiState = "1";
                     } else if ("1".equals(mUiState)) {
@@ -234,7 +234,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     showUi(mUiState);
                 });
                 // TODO: experimental: long press controls mic
-                mBClipboard.setOnLongClickListener(v -> {
+                mBUiMode.setOnLongClickListener(v -> {
                     changeState();
                     return true;
                 });
@@ -336,7 +336,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             public void onDown() {
                 mBImeKeyboard.setVisibility(View.INVISIBLE);
                 mBImeAction.setVisibility(View.INVISIBLE);
-                setVisibility(mBClipboard, View.INVISIBLE);
+                setVisibility(mBUiMode, View.INVISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
                     setVisibility(mCentralButtons, View.INVISIBLE);
                 } else {
@@ -351,7 +351,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 showMessage("");
                 mBImeKeyboard.setVisibility(View.VISIBLE);
                 mBImeAction.setVisibility(View.VISIBLE);
-                setVisibility(mBClipboard, View.VISIBLE);
+                setVisibility(mBUiMode, View.VISIBLE);
                 if (mRlClipboard.getVisibility() == View.GONE) {
                     setVisibility(mCentralButtons, View.VISIBLE);
                 } else {
@@ -383,7 +383,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBImeAction = findViewById(R.id.bImeAction);
-        mBClipboard = findViewById(R.id.bClipboard);
+        mBUiMode = findViewById(R.id.bClipboard);
         mBComboSelector = findViewById(R.id.tvComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
@@ -509,7 +509,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    // TODO: this does not make sense if the UI is in the clipboard mode
     public void start() {
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
@@ -519,7 +518,6 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     // TODO: make public?
     private void stopListening() {
-        mBClipboard.setColorFilter(COLOR_TRANSCRIBING);
         if (mRecognizer != null) {
             mRecognizer.stopListening();
         }
@@ -746,8 +744,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
         updateTouchListener(mSwipeType);
-        if (mBClipboard != null) {
-            mBClipboard.setColorFilter(null);
+        if (mBUiMode != null) {
+            mBUiMode.setColorFilter(null);
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -805,19 +803,23 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private void startListening(ServiceLanguageChooser slc) {
         setGuiState(MicButton.State.WAITING);
-        if (mBClipboard != null) {
-            mBClipboard.setColorFilter(COLOR_RECORDING);
-        }
         updateServiceLanguage(slc.getSpeechRecognizer());
-        // Increases the counter of the app that calls the recognition service.
-        // TODO: we could define it slightly differently, e.g. only count successful recognitions,
-        // count also commands executed via swipes and/or buttons (but maybe not count every deletion
-        // and cursor movement).
-        // TODO: we could also count languages, services, etc.
-        PackageNameRegistry.increaseAppCount(getContext(), slc.getIntent().getExtras(), null);
-        mRecognizer.startListening(slc.getIntent());
-        mListener.onStartListening();
-        setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+        try {
+            mRecognizer.startListening(slc.getIntent());
+            mListener.onStartListening();
+            // Increases the counter of the app that calls the recognition service.
+            // TODO: we could define it slightly differently, e.g. only count successful recognitions,
+            // count also commands executed via swipes and/or buttons (but maybe not count every deletion
+            // and cursor movement).
+            // TODO: we could also count languages, services, etc.
+            PackageNameRegistry.increaseAppCount(getContext(), slc.getIntent().getExtras(), null);
+        } catch (SecurityException e) {
+            // TODO: review this.
+            // On Android 11 we get the SecurityException when calling "Kõnele service" and Kõnele does not
+            // have the mic permission. This does not happen when calling Google's service. Instead
+            // there is a callback to RecognitionListener.onError. We act here as if this callback happened.
+            mListener.onError(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS);
+        }
     }
 
     /**
@@ -847,6 +849,10 @@ public class SpeechInputView extends LinearLayoutCompat {
             Log.i("onBeginningOfSpeech: state = " + mState);
             setGuiState(MicButton.State.RECORDING);
             mBtnType = "R";
+            setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
+            if (mBUiMode != null) {
+                mBUiMode.setColorFilter(COLOR_RECORDING);
+            }
         }
 
         @Override
@@ -857,6 +863,9 @@ public class SpeechInputView extends LinearLayoutCompat {
             // Google Voice Search, which calls EndOfSpeech after onResults.
             if (mState == MicButton.State.RECORDING) {
                 setGuiState(MicButton.State.TRANSCRIBING);
+                if (mBUiMode != null) {
+                    mBUiMode.setColorFilter(COLOR_TRANSCRIBING);
+                }
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }
         }

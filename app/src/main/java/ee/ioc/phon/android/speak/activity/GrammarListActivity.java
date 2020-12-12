@@ -56,7 +56,7 @@ public class GrammarListActivity extends AbstractContentActivity {
             Grammar.Columns.URL
     };
 
-    private static int[] TO = new int[]{
+    private static final int[] TO = new int[]{
             R.id.itemGrammarId,
             R.id.itemGrammarName,
             R.id.itemGrammarLang,
