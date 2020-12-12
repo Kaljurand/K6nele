@@ -145,14 +145,24 @@ public final class Utils {
         final EditText et = textEntryView.findViewById(R.id.url_edit);
         if (initialText != null) {
             et.setText(initialText);
+            et.setHint(initialText);
             et.setSelection(initialText.length());
         }
-        return new AlertDialog.Builder(context)
+        final AlertDialog ad = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setView(textEntryView)
                 .setPositiveButton(R.string.buttonOk, (dialog, whichButton) -> ex.execute(et.getText().toString()))
                 .setNegativeButton(R.string.buttonCancel, (dialog, whichButton) -> dialog.cancel())
                 .create();
+        et.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                ex.execute(et.getText().toString());
+                ad.cancel();
+                return true;
+            }
+            return false;
+        });
+        return ad;
     }
 
 
