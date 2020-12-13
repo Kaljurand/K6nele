@@ -640,6 +640,10 @@ public class SpeechInputView extends LinearLayoutCompat {
             tab.setText(tabName);
             tabs.addTab(tab, tabName.equals(selectedTabName));
         }
+        TabLayout.Tab tab = tabs.newTab();
+        tab.setText("+");
+        tabs.addTab(tab, false);
+
         // If the previously selected rewrites table is not among the defaults anymore then
         // we select the first one (but do not save it).
         if (tabs.getSelectedTabPosition() == -1) {
@@ -647,7 +651,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
 
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
-        for (int i = 0; i < tabStrip.getChildCount(); i++) {
+        for (int i = 0; i < tabStrip.getChildCount() - 1; i++) {
             String name = tabs.getTabAt(i).getText().toString();
             // Long click loads the rewrites view (without populating the tab)
             tabStrip.getChildAt(i).setOnLongClickListener(v -> {
@@ -661,6 +665,12 @@ public class SpeechInputView extends LinearLayoutCompat {
                 return false;
             });
         }
+
+        tabStrip.getChildAt(tabStrip.getChildCount() - 1).setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), RewritesSelectorActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
     }
 
     private String getTabName(SharedPreferences prefs, Resources res, String appId) {
