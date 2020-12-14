@@ -190,10 +190,16 @@ public class SpeechInputMethodService extends InputMethodService {
         }
         ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(ic);
 
+        // TODO: quick hack to add app to the matcher, not sure if we can access the class name of the app
+        String packageName = editorInfo.packageName;
+        ComponentName app = new ComponentName(packageName, packageName);
+
         mInputView.init(
                 R.array.keysIme,
                 new CallerInfo(makeExtras(), editorInfo, getPackageName()),
-                PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyImeMode, R.string.defaultImeMode));
+                PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyImeMode, R.string.defaultImeMode),
+                app
+        );
 
         // TODO: update this less often (in onStart)
         closeSession();
@@ -201,10 +207,6 @@ public class SpeechInputMethodService extends InputMethodService {
         if (restarting) {
             return;
         }
-
-        // TODO: quick hack to add app to the matcher, not sure if we can access the class name of the app
-        String packageName = editorInfo.packageName;
-        ComponentName app = new ComponentName(packageName, packageName);
 
         mInputView.setListener(getSpeechInputViewListener(getMyWindow(), app, mRuleManager), editorInfo);
         mShowPartialResults = PreferenceUtils.getPrefBoolean(mPrefs, mRes, R.string.keyImeShowPartialResults, R.bool.defaultImeShowPartialResults);

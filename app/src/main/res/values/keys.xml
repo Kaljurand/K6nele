@@ -14,13 +14,13 @@
     <string name="keyHelpText" translatable="false">keyHelpText</string>
     <string name="keyReturnErrors" translatable="false">keyReturnErrors</string>
     <string name="keyCombo" translatable="false">keyCombo</string>
-    <string name="keyCurrentCombo" translatable="false">keyCurrentCombo</string>
+    <string name="keyCurrentAppCombo" translatable="false">keyCurrentAppCombo</string>
     <string name="keyImeAutoStart" translatable="false">keyImeAutoStart</string>
     <string name="keyImeAudioCues" translatable="false">keyImeAudioCues</string>
     <string name="keyImeShowPartialResults" translatable="false">keyImeShowPartialResults</string>
     <string name="keyImeHelpText" translatable="false">keyImeHelpText</string>
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
-    <string name="keyImeCurrentCombo" translatable="false">keyImeCurrentCombo</string>
+    <string name="keyImeCurrentAppCombo" translatable="false">keyImeCurrentAppCombo</string>
     <string name="keyImeAudioFormat" translatable="false">keyImeAudioFormat</string>
     <string name="keyImeMode" translatable="false">keyImeMode</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
@@ -48,7 +48,7 @@
     <!-- SpeechInputView (TypedArray keysAsTypedArray) depends on the order and count of these items. -->
     <array name="keysActivity" translatable="false">
         <item>@string/keyCombo</item>
-        <item>@string/keyCurrentCombo</item>
+        <item>@string/keyCurrentAppCombo</item>
         <item>@array/defaultCombosExcluded</item>
         <item>@string/keyAutoStart</item>
         <item>@bool/defaultAutoStart</item>
@@ -60,7 +60,7 @@
 
     <array name="keysIme" translatable="false">
         <item>@string/keyImeCombo</item>
-        <item>@string/keyImeCurrentCombo</item>
+        <item>@string/keyImeCurrentAppCombo</item>
         <item>@array/defaultImeCombosExcluded</item>
         <item>@string/keyImeAutoStart</item>
         <item>@bool/defaultImeAutoStart</item>
