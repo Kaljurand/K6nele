@@ -30,6 +30,7 @@ public class ServiceLanguageChooser {
     private final SharedPreferences mPrefs;
     private final List<String> mCombosAsList;
     private final CallerInfo mCallerInfo;
+    private final String mAppId;
     private final int mKeyCurrentCombo;
     private int mIndex;
     private SpeechRecognizer mSpeechRecognizer;
@@ -37,11 +38,12 @@ public class ServiceLanguageChooser {
     private String mLanguage = null;
     private ComponentName mRecognizerComponentName = null;
 
-    public ServiceLanguageChooser(Context context, SharedPreferences prefs, int keys, CallerInfo callerInfo) {
+    public ServiceLanguageChooser(Context context, SharedPreferences prefs, int keys, CallerInfo callerInfo, String appId) {
 
         mContext = context;
         mPrefs = prefs;
         mCallerInfo = callerInfo;
+        mAppId = appId;
 
         // If SERVICE_COMPONENT is defined, we do not use the combos selected in the settings.
         String comboOverride = null;
@@ -70,12 +72,12 @@ public class ServiceLanguageChooser {
                 mCombosAsList = new ArrayList<>(mCombos);
             }
 
-            String currentCombo = PreferenceUtils.getPrefString(prefs, res, mKeyCurrentCombo);
+            String currentCombo = PreferenceUtils.getPrefMapEntry(prefs, res, mKeyCurrentCombo, mAppId);
             mIndex = mCombosAsList.indexOf(currentCombo);
             // If the current combo was not found among the choices then select the first combo.
             if (mIndex == -1) {
                 mIndex = 0;
-                PreferenceUtils.putPrefString(prefs, res, mKeyCurrentCombo, mCombosAsList.get(0));
+                PreferenceUtils.putPrefMapEntry(prefs, res, mKeyCurrentCombo, mAppId, mCombosAsList.get(0));
             }
         } else {
             mCombosAsList = Collections.singletonList(comboOverride);
@@ -108,7 +110,7 @@ public class ServiceLanguageChooser {
             if (++mIndex >= size()) {
                 mIndex = 0;
             }
-            PreferenceUtils.putPrefString(mPrefs, mContext.getResources(), mKeyCurrentCombo, mCombosAsList.get(mIndex));
+            PreferenceUtils.putPrefMapEntry(mPrefs, mContext.getResources(), mKeyCurrentCombo, mAppId, mCombosAsList.get(mIndex));
         }
         update();
     }

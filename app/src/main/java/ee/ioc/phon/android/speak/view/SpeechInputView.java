@@ -162,12 +162,6 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
-        // TODO: quick hack to add app to the matcher, not sure if we can access the
-        // class name of the app
-        if (editorInfo != null) {
-            mApp = new ComponentName(editorInfo.packageName, editorInfo.packageName);
-            mAppId = mApp.flattenToShortString();
-        }
         if (mBImeAction != null && editorInfo != null) {
             // TODO: test
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
@@ -372,10 +366,11 @@ public class SpeechInputView extends LinearLayoutCompat {
             }
         };
         setGuiInitState(0);
+
         makeComboChange();
     }
 
-    public void init(int keys, CallerInfo callerInfo, int swipeType) {
+    public void init(int keys, CallerInfo callerInfo, int swipeType, ComponentName app) {
         mSwipeType = swipeType;
         // These controls are optional (i.e. can be null),
         // except for mBImeStartStop (TODO: which should also be optional)
@@ -395,6 +390,9 @@ public class SpeechInputView extends LinearLayoutCompat {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = getResources();
 
+        mApp = app;
+        mAppId = mApp == null ? "" : mApp.flattenToShortString();
+
         if (mRvClipboard != null) {
             mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
@@ -407,7 +405,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
 
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
-        mSlc = new ServiceLanguageChooser(context, prefs, keys, callerInfo);
+        mSlc = new ServiceLanguageChooser(context, prefs, keys, callerInfo, mAppId);
         if (mBComboSelector != null) {
             if (mSlc.size() > 1) {
                 mBComboSelector.setVisibility(View.VISIBLE);
@@ -420,6 +418,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         if (mBComboSelector != null) {
             updateComboSelector(mSlc);
         }
+
         showMessage("");
 
         TypedArray keysAsTypedArray = res.obtainTypedArray(keys);
