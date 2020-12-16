@@ -24,7 +24,11 @@ New in this release:
 - (experimental) IME: clipboard items, recent utterances, and frequent utterances are logged into the ``#c``, ``#r`` and ``#f`` rewrite tables if these tables exist,
   i.e. this logging must be manually enabled by first creating the empty tables, and can be turned off by deleting
   the tables
+
+  - if imeOptions includes "flagNoPersonalizedLearning" (aka incognito mode) then do not add utterances to the ``#f`` and ``#r`` tables, even when they are active
+
 - settings: Languages & services: list each service once also with an undefined language (represented by ---), giving a better overview of all the available services and allowing them to be used without specifying the language
+- settings: make "Auto start" visible again in the IME settings
 - action bar now appears on all platforms (incl. Watch)
 - improve support for TV (untested)
 - the mic button now generates utterances like ``K6_Y_BTN_MIC_UP`` when pressed/swiped. Rewrite rules can map these to (app-dependent) actions, e.g. (in a chat app) left swipe to select text on the left, right swipe to post current text.
@@ -35,6 +39,8 @@ New in this release:
 - add developer setting to switch on Do Not Disturb access ([issue #73](https://github.com/Kaljurand/K6nele/issues/73))
 - remove intent filter for ``RECORD_SOUND`` (did not work)
 - migrate to AndroidX (~1 MB larger APK)
+- small UI changes, e.g. use SeekBarPreference
+- remember combo state per app
 - remove dependency on net-speech-api
 - use the separate app [Kõnele service](https://github.com/Kaljurand/K6nele-service) as the default service provider, if installed, otherwise use the built-in "Kõnele (fast recognition)".
   It is recommended to install "Kõnele service", at least on Android 11, where the built-in service does not seem to work.
