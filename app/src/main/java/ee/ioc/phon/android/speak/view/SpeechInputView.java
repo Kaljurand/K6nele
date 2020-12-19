@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -56,10 +55,6 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private static final String[] EMPTY_STRING_ARRAY = {};
 
-    // TODO: get the colors from speechutils
-    private static final int COLOR_RECORDING = Color.argb(255, 204, 0, 0);
-    private static final int COLOR_TRANSCRIBING = Color.argb(255, 153, 51, 204);
-
     private View mCentralButtons;
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
@@ -94,6 +89,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private final static String DASH_CUR = "――――――――――――――――――――";
     private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
+    private final static String NEW_TAB_LABEL = "+";
 
     public interface SpeechInputViewListener {
 
@@ -621,8 +617,14 @@ public class SpeechInputView extends LinearLayoutCompat {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 String name = tab.getText().toString();
-                mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
-                setTabName(prefs, res, appId, name);
+                if (NEW_TAB_LABEL.equals(tab.getTag())) {
+                    Intent intent = new Intent(getContext(), RewritesSelectorActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } else {
+                    mRvClipboard.setAdapter(getClipboardAdapter(prefs, res, name, commandMatcher));
+                    setTabName(prefs, res, appId, name);
+                }
             }
 
             @Override
@@ -640,7 +642,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             tabs.addTab(tab, tabName.equals(selectedTabName));
         }
         TabLayout.Tab tab = tabs.newTab();
-        tab.setText("+");
+        tab.setText(NEW_TAB_LABEL);
+        tab.setTag(NEW_TAB_LABEL);
         tabs.addTab(tab, false);
 
         // If the previously selected rewrites table is not among the defaults anymore then
@@ -650,6 +653,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
 
         LinearLayout tabStrip = (LinearLayout) tabs.getChildAt(0);
+        // We exclude the NEW_TAB_LABEL
         for (int i = 0; i < tabStrip.getChildCount() - 1; i++) {
             String name = tabs.getTabAt(i).getText().toString();
             // Long click loads the rewrites view (without populating the tab)
@@ -664,12 +668,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 return false;
             });
         }
-
-        tabStrip.getChildAt(tabStrip.getChildCount() - 1).setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), RewritesSelectorActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        });
     }
 
     private String getTabName(SharedPreferences prefs, Resources res, String appId) {
@@ -848,6 +846,9 @@ public class SpeechInputView extends LinearLayoutCompat {
         public void onReadyForSpeech(Bundle params) {
             Log.i("onReadyForSpeech: state = " + mState);
             setGuiState(MicButton.State.LISTENING);
+            if (mBUiMode != null) {
+                mBUiMode.setColorFilter(MicButton.COLOR_LISTENING);
+            }
             mBtnType = "R";
             setText(mTvInstruction, R.string.buttonImeStop);
             showMessage("");
@@ -859,9 +860,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             setGuiState(MicButton.State.RECORDING);
             mBtnType = "R";
             setVisibility(findViewById(R.id.rlKeyButtons), View.INVISIBLE);
-            if (mBUiMode != null) {
-                mBUiMode.setColorFilter(COLOR_RECORDING);
-            }
         }
 
         @Override
@@ -873,7 +871,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             if (mState == MicButton.State.RECORDING) {
                 setGuiState(MicButton.State.TRANSCRIBING);
                 if (mBUiMode != null) {
-                    mBUiMode.setColorFilter(COLOR_TRANSCRIBING);
+                    mBUiMode.setColorFilter(MicButton.COLOR_TRANSCRIBING);
                 }
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }

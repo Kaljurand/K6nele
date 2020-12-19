@@ -72,14 +72,14 @@ public class SpeechInputMethodService extends InputMethodService {
         mRes = getResources();
         mRuleManager = new RuleManager();
 
-        String rewritesClip = getRewrites(REWRITES_NAME_CLIP);
-        if (rewritesClip != null) {
+        Rewrites rewritesClip = new Rewrites(mPrefs, mRes, REWRITES_NAME_CLIP);
+        if (rewritesClip.isSelected()) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             // TODO: remove the listener onFinish
             clipboard.addPrimaryClipChangedListener(() -> {
                 CharSequence clip = clipboard.getPrimaryClip().getItemAt(0).getText();
                 if (clip != null) {
-                    UtteranceRewriter ur = mRuleManager.addRecent(clip.toString(), rewritesClip);
+                    UtteranceRewriter ur = mRuleManager.addRecent(clip.toString(), rewritesClip.getRewrites());
                     PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_CLIP, ur.toTsv());
                     mCommandEditor.setRewriters(
                             Utils.makeList(
@@ -218,11 +218,6 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
-    private String getRewrites(String name) {
-        Rewrites rewrites = new Rewrites(mPrefs, mRes, name);
-        return rewrites.getRewrites();
-    }
-
     /**
      * Called when the input view is being hidden from the user.
      * This will be called either prior to hiding the window,
@@ -336,8 +331,8 @@ public class SpeechInputMethodService extends InputMethodService {
     private SpeechInputView.SpeechInputViewListener getSpeechInputViewListener(final Window window, final ComponentName app, RuleManager ruleManager) {
         return new AbstractSpeechInputViewListener() {
 
-            ComponentName mApp = app;
-            RuleManager mRuleManager = ruleManager;
+            final ComponentName mApp = app;
+            final RuleManager mRuleManager = ruleManager;
 
             private void runOp(Op op) {
                 mCommandEditor.runOp(op, false);
@@ -360,18 +355,18 @@ public class SpeechInputMethodService extends InputMethodService {
                     mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
                 }
                 if (editorResult != null && mFlagPersonalizedLearning) {
-                    String rewritesRec = getRewrites(REWRITES_NAME_RECENT);
-                    if (rewritesRec != null) {
-                        UtteranceRewriter ur = mRuleManager.addRecent(editorResult, rewritesRec);
+                    Rewrites rewritesRec = new Rewrites(mPrefs, mRes, REWRITES_NAME_RECENT);
+                    if (rewritesRec.isSelected()) {
+                        UtteranceRewriter ur = mRuleManager.addRecent(editorResult, rewritesRec.getRewrites());
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_RECENT, ur.toTsv());
                     }
-                    String rewritesFreq = getRewrites(REWRITES_NAME_FREQUENT);
-                    if (rewritesFreq != null) {
-                        UtteranceRewriter ur = mRuleManager.addFrequent(editorResult, rewritesFreq);
+                    Rewrites rewritesFreq = new Rewrites(mPrefs, mRes, REWRITES_NAME_FREQUENT);
+                    if (rewritesFreq.isSelected()) {
+                        UtteranceRewriter ur = mRuleManager.addFrequent(editorResult, rewritesFreq.getRewrites());
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_FREQUENT, ur.toTsv());
                     }
                     // Update rewriters because the tables have changed
-                    if (rewritesRec != null || rewritesFreq != null) {
+                    if (rewritesRec.isSelected() || rewritesFreq.isSelected()) {
                         mCommandEditor.setRewriters(
                                 Utils.makeList(
                                         Utils.genRewriters(mPrefs, mRes, null, mRuleManager.getCommandMatcher())));

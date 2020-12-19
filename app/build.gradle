@@ -5,6 +5,7 @@ dependencies {
     implementation project(':speechutils:app')
     // TODO: use Android's JSON library instead
     implementation 'com.googlecode.json-simple:json-simple:1.1'
+    // TODO: 3.1.0
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -26,8 +27,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1750
-        versionName '1.7.50'
+        versionCode 1751
+        versionName '1.7.51'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs "en", "et"

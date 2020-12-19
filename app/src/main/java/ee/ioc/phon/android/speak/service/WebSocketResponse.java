@@ -87,7 +87,7 @@ public class WebSocketResponse {
     public static class Result {
         private final JSONObject mResult;
 
-        public Result(JSONObject result) throws JSONException {
+        public Result(JSONObject result) {
             mResult = result;
         }
 
@@ -124,7 +124,7 @@ public class WebSocketResponse {
     public static class Message {
         private final String mMessage;
 
-        public Message(String message) throws JSONException {
+        public Message(String message) {
             mMessage = message;
         }
 
@@ -135,7 +135,7 @@ public class WebSocketResponse {
 
 
     public static class AdaptationState {
-        public AdaptationState(JSONObject result) throws JSONException {
+        public AdaptationState(JSONObject result) {
         }
     }
 
