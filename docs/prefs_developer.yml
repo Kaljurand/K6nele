@@ -3,6 +3,7 @@
 #
 - key: keyImeCombo
   val:
+    - ee.ioc.phon.android.k6neleservice/.service.WebSocketRecognitionService;et-EE
     - ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE
     - com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService;en-US
 
@@ -17,6 +18,7 @@
 #
 - key: keyCombo
   val:
+    - ee.ioc.phon.android.k6neleservice/.service.WebSocketRecognitionService;et-EE
     - ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE
     - ee.ioc.phon.android.speak/.service.HttpRecognitionService;et-EE
 
@@ -26,7 +28,6 @@
 - key: keyAutoStart
   val: false
 
-# Note that the integer value needs to be passed as string
 - key: keyMaxHypotheses
   val: 4
 
@@ -39,6 +40,7 @@
 - key: keyAudioCues
   val: false
 
+# Note that the integer value needs to be passed as string
 - key: keyAutoStopAfterTime
   val: '10'
 

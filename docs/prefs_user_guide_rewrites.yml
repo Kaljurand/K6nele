@@ -1,5 +1,5 @@
 #
-# Rewrite rule tables from http://kaljurand.github.io/K6nele/docs/et/user_guide.html#näited
+# Rewrite rule tables from http://kaljurand.github.io/K6nele/docs/et/rewrites.html
 # TODO: incomplete
 #
 
@@ -21,19 +21,42 @@
   val: https://docs.google.com/spreadsheets/d/1ViO4swIovvuRJC-kiPaQOIdAkuwHCbQvTQlNUwaAoJQ/export?format=tsv
   is_url: true
 
-- key: keyRewritesMap/Calc
-  val: https://docs.google.com/spreadsheets/d/1lG3e0lhOyrRnYTLrbroLR2g3Z6R3QdwFOvRBna7Du5I/export?format=tsv
+- key: keyRewritesMap/.calc
+  val: https://docs.google.com/spreadsheets/d/1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc/export?format=tsv
+  is_url: true
+
+- key: keyRewritesMap/.edit
+  val: https://docs.google.com/spreadsheets/d/1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw/export?format=tsv
+  is_url: true
+
+- key: keyRewritesMap/.launch
+  val: https://docs.google.com/spreadsheets/d/1zmeVsyvWD_R3z_IEsBcAYR81ILsiUNGtzPj1K7x74mM/export?format=tsv
   is_url: true
 
 - key: keyRewritesMap/00Joystick
-  val: https://docs.google.com/spreadsheets/d/1c4Rbo6LLTr24Yw0NO9lZiXsPe36aCozmqrPvHScw2Ss/export?format=tsv
+  val: https://docs.google.com/spreadsheets/d/1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs/export?format=tsv
   is_url: true
+
+- key: 'keyRewritesMap/#c'
+  val: |
+    Utterance	Replacement
+    utt	repl
+
+# TODO: support empty values as map entries.
+- key: 'keyRewritesMap/#f'
+  val: 'Empty'
+
+- key: 'keyRewritesMap/#r'
+  val: 'Empty'
 
 # Making names of the rewrite tables visible in Kõnele's RewritesSelectorActivity.
 # This step can be skipped if you never need to launch this activity, e.g. on a displayless Android Things.
 # The order of the values does not matter.
 - key: keyRewritesMap
   val:
+    - '#c'
+    - '#f'
+    - '#r'
     - 00Joystick
     - 01Base
     - 02Act
@@ -42,7 +65,9 @@
     - Lights
     - Lights.Hue
     - Prompt
-    - Calc
+    - .calc
+    - .edit
+    - .launch
 
 # Making some of them default.
 # All tables cannot be default at the same time because they effectively define
@@ -52,5 +77,8 @@
 # Note that the execution order is alphabetical by name.
 - key: defaultRewriteTables
   val:
+    - '#c'
+    - '#f'
+    - '#r'
     - Lights
     - Lights.Hue
