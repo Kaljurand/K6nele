@@ -355,18 +355,21 @@ public class SpeechInputMethodService extends InputMethodService {
                     mInputView.showMessage(editorResult.getRewrite().ppCommand(), editorResult.isSuccess());
                 }
                 if (editorResult != null && mFlagPersonalizedLearning) {
+                    boolean isSelected = false;
                     Rewrites rewritesRec = new Rewrites(mPrefs, mRes, REWRITES_NAME_RECENT);
                     if (rewritesRec.isSelected()) {
+                        isSelected = true;
                         UtteranceRewriter ur = mRuleManager.addRecent(editorResult, rewritesRec.getRewrites());
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_RECENT, ur.toTsv());
                     }
                     Rewrites rewritesFreq = new Rewrites(mPrefs, mRes, REWRITES_NAME_FREQUENT);
                     if (rewritesFreq.isSelected()) {
+                        isSelected = true;
                         UtteranceRewriter ur = mRuleManager.addFrequent(editorResult, rewritesFreq.getRewrites());
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_FREQUENT, ur.toTsv());
                     }
                     // Update rewriters because the tables have changed
-                    if (rewritesRec.isSelected() || rewritesFreq.isSelected()) {
+                    if (isSelected) {
                         mCommandEditor.setRewriters(
                                 Utils.makeList(
                                         Utils.genRewriters(mPrefs, mRes, null, mRuleManager.getCommandMatcher())));
