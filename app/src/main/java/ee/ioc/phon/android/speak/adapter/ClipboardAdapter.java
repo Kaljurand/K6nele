@@ -1,5 +1,6 @@
 package ee.ioc.phon.android.speak.adapter;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -53,11 +54,24 @@ public class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Command command = mUr.getCommands().get(position);
-        holder.mView.setText(command.getLabelOrString());
         String val = command.makeUtt();
+        String label = command.getLabel();
+        if (label == null || label.isEmpty()) {
+            if (val == null) {
+                label = command.toString();
+            } else {
+                label = val;
+            }
+        }
+        holder.mView.setText(label);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder.mView.setTooltipText(label);
+        }
+
         // TODO: Note that "press and hold" buttons are not compatible with scrolling the keyboard
         // TODO: show them with a different background
         if (command.isRepeatable()) {
+            holder.mView.setBackgroundResource(R.drawable.button_repeatable);
             holder.mView.setOnClickListener(null);
             holder.mView.setOnTouchListener(new OnPressAndHoldListener() {
                 @Override
@@ -68,6 +82,7 @@ public class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyVi
                 }
             });
         } else {
+            holder.mView.setBackgroundResource(R.drawable.button_clip);
             holder.mView.setOnTouchListener(null);
             holder.mView.setOnClickListener(view -> {
                         if (val != null) {
@@ -76,10 +91,12 @@ public class ClipboardAdapter extends RecyclerView.Adapter<ClipboardAdapter.MyVi
                     }
             );
             // TODO: launch regex generator picker instead
+            /*
             holder.mView.setOnLongClickListener(v -> {
-                //speechInputView.showMessage(command.toString());
+                Toast.makeText(v.getContext(), label, Toast.LENGTH_SHORT).show();
                 return true;
             });
+             */
         }
     }
 
