@@ -8,6 +8,8 @@
     android:layout_alignParentBottom="true"
     android:background="@drawable/rectangle_gradient"
     android:clickable="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
@@ -46,7 +48,7 @@
             android:ellipsize="start"
             android:gravity="center"
             android:lines="2"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize2"
             tools:text="@string/summaryEnableIme" />
 
@@ -73,6 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:elevation="1dp"
         android:orientation="horizontal">
 
         <TextView
@@ -93,6 +96,7 @@
             android:layout_gravity="center"
             android:background="@drawable/button_mic"
             android:contentDescription="@string/cdMicrophone"
+            android:elevation="6dp"
             app:srcCompat="@drawable/ic_voice_search_api_material" />
 
         <RelativeLayout

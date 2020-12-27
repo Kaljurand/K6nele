@@ -8,6 +8,8 @@
     android:layout_alignParentBottom="true"
     android:background="@drawable/rectangle_gradient"
     android:clickable="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
@@ -48,7 +50,6 @@
             android:singleLine="true"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize2"
-            android:visibility="visible"
             tools:text="@string/summaryEnableIme" />
 
         <ImageButton
@@ -74,6 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:elevation="1dp"
         android:gravity="center">
 
         <ee.ioc.phon.android.speechutils.view.MicButton
@@ -85,6 +87,7 @@
             android:layout_gravity="center"
             android:background="@drawable/button_mic"
             android:contentDescription="@string/cdMicrophone"
+            android:elevation="6dp"
             android:gravity="center"
             app:srcCompat="@drawable/ic_voice_search_api_material" />
 

@@ -8,6 +8,8 @@
     android:layout_alignParentBottom="true"
     android:background="@drawable/rectangle_gradient"
     android:clickable="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
@@ -15,7 +17,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="1dp">
 
         <ImageButton
             android:id="@+id/bImeKeyboard"
@@ -44,7 +49,7 @@
             android:ellipsize="start"
             android:padding="@dimen/layoutMargin1"
             android:singleLine="true"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize2"
             tools:text="@string/summaryEnableIme" />
 
@@ -72,6 +77,9 @@
             android:layout_gravity="end"
             android:layout_toStartOf="@+id/bImeAction"
             android:layout_toLeftOf="@+id/bImeAction"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="2dp"
             android:gravity="end"
             android:padding="@dimen/layoutMargin4dp">
 
@@ -94,6 +102,7 @@
                 android:layout_toRightOf="@+id/tvInstruction"
                 android:background="@drawable/button_mic"
                 android:contentDescription="@string/cdMicrophone"
+                android:elevation="6dp"
                 app:srcCompat="@drawable/ic_voice_search_api_material" />
 
             <LinearLayout

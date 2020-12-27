@@ -5,6 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/rectangle_gradient"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:gravity="end"
     android:orientation="vertical"
     android:paddingLeft="0dip"
@@ -31,7 +33,7 @@
             android:lines="3"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/textSize2"
-            tools:text="@string/testComboLabel" />
+            tools:text="@string/testComboLabels" />
 
         <ImageButton
             android:id="@+id/bSettings"
@@ -63,6 +65,8 @@
         android:id="@+id/vVoiceImeView"
         android:layout_width="@dimen/layoutSpeechInputViewWidth"
         android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -70,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/layoutMargin1"
+            android:elevation="1dp"
             android:gravity="center">
 
             <TextView
@@ -83,7 +88,7 @@
                 android:singleLine="true"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/textSize2"
-                tools:text="@string/testComboLabel" />
+                tools:text="@string/testComboLabels" />
 
             <ee.ioc.phon.android.speechutils.view.MicButton
                 android:id="@+id/bImeStartStop"
@@ -96,6 +101,7 @@
                 android:layout_margin="@dimen/layoutMargin4dp"
                 android:background="@drawable/button_mic"
                 android:contentDescription="@string/cdMicrophone"
+                android:elevation="6dp"
                 android:gravity="center"
                 app:srcCompat="@drawable/ic_voice_search_api_material" />
 
