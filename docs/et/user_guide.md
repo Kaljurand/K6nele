@@ -44,7 +44,7 @@ Android v5 (Lollipop) ja uuemates seadmetes. Androidi kasutajaliidese tõlge ja 
 
 ## Demovideod
 
-[Esimene video](https://www.youtube.com/watch?v=gKFIWSA2GWc) näitab
+- [Esimene video](https://www.youtube.com/watch?v=gKFIWSA2GWc) näitab
 (1) kõnepõhist veebiotsingut;
 (2) kõneklaviatuuri sisse lülitamist ja sellega kirja kirjutamist;
 (3) aadressiotsingut kaardirakenduses;
@@ -55,13 +55,18 @@ Video on tehtud Kõnele versiooniga 0.8.56, uuemates versioonides on kasutajalii
 muutunud.
 (Samuti, _Arvutaja_ rakendust toetav teenus on praeguseks aegunud ning pole sellisel kujul enam kasutatav.)
 
-[Teine video](http://www.youtube.com/watch?v=VLjV8JulEow) näitab Kõnele paigaldamist Android v11 nutitelefoni, kus rakendusele
+- [Teine video](http://www.youtube.com/watch?v=VLjV8JulEow) näitab Kõnele paigaldamist Android v11 nutitelefoni, kus rakendusele
 mikrofoni kasutamise õiguse andmine on keerukam, ning kõnetuvastuskomponent tuleb
 paigaldada eraldi rakendusena
 [Kõnele service](https://github.com/Kaljurand/K6nele-service).
 Video on tehtud Kõnele
 beetaversiooniga v1.7.42, teistes versioonides on kasutajaliides natukene
 teistsugune.
+
+- [Kolmas video](https://youtu.be/PWngf5onMaE) näitab Kõnele v1.7.xx lisatud nuppude funktsionaalsust:
+(1) mikrofoninupu svapidele saab ümberkirjutusreeglite läbi käske omistada;
+(2) sisselülitatud ümberkirjutusreeglid kuvatakse nuppudena, ja nii saab näiteks ise teha kalkulaatorirakenduse;
+(3) tekstikastis kopeeritud tekst salvestub tabelisse nimega "#c" (_clipboard_), ja nii saab hiljem pikemaid ja/või korduvaid tekste ühe nupuvajutusega taassisestada.
 
 ## Kõnele kui iseseisev rakendus
 
