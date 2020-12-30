@@ -166,8 +166,9 @@ otselink sellesse menüüsse.
 Androidi seadete hierarhias asub vastav menüü üsna sügaval, ning lisaks erineb selle asukoht
 Androidi versiooniti:
 
-- Android v5: `Seaded -> Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`
-- uuemad Androidi versioonid: `Seaded -> Täpsemad seaded -> Keel ja klahvistik -> Virtuaalne klaviatuur`
+- v5: `Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`
+- v6-?: `Täpsemad seaded -> Keel ja klahvistik -> Virtuaalne klaviatuur`
+- v11: `Süsteem -> Keeled ja sisend -> Ekraanil kuvatav klaviatuur -> Ekraanil kuvatavate klaviatuuride haldamine`
 
 Järgnevad ekraanipildid näitavad klaviatuuri seadistamist Androidis v5.
 
@@ -201,10 +202,69 @@ Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult 
 
 ### Omadused
 
-Lisaks põhinupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
+Lisaks mikrofoninupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuuri puutetundlik paneel erinevaid operatsioone, sõltuvalt
 klaviatuuriseadetest,
 tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
+Osa nendest operatsioonidest on võimalik
+[tekstitoimetuskäskude](#tekstitoimetuskäsud) abil dubleerida.
+
+Versioonis 1.7 toetab mikrofoninupp lisaks svaipimist ja pikalt/topelt vajutamist, mida
+saab kasutajadefineertud operatsioonidega siduda,
+vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
+
+#### v1.7
+
+- vasak ülemine nurk, klaviatuurinupp:
+
+  - lühike vajutus vahetab eelmisele klaviatuurile,
+
+  - pikk vajutus vahetab järgmisele klaviatuurile;
+
+- parem ülemine nurk, tekstivälja tüübist sõltuv "action" nupp, nt
+
+  - otsinguväli: lühike vajutus sooritab otsingu,
+
+  - üherealine tekstiväli (nt pealkirjaväli): lühike vajutus liigutab kursori järgmisele väljale,
+
+  - tavaline mitmerealine tekstiväli: lühike vajutus lisab reavahetuse;
+
+- parem alumine nurk:
+
+  - lühike vajutus muudab paneeli tüüpi,
+
+    1. mikrofoni- ja kustutamisnupuga paneel
+       (kustutamisnupp kustutab kursorist vasakul oleva sümboli või praeguse tekstivaliku),
+
+    2. lausunginuppudega paneel, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus),
+
+    3. ainult nurganuppudega (ja seega väiksem) paneel,
+
+  - pikk vajutus käivitab/lõpetab/katkestab kõnetuvastuse (samamoodi nagu mikrofoninupp);
+
+- vasak alumine nurk, keele/teenuse vahetamise nupp (kui mitu keelt/teenust on aktiivsed):
+
+  - lühike vajus lülitab järgmisele keelele/teenusele,
+
+  - pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta;
+
+- paneel:
+
+  - lühike vajutus tühistab praeguse tekstivaliku,
+
+  - topeltvajutus lisab tühiku,
+
+  - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
+
+  - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
+
+  - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
+
+  - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
+
+  - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
+
+#### v1.6
 
 - vasak ülemine nurk:
 
@@ -225,23 +285,20 @@ tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
 
 - paneel, variant 1:
 
-  - topeltvajutus lisab tühiku;
+  - topeltvajutus lisab tühiku,
   - svaip vasakule kustutab kursorist vasakul asuva sõna,
   - svaip paremale lisab reavahetuse,
   - pikk vajutus valib kogu teksti;
 
 - paneel, variant 2 (vaikimisi, aga seadetes muudetav):
 
-  - topeltvajutus lisab tühiku;
+  - topeltvajutus lisab tühiku,
   - kustutamise ikoon kustutab kursorist vasakul oleva sümboli või praeguse valiku,
   - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
   - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
   - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
   - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
   - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
-
-Osa nendest operatsioonidest on võimalik
-[tekstitoimetuskäskude](#tekstitoimetuskäsud) abil dubleerida (vt allpool).
 
 ## Kõnele kutsumine teistest rakendustest
 
@@ -415,7 +472,9 @@ Näide. (Eestikeelne) kõnekäsk, mis rakendab lausele vastavat mustrit (st sõn
 - __Arg1__ = `[.?!]\\s*()[^.?!]+[.?!]`
 - __Arg2__ = `2`
 
-### Lausung kui nupuvajutus (alates Kõnele v1.7.28)
+### Lausung kui nupuvajutus
+
+(_Alates Kõnele v1.7.28_)
 
 Mõningaid toimingud on mõistlikum kõneliidese asemel nuppudele vajutades läbi viia (klaveri mängimine, liftis korruse valimine, jms).
 Lisaks eelkirjeldatud nuppudele ("action" nupp, kustutamisnupp, ...) ja kursori liigutamisele Kõnele paneelil, toetab
