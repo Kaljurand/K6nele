@@ -9,7 +9,7 @@ title: Release notes
 
 Requires Android 4.1+
 
-### v1.7.?? (2020-12-??)
+### v1.7.?? (2021-01-??)
 
 New in this release:
 
@@ -28,7 +28,6 @@ New in this release:
   - if imeOptions includes "flagNoPersonalizedLearning" (aka incognito mode) then do not add utterances to the ``#f`` and ``#r`` tables, even when they are active
 
 - settings: Languages & services: list each service once also with an undefined language (represented by ---), giving a better overview of all the available services and allowing them to be used without specifying the language
-- settings: make "Auto start" visible again in the IME settings
 - action bar now appears on all platforms (incl. Watch)
 - improve support for TV (untested)
 - the mic button now generates utterances like ``K6_Y_BTN_MIC_UP`` when pressed/swiped. Rewrite rules can map these to (app-dependent) actions, e.g. (in a chat app) left swipe to select text on the left, right swipe to post current text.

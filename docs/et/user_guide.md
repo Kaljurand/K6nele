@@ -196,9 +196,10 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181227-093824.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult veerandi märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20181227-093855.png"><img title="Ekraanipilt: Kõnele võib tuvastuse ajaks veel väiksemaks teha." src="{{ site.baseurl }}/images/et/Screenshot_20181227-094100.png">
+<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20201230-114003.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult kolmandiku märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20201230-114031.png">
 
-Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult veerandi, ning tuvastuse ajaks saab klaviatuuri veel väiksemaks teha.
+Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult veerandi.
+
 
 ### Omadused
 
@@ -237,8 +238,10 @@ vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
        (kustutamisnupp kustutab kursorist vasakul oleva sümboli või praeguse tekstivaliku),
 
     2. lausunginuppudega paneel, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus),
+       <img style="float: right" title="Ekraanipilt: lausunginuppudega paneel" alt="Ekraanipilt: lausunginuppudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20201230-115204.png">
 
     3. ainult nurganuppudega (ja seega väiksem) paneel,
+       <img style="float: right" title="Ekraanipilt: ainult nurganupudega paneel" alt="Ekraanipilt: ainult nurganupudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20201230-114051.png">
 
   - pikk vajutus käivitab/lõpetab/katkestab kõnetuvastuse (samamoodi nagu mikrofoninupp);
 
@@ -263,6 +266,7 @@ vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
   - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
 
   - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
+
 
 #### v1.6
 
