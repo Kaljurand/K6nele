@@ -2,6 +2,7 @@ package ee.ioc.phon.android.speak.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -77,13 +78,17 @@ public class SpeechInputMethodService extends InputMethodService {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             // TODO: remove the listener onFinish
             clipboard.addPrimaryClipChangedListener(() -> {
-                CharSequence clip = clipboard.getPrimaryClip().getItemAt(0).getText();
-                if (clip != null) {
-                    UtteranceRewriter ur = mRuleManager.addRecent(clip.toString(), rewritesClip.getRewrites());
-                    PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_CLIP, ur.toTsv());
-                    mCommandEditor.setRewriters(
-                            Utils.makeList(
-                                    Utils.genRewriters(mPrefs, mRes, null, mRuleManager.getCommandMatcher())));
+                ClipData clipData = clipboard.getPrimaryClip();
+                if (clipData != null) {
+                    String clip = clipData.getItemAt(0).getText().toString();
+                    // Empty strings make less sense as clips
+                    if (!clip.isEmpty()) {
+                        UtteranceRewriter ur = mRuleManager.addRecent(clip, rewritesClip.getRewrites());
+                        PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_CLIP, ur.toTsv());
+                        mCommandEditor.setRewriters(
+                                Utils.makeList(
+                                        Utils.genRewriters(mPrefs, mRes, null, mRuleManager.getCommandMatcher())));
+                    }
                 }
             });
         }

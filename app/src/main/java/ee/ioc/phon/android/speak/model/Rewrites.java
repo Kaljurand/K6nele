@@ -28,9 +28,8 @@ public class Rewrites {
 
     private static final Comparator SORT_BY_ID = new Rewrites.SortById();
 
-    private SharedPreferences mPrefs;
-    private Resources mRes;
-
+    private final SharedPreferences mPrefs;
+    private final Resources mRes;
     private final String mId;
 
     public Rewrites(SharedPreferences prefs, Resources res, String id) {
@@ -240,9 +239,26 @@ public class Rewrites {
         if (id == null || id.isEmpty()) {
             return "";
         }
-        return "\n" + id +
-                "\n · " + toPp(map.get(UtteranceRewriter.HEADER_ARG1)) +
-                "\n · " + toPp(map.get(UtteranceRewriter.HEADER_ARG2));
+        StringBuilder sb = new StringBuilder();
+        sb.append('\n');
+        sb.append(id);
+        String arg1 = toPp(map.get(UtteranceRewriter.HEADER_ARG1));
+        if (!arg1.isEmpty()) {
+            sb.append('\n');
+            sb.append(' ');
+            sb.append('(');
+            sb.append(arg1);
+            sb.append(')');
+            String arg2 = toPp(map.get(UtteranceRewriter.HEADER_ARG2));
+            if (!arg2.isEmpty()) {
+                sb.append('\n');
+                sb.append(' ');
+                sb.append('(');
+                sb.append(arg2);
+                sb.append(')');
+            }
+        }
+        return sb.toString();
     }
 
     private static String ppMatcher(Map<String, String> map) {
