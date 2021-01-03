@@ -188,14 +188,16 @@ public class SpeechInputMethodService extends InputMethodService {
         InputConnection ic = getCurrentInputConnection();
         // InputConnectionCommandEditor cannot be called with a null InputConnection.
         // We do not expect this to happen, but Google Play crash reports show that it does.
+        // TODO: review, e.g. move to after restarting-check
         if (ic == null) {
             Toast.makeText(getApplicationContext(), R.string.errorFailedGetCurrentInputConnection, Toast.LENGTH_LONG).show();
-            switchToLastIme();
+            //switchToLastIme();
             return;
         }
         ((InputConnectionCommandEditor) mCommandEditor).setInputConnection(ic);
 
         // TODO: quick hack to add app to the matcher, not sure if we can access the class name of the app
+        // TODO: use getPackageName() or editorInfo.packageName, but not both
         String packageName = editorInfo.packageName;
         ComponentName app = new ComponentName(packageName, packageName);
 

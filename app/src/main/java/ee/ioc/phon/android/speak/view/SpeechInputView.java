@@ -834,6 +834,7 @@ public class SpeechInputView extends LinearLayoutCompat {
      * Note that SpeechRecognizer#destroy calls cancel first.
      */
     private void cancelOrDestroy() {
+        mBtnType = "Y";
         if (mRecognizer != null) {
             mRecognizer.destroy();
             mRecognizer = null;
