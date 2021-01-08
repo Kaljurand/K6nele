@@ -97,6 +97,7 @@
     </queries>
 
     <application
+        android:name=".K6neleApplication"
         android:allowBackup="true"
         android:description="@string/descriptionApp"
         android:fullBackupContent="true"
@@ -403,6 +404,14 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".demo.FormDemoActivity"
             android:exported="true"
             android:label="@string/labelActivityFormDemo" />
+
+        <activity
+            android:name=".activity.RewritesActivity2"
+            android:label="Rewrites2" />
+
+        <activity
+            android:name=".activity.RewriteRuleAddActivity"
+            android:label="Rewrite Rule Add" />
 
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->

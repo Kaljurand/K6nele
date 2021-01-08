@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        android:title="Room experiment"
+        app:iconSpaceReserved="false">
+        <intent
+            android:targetClass="ee.ioc.phon.android.speak.activity.RewritesActivity2"
+            android:targetPackage="ee.ioc.phon.android.speak" />
+    </Preference>
     <!-- This preference is a shortcut to the Android IME settings to allow the
     user to quickly enable the Kõnele IME. If already enabled, this preference is not shown.
     Note that Android Things does not have the INPUT_METHOD_SETTINGS activity, so clicking
