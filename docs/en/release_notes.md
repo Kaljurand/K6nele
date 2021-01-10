@@ -9,12 +9,12 @@ title: Release notes
 
 Requires Android 4.1+
 
-### v1.7.?? (2021-01-??)
+### v1.7.56 (2021-01-10)
 
 New in this release:
 
 - IME: new UI mode where the selected rewrite rules are available as buttons, allowing one to implement custom keyboards for numbers/punctuation, commonly used emoji, text editing commands, calculators, app launchers, etc., where buttons are a more natural modality than speech
-- IME: new UI mode button in the lower right corner, that allows switching between the default mode, buttons-mode, and the minimized mode (without stopping the ongoing recognition). The current UI mode is saved per app.
+- IME: new UI mode button in the lower right corner, that allows switching between the default mode, buttons-mode, and the minimized mode (without stopping the possibly ongoing recognition). The current UI mode is saved per app.
 - IME: remove the possibility to switch between the default and minimized mode via arrow keys during recognition
 - IME: rewrite rule tables now support a Label-column, meant for button-sized labels and icons
 - IME: remove command ``saveClip``
@@ -25,9 +25,9 @@ New in this release:
   i.e. this logging must be manually enabled by first creating the empty tables, and can be turned off by deleting
   the tables
 
-  - if imeOptions includes "flagNoPersonalizedLearning" (aka incognito mode) then do not add utterances to the ``#f`` and ``#r`` tables, even when they are active
+  - if ``imeOptions`` includes "flagNoPersonalizedLearning" (aka incognito mode) then do not add utterances to the ``#f`` and ``#r`` tables, even when they are active
 
-- settings: Languages & services: list each service once also with an undefined language (represented by ---), giving a better overview of all the available services and allowing them to be used without specifying the language
+- settings: Languages & services: list each service once also with an undefined language (represented by "&mdash;"), giving a better overview of all the available services and allowing them to be used without specifying the language
 - action bar now appears on all platforms (incl. Watch)
 - improve support for TV (untested)
 - the mic button now generates utterances like ``K6_Y_BTN_MIC_UP`` when pressed/swiped. Rewrite rules can map these to (app-dependent) actions, e.g. (in a chat app) left swipe to select text on the left, right swipe to post current text.
@@ -37,12 +37,13 @@ New in this release:
 - avoid the error "Cleartext HTTP traffic not permitted" when using the Lights.Hue rewrites table, on Android v8+
 - add developer setting to switch on Do Not Disturb access ([issue #73](https://github.com/Kaljurand/K6nele/issues/73))
 - remove intent filter for ``RECORD_SOUND`` (did not work)
-- migrate to AndroidX (~1 MB larger APK)
-- small UI changes, e.g. use SeekBarPreference
+- migrate UI to AndroidX (~1 MB larger APK)
+- small UI changes, e.g. use ``SeekBarPreference``
 - remember combo state per app
-- remove dependency on net-speech-api
+- remove dependency on the net-speech-api library
 - use the separate app [Kõnele service](https://github.com/Kaljurand/K6nele-service) as the default service provider, if installed, otherwise use the built-in "Kõnele (fast recognition)".
-  It is recommended to install "Kõnele service", at least on Android 11, where the built-in service does not seem to work.
+  It is recommended to install "Kõnele service", at least on Android 11, where the built-in service does not seem to work
+  ([issue #82](https://github.com/Kaljurand/K6nele/issues/82)).
 - add support for the light theme; the theme now depends on the system theme (requires recent Android)
 
 ## v1.1 - v1.6
