@@ -22,11 +22,11 @@ New in this release:
 - IME: make height of the panel independent of the presence of the combo selector (because it must accommodate the UI mode button in all configurations)
 - (experimental) IME: long-pressing the UI mode button starts/stops/cancels recognition
 - (experimental) IME: clipboard items, recent utterances, and frequent utterances are logged into the ``#c``, ``#r`` and ``#f`` rewrite tables if these tables exist,
-  i.e. this logging must be manually enabled by first creating the empty tables, and can be turned off by deleting
-  the tables
+  i.e. this logging must be manually turned on by first creating the empty tables and enabling them, and can be turned off by disabling the tables
 
   - if ``imeOptions`` includes "flagNoPersonalizedLearning" (aka incognito mode) then do not add utterances to the ``#f`` and ``#r`` tables, even when they are active
 
+- IME: settings: deprecate "Swiping" (will be removed in the next release)
 - settings: Languages & services: list each service once also with an undefined language (represented by "&mdash;"), giving a better overview of all the available services and allowing them to be used without specifying the language
 - action bar now appears on all platforms (incl. Watch)
 - improve support for TV (untested)

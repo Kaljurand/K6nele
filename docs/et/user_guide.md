@@ -205,16 +205,14 @@ Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult 
 
 Lisaks mikrofoninupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuuri puutetundlik paneel erinevaid operatsioone, sõltuvalt
-klaviatuuriseadetest,
 tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
 Osa nendest operatsioonidest on võimalik
 [tekstitoimetuskäskude](#tekstitoimetuskäsud) abil dubleerida.
-
-Versioonis 1.7 toetab mikrofoninupp lisaks svaipimist ja pikalt/topelt vajutamist, mida
+Alates versioonist 1.7 toetab mikrofoninupp lisaks svaipimist ja pikalt/topelt vajutamist, mida
 saab kasutajadefineertud operatsioonidega siduda,
 vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
 
-#### v1.7
+Nurganupud:
 
 - vasak ülemine nurk, klaviatuurinupp:
 
@@ -245,13 +243,13 @@ vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
 
   - pikk vajutus käivitab/lõpetab/katkestab kõnetuvastuse (samamoodi nagu mikrofoninupp);
 
-- vasak alumine nurk, keele/teenuse vahetamise nupp (kui mitu keelt/teenust on aktiivsed):
+- vasak alumine nurk, keele/teenuse vahetamise nupp (nähtav, kui mitu keelt/teenust on aktiivsed):
 
   - lühike vajus lülitab järgmisele keelele/teenusele,
 
   - pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta;
 
-- paneel:
+Paneel:
 
   - lühike vajutus tühistab praeguse tekstivaliku,
 
@@ -267,42 +265,6 @@ vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
 
   - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
-
-#### v1.6
-
-- vasak ülemine nurk:
-
-  - klaviatuuri-ikoon, kui tuvastust ei toimu:
-  lühike vajutus vahetab eelmisele klaviatuurile,
-  pikk vajutus vahetab järgmisele klaviatuurile;
-
-  - noole-ikoon, tuvastuse ajal:
-  lühike vajutus muudab klaviatuuri paneeli väikseks, või tagasi suureks;
-
-- parem ülemine nurk, tekstivälja tüübist sõltuv "action" nupp, nt
-
-  - otsinguväli: lühike vajutus sooritab otsingu,
-
-  - üherealine tekstiväli (nt pealkirjaväli): lühike vajutus liigutab kursori järgmisele väljale,
-
-  - tavaline mitmerealine tekstiväli: lühike vajutus lisab reavahetuse;
-
-- paneel, variant 1:
-
-  - topeltvajutus lisab tühiku,
-  - svaip vasakule kustutab kursorist vasakul asuva sõna,
-  - svaip paremale lisab reavahetuse,
-  - pikk vajutus valib kogu teksti;
-
-- paneel, variant 2 (vaikimisi, aga seadetes muudetav):
-
-  - topeltvajutus lisab tühiku,
-  - kustutamise ikoon kustutab kursorist vasakul oleva sümboli või praeguse valiku,
-  - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
-  - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
-  - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
-  - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
-  - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
 ## Kõnele kutsumine teistest rakendustest
 
