@@ -204,7 +204,7 @@ public class SpeechInputMethodService extends InputMethodService {
         mInputView.init(
                 R.array.keysIme,
                 new CallerInfo(makeExtras(), editorInfo, getPackageName()),
-                PreferenceUtils.getPrefInt(mPrefs, mRes, R.string.keyImeMode, R.string.defaultImeMode),
+                true,
                 app
         );
 

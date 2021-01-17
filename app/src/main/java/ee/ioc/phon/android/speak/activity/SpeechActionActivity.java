@@ -143,7 +143,7 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         mView = findViewById(R.id.vVoiceImeView);
         ComponentName callingActivity = getCallingActivity();
         CallerInfo callerInfo = new CallerInfo(getExtras(), callingActivity);
-        mView.init(R.array.keysActivity, callerInfo, 0, callingActivity);
+        mView.init(R.array.keysActivity, callerInfo, false, callingActivity);
         mView.setListener(getSpeechInputViewListener(), null);
 
         String[] results = getExtras().getStringArray(Extras.EXTRA_RESULT_RESULTS);

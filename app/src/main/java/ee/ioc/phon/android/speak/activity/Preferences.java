@@ -149,9 +149,6 @@ public class Preferences extends AppCompatActivity implements PreferenceFragment
 
             showOrHideLinkToImeSettings(category, pref);
 
-            Preference prefImeMode = findPreference(getString(R.string.keyImeMode));
-            prefImeMode.setSummary(((ListPreference) prefImeMode).getEntry());
-
             updateSummary(R.string.keyImeCombo, R.string.emptylistImeCombos);
             updateSummary(R.string.keyCombo, R.string.emptylistCombos);
         }

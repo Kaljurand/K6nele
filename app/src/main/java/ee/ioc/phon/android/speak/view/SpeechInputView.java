@@ -73,9 +73,6 @@ public class SpeechInputView extends LinearLayoutCompat {
     private SpeechRecognizer mRecognizer;
     private ServiceLanguageChooser mSlc;
 
-    private OnSwipeTouchListener mOstl;
-    private OnCursorTouchListener mOctl;
-
     private MicButton.State mState;
 
     private String mUiState;
@@ -85,7 +82,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private String mBtnType = "Y";
 
     // TODO: make it an attribute
-    private int mSwipeType = 0;
+    private boolean mSwipeType;
     private final static String DASH_CUR = "――――――――――――――――――――";
     private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
@@ -249,124 +246,89 @@ public class SpeechInputView extends LinearLayoutCompat {
             });
         }
 
-        mOstl = new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeLeft() {
-                mListener.onDeleteLastWord();
-            }
-
-            @Override
-            public void onSwipeRight() {
-                mListener.onAddNewline();
-            }
-
-            @Override
-            public void onSwipeUp() {
-                mListener.goUp();
-            }
-
-            @Override
-            public void onSwipeDown() {
-                mListener.goDown();
-            }
-
-            @Override
-            public void onSingleTapMotion() {
-                mListener.onReset();
-            }
-
-            @Override
-            public void onDoubleTapMotion() {
-                mListener.onAddSpace();
-            }
-
-            @Override
-            public void onLongPressMotion() {
-                mListener.onSelectAll();
-            }
-        };
-
         // TODO: move to utilities (48dp for the edges)
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int edge = Math.round(48 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-        mOctl = new OnCursorTouchListener(edge) {
-            @Override
-            public void onMove(int numOfChars) {
-                mListener.moveRel(numOfChars);
-                showMessageArrow(numOfChars, DASH_CUR);
-            }
-
-            @Override
-            public void onMoveSel(int numOfChars, int type) {
-                mListener.moveRelSel(numOfChars, type);
-                showMessageArrow(numOfChars, DASH_SEL);
-            }
-
-            @Override
-            public void onLongPress() {
-                // Selects current word.
-                // The selection can be later changed, e.g. include punctuation.
-                mListener.onExtendSel("\\w+");
-                setBackgroundResource(R.drawable.rectangle_gradient_light);
-                performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            }
-
-            @Override
-            public void onSingleTapMotion() {
-                mListener.onReset();
-            }
-
-            @Override
-            public void onDoubleTapMotion() {
-                mListener.onAddSpace();
-            }
-
-            @Override
-            public void onDown() {
-                mBImeKeyboard.setVisibility(View.INVISIBLE);
-                mBImeAction.setVisibility(View.INVISIBLE);
-                setVisibility(mBUiMode, View.INVISIBLE);
-                if (mRlClipboard.getVisibility() == View.GONE) {
-                    setVisibility(mCentralButtons, View.INVISIBLE);
-                } else {
-                    setVisibility(mRlClipboard, View.INVISIBLE);
+        if (mSwipeType) {
+            setOnTouchListener(new OnCursorTouchListener(edge) {
+                @Override
+                public void onMove(int numOfChars) {
+                    mListener.moveRel(numOfChars);
+                    showMessageArrow(numOfChars, DASH_CUR);
                 }
-                setVisibility(mBComboSelector, View.INVISIBLE);
-                showMessage("");
-            }
 
-            @Override
-            public void onUp() {
-                showMessage("");
-                mBImeKeyboard.setVisibility(View.VISIBLE);
-                mBImeAction.setVisibility(View.VISIBLE);
-                setVisibility(mBUiMode, View.VISIBLE);
-                if (mRlClipboard.getVisibility() == View.GONE) {
-                    setVisibility(mCentralButtons, View.VISIBLE);
-                } else {
-                    setVisibility(mRlClipboard, View.VISIBLE);
+                @Override
+                public void onMoveSel(int numOfChars, int type) {
+                    mListener.moveRelSel(numOfChars, type);
+                    showMessageArrow(numOfChars, DASH_SEL);
                 }
-                setVisibility(mBComboSelector, View.VISIBLE);
-                setBackgroundResource(R.drawable.rectangle_gradient);
-            }
 
-            @Override
-            public void onSwipeUp() {
-                mListener.onAction(EditorInfo.IME_ACTION_PREVIOUS, false);
-            }
+                @Override
+                public void onLongPress() {
+                    // Selects current word.
+                    // The selection can be later changed, e.g. include punctuation.
+                    mListener.onExtendSel("\\w+");
+                    setBackgroundResource(R.drawable.rectangle_gradient_light);
+                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
 
-            @Override
-            public void onSwipeDown() {
-                mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
-            }
-        };
+                @Override
+                public void onSingleTapMotion() {
+                    mListener.onReset();
+                }
+
+                @Override
+                public void onDoubleTapMotion() {
+                    mListener.onAddSpace();
+                }
+
+                @Override
+                public void onDown() {
+                    mBImeKeyboard.setVisibility(View.INVISIBLE);
+                    mBImeAction.setVisibility(View.INVISIBLE);
+                    setVisibility(mBUiMode, View.INVISIBLE);
+                    if (mRlClipboard.getVisibility() == View.GONE) {
+                        setVisibility(mCentralButtons, View.INVISIBLE);
+                    } else {
+                        setVisibility(mRlClipboard, View.INVISIBLE);
+                    }
+                    setVisibility(mBComboSelector, View.INVISIBLE);
+                    showMessage("");
+                }
+
+                @Override
+                public void onUp() {
+                    showMessage("");
+                    mBImeKeyboard.setVisibility(View.VISIBLE);
+                    mBImeAction.setVisibility(View.VISIBLE);
+                    setVisibility(mBUiMode, View.VISIBLE);
+                    if (mRlClipboard.getVisibility() == View.GONE) {
+                        setVisibility(mCentralButtons, View.VISIBLE);
+                    } else {
+                        setVisibility(mRlClipboard, View.VISIBLE);
+                    }
+                    setVisibility(mBComboSelector, View.VISIBLE);
+                    setBackgroundResource(R.drawable.rectangle_gradient);
+                }
+
+                @Override
+                public void onSwipeUp() {
+                    mListener.onAction(EditorInfo.IME_ACTION_PREVIOUS, false);
+                }
+
+                @Override
+                public void onSwipeDown() {
+                    mListener.onAction(EditorInfo.IME_ACTION_NEXT, false);
+                }
+            });
+        }
         setGuiInitState(0);
 
         makeComboChange();
     }
 
-    public void init(int keys, CallerInfo callerInfo, int swipeType, ComponentName app) {
+    public void init(int keys, CallerInfo callerInfo, boolean swipeType, ComponentName app) {
         mSwipeType = swipeType;
         // These controls are optional (i.e. can be null),
         // except for mBImeStartStop (TODO: which should also be optional)
@@ -395,7 +357,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             mRvClipboard.setLayoutManager(new GridLayoutManager(context, getResources().getInteger(R.integer.spanCount)));
         }
 
-        if (mSwipeType == 2) {
+        if (swipeType) {
             // Turning from GONE to VISIBLE
             findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
         }
@@ -549,16 +511,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 }
                 setText(mTvMessage, message);
             }
-        }
-    }
-
-    private void updateTouchListener(int type) {
-        if (type == 1) {
-            setOnTouchListener(mOstl);
-        } else if (type == 2) {
-            setOnTouchListener(mOctl);
-        } else {
-            setOnTouchListener(null);
         }
     }
 
@@ -750,7 +702,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             setGuiState(MicButton.State.ERROR);
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
-        updateTouchListener(mSwipeType);
+
         if (mBUiMode != null) {
             mBUiMode.setColorFilter(null);
         }

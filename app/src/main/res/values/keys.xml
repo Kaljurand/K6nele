@@ -22,7 +22,6 @@
     <string name="keyImeCombo" translatable="false">keyImeCombo</string>
     <string name="keyImeCurrentAppCombo" translatable="false">keyImeCurrentAppCombo</string>
     <string name="keyImeAudioFormat" translatable="false">keyImeAudioFormat</string>
-    <string name="keyImeMode" translatable="false">keyImeMode</string>
     <string name="keyAudioFormat" translatable="false">keyAudioFormat</string>
     <string name="keyMaxHypotheses" translatable="false">keyMaxHypotheses</string>
     <string name="keyRewritesMap" translatable="false">keyRewritesMap</string>

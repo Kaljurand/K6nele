@@ -49,13 +49,6 @@
             android:summary="@string/summaryImeShowPartialResults"
             android:title="@string/titleImeShowPartialResults"
             app:iconSpaceReserved="false" />
-        <ListPreference
-            android:defaultValue="@string/defaultImeMode"
-            android:entries="@array/entriesImeMode"
-            android:entryValues="@array/valuesImeMode"
-            android:key="@string/keyImeMode"
-            android:title="@string/titleImeMode"
-            app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"

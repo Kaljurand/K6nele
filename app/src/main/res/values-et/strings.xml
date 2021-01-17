@@ -39,7 +39,6 @@
     <string name="titleCategoryDevel">Arendajatele</string>
     <string name="titleCategoryDemos">Demod, testid, jne</string>
     <string name="titleScreenDevel">Arendaja seaded, demod, jne</string>
-    <string name="titleImeMode">Svaipimine</string>
     <string name="titleAutoStart">Autostart</string>
     <string name="summaryAutoStart">Alusta lindistamist automaatselt</string>
     <string name="titleAutoStopAfterPause">Autostopp pärast pausi</string>
@@ -272,11 +271,6 @@
         <item>10 sek</item>
         <item>20 sek</item>
         <item>30 sek</item>
-    </string-array>
-
-    <string-array name="entriesImeMode">
-        <item>Svaip vasakule kustutab eelneva sõna, svaip paremale lisab uue rea</item>
-        <item>Svaipimine liigutab kursorit</item>
     </string-array>
 
     <plurals name="summaryWsServerWithStatus">

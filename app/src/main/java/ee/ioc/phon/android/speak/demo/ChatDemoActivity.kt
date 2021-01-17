@@ -93,7 +93,7 @@ class ChatDemoActivity : AppCompatActivity() {
         val siv = findViewById<SpeechInputView>(R.id.vSpeechInputView)
         val callerInfo = CallerInfo(createExtras(), callingActivity)
         // TODO: review this
-        siv.init(R.array.keysActivity, callerInfo, 0, null)
+        siv.init(R.array.keysActivity, callerInfo, false, null)
         siv.setListener(speechInputViewListener, null)
 
         (findViewById(android.R.id.list) as ListView).onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
