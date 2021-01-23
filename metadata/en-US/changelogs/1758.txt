@@ -1,0 +1,1 @@
+- IME: settings: Remove "Swiping", which can be emulated by the more powerful microphone button swipe commands.

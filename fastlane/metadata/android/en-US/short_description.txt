@@ -1,1 +1,0 @@
-An app that offers speech-to-text based services and user interfaces to other apps
