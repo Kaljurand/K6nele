@@ -15,6 +15,7 @@ import ee.ioc.phon.android.speak.adapter.RewriteRuleListAdapter
 import ee.ioc.phon.android.speak.model.RewriteRule
 import ee.ioc.phon.android.speak.model.RewriteRuleViewModel
 import ee.ioc.phon.android.speak.model.RewriteRuleViewModelFactory
+import java.util.regex.Pattern
 
 class RewritesActivity2 : AppCompatActivity() {
 
@@ -53,7 +54,7 @@ class RewritesActivity2 : AppCompatActivity() {
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
             intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { reply ->
-                val word = RewriteRule(reply)
+                val word = RewriteRule(2, Pattern.compile("(.)"), reply)
                 wordViewModel.insert(word)
             }
         } else {

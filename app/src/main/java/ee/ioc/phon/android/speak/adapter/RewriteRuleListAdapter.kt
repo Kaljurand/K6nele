@@ -18,14 +18,16 @@ class RewriteRuleListAdapter : ListAdapter<RewriteRule, RewriteRuleListAdapter.R
 
     override fun onBindViewHolder(holder: RewriteRuleViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.replacement)
+        holder.bind(current.utteranceAsStr, current.replacement)
     }
 
     class RewriteRuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val wordItemView: TextView = itemView.findViewById(R.id.textView)
+        private val utterance: TextView = itemView.findViewById(R.id.utterance)
+        private val replacement: TextView = itemView.findViewById(R.id.replacement)
 
-        fun bind(text: String?) {
-            wordItemView.text = text
+        fun bind(_utterance: String?, _replacement: String?) {
+            utterance.text = _utterance
+            replacement.text = _replacement
         }
 
         companion object {
@@ -43,7 +45,7 @@ class RewriteRuleListAdapter : ListAdapter<RewriteRule, RewriteRuleListAdapter.R
         }
 
         override fun areContentsTheSame(oldItem: RewriteRule, newItem: RewriteRule): Boolean {
-            return oldItem.replacement == newItem.replacement
+            return oldItem.utteranceAsStr == newItem.utteranceAsStr && oldItem.replacement == newItem.replacement
         }
     }
 }

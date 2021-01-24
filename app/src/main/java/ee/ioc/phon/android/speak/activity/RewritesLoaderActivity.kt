@@ -30,16 +30,16 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
-import ee.ioc.phon.android.speak.AppDatabase
+import ee.ioc.phon.android.speak.K6neleApplication
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.databinding.ActivityRewritesLoaderBinding
 import ee.ioc.phon.android.speak.model.RewriteRule
+import ee.ioc.phon.android.speak.model.RewriteRuleViewModel
+import ee.ioc.phon.android.speak.model.RewriteRuleViewModelFactory
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.*
@@ -52,6 +52,11 @@ import java.util.*
  * can be picked.
  */
 class RewritesLoaderActivity : AppCompatActivity() {
+
+    private val wordViewModel: RewriteRuleViewModel by viewModels {
+        RewriteRuleViewModelFactory((application as K6neleApplication).repository)
+    }
+
     private var utteranceRewriter: UtteranceRewriter? = null
     private var binding: ActivityRewritesLoaderBinding? = null
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,12 +158,13 @@ class RewritesLoaderActivity : AppCompatActivity() {
         if (utteranceRewriter != null) {
             val intent = Intent(this, RewritesActivity::class.java)
             intent.putExtra(RewritesActivity.EXTRA_NAME, name)
-            GlobalScope.launch {
-                room(name, utteranceRewriter!!)
-                // TODO: remove once Room is ready
-                PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter!!.toTsv())
-                startActivity(intent)
+
+            for (command in utteranceRewriter!!.commands) {
+                wordViewModel.insert((RewriteRule.fromCommand(command)))
             }
+            // TODO: remove once Room is ready
+            PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter!!.toTsv())
+            startActivity(intent)
 
             // If there were errors then we load another activity to show them.
             // TODO: verify that this is a correct way to start multiple activities
@@ -175,24 +181,6 @@ class RewritesLoaderActivity : AppCompatActivity() {
 
     private fun toast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
-    }
-
-    /**
-     * TODO:
-     * - named tables
-     * db.rewriteRuleDao().insertAll
-     *
-     * @param ur
-     */
-    private suspend fun room(name: String, ur: UtteranceRewriter) {
-        val db = Room.databaseBuilder(applicationContext,
-                AppDatabase::class.java, name).build()
-        val rules: MutableList<RewriteRule> = ArrayList()
-        var idx = 0
-        for (command in ur.commands) {
-            rules.add(RewriteRule.fromCommand(idx++, command))
-        }
-        db.rewriteRuleDao().insertAll(rules)
     }
 
     companion object {
