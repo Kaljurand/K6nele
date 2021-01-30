@@ -29,7 +29,11 @@ class RewritesActivity2 : AppCompatActivity() {
         setContentView(R.layout.activity_rewrites)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = RewriteRuleListAdapter()
+        val adapter = RewriteRuleListAdapter(
+                { rule -> wordViewModel.incFreq(rule) },
+                { rule -> wordViewModel.delete(rule) }
+        )
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -42,6 +46,7 @@ class RewritesActivity2 : AppCompatActivity() {
             words.let { adapter.submitList(it) }
         }
 
+        // Add new entry
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             val intent = Intent(this@RewritesActivity2, RewriteRuleAddActivity::class.java)
@@ -54,13 +59,13 @@ class RewritesActivity2 : AppCompatActivity() {
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
             intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { reply ->
-                val word = RewriteRule(2, Pattern.compile("(.)"), reply)
+                val word = RewriteRule(2, Pattern.compile("myapp3"), Pattern.compile("(.)"), reply)
                 wordViewModel.insert(word)
             }
         } else {
             Toast.makeText(
                     applicationContext,
-                    "empty not saved",
+                    "Empty not saved",
                     Toast.LENGTH_LONG
             ).show()
         }

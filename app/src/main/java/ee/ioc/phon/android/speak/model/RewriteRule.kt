@@ -9,18 +9,16 @@ import java.util.regex.Pattern
 @Entity(tableName = "rewrite_rules")
 data class RewriteRule(
         val ownerId: Int,
+        @ColumnInfo(name = "app") val app: Pattern?,
         @ColumnInfo(name = "utterance") val utterance: Pattern?,
         @ColumnInfo(name = "replacement") val replacement: String?) {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
-    val utteranceAsStr: String?
-        get() = utterance?.pattern()
-
     companion object {
         fun fromCommand(command: Command): RewriteRule {
-            return RewriteRule(1, command.utterance, command.replacement)
+            return RewriteRule(1, command.app, command.utterance, command.replacement)
         }
 
         /**
@@ -30,7 +28,7 @@ data class RewriteRule(
          * @return
          */
         fun toCommand(rule: RewriteRule): Command {
-            return Command("", "", null, null, null, rule.utterance, rule.replacement, null, null)
+            return Command("", "", null, null, rule.app, rule.utterance, rule.replacement, null, null)
         } // TODO
     }
 }

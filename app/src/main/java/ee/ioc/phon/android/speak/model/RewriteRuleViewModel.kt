@@ -17,6 +17,14 @@ class RewriteRuleViewModel(private val repository: RewriteRuleRepository) : View
     fun insert(word: RewriteRule) = viewModelScope.launch {
         repository.insertAll(word)
     }
+
+    fun delete(word: RewriteRule) = viewModelScope.launch {
+        repository.delete(word)
+    }
+
+    fun incFreq(word: RewriteRule) = viewModelScope.launch {
+        repository.incFreq(word)
+    }
 }
 
 class RewriteRuleViewModelFactory(private val repository: RewriteRuleRepository) : ViewModelProvider.Factory {

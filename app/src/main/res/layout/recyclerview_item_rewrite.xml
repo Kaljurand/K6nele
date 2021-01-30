@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ownerId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:padding="@dimen/layoutMargin4dp"
+        android:textSize="@dimen/textSize3"
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:padding="@dimen/layoutMargin4dp"
+        android:textSize="@dimen/textSize1"
+        tools:text="myapp" />
 
     <TextView
         android:id="@+id/utterance"
@@ -10,12 +29,16 @@
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
         android:padding="@dimen/layoutMargin4dp"
-        android:textSize="@dimen/textSize2" />
+        android:textColor="@color/accent"
+        android:textSize="@dimen/textSize2"
+        tools:text="(this is (a|the) test)" />
 
     <TextView
         android:id="@+id/replacement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/layoutMargin4dp"
-        android:textSize="@dimen/textSize1" />
+        android:textColor="@color/transparent_blue"
+        android:textSize="@dimen/textSize1"
+        tools:text="THIS IS TEST" />
 </LinearLayout>

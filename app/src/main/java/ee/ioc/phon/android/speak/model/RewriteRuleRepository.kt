@@ -19,4 +19,16 @@ class RewriteRuleRepository(private val dao: RewriteRuleDao) {
     suspend fun insertAll(rewriteRule: RewriteRule) {
         dao.insertAll(rewriteRule)
     }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun delete(rewriteRule: RewriteRule) {
+        dao.delete(rewriteRule)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun incFreq(rewriteRule: RewriteRule) {
+        dao.incFreq(rewriteRule.id)
+    }
 }

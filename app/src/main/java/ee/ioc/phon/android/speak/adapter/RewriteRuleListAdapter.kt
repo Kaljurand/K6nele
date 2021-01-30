@@ -10,32 +10,49 @@ import androidx.recyclerview.widget.RecyclerView
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.model.RewriteRule
 
-class RewriteRuleListAdapter : ListAdapter<RewriteRule, RewriteRuleListAdapter.RewriteRuleViewHolder>(WordsComparator()) {
+class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private val onLongClick: (RewriteRule) -> Unit) :
+        ListAdapter<RewriteRule, RewriteRuleListAdapter.RewriteRuleViewHolder>(WordsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewriteRuleViewHolder {
-        return RewriteRuleViewHolder.create(parent)
+        val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.recyclerview_item_rewrite, parent, false)
+        return RewriteRuleViewHolder(view, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: RewriteRuleViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.utteranceAsStr, current.replacement)
+        holder.bind(current)
     }
 
-    class RewriteRuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class RewriteRuleViewHolder(itemView: View, val onClick: (RewriteRule) -> Unit, val onLongClick: (RewriteRule) -> Unit) :
+            RecyclerView.ViewHolder(itemView) {
+        private val ownerId: TextView = itemView.findViewById(R.id.ownerId)
+        private val app: TextView = itemView.findViewById(R.id.app)
         private val utterance: TextView = itemView.findViewById(R.id.utterance)
         private val replacement: TextView = itemView.findViewById(R.id.replacement)
+        private var current: RewriteRule? = null
 
-        fun bind(_utterance: String?, _replacement: String?) {
-            utterance.text = _utterance
-            replacement.text = _replacement
+        init {
+            itemView.setOnClickListener {
+                current?.let {
+                    onClick(it)
+                }
+            }
+
+            itemView.setOnLongClickListener {
+                current?.let {
+                    onLongClick(it)
+                }
+                true
+            }
         }
 
-        companion object {
-            fun create(parent: ViewGroup): RewriteRuleViewHolder {
-                val view: View = LayoutInflater.from(parent.context)
-                        .inflate(R.layout.recyclerview_item_rewrite, parent, false)
-                return RewriteRuleViewHolder(view)
-            }
+        fun bind(rewriteRule: RewriteRule) {
+            current = rewriteRule
+            ownerId.text = rewriteRule.ownerId.toString()
+            app.text = rewriteRule.app?.pattern()
+            utterance.text = rewriteRule.utterance?.pattern()
+            replacement.text = rewriteRule.replacement
         }
     }
 
@@ -45,7 +62,7 @@ class RewriteRuleListAdapter : ListAdapter<RewriteRule, RewriteRuleListAdapter.R
         }
 
         override fun areContentsTheSame(oldItem: RewriteRule, newItem: RewriteRule): Boolean {
-            return oldItem.utteranceAsStr == newItem.utteranceAsStr && oldItem.replacement == newItem.replacement
+            return oldItem.id == newItem.id
         }
     }
 }

@@ -13,7 +13,7 @@ interface RewriteRuleDao {
     suspend fun insertAll(rewriteRules: List<RewriteRule>)
 
     @Delete
-    suspend fun delete(user: RewriteRule)
+    suspend fun delete(rewriteRule: RewriteRule)
 
     @Query("DELETE FROM rewrite_rules")
     suspend fun deleteAll()
@@ -25,6 +25,6 @@ interface RewriteRuleDao {
     @Query("SELECT * FROM rewrite_list")
     fun getRewriteListsWithRules(): Flow<List<RewriteListWithRules>>
 
-    //@Query("UPDATE rewrite_rules SET freq = freq + 1 WHERE userId = :userId")
-    //suspend fun incrementFreq(userId: String)
+    @Query("UPDATE rewrite_rules SET ownerId = ownerId + 1 WHERE id = :id")
+    suspend fun incFreq(id: Int)
 }
