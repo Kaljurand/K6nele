@@ -16,7 +16,13 @@ class RewriteRuleRepository(private val dao: RewriteRuleDao) {
     // off the main thread.
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertAll(rewriteRule: RewriteRule) {
+    suspend fun addNewRule(tableName: String, rewriteRule: RewriteRule) {
+        val ownerId = dao.getId(tableName)
+        if (ownerId == null) {
+            rewriteRule.ownerId = dao.insertTable(RewriteList(tableName, true))
+        } else {
+            rewriteRule.ownerId = ownerId
+        }
         dao.insertAll(rewriteRule)
     }
 

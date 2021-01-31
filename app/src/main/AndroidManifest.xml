@@ -302,6 +302,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/labelActivityRewritesSelector"
             android:parentActivityName=".activity.Preferences" />
         <activity
+            android:name=".activity.RewritesSelectorActivity2"
+            android:exported="true"
+            android:label="@string/labelActivityRewritesSelector"
+            android:parentActivityName=".activity.Preferences" />
+        <activity
             android:name=".activity.RewritesLoaderActivity"
             android:label="@string/labelActivityRewritesLoader"
             android:theme="@style/Theme.K6nele.Dialog.NoActionBar"
@@ -407,7 +412,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <activity
             android:name=".activity.RewritesActivity2"
-            android:label="Rewrites2" />
+            android:label="Rewrites2"
+            android:parentActivityName=".activity.Preferences" />
 
         <activity
             android:name=".activity.RewriteRuleAddActivity"

@@ -6,29 +6,58 @@ import androidx.room.PrimaryKey
 import ee.ioc.phon.android.speechutils.editor.Command
 import java.util.regex.Pattern
 
+// TODO: review mapping of arg1, arg2 to/from array
+// TODO: add sortOrder, timestamp, frequency
+// TODO: is it OK to use var for columns?
 @Entity(tableName = "rewrite_rules")
 data class RewriteRule(
-        val ownerId: Int,
+        var ownerId: Long,
         @ColumnInfo(name = "app") val app: Pattern?,
+        @ColumnInfo(name = "locale") val locale: Pattern?,
+        @ColumnInfo(name = "service") val service: Pattern?,
         @ColumnInfo(name = "utterance") val utterance: Pattern?,
-        @ColumnInfo(name = "replacement") val replacement: String?) {
+        @ColumnInfo(name = "replacement") val replacement: String?,
+        @ColumnInfo(name = "command") val command: String?,
+        @ColumnInfo(name = "arg1") val arg1: String?,
+        @ColumnInfo(name = "arg2") val arg2: String?,
+        @ColumnInfo(name = "comment") val comment: String?,
+        @ColumnInfo(name = "label") val label: String?) {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
     companion object {
         fun fromCommand(command: Command): RewriteRule {
-            return RewriteRule(1, command.app, command.utterance, command.replacement)
+            return RewriteRule(1,
+                    command.app,
+                    command.locale,
+                    command.service,
+                    command.utterance,
+                    command.replacement,
+                    command.id,
+                    command.args.getOrNull(0),
+                    command.args.getOrNull(1),
+                    command.comment,
+                    command.label
+            )
         }
 
         /**
-         * public Command(String label, String comment, Pattern locale, Pattern service, Pattern app, Pattern utt, String replacement, String id, String[] args)
-         *
          * @param rule
-         * @return
+         * @return Command(String label, String comment, Pattern locale, Pattern service, Pattern app, Pattern utt, String replacement, String id, String[] args)
          */
         fun toCommand(rule: RewriteRule): Command {
-            return Command("", "", null, null, rule.app, rule.utterance, rule.replacement, null, null)
-        } // TODO
+            return Command(
+                    rule.label,
+                    rule.comment,
+                    rule.locale,
+                    rule.service,
+                    rule.app,
+                    rule.utterance,
+                    rule.replacement,
+                    rule.command,
+                    arrayOf(rule.arg1, rule.arg2)
+            )
+        }
     }
 }

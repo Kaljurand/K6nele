@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RewriteRuleDao {
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(vararg rewriteList: RewriteList)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg rewriteRules: RewriteRule)
 
@@ -14,6 +17,9 @@ interface RewriteRuleDao {
 
     @Delete
     suspend fun delete(rewriteRule: RewriteRule)
+
+    @Delete
+    suspend fun delete(rewriteRule: RewriteList)
 
     @Query("DELETE FROM rewrite_rules")
     suspend fun deleteAll()
@@ -25,6 +31,22 @@ interface RewriteRuleDao {
     @Query("SELECT * FROM rewrite_list")
     fun getRewriteListsWithRules(): Flow<List<RewriteListWithRules>>
 
+    @Query("SELECT * FROM rewrite_list ORDER BY name")
+    fun getRewriteLists(): Flow<List<RewriteList>>
+
     @Query("UPDATE rewrite_rules SET ownerId = ownerId + 1 WHERE id = :id")
     suspend fun incFreq(id: Int)
+
+    @Query("UPDATE rewrite_list SET name = :name WHERE rewriteListId = :rewriteListId")
+    suspend fun rename(rewriteListId: Int, name: String)
+
+    @Query("SELECT name FROM rewrite_list WHERE rewriteListId = :rewriteListId")
+    suspend fun getName(rewriteListId: Long): String
+
+    // TODO: if name does not exist then create it (transaction?)
+    @Query("SELECT rewriteListId FROM rewrite_list WHERE name = :name")
+    suspend fun getId(name: String): Long?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTable(rewriteList: RewriteList): Long
 }

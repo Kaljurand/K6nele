@@ -3,12 +3,12 @@ package ee.ioc.phon.android.speak.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import ee.ioc.phon.android.speak.K6neleApplication
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.adapter.RewriteRuleListAdapter
@@ -17,6 +17,13 @@ import ee.ioc.phon.android.speak.model.RewriteRuleViewModel
 import ee.ioc.phon.android.speak.model.RewriteRuleViewModelFactory
 import java.util.regex.Pattern
 
+
+// Replaces RewritesActivity
+// TODO: single press to open in a details view (that allows editing)
+// Long-press to delete
+// TODO: filtering
+// TODO: make it possible to select multiple rows to convert them to a new table,
+// or insert to the beginning or end of an existing table
 class RewritesActivity2 : AppCompatActivity() {
 
     private val newWordActivityRequestCode = 1
@@ -58,16 +65,21 @@ class RewritesActivity2 : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, intentData)
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { reply ->
-                val word = RewriteRule(2, Pattern.compile("myapp3"), Pattern.compile("(.)"), reply)
-                wordViewModel.insert(word)
+            intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { tableName ->
+                val rewriteRule = RewriteRule(0,
+                        Pattern.compile("myapp3"),
+                        Pattern.compile("et-EE"),
+                        Pattern.compile("K6neleService"),
+                        Pattern.compile("(.+)"),
+                        "repl",
+                        "replace", "$1", "$2", "This is a comment", "<->"
+                )
+                wordViewModel.addNewRule(tableName, rewriteRule)
             }
         } else {
-            Toast.makeText(
-                    applicationContext,
-                    "Empty not saved",
-                    Toast.LENGTH_LONG
-            ).show()
+            Snackbar
+                    .make(findViewById<RecyclerView>(R.id.recyclerview), "Empty not saved", Snackbar.LENGTH_LONG)
+                    .show()
         }
     }
 }

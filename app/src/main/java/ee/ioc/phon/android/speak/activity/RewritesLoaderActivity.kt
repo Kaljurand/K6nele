@@ -160,7 +160,7 @@ class RewritesLoaderActivity : AppCompatActivity() {
             intent.putExtra(RewritesActivity.EXTRA_NAME, name)
 
             for (command in utteranceRewriter!!.commands) {
-                wordViewModel.insert((RewriteRule.fromCommand(command)))
+                wordViewModel.addNewRule(name, RewriteRule.fromCommand(command))
             }
             // TODO: remove once Room is ready
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter!!.toTsv())

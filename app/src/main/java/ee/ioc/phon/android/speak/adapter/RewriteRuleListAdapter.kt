@@ -11,7 +11,7 @@ import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.model.RewriteRule
 
 class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private val onLongClick: (RewriteRule) -> Unit) :
-        ListAdapter<RewriteRule, RewriteRuleListAdapter.RewriteRuleViewHolder>(WordsComparator()) {
+        ListAdapter<RewriteRule, RewriteRuleListAdapter.RewriteRuleViewHolder>(MyComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewriteRuleViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -26,10 +26,18 @@ class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private
 
     class RewriteRuleViewHolder(itemView: View, val onClick: (RewriteRule) -> Unit, val onLongClick: (RewriteRule) -> Unit) :
             RecyclerView.ViewHolder(itemView) {
+        // TODO: use view binder
         private val ownerId: TextView = itemView.findViewById(R.id.ownerId)
         private val app: TextView = itemView.findViewById(R.id.app)
+        private val locale: TextView = itemView.findViewById(R.id.locale)
+        private val service: TextView = itemView.findViewById(R.id.service)
         private val utterance: TextView = itemView.findViewById(R.id.utterance)
         private val replacement: TextView = itemView.findViewById(R.id.replacement)
+        private val command: TextView = itemView.findViewById(R.id.command)
+        private val arg1: TextView = itemView.findViewById(R.id.arg1)
+        private val arg2: TextView = itemView.findViewById(R.id.arg2)
+        private val comment: TextView = itemView.findViewById(R.id.comment)
+        private val label: TextView = itemView.findViewById(R.id.label)
         private var current: RewriteRule? = null
 
         init {
@@ -51,12 +59,20 @@ class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private
             current = rewriteRule
             ownerId.text = rewriteRule.ownerId.toString()
             app.text = rewriteRule.app?.pattern()
+            locale.text = rewriteRule.locale?.pattern()
+            service.text = rewriteRule.service?.pattern()
             utterance.text = rewriteRule.utterance?.pattern()
             replacement.text = rewriteRule.replacement
+            command.text = rewriteRule.command
+            arg1.text = rewriteRule.arg1
+            arg2.text = rewriteRule.arg2
+            comment.text = rewriteRule.comment
+            label.text = rewriteRule.label
         }
     }
 
-    class WordsComparator : DiffUtil.ItemCallback<RewriteRule>() {
+    // TODO: understand why this is needed
+    class MyComparator : DiffUtil.ItemCallback<RewriteRule>() {
         override fun areItemsTheSame(oldItem: RewriteRule, newItem: RewriteRule): Boolean {
             return oldItem === newItem
         }

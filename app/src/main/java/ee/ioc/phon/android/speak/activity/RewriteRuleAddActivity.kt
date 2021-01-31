@@ -34,6 +34,6 @@ class RewriteRuleAddActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_REPLY = "com.example.android.wordlistsql.REPLY"
+        const val EXTRA_REPLY = "reply"
     }
 }

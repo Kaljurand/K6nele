@@ -2,6 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
+        android:title="Tables"
+        app:iconSpaceReserved="false">
+        <intent
+            android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity2"
+            android:targetPackage="ee.ioc.phon.android.speak" />
+    </Preference>
+    <Preference
         android:title="Room experiment"
         app:iconSpaceReserved="false">
         <intent

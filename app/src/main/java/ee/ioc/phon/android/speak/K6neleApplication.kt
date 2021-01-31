@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak
 
 import android.app.Application
+import ee.ioc.phon.android.speak.model.RewriteListRepository
 import ee.ioc.phon.android.speak.model.RewriteRuleRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -13,4 +14,7 @@ class K6neleApplication : Application() {
     // rather than when the application starts
     val database by lazy { AppDatabase.getDatabase(this, applicationScope) }
     val repository by lazy { RewriteRuleRepository(database.rewriteRuleDao()) }
+
+    // TODO: do we need a separate repository here?
+    val repositoryForList by lazy { RewriteListRepository(database.rewriteRuleDao()) }
 }

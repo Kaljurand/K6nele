@@ -14,8 +14,8 @@ class RewriteRuleViewModel(private val repository: RewriteRuleRepository) : View
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-    fun insert(word: RewriteRule) = viewModelScope.launch {
-        repository.insertAll(word)
+    fun addNewRule(tableName: String, rewriteRule: RewriteRule) = viewModelScope.launch {
+        repository.addNewRule(tableName, rewriteRule)
     }
 
     fun delete(word: RewriteRule) = viewModelScope.launch {

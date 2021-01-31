@@ -15,7 +15,7 @@ import java.util.regex.Pattern
 
 // consider setting a directory for Room to use to export the schema so you can check
 // the current schema into your version control system
-@Database(entities = arrayOf(RewriteList::class, RewriteRule::class), version = 6, exportSchema = false)
+@Database(entities = arrayOf(RewriteList::class, RewriteRule::class), version = 9, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun rewriteRuleDao(): RewriteRuleDao
@@ -28,14 +28,24 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var wordDao = database.rewriteRuleDao()
+                    val wordDao = database.rewriteRuleDao()
 
                     // Delete all content here.
                     wordDao.deleteAll()
 
                     wordDao.insertAll(
-                            RewriteRule(1, Pattern.compile("myapp"), Pattern.compile("1"), "One"),
-                            RewriteRule(1, Pattern.compile("myapp2"), Pattern.compile("2"), "Two")
+                            RewriteRule(1,
+                                    Pattern.compile("myapp"),
+                                    Pattern.compile("et-EE"),
+                                    Pattern.compile("K6neleService"),
+                                    Pattern.compile("utt"),
+                                    "repl",
+                                    "command",
+                                    "arg1",
+                                    "arg2",
+                                    "comment",
+                                    "label"
+                            )
                     );
 
                 }
