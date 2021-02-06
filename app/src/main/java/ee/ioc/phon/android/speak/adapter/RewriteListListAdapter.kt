@@ -28,6 +28,7 @@ class RewriteListListAdapter(private val onClick: (RewriteList) -> Unit, private
     class RewriteRuleViewHolder(itemView: View, val onClick: (RewriteList) -> Unit, val onLongClick: (RewriteList) -> Unit) :
             RecyclerView.ViewHolder(itemView) {
         // TODO: use view binder
+        private val rewriteListId: TextView = itemView.findViewById(R.id.rewriteListId)
         private val name: TextView = itemView.findViewById(R.id.rewritesId)
         private val isSelected: CheckBox = itemView.findViewById(R.id.rewritesIsSelected)
         private var current: RewriteList? = null
@@ -49,6 +50,7 @@ class RewriteListListAdapter(private val onClick: (RewriteList) -> Unit, private
 
         fun bind(rewriteList: RewriteList) {
             current = rewriteList
+            rewriteListId.text = rewriteList.rewriteListId.toString()
             name.text = rewriteList.name
             isSelected.isChecked = rewriteList.isEnabled
         }

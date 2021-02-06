@@ -27,8 +27,9 @@ data class RewriteRule(
     var id: Int = 0
 
     companion object {
-        fun fromCommand(command: Command): RewriteRule {
-            return RewriteRule(1,
+
+        fun fromCommand(ownerId: Long, command: Command): RewriteRule {
+            return RewriteRule(ownerId,
                     command.app,
                     command.locale,
                     command.service,

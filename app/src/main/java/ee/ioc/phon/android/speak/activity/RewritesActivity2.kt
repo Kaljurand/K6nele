@@ -17,23 +17,33 @@ import ee.ioc.phon.android.speak.model.RewriteRuleViewModel
 import ee.ioc.phon.android.speak.model.RewriteRuleViewModelFactory
 import java.util.regex.Pattern
 
-
 // Replaces RewritesActivity
 // TODO: single press to open in a details view (that allows editing)
 // Long-press to delete
-// TODO: filtering
+// TODO: filtering by every field; initial search values loaded from extras
+// TODO: share menus
 // TODO: make it possible to select multiple rows to convert them to a new table,
 // or insert to the beginning or end of an existing table
 class RewritesActivity2 : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_NAME = "EXTRA_NAME"
+        const val EXTRA_LOCALE = "EXTRA_LOCALE"
+        const val EXTRA_APP = "EXTRA_APP"
+        const val EXTRA_SERVICE = "EXTRA_SERVICE"
+    }
 
     private val newWordActivityRequestCode = 1
     private val wordViewModel: RewriteRuleViewModel by viewModels {
         RewriteRuleViewModelFactory((application as K6neleApplication).repository)
     }
+    private var tableName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewrites)
+
+        tableName = intent.getStringExtra(EXTRA_NAME).orEmpty()
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = RewriteRuleListAdapter(
@@ -48,7 +58,14 @@ class RewritesActivity2 : AppCompatActivity() {
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         // Was: "owner = this", but it caused "Named arguments not allowed for non-Kotlin functions"
+        /*
         wordViewModel.allWords.observe(this) { words ->
+            // Update the cached copy of the words in the adapter.
+            words.let { adapter.submitList(it) }
+        }
+        */
+
+        wordViewModel.rulesByOwnerName(tableName).observe(this) { words ->
             // Update the cached copy of the words in the adapter.
             words.let { adapter.submitList(it) }
         }
@@ -65,14 +82,14 @@ class RewritesActivity2 : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, intentData)
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { tableName ->
+            intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { label ->
                 val rewriteRule = RewriteRule(0,
                         Pattern.compile("myapp3"),
                         Pattern.compile("et-EE"),
                         Pattern.compile("K6neleService"),
                         Pattern.compile("(.+)"),
                         "repl",
-                        "replace", "$1", "$2", "This is a comment", "<->"
+                        "replace", "$1", "$2", "This is a comment", label
                 )
                 wordViewModel.addNewRule(tableName, rewriteRule)
             }

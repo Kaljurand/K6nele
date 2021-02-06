@@ -35,7 +35,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.K6neleApplication
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.databinding.ActivityRewritesLoaderBinding
-import ee.ioc.phon.android.speak.model.RewriteRule
 import ee.ioc.phon.android.speak.model.RewriteRuleViewModel
 import ee.ioc.phon.android.speak.model.RewriteRuleViewModelFactory
 import ee.ioc.phon.android.speechutils.editor.UtteranceRewriter
@@ -156,14 +155,15 @@ class RewritesLoaderActivity : AppCompatActivity() {
     // TODO: cleanup
     private fun saveAndShow(prefs: SharedPreferences, res: Resources, name: String) {
         if (utteranceRewriter != null) {
-            val intent = Intent(this, RewritesActivity::class.java)
-            intent.putExtra(RewritesActivity.EXTRA_NAME, name)
-
+            // TODO: first create the table
             for (command in utteranceRewriter!!.commands) {
-                wordViewModel.addNewRule(name, RewriteRule.fromCommand(command))
+                wordViewModel.addNewRule(name, command)
             }
             // TODO: remove once Room is ready
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter!!.toTsv())
+
+            val intent = Intent(this, RewritesActivity::class.java)
+            intent.putExtra(RewritesActivity.EXTRA_NAME, name)
             startActivity(intent)
 
             // If there were errors then we load another activity to show them.

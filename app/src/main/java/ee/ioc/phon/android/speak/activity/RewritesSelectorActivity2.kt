@@ -2,7 +2,10 @@ package ee.ioc.phon.android.speak.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +19,8 @@ import ee.ioc.phon.android.speak.model.RewriteList
 import ee.ioc.phon.android.speak.model.RewriteListViewModel
 import ee.ioc.phon.android.speak.model.RewriteListViewModelFactory
 
+// TODO: expandable FAB (new empty table, RewritesLoaderActivity, pick from examples); should work on Wear though
+// TODO: context menu for share, delete, etc.
 class RewritesSelectorActivity2 : AppCompatActivity() {
 
     private val vm: RewriteListViewModel by viewModels {
@@ -28,7 +33,7 @@ class RewritesSelectorActivity2 : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = RewriteListListAdapter(
-                { rule -> vm.view(rule) },
+                { rule -> startView(rule) },
                 { rule -> vm.delete(rule) }
         )
 
@@ -60,5 +65,34 @@ class RewritesSelectorActivity2 : AppCompatActivity() {
                     .make(findViewById<RecyclerView>(R.id.recyclerview), "Empty not saved", Snackbar.LENGTH_LONG)
                     .show()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.rewrites_selector, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menuRewritesAdd -> {
+                val intent = Intent(this, RewritesLoaderActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.menuRewritesHelp -> {
+                val view = Intent(Intent.ACTION_VIEW)
+                view.data = Uri.parse(getString(R.string.urlRewritesDoc))
+                startActivity(view)
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    fun startView(table: RewriteList) {
+        val intent = Intent(this@RewritesSelectorActivity2, RewritesActivity2::class.java)
+        intent.putExtra(RewritesActivity2.EXTRA_NAME, table.name)
+        startActivityForResult(intent, 1)
     }
 }

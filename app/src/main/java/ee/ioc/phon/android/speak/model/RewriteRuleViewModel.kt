@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak.model
 
 import androidx.lifecycle.*
+import ee.ioc.phon.android.speechutils.editor.Command
 import kotlinx.coroutines.launch
 
 class RewriteRuleViewModel(private val repository: RewriteRuleRepository) : ViewModel() {
@@ -11,11 +12,19 @@ class RewriteRuleViewModel(private val repository: RewriteRuleRepository) : View
     // - Repository is completely separated from the UI through the ViewModel.
     val allWords: LiveData<List<RewriteRule>> = repository.allRewriteRules.asLiveData()
 
+    fun rulesByOwnerName(tableName: String): LiveData<List<RewriteRule>> {
+        return repository.rulesByOwnerName(tableName).asLiveData()
+    }
+
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
     fun addNewRule(tableName: String, rewriteRule: RewriteRule) = viewModelScope.launch {
         repository.addNewRule(tableName, rewriteRule)
+    }
+
+    fun addNewRule(tableName: String, command: Command) = viewModelScope.launch {
+        repository.addNewRule(tableName, command)
     }
 
     fun delete(word: RewriteRule) = viewModelScope.launch {

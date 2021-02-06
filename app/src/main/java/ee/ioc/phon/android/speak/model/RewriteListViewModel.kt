@@ -7,11 +7,6 @@ class RewriteListViewModel(private val repository: RewriteListRepository) : View
 
     val allWords: LiveData<List<RewriteList>> = repository.all.asLiveData()
 
-    // TODO: open a new activity (maybe in the caller object)
-    fun view(item: RewriteList) = viewModelScope.launch {
-        //repository.view(item)
-    }
-
     fun addEmpty(item: RewriteList) = viewModelScope.launch {
         repository.insert(item)
     }

@@ -27,6 +27,18 @@ interface RewriteRuleDao {
     @Query("SELECT * FROM rewrite_rules")
     fun getRewriteRules(): Flow<List<RewriteRule>>
 
+    @Query("SELECT * FROM rewrite_rules WHERE ownerId = :ownerId")
+    fun getRewriteRulesByOwner(ownerId: Int): Flow<List<RewriteRule>>
+
+    //@Transaction
+    //@Query("SELECT * FROM rewrite_list WHERE name = :tableName")
+    //fun getRewriteRulesByOwnerName(tableName: String): Flow<List<RewriteListWithRules>>
+
+    // TODO: seems to work but is maybe not idiomatic
+    @Transaction
+    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId)")
+    fun getRewriteRulesByOwnerName(tableName: String): Flow<List<RewriteRule>>
+
     @Transaction
     @Query("SELECT * FROM rewrite_list")
     fun getRewriteListsWithRules(): Flow<List<RewriteListWithRules>>
@@ -48,5 +60,5 @@ interface RewriteRuleDao {
     suspend fun getId(name: String): Long?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTable(rewriteList: RewriteList): Long
+    suspend fun insertTable(table: RewriteList): Long
 }

@@ -7,7 +7,6 @@ class RewriteListRepository(private val dao: RewriteRuleDao) {
 
     val all: Flow<List<RewriteList>> = dao.getRewriteLists()
 
-
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(rewriteList: RewriteList) {

@@ -10,14 +10,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!-- Add frequency, timestamp, etc. -->
         <TextView
-            android:id="@+id/ownerId"
+            android:id="@+id/ruleId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
             android:textSize="@dimen/textSize3"
-            tools:text="10" />
+            tools:text="123" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,12 +29,25 @@
             android:textSize="@dimen/textSize3" />
 
         <TextView
+            android:id="@+id/ownerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:padding="@dimen/layoutMargin4dp"
+            android:textSize="@dimen/textSize3"
+            tools:text="4" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
-            android:textColor="@color/buttonRecordingNormal1"
             android:textSize="@dimen/textSize3"
             tools:text=":)" />
     </LinearLayout>

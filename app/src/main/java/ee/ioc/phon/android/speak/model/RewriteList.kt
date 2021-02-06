@@ -5,6 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 // TODO: does the ID need to be Long?
+// TODO: separate enabled-Boolean for activity vs the IME
 // TODO: declare name to be unique (and index by it?)
 @Entity(tableName = "rewrite_list", indices = arrayOf(Index(value = ["name"], unique = true)))
 data class RewriteList(

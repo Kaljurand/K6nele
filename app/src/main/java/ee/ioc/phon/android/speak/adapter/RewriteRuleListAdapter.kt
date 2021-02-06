@@ -27,6 +27,7 @@ class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private
     class RewriteRuleViewHolder(itemView: View, val onClick: (RewriteRule) -> Unit, val onLongClick: (RewriteRule) -> Unit) :
             RecyclerView.ViewHolder(itemView) {
         // TODO: use view binder
+        private val ruleId: TextView = itemView.findViewById(R.id.ruleId)
         private val ownerId: TextView = itemView.findViewById(R.id.ownerId)
         private val app: TextView = itemView.findViewById(R.id.app)
         private val locale: TextView = itemView.findViewById(R.id.locale)
@@ -57,6 +58,7 @@ class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private
 
         fun bind(rewriteRule: RewriteRule) {
             current = rewriteRule
+            ruleId.text = rewriteRule.id.toString()
             ownerId.text = rewriteRule.ownerId.toString()
             app.text = rewriteRule.app?.pattern()
             locale.text = rewriteRule.locale?.pattern()
