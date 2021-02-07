@@ -8,6 +8,14 @@
             android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity2"
             android:targetPackage="ee.ioc.phon.android.speak" />
     </Preference>
+    <Preference
+        android:summary="@string/summaryEncoderDemo"
+        android:title="@string/labelActivityEncoderDemo"
+        app:iconSpaceReserved="false">
+        <intent
+            android:targetClass="ee.ioc.phon.android.speak.demo.EncoderDemoActivity"
+            android:targetPackage="ee.ioc.phon.android.speak" />
+    </Preference>
     <!-- This preference is a shortcut to the Android IME settings to allow the
     user to quickly enable the Kõnele IME. If already enabled, this preference is not shown.
     Note that Android Things does not have the INPUT_METHOD_SETTINGS activity, so clicking

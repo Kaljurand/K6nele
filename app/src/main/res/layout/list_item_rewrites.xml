@@ -29,10 +29,8 @@
         android:id="@+id/rewriteListId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/rewritesId"
-        android:layout_toRightOf="@+id/rewritesId"
-        android:padding="@dimen/layoutMargin4dp"
+        android:layout_below="@+id/rewritesId"
+        android:layout_marginTop="@dimen/layoutMargin1"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
         tools:text="123" />
