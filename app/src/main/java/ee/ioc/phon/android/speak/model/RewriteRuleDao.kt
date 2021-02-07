@@ -39,6 +39,11 @@ interface RewriteRuleDao {
     @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId)")
     fun getRewriteRulesByOwnerName(tableName: String): Flow<List<RewriteRule>>
 
+    // TODO: order by "rank" (i..e a further column)
+    @Transaction
+    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY id")
+    suspend fun getRewriteRulesByOwnerNameSus(tableName: String): List<RewriteRule>
+
     @Transaction
     @Query("SELECT * FROM rewrite_list")
     fun getRewriteListsWithRules(): Flow<List<RewriteListWithRules>>

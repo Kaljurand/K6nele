@@ -40,6 +40,7 @@ class SpeechInputMethodService : InputMethodService() {
     private var mPrefs: SharedPreferences? = null
     private var mRes: Resources? = null
     private var mRuleManager: RuleManager? = null
+
     override fun onCreate() {
         super.onCreate()
         Log.i("onCreate")

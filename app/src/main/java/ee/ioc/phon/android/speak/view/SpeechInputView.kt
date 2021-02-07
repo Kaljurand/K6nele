@@ -24,19 +24,25 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import ee.ioc.phon.android.speak.*
 import ee.ioc.phon.android.speak.activity.ComboSelectorActivity
-import ee.ioc.phon.android.speak.activity.RewritesActivity
-import ee.ioc.phon.android.speak.activity.RewritesSelectorActivity
+import ee.ioc.phon.android.speak.activity.RewritesActivity2
+import ee.ioc.phon.android.speak.activity.RewritesSelectorActivity2
 import ee.ioc.phon.android.speak.adapter.ButtonsAdapter
 import ee.ioc.phon.android.speak.model.CallerInfo
 import ee.ioc.phon.android.speak.model.Combo
+import ee.ioc.phon.android.speak.model.RewriteRule
+import ee.ioc.phon.android.speak.model.RewriteRuleRepository
 import ee.ioc.phon.android.speechutils.Extras
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils
 import ee.ioc.phon.android.speechutils.view.MicButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.util.*
 
-class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCompat(context!!, attrs) {
+class SpeechInputView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs) {
     private var mCentralButtons: View? = null
     private var mBImeStartStop: MicButton? = null
     private var mBImeKeyboard: ImageButton? = null
@@ -64,6 +70,10 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
 
     // TODO: make it an attribute
     private var mSwipeType = 0
+
+    val applicationScope = CoroutineScope(SupervisorJob())
+    val database by lazy { AppDatabase.getDatabase(context, applicationScope) }
+    val repository by lazy { RewriteRuleRepository(database.rewriteRuleDao()) }
 
     interface SpeechInputViewListener {
         fun onComboChange(language: String, service: ComponentName)
@@ -109,6 +119,7 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
 
     fun setListener(listener: SpeechInputViewListener?, editorInfo: EditorInfo?) {
         mListener = listener
+        mRvClipboard?.adapter = ButtonsAdapter(mListener!!)
         if (mBImeAction != null && editorInfo != null) {
             // TODO: test
             val overrideEnter = editorInfo.imeOptions and EditorInfo.IME_FLAG_NO_ENTER_ACTION == 0
@@ -313,9 +324,9 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
         mApp = app
         mAppId = if (mApp == null) "" else mApp!!.flattenToShortString()
         if (mRvClipboard != null) {
-            mRvClipboard!!.setHasFixedSize(true)
+            mRvClipboard?.setHasFixedSize(true)
             // TODO: make span count configurable
-            mRvClipboard!!.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.spanCount))
+            mRvClipboard?.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.spanCount))
         }
         if (mSwipeType == 2) {
             // Turning from GONE to VISIBLE
@@ -471,10 +482,13 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
         }
     }
 
-    private fun getClipboardAdapter(prefs: SharedPreferences, res: Resources, tabName: String, commandMatcher: CommandMatcher): ButtonsAdapter? {
-        val rewritesAsStr = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.keyRewritesMap, tabName)
-                ?: return null
-        return ButtonsAdapter(mListener!!, commandMatcher, rewritesAsStr)
+    // TODO: filter using commandMatcher
+    private suspend fun updateClipboardAdapter(tabName: String, commandMatcher: CommandMatcher): List<RewriteRule> {
+        // TODO: convert to a list of RewriteRule, with commandMatcher-based filtering
+        val rules: List<RewriteRule> = repository.rulesByOwnerNameSus(tabName)
+        //Log.i("Rules: count: ${rules.count()}")
+        //Log.i("Rules: ${rules}")
+        return rules
     }
 
     /**
@@ -492,7 +506,7 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
             mRvClipboard!!.visibility = GONE
             tabs.visibility = GONE
             findViewById<View>(R.id.buttonOpenRewrites).setOnClickListener { v: View? ->
-                val intent = Intent(getContext(), RewritesSelectorActivity::class.java)
+                val intent = Intent(getContext(), RewritesSelectorActivity2::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
             }
@@ -508,17 +522,27 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
         val names = defaults.toTypedArray()
         // TODO: defaults should be a list (not a set that needs to be sorted)
         Arrays.sort(names)
+
         val appId = app!!.flattenToShortString()
         val selectedTabName = getTabName(prefs, res, appId)
         tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val name = tab.text.toString()
                 if (NEW_TAB_LABEL == tab.tag) {
-                    val intent = Intent(getContext(), RewritesSelectorActivity::class.java)
+                    val intent = Intent(getContext(), RewritesSelectorActivity2::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
                 } else {
-                    mRvClipboard!!.adapter = getClipboardAdapter(prefs, res, name, commandMatcher)
+                    Log.i("SpeechInputView: launch: " + name)
+                    GlobalScope.launch { // launch a new coroutine in background and continue
+                        // No adapter attached; skipping layout
+                        Log.i("SpeechInputView: GlobalScope: " + name)
+                        val rules = updateClipboardAdapter(name, commandMatcher)
+                        Log.i("SpeechInputView: GlobalScope: " + rules)
+                        (mRvClipboard?.adapter as ButtonsAdapter).submitList(rules)
+                        val count = mRvClipboard!!.adapter?.itemCount
+                        Log.i("SpeechInputView: GlobalScope: count: " + count)
+                    }
                     setTabName(prefs, res, appId, name)
                 }
             }
@@ -547,12 +571,12 @@ class SpeechInputView(context: Context?, attrs: AttributeSet?) : LinearLayoutCom
             val name = tabs.getTabAt(i)!!.text.toString()
             // Long click loads the rewrites view (without populating the tab)
             tabStrip.getChildAt(i).setOnLongClickListener { v: View? ->
-                val intent = Intent(getContext(), RewritesActivity::class.java)
+                val intent = Intent(getContext(), RewritesActivity2::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(RewritesActivity.EXTRA_NAME, name)
-                intent.putExtra(RewritesActivity.EXTRA_LOCALE, language)
-                intent.putExtra(RewritesActivity.EXTRA_APP, appId)
-                intent.putExtra(RewritesActivity.EXTRA_SERVICE, service.flattenToShortString())
+                intent.putExtra(RewritesActivity2.EXTRA_NAME, name)
+                intent.putExtra(RewritesActivity2.EXTRA_LOCALE, language)
+                intent.putExtra(RewritesActivity2.EXTRA_APP, appId)
+                intent.putExtra(RewritesActivity2.EXTRA_SERVICE, service.flattenToShortString())
                 context.startActivity(intent)
                 false
             }
