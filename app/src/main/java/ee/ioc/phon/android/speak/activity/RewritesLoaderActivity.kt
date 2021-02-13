@@ -156,8 +156,9 @@ class RewritesLoaderActivity : AppCompatActivity() {
     private fun saveAndShow(prefs: SharedPreferences, res: Resources, name: String) {
         if (utteranceRewriter != null) {
             // TODO: first create the table
+            var idx = 0;
             for (command in utteranceRewriter!!.commands) {
-                wordViewModel.addNewRule(name, command)
+                wordViewModel.addNewRule(name, idx++, command)
             }
             // TODO: remove once Room is ready
             PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter!!.toTsv())

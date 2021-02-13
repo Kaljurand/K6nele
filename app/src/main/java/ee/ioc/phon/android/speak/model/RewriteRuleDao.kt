@@ -24,10 +24,10 @@ interface RewriteRuleDao {
     @Query("DELETE FROM rewrite_rules")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM rewrite_rules")
+    @Query("SELECT * FROM rewrite_rules ORDER BY rank")
     fun getRewriteRules(): Flow<List<RewriteRule>>
 
-    @Query("SELECT * FROM rewrite_rules WHERE ownerId = :ownerId")
+    @Query("SELECT * FROM rewrite_rules WHERE ownerId = :ownerId ORDER BY rank")
     fun getRewriteRulesByOwner(ownerId: Int): Flow<List<RewriteRule>>
 
     //@Transaction
@@ -36,16 +36,15 @@ interface RewriteRuleDao {
 
     // TODO: seems to work but is maybe not idiomatic
     @Transaction
-    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId)")
+    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY rank")
     fun getRewriteRulesByOwnerName(tableName: String): Flow<List<RewriteRule>>
 
-    // TODO: order by "rank" (i..e a further column)
     @Transaction
-    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY id")
+    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY rank")
     suspend fun getRewriteRulesByOwnerNameSus(tableName: String): List<RewriteRule>
 
     @Transaction
-    @Query("SELECT * FROM rewrite_list")
+    @Query("SELECT * FROM rewrite_list ORDER BY name")
     fun getRewriteListsWithRules(): Flow<List<RewriteListWithRules>>
 
     @Query("SELECT * FROM rewrite_list ORDER BY name")

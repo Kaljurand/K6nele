@@ -7,7 +7,7 @@ import ee.ioc.phon.android.speechutils.editor.Command
 import java.util.regex.Pattern
 
 // TODO: review mapping of arg1, arg2 to/from array
-// TODO: add sortOrder, timestamp, frequency
+// TODO: add timestamp, frequency (or maybe support these in a separate table)
 // TODO: is it OK to use var for columns?
 @Entity(tableName = "rewrite_rules")
 data class RewriteRule(
@@ -21,15 +21,18 @@ data class RewriteRule(
         @ColumnInfo(name = "arg1") val arg1: String?,
         @ColumnInfo(name = "arg2") val arg2: String?,
         @ColumnInfo(name = "comment") val comment: String?,
-        @ColumnInfo(name = "label") val label: String?) {
+        @ColumnInfo(name = "label") val label: String?,
+        @ColumnInfo(name = "rank") val rank: Int,
+) {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
     companion object {
 
-        fun fromCommand(ownerId: Long, command: Command): RewriteRule {
-            return RewriteRule(ownerId,
+        fun fromCommand(ownerId: Long, rank: Int, command: Command): RewriteRule {
+            return RewriteRule(
+                    ownerId,
                     command.app,
                     command.locale,
                     command.service,
@@ -39,7 +42,8 @@ data class RewriteRule(
                     command.args.getOrNull(0),
                     command.args.getOrNull(1),
                     command.comment,
-                    command.label
+                    command.label,
+                    rank,
             )
         }
 

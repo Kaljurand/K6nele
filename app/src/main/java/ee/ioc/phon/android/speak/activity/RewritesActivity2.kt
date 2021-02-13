@@ -47,8 +47,14 @@ class RewritesActivity2 : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = RewriteRuleListAdapter(
-                { rule -> wordViewModel.incFreq(rule) },
-                { rule -> wordViewModel.delete(rule) }
+                {},
+                //{ rule -> wordViewModel.incFreq(rule) },
+                { rule ->
+                    Snackbar
+                            .make(findViewById<RecyclerView>(R.id.recyclerview), rule.toString(), Snackbar.LENGTH_LONG)
+                            .show()
+                }
+                //{ rule -> wordViewModel.delete(rule) },
         )
 
         recyclerView.adapter = adapter
@@ -83,13 +89,18 @@ class RewritesActivity2 : AppCompatActivity() {
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
             intentData?.getStringExtra(RewriteRuleAddActivity.EXTRA_REPLY)?.let { label ->
-                val rewriteRule = RewriteRule(0,
+                val rewriteRule = RewriteRule(
+                        0,
                         Pattern.compile("myapp3"),
                         Pattern.compile("et-EE"),
                         Pattern.compile("K6neleService"),
                         Pattern.compile("(.+)"),
                         "repl",
-                        "replace", "$1", "$2", "This is a comment", label
+                        "replace", "$1", "$2",
+                        "This is a comment",
+                        label,
+                        // TODO: should be one larger than the largest rank number (for this owner)
+                        0,
                 )
                 wordViewModel.addNewRule(tableName, rewriteRule)
             }

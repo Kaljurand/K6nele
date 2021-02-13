@@ -23,8 +23,8 @@ class RewriteRuleViewModel(private val repository: RewriteRuleRepository) : View
         repository.addNewRule(tableName, rewriteRule)
     }
 
-    fun addNewRule(tableName: String, command: Command) = viewModelScope.launch {
-        repository.addNewRule(tableName, command)
+    fun addNewRule(tableName: String, rank: Int, command: Command) = viewModelScope.launch {
+        repository.addNewRule(tableName, rank, command)
     }
 
     fun delete(word: RewriteRule) = viewModelScope.launch {

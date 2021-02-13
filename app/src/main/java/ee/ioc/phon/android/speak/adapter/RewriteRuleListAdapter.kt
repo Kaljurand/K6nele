@@ -39,6 +39,7 @@ class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private
         private val arg2: TextView = itemView.findViewById(R.id.arg2)
         private val comment: TextView = itemView.findViewById(R.id.comment)
         private val label: TextView = itemView.findViewById(R.id.label)
+        private val rank: TextView = itemView.findViewById(R.id.rank)
         private var current: RewriteRule? = null
 
         init {
@@ -70,6 +71,7 @@ class RewriteRuleListAdapter(private val onClick: (RewriteRule) -> Unit, private
             arg2.text = rewriteRule.arg2
             comment.text = rewriteRule.comment
             label.text = rewriteRule.label
+            rank.text = rewriteRule.rank.toString()
         }
     }
 

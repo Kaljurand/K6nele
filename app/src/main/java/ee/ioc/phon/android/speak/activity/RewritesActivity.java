@@ -37,7 +37,7 @@ import androidx.preference.PreferenceManager;
 
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.fragment.K6neleListFragment;
-import ee.ioc.phon.android.speak.model.RoomRewrites;
+import ee.ioc.phon.android.speak.model.Rewrites;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
@@ -50,7 +50,7 @@ public class RewritesActivity extends AppCompatActivity {
     public static final String EXTRA_LOCALE = "EXTRA_LOCALE";
     public static final String EXTRA_APP = "EXTRA_APP";
     public static final String EXTRA_SERVICE = "EXTRA_SERVICE";
-    private RoomRewrites mRewrites;
+    private Rewrites mRewrites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class RewritesActivity extends AppCompatActivity {
                     app == null ? null : ComponentName.unflattenFromString(app)
             );
 
-            emptyList = String.format(getString(R.string.emptylistRewriteRulesFiltered), RoomRewrites.ppComboMatcher(app, locale, service));
+            emptyList = String.format(getString(R.string.emptylistRewriteRulesFiltered), Rewrites.ppComboMatcher(app, locale, service));
             resSubtitle = R.plurals.statusLoadRewritesFiltered;
         } else {
             emptyList = getString(R.string.emptylistRewriteRules);
@@ -180,7 +180,7 @@ public class RewritesActivity extends AppCompatActivity {
     private void setRewrites(String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Resources res = getResources();
-        mRewrites = new RoomRewrites(getApplicationContext(), prefs, res, name);
+        mRewrites = new Rewrites(prefs, res, name);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -188,7 +188,7 @@ public class RewritesActivity extends AppCompatActivity {
         }
     }
 
-    private RoomRewrites getRewrites() {
+    private Rewrites getRewrites() {
         return mRewrites;
     }
 
@@ -208,7 +208,7 @@ public class RewritesActivity extends AppCompatActivity {
         public void onResume() {
             super.onResume();
             RewritesActivity activity = (RewritesActivity) getActivity();
-            RoomRewrites rewrites = activity.getRewrites();
+            Rewrites rewrites = activity.getRewrites();
             // TODO: load it from Dao, ideally with combo filtering (regex based)
             setListAdapter(new ArrayAdapter<>(activity, R.layout.list_item_rewrite, rewrites.getRules(mCommandMatcher)));
             getListView().setFastScrollEnabled(true);

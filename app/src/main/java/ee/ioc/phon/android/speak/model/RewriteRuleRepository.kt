@@ -45,7 +45,7 @@ class RewriteRuleRepository(private val dao: RewriteRuleDao) {
     // TODO: this should be a transaction (?)
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun addNewRule(tableName: String, command: Command) {
+    suspend fun addNewRule(tableName: String, rank: Int, command: Command) {
         var ownerId = dao.getId(tableName)
         if (ownerId == null) {
             ownerId = dao.insertTable(RewriteList(tableName, true))
@@ -53,7 +53,7 @@ class RewriteRuleRepository(private val dao: RewriteRuleDao) {
         } else {
             Log.i("Table (old)", ownerId.toString() + " " + tableName)
         }
-        dao.insertAll(RewriteRule.fromCommand(ownerId, command))
+        dao.insertAll(RewriteRule.fromCommand(ownerId, rank, command))
     }
 
     @Suppress("RedundantSuspendModifier")

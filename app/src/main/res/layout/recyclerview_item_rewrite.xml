@@ -12,6 +12,23 @@
 
         <!-- Add frequency, timestamp, etc. -->
         <TextView
+            android:id="@+id/rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:padding="@dimen/layoutMargin4dp"
+            android:textSize="@dimen/textSize3"
+            tools:text="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:padding="@dimen/layoutMargin4dp"
+            android:text="•"
+            android:textSize="@dimen/textSize3" />
+
+        <TextView
             android:id="@+id/ruleId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
