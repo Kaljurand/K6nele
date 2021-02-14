@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
-            android:textSize="@dimen/textSize3"
+            android:textSize="@dimen/textSize1"
             tools:text="1" />
 
         <TextView
@@ -26,7 +26,7 @@
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
             android:text="•"
-            android:textSize="@dimen/textSize3" />
+            android:textSize="@dimen/textSize1" />
 
         <TextView
             android:id="@+id/ruleId"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
-            android:textSize="@dimen/textSize3"
+            android:textSize="@dimen/textSize1"
             tools:text="123" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
             android:text="•"
-            android:textSize="@dimen/textSize3" />
+            android:textSize="@dimen/textSize1" />
 
         <TextView
             android:id="@+id/ownerId"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:padding="@dimen/layoutMargin4dp"
-            android:textSize="@dimen/textSize3"
+            android:textSize="@dimen/textSize1"
             tools:text="4" />
 
         <View

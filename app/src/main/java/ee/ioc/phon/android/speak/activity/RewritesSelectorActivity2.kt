@@ -21,6 +21,9 @@ import ee.ioc.phon.android.speak.model.RewriteListViewModelFactory
 
 // TODO: expandable FAB (new empty table, RewritesLoaderActivity, pick from examples); should work on Wear though
 // TODO: context menu for share, delete, etc.
+// TODO: publish shortcuts
+// TODO: separate selection for Panel vs IME
+// TODO: create new table with name, leaving it empty of loading rules into it (from existing, from file manager, from web)
 class RewritesSelectorActivity2 : AppCompatActivity() {
 
     private val vm: RewriteListViewModel by viewModels {
@@ -34,7 +37,14 @@ class RewritesSelectorActivity2 : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = RewriteListListAdapter(
                 { rule -> startView(rule) },
-                { rule -> vm.delete(rule) }
+                { rule ->
+                    run {
+                        vm.delete(rule);
+                        Snackbar
+                                .make(findViewById<RecyclerView>(R.id.recyclerview), "Deleted: ${rule.name}", Snackbar.LENGTH_LONG)
+                                .show()
+                    }
+                }
         )
 
         recyclerView.adapter = adapter

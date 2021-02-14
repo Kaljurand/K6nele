@@ -155,13 +155,15 @@ class RewritesLoaderActivity : AppCompatActivity() {
     // TODO: cleanup
     private fun saveAndShow(prefs: SharedPreferences, res: Resources, name: String) {
         if (utteranceRewriter != null) {
+            val ur = utteranceRewriter!!
             // TODO: first create the table
             var idx = 0;
-            for (command in utteranceRewriter!!.commands) {
-                wordViewModel.addNewRule(name, idx++, command)
+            val size = ur.commandHolder.size()
+            for (command in ur.commands) {
+                wordViewModel.addNewRule(name, size - (idx++), command)
             }
             // TODO: remove once Room is ready
-            PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, utteranceRewriter!!.toTsv())
+            PreferenceUtils.putPrefMapEntry(prefs, res, R.string.keyRewritesMap, name, ur.toTsv())
 
             val intent = Intent(this, RewritesActivity::class.java)
             intent.putExtra(RewritesActivity.EXTRA_NAME, name)
@@ -169,7 +171,7 @@ class RewritesLoaderActivity : AppCompatActivity() {
 
             // If there were errors then we load another activity to show them.
             // TODO: verify that this is a correct way to start multiple activities
-            val errors = utteranceRewriter!!.errorsAsStringArray
+            val errors = ur.errorsAsStringArray
             if (errors.size > 0) {
                 val searchIntent = Intent(this, RewritesErrorsActivity::class.java)
                 searchIntent.putExtra(RewritesErrorsActivity.EXTRA_TITLE, name)

@@ -18,10 +18,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodSubtype
 import android.widget.Toast
+import ee.ioc.phon.android.speak.AppDatabase
 import ee.ioc.phon.android.speak.Log
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.activity.PermissionsRequesterActivity
 import ee.ioc.phon.android.speak.model.CallerInfo
+import ee.ioc.phon.android.speak.model.RewriteRuleRepository
 import ee.ioc.phon.android.speak.model.Rewrites
 import ee.ioc.phon.android.speak.utils.Utils
 import ee.ioc.phon.android.speak.view.AbstractSpeechInputViewListener
@@ -30,6 +32,12 @@ import ee.ioc.phon.android.speak.view.SpeechInputView.SpeechInputViewListener
 import ee.ioc.phon.android.speechutils.Extras
 import ee.ioc.phon.android.speechutils.editor.*
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import java.util.*
+import java.util.regex.Matcher
 
 class SpeechInputMethodService : InputMethodService() {
     private var mFlagPersonalizedLearning = true
@@ -39,35 +47,30 @@ class SpeechInputMethodService : InputMethodService() {
     private var mShowPartialResults = false
     private var mPrefs: SharedPreferences? = null
     private var mRes: Resources? = null
-    private var mRuleManager: RuleManager? = null
+    private lateinit var mRuleManager: RuleManager
+    private lateinit var repository: RewriteRuleRepository
 
     override fun onCreate() {
         super.onCreate()
         Log.i("onCreate")
+
         mInputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         mCommandEditor = InputConnectionCommandEditor(applicationContext)
         mPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         mRes = resources
-        mRuleManager = RuleManager()
-        val rewritesClip = Rewrites(mPrefs, mRes, REWRITES_NAME_CLIP)
-        if (rewritesClip.isSelected) {
-            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            // TODO: remove the listener onFinish
-            clipboard.addPrimaryClipChangedListener {
-                val clipData = clipboard.primaryClip
-                if (clipData != null) {
-                    val clip = clipData.getItemAt(0).text.toString()
-                    // Empty strings make less sense as clips
-                    if (!clip.isEmpty()) {
-                        val ur = mRuleManager!!.addRecent(clip, rewritesClip.rewrites)
-                        PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_CLIP, ur.toTsv())
-                        mCommandEditor?.setRewriters(
-                                Utils.makeList(
-                                        Utils.genRewriters(mPrefs, mRes, null, mRuleManager!!.commandMatcher)))
-                    }
-                }
-            }
-        }
+    }
+
+    // TODO: use it for #r, just with a different command
+    suspend fun clipToCommand(text: String, ruleManager: RuleManager, repository: RewriteRuleRepository) {
+        val cal = Calendar.getInstance()
+        val timeInMillis = cal.timeInMillis
+        val comment = RuleManager.DATE_FORMAT.format(cal.time)
+        val textEscaped = Matcher.quoteReplacement(text)
+        val command = Command(text, comment, ruleManager.localePattern, ruleManager.servicePattern, ruleManager.appPattern,
+                RuleManager.makeUtt(cal), "", CommandEditorManager.REPLACE_SEL, arrayOf(textEscaped))
+        // TODO: use:
+        //  val time = ZonedDateTime.now().toEpochSecond()
+        repository.addNewRule(REWRITES_NAME_CLIP, (timeInMillis / 1000).toInt(), command)
     }
 
     /**
@@ -84,6 +87,42 @@ class SpeechInputMethodService : InputMethodService() {
         //ViewGroup view = (ViewGroup) findViewById(android.R.id.content);
         val view = myWindow!!.decorView.rootView as ViewGroup
         mInputView = layoutInflater.inflate(R.layout.voice_ime_view, view, false) as SpeechInputView
+
+        val applicationScope = CoroutineScope(SupervisorJob())
+        val database by lazy { AppDatabase.getDatabase(mInputView!!.context, applicationScope) }
+        repository = RewriteRuleRepository(database.rewriteRuleDao())
+
+        mRuleManager = RuleManager()
+        val rewritesClip = Rewrites(mPrefs, mRes, REWRITES_NAME_CLIP)
+
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val lambda = ClipboardManager.OnPrimaryClipChangedListener {
+            val clipData = clipboard.primaryClip
+            if (clipData != null) {
+                val clip = clipData.getItemAt(0).text.toString()
+                // Empty strings make less sense as clips
+                if (!clip.isEmpty()) {
+
+                    GlobalScope.launch {
+                        // TODO: put clip into DB + update commandEditor rewriters
+                        clipToCommand(clip, mRuleManager, repository)
+                    }
+
+                    val ur = mRuleManager.addRecent(clip, rewritesClip.rewrites)
+                    PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_CLIP, ur?.toTsv())
+                    mCommandEditor?.setRewriters(
+                            Utils.makeList(
+                                    Utils.genRewriters(mPrefs, mRes, null, mRuleManager.commandMatcher)))
+                }
+            }
+        }
+
+        if (rewritesClip.isSelected) {
+            // TODO: remove the listener onFinish
+            clipboard.removePrimaryClipChangedListener(lambda)
+            clipboard.addPrimaryClipChangedListener(lambda)
+        }
+
         return mInputView!!
     }
 
@@ -270,7 +309,7 @@ class SpeechInputMethodService : InputMethodService() {
         mInputMethodManager!!.switchToLastInputMethod(token)
     }
 
-    private fun getSpeechInputViewListener(window: Window?, app: ComponentName, ruleManager: RuleManager?): SpeechInputViewListener {
+    private fun getSpeechInputViewListener(window: Window?, app: ComponentName, ruleManager: RuleManager): SpeechInputViewListener {
         return object : AbstractSpeechInputViewListener() {
             val mApp = app
             val mRuleManager = ruleManager
@@ -299,25 +338,35 @@ class SpeechInputMethodService : InputMethodService() {
                     val rewritesRec = Rewrites(mPrefs, mRes, REWRITES_NAME_RECENT)
                     if (rewritesRec.isSelected) {
                         isSelected = true
-                        val ur = mRuleManager!!.addRecent(editorResult, rewritesRec.rewrites)
+                        val ur = mRuleManager.addRecent(editorResult, rewritesRec.rewrites)
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_RECENT, ur.toTsv())
+
+                        // TODO: add to DB
+                        val cal = Calendar.getInstance()
+                        val comment = RuleManager.DATE_FORMAT.format(cal.time)
+                        val command = mRuleManager.makeCommand(editorResult.rewrite, RuleManager.makeUtt(cal), comment)
+                        // TODO: use:
+                        //  val time = ZonedDateTime.now().toEpochSecond()
+                        GlobalScope.launch {
+                            repository.addNewRule(REWRITES_NAME_RECENT, (cal.timeInMillis / 1000).toInt(), command)
+                        }
                     }
                     val rewritesFreq = Rewrites(mPrefs, mRes, REWRITES_NAME_FREQUENT)
                     if (rewritesFreq.isSelected) {
                         isSelected = true
-                        val ur = mRuleManager!!.addFrequent(editorResult, rewritesFreq.rewrites)
+                        val ur = mRuleManager.addFrequent(editorResult, rewritesFreq.rewrites)
                         PreferenceUtils.putPrefMapEntry(mPrefs, mRes, R.string.keyRewritesMap, REWRITES_NAME_FREQUENT, ur.toTsv())
                     }
                     // Update rewriters because the tables have changed
                     if (isSelected) {
                         mCommandEditor!!.rewriters = Utils.makeList(
-                                Utils.genRewriters(mPrefs, mRes, null, mRuleManager!!.commandMatcher))
+                                Utils.genRewriters(mPrefs, mRes, null, mRuleManager.commandMatcher))
                     }
                 }
             }
 
             override fun onComboChange(language: String, service: ComponentName) {
-                mRuleManager!!.setMatchers(language, service, mApp)
+                mRuleManager.setMatchers(language, service, mApp)
                 // TODO: name of the rewrites table configurable
                 mCommandEditor!!.rewriters = Utils.makeList(
                         Utils.genRewriters(mPrefs, mRes, null, mRuleManager.commandMatcher))

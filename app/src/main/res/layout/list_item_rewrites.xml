@@ -17,6 +17,10 @@
         android:textColor="?android:textColorPrimary"
         tools:text="#f" />
 
+    <!-- TODO: use data bindings
+android:checked="@{viewmodel.rememberMe}"
+android:onCheckedChanged="@{viewmodel.rememberMeChanged}"
+-->
     <CheckBox
         android:id="@+id/rewritesIsSelected"
         android:layout_width="wrap_content"

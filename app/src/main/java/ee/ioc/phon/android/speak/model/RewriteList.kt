@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "rewrite_list", indices = arrayOf(Index(value = ["name"], unique = true)))
 data class RewriteList(
         val name: String,
-        val isEnabled: Boolean = false) {
+        var isEnabled: Boolean = false) {
     @PrimaryKey(autoGenerate = true)
     var rewriteListId: Long = 0
 }

@@ -24,10 +24,10 @@ interface RewriteRuleDao {
     @Query("DELETE FROM rewrite_rules")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM rewrite_rules ORDER BY rank")
+    @Query("SELECT * FROM rewrite_rules ORDER BY rank DESC")
     fun getRewriteRules(): Flow<List<RewriteRule>>
 
-    @Query("SELECT * FROM rewrite_rules WHERE ownerId = :ownerId ORDER BY rank")
+    @Query("SELECT * FROM rewrite_rules WHERE ownerId = :ownerId ORDER BY rank DESC")
     fun getRewriteRulesByOwner(ownerId: Int): Flow<List<RewriteRule>>
 
     //@Transaction
@@ -36,11 +36,11 @@ interface RewriteRuleDao {
 
     // TODO: seems to work but is maybe not idiomatic
     @Transaction
-    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY rank")
+    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY rank DESC")
     fun getRewriteRulesByOwnerName(tableName: String): Flow<List<RewriteRule>>
 
     @Transaction
-    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY rank")
+    @Query("SELECT * FROM rewrite_rules, rewrite_list WHERE (:tableName = '' or rewrite_list.name = :tableName and rewrite_list.rewriteListId = rewrite_rules.ownerId) ORDER BY rank DESC")
     suspend fun getRewriteRulesByOwnerNameSus(tableName: String): List<RewriteRule>
 
     @Transaction
@@ -52,6 +52,10 @@ interface RewriteRuleDao {
 
     @Query("UPDATE rewrite_rules SET ownerId = ownerId + 1 WHERE id = :id")
     suspend fun incFreq(id: Int)
+
+    // #f rule frequency increment
+    @Query("UPDATE rewrite_rules SET rank = rank + 1 WHERE replacement = :replacement")
+    suspend fun incFreq1(replacement: String)
 
     @Query("UPDATE rewrite_list SET name = :name WHERE rewriteListId = :rewriteListId")
     suspend fun rename(rewriteListId: Int, name: String)
