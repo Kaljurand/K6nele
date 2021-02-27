@@ -76,8 +76,8 @@ public class ServerListActivity extends AbstractContentActivity {
     }
 
     private boolean menuAction(int itemId, Cursor cursor) {
-        final long key = cursor.getLong(cursor.getColumnIndex(Server.Columns._ID));
-        String url = cursor.getString(cursor.getColumnIndex(Server.Columns.URL));
+        final long key = cursor.getLong(cursor.getColumnIndexOrThrow(Server.Columns._ID));
+        String url = cursor.getString(cursor.getColumnIndexOrThrow(Server.Columns.URL));
 
         switch (itemId) {
             case R.id.cmServerEdit:
@@ -136,7 +136,7 @@ public class ServerListActivity extends AbstractContentActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Cursor cursor = (Cursor) l.getItemAtPosition(position);
-            final long key = cursor.getLong(cursor.getColumnIndex(Server.Columns._ID));
+            final long key = cursor.getLong(cursor.getColumnIndexOrThrow(Server.Columns._ID));
             ((AbstractContentActivity) getActivity()).returnIntent(CONTENT_URI, key);
         }
 

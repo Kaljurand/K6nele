@@ -64,8 +64,8 @@ public class PackageNameRegistry {
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
-                    grammarId = cursor.getLong(cursor.getColumnIndex(App.Columns.GRAMMAR));
-                    serverId = cursor.getLong(cursor.getColumnIndex(App.Columns.SERVER));
+                    grammarId = cursor.getLong(cursor.getColumnIndexOrThrow(App.Columns.GRAMMAR));
+                    serverId = cursor.getLong(cursor.getColumnIndexOrThrow(App.Columns.SERVER));
                 }
                 cursor.close();
             }
@@ -138,8 +138,8 @@ public class PackageNameRegistry {
                     null);
 
             if (cursor.moveToFirst()) {
-                long id = cursor.getLong(cursor.getColumnIndex(App.Columns._ID));
-                int count = cursor.getInt(cursor.getColumnIndex(App.Columns.COUNT));
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(App.Columns._ID));
+                int count = cursor.getInt(cursor.getColumnIndexOrThrow(App.Columns.COUNT));
 
                 ContentValues values = new ContentValues();
                 values.put(App.Columns.COUNT, ++count);

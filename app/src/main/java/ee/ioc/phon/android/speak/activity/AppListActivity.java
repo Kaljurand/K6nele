@@ -87,8 +87,8 @@ public class AppListActivity extends AbstractContentActivity {
     }
 
     private boolean menuAction(int itemId, Cursor cursor) {
-        final long key = cursor.getLong(cursor.getColumnIndex(App.Columns._ID));
-        String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
+        final long key = cursor.getLong(cursor.getColumnIndexOrThrow(App.Columns._ID));
+        String fname = cursor.getString(cursor.getColumnIndexOrThrow(App.Columns.FNAME));
         mCurrentAppId = key;
 
         switch (itemId) {
@@ -217,8 +217,8 @@ public class AppListActivity extends AbstractContentActivity {
 
             final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
             Cursor c = (Cursor) getListView().getItemAtPosition(info.position);
-            long grammarId = c.getLong(c.getColumnIndex(App.Columns.GRAMMAR));
-            long serverId = c.getLong(c.getColumnIndex(App.Columns.SERVER));
+            long grammarId = c.getLong(c.getColumnIndexOrThrow(App.Columns.GRAMMAR));
+            long serverId = c.getLong(c.getColumnIndexOrThrow(App.Columns.SERVER));
             if (grammarId == 0) {
                 menu.findItem(R.id.cmAppRemoveGrammar).setEnabled(false);
             }
@@ -230,7 +230,7 @@ public class AppListActivity extends AbstractContentActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Cursor cursor = (Cursor) l.getItemAtPosition(position);
-            String fname = cursor.getString(cursor.getColumnIndex(App.Columns.FNAME));
+            String fname = cursor.getString(cursor.getColumnIndexOrThrow(App.Columns.FNAME));
             Intent intent = IntentUtils.getAppIntent(getContext(), fname);
             if (intent != null) {
                 startActivity(intent);

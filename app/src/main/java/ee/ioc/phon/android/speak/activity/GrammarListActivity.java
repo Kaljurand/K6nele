@@ -110,11 +110,11 @@ public class GrammarListActivity extends AbstractContentActivity {
 
     private boolean menuAction(int itemId, Cursor cursor) {
 
-        final long key = cursor.getLong(cursor.getColumnIndex(Grammar.Columns._ID));
-        String name = cursor.getString(cursor.getColumnIndex(Grammar.Columns.NAME));
-        String grammarName = cursor.getString(cursor.getColumnIndex(Grammar.Columns.NAME));
-        String grammarLang = cursor.getString(cursor.getColumnIndex(Grammar.Columns.LANG));
-        String grammarUrl = cursor.getString(cursor.getColumnIndex(Grammar.Columns.URL));
+        final long key = cursor.getLong(cursor.getColumnIndexOrThrow(Grammar.Columns._ID));
+        String name = cursor.getString(cursor.getColumnIndexOrThrow(Grammar.Columns.NAME));
+        String grammarName = cursor.getString(cursor.getColumnIndexOrThrow(Grammar.Columns.NAME));
+        String grammarLang = cursor.getString(cursor.getColumnIndexOrThrow(Grammar.Columns.LANG));
+        String grammarUrl = cursor.getString(cursor.getColumnIndexOrThrow(Grammar.Columns.URL));
 
         switch (itemId) {
             case R.id.cmGrammarView:
@@ -204,7 +204,7 @@ public class GrammarListActivity extends AbstractContentActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Cursor cursor = (Cursor) l.getItemAtPosition(position);
-            final long key = cursor.getLong(cursor.getColumnIndex(Server.Columns._ID));
+            final long key = cursor.getLong(cursor.getColumnIndexOrThrow(Server.Columns._ID));
             ((AbstractContentActivity) getActivity()).returnIntent(CONTENT_URI, key);
         }
 

@@ -56,7 +56,7 @@ public class AppListCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor c) {
-        String packageName = c.getString(c.getColumnIndex(App.Columns.FNAME));
+        String packageName = c.getString(c.getColumnIndexOrThrow(App.Columns.FNAME));
 
         String label = "";
         Drawable icon = null;
@@ -77,7 +77,7 @@ public class AppListCursorAdapter extends CursorAdapter {
 
         // App usage count (comes from the DB)
         TextView itemAppCount = view.findViewById(R.id.itemAppCount);
-        itemAppCount.setText(String.valueOf(c.getInt(c.getColumnIndex(App.Columns.COUNT))));
+        itemAppCount.setText(String.valueOf(c.getInt(c.getColumnIndexOrThrow(App.Columns.COUNT))));
 
         // App icon (can be null if the app has been uninstalled)
         ImageView itemAppIcon = view.findViewById(R.id.itemAppIcon);
@@ -91,7 +91,7 @@ public class AppListCursorAdapter extends CursorAdapter {
         // Grammar URL assigned to the app (comes from the DB)
         TextView itemAppGrammar = view.findViewById(R.id.itemAppGrammar);
         TextView itemAppGrammarTargetLang = view.findViewById(R.id.itemAppGrammarTargetLang);
-        long grammarId = c.getLong(c.getColumnIndex(App.Columns.GRAMMAR));
+        long grammarId = c.getLong(c.getColumnIndexOrThrow(App.Columns.GRAMMAR));
 
         String grammarUrl = Utils.idToValue(context, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.URL, grammarId);
         String grammarTargetLang = Utils.idToValue(context, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.LANG, grammarId);
@@ -121,7 +121,7 @@ public class AppListCursorAdapter extends CursorAdapter {
 
         // Server URL assigned to the app (comes from the DB)
         TextView itemAppServer = view.findViewById(R.id.itemAppServer);
-        long serverId = c.getLong(c.getColumnIndex(App.Columns.SERVER));
+        long serverId = c.getLong(c.getColumnIndexOrThrow(App.Columns.SERVER));
 
         String serverUrl = Utils.idToValue(context, Server.Columns.CONTENT_URI, Server.Columns._ID, Server.Columns.URL, serverId);
 
