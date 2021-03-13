@@ -4,13 +4,13 @@ Contributing
 Introduction
 ------------
 
-Contribute via [GitHub pull requests](https://help.github.com/articles/using-pull-requests/).
+Contribute via [GitHub pull requests](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).
 
 
 Possible tasks
 --------------
 
-- support for other languages, see [Issue #38](https://github.com/Kaljurand/K6nele/issues/38)
+- support for other languages, see [#38](https://github.com/Kaljurand/K6nele/discussions/38)
 - optimize UX for Android Wear, Auto, TV, Things, ...
 - audio compression
 - support for external (e.g. Bluetooth) microphone
@@ -31,7 +31,6 @@ Submodules
 ----------
 
     git submodule add git@github.com:Kaljurand/speechutils.git speechutils
-    git submodule add git@github.com:Kaljurand/net-speech-api.git net-speech-api
 
 
 Version tags

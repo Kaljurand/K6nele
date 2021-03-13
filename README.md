@@ -1,8 +1,6 @@
 Kõnele
 ======
 
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/b15968aa0a524d2986ba5deac6801196)](https://www.codacy.com/app/kaljurand/K6nele)
-
 Kõnele is an Android app that offers speech-to-text services to other apps.
 Its main components are:
 
@@ -25,8 +23,6 @@ The diagram below shows Kõnele's main components in yellow, while the standard 
 
 The main goals of this project is to offer support for Estonian speech recognition on the
 Android platform, as well as grammar-based speech recognition for voice command applications.
-
-How to add support for other languages than Estonian is detailed in https://github.com/Kaljurand/K6nele/issues/38
 
 For documentation, APKs, app store links, news etc. see <http://kaljurand.github.io/K6nele/>.
 
