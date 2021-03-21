@@ -93,44 +93,39 @@ Antud juhul on reeglil kolm komponenti: regulaaravaldis, mis vastab lausungile (
 
 ## Kõnele seadistamine
 
-<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2018-12-27-09-29-43.jpg">
+<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2021-03-20-20-18-30.jpg">
 
-Sama mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
-Need võimaldavad Kõnele töökäiku erinevatel viisidel suunata, määrates nt
+Mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
+Need võimaldavad Kõnele kasutajaliidest (st klaviatuuri ja otsingupaneeli)
+ja töökäiku erinevatel viisidel suunata, määrates nt
 
 - milliseid tuvastusteenusi ja -keeli kasutatakse;
 - kas/kuidas rakendada tuvastustulemusele tõlkegrammatikaid ja ümberkirjutusreegleid (vt allpool);
-- kas lindistamine algab automaatselt või peale nupule vajutamist;
-- kas lindistamine lõpeb kui sisendkõnesse tekib paus, või alles siis, kui nupule on vajutatud;
-- kas lindistamise algusest ja lõpust teavitatakse lühikese helisignaaliga.
+- kas lindistamine algab automaatselt või peale nupule vajutamist.
 
-Mõned nendest seadetest puudutavad ainult Kõnele enda kasutajaliidest (st klaviatuuri ja otsingupaneeli) ning
-seega ei rakendu juhul kui Kõnelet kasutatakse läbi teise rakenduse.
+Kõnele kaudu saab põhimõtteliselt kasutada kõiki seadmes olevaid kõnetuvastusteenusi, aga eriti on testitud kolme
+(eesti keele toetusega) teenust:
 
-Kõnele toetab kahte erinevat kõnetuvastusteenust:
-
+  - [Kõnele teenus](https://github.com/Kaljurand/K6nele-service).
+    Teenus tagastab tuvastustulemuse juba rääkimise ajal, ega sea sisendkõne pikkusele mingit piirangut.
+    Kasutab serverit tarkvaraga <http://github.com/alumae/kaldi-gstreamer-server>, mis on
+    vaba lähtekoodiga ja seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku
+    (vt peatükk [Tuvastusserver koduvõrgus](#tuvastusserver-koduvõrgus)).
+    Teenust sisaldav rakendus tuleb paigaldada eraldi.
+  - "kiire tuvastusega" teenus. Sama, mis "Kõnele teenus", aga installeerub Kõnele osana, st paigaldamine on lihtsam.
+    Kahjuks pole kasutatav Android v11 seadmetes.
   - "grammatikatoega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/ruby-pocketsphinx-server>)
     lubab sisendkõnele omistada tõlkegrammatikaid, kuid on aeglasem ja sisendkõne pikkus ei tohi ületada
-    30 sekundit;
-  - "kiire tuvastusega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/kaldi-gstreamer-server>)
-    tagastab tuvastustulemuse juba rääkimise ajal, ega sea sisendkõne pikkusele mingit piirangut.
+    30 sekundit. Hetkel puudub selle tarkvara toetusega avalik server, st kasutamiseks tuleb paigaldada oma server.
 
-Mõlema teenuse tarkvara on vaba lähtekoodiga ja teenuse veebiaadressid on Kõneles konfigureeritavad. Seega võib teenuse installeerida suurema kiiruse ja privaatsuse huvides kohtvõrku. Seda käsitleb pikemalt [eraldi peatükk](#tuvastusserver-koduvõrgus).
-
-Kõnele kasutajaliidesed kasutavad vaikimisi "kiire tuvastusega" kõnetuvastusteenust, kuid
-lisada saab ka teisi seadmesse installeeritud teenuseid ja nende poolt toetatud
-keeli (nt Kõnele "grammatikatoega" teenus ja Google'i teenus),
-muutes vastavat seadet.
 Kui valitud on mitu keelt/teenust, siis on Kõnele mikrofoninupu juures lisaks keele/teenuse vahetamise nupp:
 
 - lühike vajus lülitab järgmisele keelele/teenusele,
 - pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta.
 
-(Vt näidet peatükis "Grammatikapõhine kõnetuvastus".)
+Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_), alates Android v7.1. Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingi kaudu Kõnele käivitamisel, algab kõnetuvastus koheselt väljavalitud keeles/teenuses. See võimaldab mugavalt/kiiresti sooritada veebiotsingut erinevates keeltes. Järgmine video näitab veebiotsingu sooritamist eesti- ja siis ingliskeelse kõne abil, rakenduses "Niagara Launcher", mis avab otselinkide paneeli, kui rakenduse ikoonil svaipida.
 
-Otsingupaneeli jaoks välja valitud keeled/teenused on saadaval ka otselinkidena (_app shortcuts_), alates Android v7.1. Otselingid avanevad kui näppu pikemalt Kõnele käivitusikoonil hoida, samuti võib otselingi teha ikooniks. Otselingil klikkides alustab Kõnele koheselt tuvastamist väljavalitud keeles/teenuses.
-
-<img title="Ekraanipilt: otselingid" alt="Ekraanipilt: otselingid." src="{{ site.baseurl }}/images/et/Screenshot_20161227-115800.png">
+<img title="Ekraanivideo: otselingid" alt="Ekraanivideo: otselingid." src="{{ site.baseurl }}/images/et/screen-20210321-115441.gif">
 
 Otselink on lihtne näide, kuidas käivitada Kõnele otsingupaneel sisendparameetritega, mille väärtused erinevad nendest, mis seadetes kirjas. Kõnele toetab palju erinevaid sisendparameeterid (nn EXTRA), mis võimaldavad teistel rakendustel (nt Tasker, vt [eraldi peatükk](#kõnele-ja-tasker)) Kõnelega otse suhelda. Toetatud EXTRAte kohta vt täpsemalt [Developer's Guide]({{ site.baseurl }}/docs/en/developer_guide.html).
 
@@ -161,7 +156,7 @@ virtuaalklaviatuurimenüüs.
 Kui Kõnele klaviatuur pole sisse lülitatud, siis on Kõnele seadetes, esimesel kohal, ka
 otselink sellesse menüüsse.
 
-<img title="Ekraanipilt: otselink klaviatuuri sisselülitamise menüüsse" alt="Ekraanipilt: otselink klaviatuuri sisselülitamise menüüsse." src="{{ site.baseurl }}/images/et/Screenshot_20181227-093420.png">
+<img title="Ekraanipilt: otselink klaviatuuri sisselülitamise menüüsse" alt="Ekraanipilt: otselink klaviatuuri sisselülitamise menüüsse." src="{{ site.baseurl }}/images/et/Screenshot_20210321-113444.jpg">
 
 Androidi seadete hierarhias asub vastav menüü üsna sügaval, ning lisaks erineb selle asukoht
 Androidi versiooniti:
