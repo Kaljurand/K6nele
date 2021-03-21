@@ -1,6 +1,5 @@
 package ee.ioc.phon.android.speak.service;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -190,7 +189,7 @@ public class SpeechInputMethodService extends InputMethodService {
         // We do not expect this to happen, but Google Play crash reports show that it does.
         // TODO: review, e.g. move to after restarting-check
         if (ic == null) {
-            Toast.makeText(getApplicationContext(), R.string.errorFailedGetCurrentInputConnection, Toast.LENGTH_LONG).show();
+            toast(R.string.errorFailedGetCurrentInputConnection);
             //switchToLastIme();
             return;
         }
@@ -262,6 +261,10 @@ public class SpeechInputMethodService extends InputMethodService {
         closeSession();
     }
 
+    private void toast(int res) {
+        Toast.makeText(getApplicationContext(), res, Toast.LENGTH_LONG).show();
+    }
+
     private void closeSession() {
         if (mInputView != null) {
             mInputView.cancel();
@@ -290,23 +293,25 @@ public class SpeechInputMethodService extends InputMethodService {
 
     /**
      * Switch to another IME by selecting it from the list of all active IMEs (isAskUser==true), or
-     * by taking the next IME in the IME rotation (isAskUser==false on JELLY_BEAN).
+     * by taking the next IME in the IME rotation (isAskUser==false).
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void switchIme(boolean isAskUser) {
         closeSession();
         if (isAskUser) {
             mInputMethodManager.showInputMethodPicker();
         } else {
-            final IBinder token = getToken();
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    mInputMethodManager.switchToNextInputMethod(token, false /* not onlyCurrentIme */);
-                } else {
-                    mInputMethodManager.switchToLastInputMethod(token);
+            boolean result = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                result = switchToNextInputMethod(false);
+            } else {
+                try {
+                    result = mInputMethodManager.switchToNextInputMethod(getToken(), false /* not onlyCurrentIme */);
+                } catch (NoSuchMethodError e) {
+                    Log.e("IME switch failed", e);
                 }
-            } catch (NoSuchMethodError e) {
-                Log.e("IME switch failed", e);
+            }
+            if (!result) {
+                toast(R.string.toastNoNextIme);
             }
         }
     }
@@ -318,7 +323,15 @@ public class SpeechInputMethodService extends InputMethodService {
      */
     private void switchToLastIme() {
         closeSession();
-        mInputMethodManager.switchToLastInputMethod(getToken());
+        boolean result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            result = switchToPreviousInputMethod();
+        } else {
+            result = mInputMethodManager.switchToLastInputMethod(getToken());
+        }
+        if (!result) {
+            toast(R.string.toastNoPreviousIme);
+        }
     }
 
     private static String getText(@NonNull List<String> results) {

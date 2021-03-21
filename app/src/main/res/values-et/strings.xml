@@ -186,6 +186,8 @@
     <string name="dialogTitleChangeServer">Muuda serveri URL</string>
     <string name="dialogTitleNewServer">Lisa uus serveri URL</string>
     <string name="dialogTitleHypotheses">Kas ütlesite &#8230;</string>
+    <string name="toastNoNextIme">Järgnevat klaviatuuri pole</string>
+    <string name="toastNoPreviousIme">Eelnevat klaviatuuri pole</string>
     <string name="toastForwardedMatches">Tuvastasin: %1$s</string>
     <string name="toastAssignGrammar">Omistasin grammatika: %1$s</string>
     <string name="toastActivated">Sisselülitatud: %1$s</string>

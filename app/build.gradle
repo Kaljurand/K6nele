@@ -22,12 +22,13 @@ android {
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
     // API level 8: android.speech.SpeechRecognizer and android.speech.RecognitionService
     // API level 14: @android:style/Theme.DeviceDefault
+    // API level 21: Jetpack Compose
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1760
-        versionName '1.7.60'
+        versionCode 1761
+        versionName '1.7.61'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs "en", "et"

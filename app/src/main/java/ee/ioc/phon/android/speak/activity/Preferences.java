@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -131,17 +130,6 @@ public class Preferences extends AppCompatActivity implements PreferenceFragment
         public void onResume() {
             super.onResume();
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-            // Remove the shortcut to the system-wide recognizer settings which does not
-            // exist pre Android v5.
-            // TODO: also remove it on Wear
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                PreferenceCategory category = findPreference(getString(R.string.keyCategoryDependencies));
-                Preference pref = category.findPreference(getString(R.string.keySystemVoiceInputSettings));
-                if (pref != null) {
-                    category.removePreference(pref);
-                }
-            }
 
             PreferenceScreen prefScreen = getPreferenceScreen();
             PreferenceCategory category = prefScreen.findPreference(getString(R.string.keyCategoryIme));
