@@ -1,7 +1,7 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# cat rewrites.csv | python make-rewrites-md.py > rewrites.md
+# cat rewrites.csv | python3 make-rewrites-md.py > rewrites.md
 
 import sys
 import base64
