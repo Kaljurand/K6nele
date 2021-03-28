@@ -43,9 +43,7 @@ public class RecService {
         try {
             mSettingsActivity = RecognitionServiceManager.getSettingsActivity(context, si);
             Log.i(mSettingsActivity);
-        } catch (XmlPullParserException e) {
-            mSettingsActivity = null;
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
             mSettingsActivity = null;
         }
     }
