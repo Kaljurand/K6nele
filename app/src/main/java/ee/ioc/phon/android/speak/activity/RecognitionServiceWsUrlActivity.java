@@ -41,7 +41,7 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 public class RecognitionServiceWsUrlActivity extends AppCompatActivity {
 
     private static final int TIMEOUT_PING = 100;
-    private List<String> mList = new ArrayList<>();
+    private final List<String> mList = new ArrayList<>();
     private ServerAdapter mAdapter;
     private Button mBScan;
     private TextView mTvServerStatus;
@@ -255,10 +255,10 @@ public class RecognitionServiceWsUrlActivity extends AppCompatActivity {
     }
 
     private class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHolder> {
-        private List<String> mDataset;
+        private final List<String> mDataset;
 
         private class MyViewHolder extends RecyclerView.ViewHolder {
-            private Button mView;
+            private final Button mView;
 
             private MyViewHolder(Button v) {
                 super(v);
