@@ -641,7 +641,7 @@ kiirust (sõltuvalt koduserveri kiirusest ja välisinterneti aeglusest).
 
 Kõnetuvastusserveritarkvara <https://github.com/alumae/kaldi-gstreamer-server>
 koos eesti keele mudelite ja käivitusskriptiga on saadaval Dockeri konteinerina
-[alumae/docker-konele](https://hub.docker.com/r/alumae/docker-konele/), mis
+[alumae/konele](https://hub.docker.com/r/alumae/konele/), mis
 teeb serveri jooksutamise koduarvutis ülilihtsaks.
 See konteiner toetab nii "grammatikatoega" teenuse HTTP-liidest
 kui ka "kiire tuvastusega" teenuse WebSocket-liidest (esimesel juhul küll GF grammatikaid
@@ -653,7 +653,7 @@ ning Dockeri infrastruktuuri, mille paigaldamisjuhend nt Ubuntu Linuxile on
 Seejärel saab teenuse paigaldada käsuga
 
 {% highlight sh %}
-$ docker pull alumae/docker-konele
+$ docker pull alumae/konele
 {% endhighlight %}
 
 Käsu täitmine võtab mõnevõrra aega, sõltuvalt internetiühenduse ja arvuti kiirusest.
@@ -662,7 +662,7 @@ Teenuse käivitamiseks pordil 8080 (kasutada võib ka mõnd muud porti) tuleb
 anda käsk
 
 {% highlight sh %}
-$ docker run -p 8080:80 -e num_workers=1 alumae/docker-konele
+$ docker run -p 8080:80 -e num_workers=1 alumae/konele
 {% endhighlight %}
 
 Jooksva teenuse testimiseks võib nt `curl` programmiga laadida sellesse
