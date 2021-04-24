@@ -17,7 +17,6 @@ import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,13 +37,10 @@ import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.OnSwipeTouchListener;
 import ee.ioc.phon.android.speak.PackageNameRegistry;
 import ee.ioc.phon.android.speak.R;
-import ee.ioc.phon.android.speak.ServiceLanguageChooser;
-import ee.ioc.phon.android.speak.activity.ComboSelectorActivity;
 import ee.ioc.phon.android.speak.activity.RewritesActivity;
 import ee.ioc.phon.android.speak.activity.RewritesSelectorActivity;
 import ee.ioc.phon.android.speak.adapter.ClipboardAdapter;
 import ee.ioc.phon.android.speak.model.CallerInfo;
-import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
@@ -60,7 +56,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeAction;
     private ImageButton mBUiMode;
-    private Button mBComboSelector;
+    private ComboSelectorView mComboSelectorView;
     private TextView mTvInstruction;
     private TextView mTvMessage;
     private RecyclerView mRvClipboard;
@@ -71,7 +67,6 @@ public class SpeechInputView extends LinearLayoutCompat {
     private String mAppId = "";
     private SpeechInputViewListener mListener;
     private SpeechRecognizer mRecognizer;
-    private ServiceLanguageChooser mSlc;
 
     private MicButton.State mState;
 
@@ -293,7 +288,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     } else {
                         setVisibility(mRlClipboard, View.INVISIBLE);
                     }
-                    setVisibility(mBComboSelector, View.INVISIBLE);
+                    setVisibility(mComboSelectorView, View.INVISIBLE);
                     showMessage("");
                 }
 
@@ -308,7 +303,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     } else {
                         setVisibility(mRlClipboard, View.VISIBLE);
                     }
-                    setVisibility(mBComboSelector, View.VISIBLE);
+                    setVisibility(mComboSelectorView, View.VISIBLE);
                     setBackgroundResource(R.drawable.rectangle_gradient);
                 }
 
@@ -324,8 +319,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             });
         }
         setGuiInitState(0);
-
-        makeComboChange();
     }
 
     public void init(int keys, CallerInfo callerInfo, boolean swipeType, ComponentName app) {
@@ -337,7 +330,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBImeAction = findViewById(R.id.bImeAction);
         mBUiMode = findViewById(R.id.bClipboard);
-        mBComboSelector = findViewById(R.id.tvComboSelector);
+        mComboSelectorView = findViewById(R.id.vComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
@@ -362,21 +355,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             findViewById(R.id.rlKeyButtons).setVisibility(View.VISIBLE);
         }
 
-        // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
-        mSlc = new ServiceLanguageChooser(context, prefs, keys, callerInfo, mAppId);
-        if (mBComboSelector != null) {
-            if (mSlc.size() > 1) {
-                mBComboSelector.setVisibility(View.VISIBLE);
-            } else {
-                mBComboSelector.setVisibility(View.GONE);
-                mBComboSelector = null;
-            }
-        }
-        updateServiceLanguage(mSlc.getSpeechRecognizer());
-        if (mBComboSelector != null) {
-            updateComboSelector(mSlc);
-        }
-
         showMessage("");
 
         TypedArray keysAsTypedArray = res.obtainTypedArray(keys);
@@ -384,6 +362,18 @@ public class SpeechInputView extends LinearLayoutCompat {
         int keyHelpText = keysAsTypedArray.getResourceId(7, 0);
         int defaultHelpText = keysAsTypedArray.getResourceId(8, 0);
         keysAsTypedArray.recycle();
+
+        mComboSelectorView.init(context, prefs, keys, callerInfo, mAppId, key, (language, service) -> {
+            if (mState == MicButton.State.RECORDING) {
+                stopListening();
+            }
+            mListener.onComboChange(language, service);
+            if (mRvClipboard != null) {
+                updateClipboard(getContext(), language, service, mApp);
+            }
+        });
+
+        updateServiceLanguage(mComboSelectorView.getSpeechRecognizer());
 
         if (mTvInstruction != null) {
             if (PreferenceUtils.getPrefBoolean(prefs, res, keyHelpText, defaultHelpText)) {
@@ -431,17 +421,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             }
 
         });
-
-        if (mBComboSelector != null) {
-            mBComboSelector.setOnClickListener(v -> {
-                nextCombo();
-            });
-
-            mBComboSelector.setOnLongClickListener(view -> {
-                comboSelector(key);
-                return true;
-            });
-        }
     }
 
     /**
@@ -452,7 +431,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         switch (mState) {
             case INIT:
             case ERROR:
-                startListening(mSlc);
+                startListening(mComboSelectorView.getSpeechRecognizer(), mComboSelectorView.getIntent());
                 break;
             case RECORDING:
                 stopListening();
@@ -469,7 +448,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     public void start() {
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
-            startListening(mSlc);
+            startListening(mComboSelectorView.getSpeechRecognizer(), mComboSelectorView.getIntent());
         }
     }
 
@@ -511,15 +490,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                 }
                 setText(mTvMessage, message);
             }
-        }
-    }
-
-    private void makeComboChange() {
-        String language = mSlc.getLanguage();
-        ComponentName service = mSlc.getService();
-        mListener.onComboChange(language, service);
-        if (mRvClipboard != null) {
-            updateClipboard(getContext(), language, service, mApp);
         }
     }
 
@@ -630,24 +600,6 @@ public class SpeechInputView extends LinearLayoutCompat {
         PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapClipboardTabName, appId, name);
     }
 
-    private void nextCombo() {
-        if (mState == MicButton.State.RECORDING) {
-            stopListening();
-        }
-        mSlc.next();
-        makeComboChange();
-        updateComboSelector(mSlc);
-    }
-
-    private void comboSelector(int key) {
-        cancelOrDestroy();
-        Context context = getContext();
-        Intent intent = new Intent(context, ComboSelectorActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("key", context.getString(key));
-        context.startActivity(intent);
-    }
-
     private void showUi(String state) {
         if (state == null) {
             mRlClipboard.setVisibility(View.GONE);
@@ -749,29 +701,24 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    private void updateComboSelector(ServiceLanguageChooser slc) {
-        Combo combo = new Combo(getContext(), slc.getCombo());
-        mBComboSelector.setText(combo.getLongLabel());
-    }
-
     private void updateServiceLanguage(SpeechRecognizer sr) {
         cancelOrDestroy();
         mRecognizer = sr;
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());
     }
 
-    private void startListening(ServiceLanguageChooser slc) {
+    private void startListening(SpeechRecognizer sr, Intent intent) {
         setGuiState(MicButton.State.WAITING);
-        updateServiceLanguage(slc.getSpeechRecognizer());
+        updateServiceLanguage(sr);
         try {
-            mRecognizer.startListening(slc.getIntent());
+            mRecognizer.startListening(intent);
             mListener.onStartListening();
             // Increases the counter of the app that calls the recognition service.
             // TODO: we could define it slightly differently, e.g. only count successful recognitions,
             // count also commands executed via swipes and/or buttons (but maybe not count every deletion
             // and cursor movement).
             // TODO: we could also count languages, services, etc.
-            PackageNameRegistry.increaseAppCount(getContext(), slc.getIntent().getExtras(), null);
+            PackageNameRegistry.increaseAppCount(getContext(), intent.getExtras(), null);
         } catch (SecurityException e) {
             // TODO: review this.
             // On Android 11 we get the SecurityException when calling "Kõnele service" and Kõnele does not
