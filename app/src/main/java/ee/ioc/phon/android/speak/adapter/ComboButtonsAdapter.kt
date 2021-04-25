@@ -16,7 +16,7 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
 
     interface ComboButtonsAdapterListener {
         fun onComboChange(language: String, service: ComponentName)
-        fun onOpenConf()
+        fun onMore()
     }
 
     class MyViewHolder(var mView: Button) : RecyclerView.ViewHolder(mView)
@@ -30,9 +30,9 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
         if (mSlc.size() == position) {
             holder.mView.text = "+"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                holder.mView.tooltipText = "Open conf"
+                holder.mView.tooltipText = "..."
             }
-            holder.mView.setOnClickListener { view: View -> mListener.onOpenConf() }
+            holder.mView.setOnClickListener { view: View -> mListener.onMore() }
         } else {
             val context = holder.mView.context
             val combo = Combo(context, mSlc[position])
@@ -42,7 +42,11 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
             } else {
                 holder.mView.alpha = 0.5f
             }
-            holder.mView.text = combo.localeAsStr
+            var label = combo.localeAsStr
+            if (label.isEmpty() || label.equals("und")) {
+                label = combo.service.substring(0, 3)
+            }
+            holder.mView.text = label
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 holder.mView.tooltipText = combo.longLabel
             }

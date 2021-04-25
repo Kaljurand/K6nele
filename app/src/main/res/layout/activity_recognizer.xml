@@ -125,7 +125,6 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_margin="@dimen/layoutMargin4dp"
-            android:gravity="center"
             tools:text="@string/testComboLabels" />
 
     </ee.ioc.phon.android.speak.view.SpeechInputView>

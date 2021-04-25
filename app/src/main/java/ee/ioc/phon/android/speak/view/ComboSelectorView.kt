@@ -80,7 +80,7 @@ class ComboSelectorView : LinearLayoutCompat {
                     mListener.onComboChange(language, service)
                 }
 
-                override fun onOpenConf() {
+                override fun onMore() {
                     comboSelector(context, key)
                 }
             }, mSlc)

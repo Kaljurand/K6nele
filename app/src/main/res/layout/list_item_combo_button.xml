@@ -7,6 +7,7 @@
     android:focusable="true"
     android:minEms="10"
     android:singleLine="true"
+    android:textAllCaps="false"
     android:textAppearance="?android:attr/textAppearanceButton"
     android:textColor="?attr/colorControlNormal"
     android:textSize="@dimen/textSize10sp" />
