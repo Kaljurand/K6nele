@@ -45,7 +45,7 @@ to Kõnele to change the respective preferences.
 
     ./adb-pref.py --disable-confirmation | sh
     read
-    ./adb-pref.py prefs_{clips,developer,user_guide_rewrites,private}.yml | sh
+    ./adb-pref.py prefs_{developer,user_guide_rewrites,private}.yml | sh
 
 Note that every preference has a type (Boolean, String, ...). If the type of a preference listed in the YAML-file
 does not match with the one expected by Kõnele, a crash can occur (``ClassCastException``), and part of Kõnele might

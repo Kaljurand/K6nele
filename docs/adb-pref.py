@@ -29,6 +29,8 @@ import argparse
 import re
 import yaml
 
+# TODO: support "-s 10.0.0.11:40742 shell" if "adb: more than one device/emulator"
+# where the addr:port is read from a commandline argument.
 DEFAULT_ADB_COMMAND = "shell"
 # DEFAULT_ADB_COMMAND = 'exec-out'
 
