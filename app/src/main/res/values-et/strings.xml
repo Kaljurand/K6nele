@@ -256,6 +256,8 @@
     <string name="promptDemo">Öelge nt: %1$s</string>
 
     <!-- Content description of images and buttons -->
+    <string name="cdUndefined">Puudub</string>
+    <string name="cdNewline">Sisesta uus rida</string>
     <string name="cdMicrophone">Vajutage sellele nupule ja kõnelege</string>
     <string name="cdAppIcon">Rakenduse logo</string>
     <string name="cdServiceIcon">Teenuse logo</string>

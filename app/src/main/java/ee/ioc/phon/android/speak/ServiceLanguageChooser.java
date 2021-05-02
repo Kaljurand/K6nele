@@ -115,6 +115,26 @@ public class ServiceLanguageChooser {
         update();
     }
 
+    public String get(int position) {
+        return mCombosAsList.get(position);
+    }
+
+    public boolean isSelected(int position) {
+        return mIndex == position;
+    }
+
+    public void set(int position) {
+        if (size() > 1) {
+            if (position >= size()) {
+                mIndex = 0;
+            } else {
+                mIndex = position;
+            }
+            PreferenceUtils.putPrefMapEntry(mPrefs, mContext.getResources(), mKeyCurrentCombo, mAppId, mCombosAsList.get(mIndex));
+        }
+        update();
+    }
+
     public String getCombo() {
         return mCombosAsList.get(mIndex);
     }
