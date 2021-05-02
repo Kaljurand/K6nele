@@ -12,6 +12,7 @@ set color to be the icon color
     android:layout_alignParentStart="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentBottom="true"
+    android:layout_centerVertical="true"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:focusable="true"

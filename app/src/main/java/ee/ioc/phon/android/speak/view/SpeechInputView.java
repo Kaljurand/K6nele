@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
@@ -150,6 +151,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     public void setListener(final SpeechInputViewListener listener, EditorInfo editorInfo) {
         mListener = listener;
+        Resources res = getResources();
         if (mBImeAction != null && editorInfo != null) {
             // TODO: test
             boolean overrideEnter = (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) == 0;
@@ -173,10 +175,6 @@ public class SpeechInputView extends LinearLayoutCompat {
                     useEnter = true;
                 }
                 final boolean finalHide = hide;
-                // The content description is based on the text field's action label,
-                // which might not always be present, or be the best description of the content.
-                // TODO: fall back to a description like "go", "send" if action label is missing.
-                mBImeAction.setContentDescription(editorInfo.actionLabel);
                 mBImeAction.setOnClickListener(v -> {
                     if (finalHide) {
                         cancelOrDestroy();
@@ -187,9 +185,26 @@ public class SpeechInputView extends LinearLayoutCompat {
 
             // If no action was defined, then we show the Enter icon,
             // even if we were allowed to override Enter.
+            CharSequence tooltipText = editorInfo.actionLabel;
             if (useEnter) {
                 mBImeAction.setImageResource(R.drawable.ic_newline);
                 mBImeAction.setOnClickListener(v -> mListener.onAddNewline());
+                tooltipText = res.getString(R.string.cdNewline);
+            }
+
+            // The content description is based on the text field's action label,
+            // which might not always be present, or be the best description of the content.
+            CharSequence contentDescription;
+            if (tooltipText == null || tooltipText.length() == 0) {
+                contentDescription = res.getString(R.string.cdUndefined);
+                tooltipText = String.format(getResources().getString(R.string.labelSpeechInputViewMessage), contentDescription);
+            } else {
+                contentDescription = tooltipText;
+            }
+
+            mBImeAction.setContentDescription(contentDescription);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mBImeAction.setTooltipText(tooltipText);
             }
 
             // if mBImeKeyboard is available then we are in the IME mode where changing
@@ -197,7 +212,6 @@ public class SpeechInputView extends LinearLayoutCompat {
             if (mBImeKeyboard != null) {
                 Context context = getContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                Resources res = getResources();
 
                 mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
                 mBUiMode.setImageResource(R.drawable.ic_baseline_swap_vert_24);
@@ -319,6 +333,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             });
         }
         setGuiInitState(0);
+
+        mComboSelectorView.click();
     }
 
     public void init(int keys, CallerInfo callerInfo, boolean swipeType, ComponentName app) {

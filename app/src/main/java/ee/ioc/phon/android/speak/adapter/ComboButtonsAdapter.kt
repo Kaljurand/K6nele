@@ -50,12 +50,15 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 holder.mView.tooltipText = combo.longLabel
             }
+            // TODO: selected button should not be clickable
             holder.mView.setOnClickListener { view: View ->
-                mSlc.set(position)
-                mSelectedView.alpha = 0.5f
-                mSelectedView = view
-                mSelectedView.alpha = 1f
-                mListener.onComboChange(mSlc.language, mSlc.service)
+                if (!mSlc.isSelected(position)) {
+                    mSlc.set(position)
+                    mSelectedView.alpha = 0.5f
+                    mSelectedView = view
+                    mSelectedView.alpha = 1f
+                    mListener.onComboChange(mSlc.language, mSlc.service)
+                }
             }
         }
     }
