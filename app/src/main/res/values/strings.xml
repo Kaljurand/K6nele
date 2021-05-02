@@ -136,30 +136,33 @@
     <string name="statusImeTranscribing">Still transcribing…</string>
     <string name="statusServerStatus" translatable="false">…</string>
 
-    <string name="tvAbout">&lt;p>%1$s is an app that offers speech-to-text services to other apps.
-        Many apps contain text fields (e.g. a search bar) that can be edited using the keyboard.
-        %1$s provides a keyboard that allows text to be entered and edited via speech.
-        Some apps (e.g. intelligent assistants, navigation apps) also contain a microphone button
-        that is either linked to the &lt;b>standard Android speech recognition activity&lt;/b> or the
-        &lt;b>standard Android speech recognition service&lt;/b>.
-        %1$s implements both the activity and the service.&lt;/p>
+    <string name="tvAbout">&lt;p>Kõnele is an app that offers speech-to-text user interfaces to other apps.
+        Many apps contain a text area or a text field (e.g. a message box or a search bar) that can be edited using the &lt;b>input method editor (IME)&lt;/b>,
+        aka the on-screen keyboard.
+        Kõnele provides an IME that is optimized for speech input. Modalities like swiping and buttons are also supported,
+        for situations where speaking is less convenient.
+        Many apps (e.g. intelligent assistants, navigation apps) also contain a microphone button
+        that is linked to the &lt;b>standard Android speech recognition activity&lt;/b>.
+        Kõnele provides an implementation of this activity, and uses it itself as a launcher.&lt;/p>
 
         &lt;p>How to use the Kõnele keyboard?
         Tap the big yellow button and start dictating, the words will
         appear at the cursor position in the text area.
-        Swipe left or right to move the cursor, long-press and swipe to select text, double-tap to add space.
-        Rewrite rules allow you to define voice commands to edit an existing text.&lt;/p>
+        Swipe to move the cursor, long-press and swipe to select text, double-tap to add space.
+        Define text editing commands as rewrite rules and execute them by voice or by buttons.&lt;/p>
 
         &lt;p>How to use the voice search activity? Its user interface is similar to the speech keyboard
-        but because the transcription is immediately executed (e.g. loaded into a web browser) or returned to the caller
-        (e.g. a navigation app), there is no support for editing commands (such as the swipe operations).&lt;/p>
+        but the transcription is immediately executed (e.g. loaded into a web browser) or returned to the caller
+        (e.g. a navigation app).&lt;/p>
 
-&lt;p>Kõnele can use any speech recognition service on the device, but it also comes with two services of its own.
-        Each of these uses a separate cloud-based speech recognition server.
-        One supports &lt;b>grammar-based speech recognition&lt;/b>, the other supports &lt;b>continuous full-duplex speech recognition&lt;/b>.
-        Both servers focus on &lt;b>Estonian speech recognition&lt;/b>, but both are based on a fully open-source stack that makes them easy to deploy
-        and customize for other languages.
-        For more information, see &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.&lt;/p>
+        &lt;p>Kõnele can connect to any speech recognition service available on the device but by default uses,
+        and is optimized for &lt;a href="https://github.com/Kaljurand/K6nele-service">Kõnele service&lt;/a>,
+        a separate lightweight app whose backing server runs the &lt;a href="https://github.com/alumae/kaldi-gstreamer-server">kaldi-gstreamer-server&lt;/a> software.
+        The default server operates from Tallinn and provides Estonian speech recognition, but the software is easy to deploy elsewhere (e.g. a private network)
+        and customize for other languages.&lt;/p>
+
+        &lt;p>(Note that while Kõnele also includes the service implementation under the name \"Kõnele (fast recognition)\",
+        this is known not to work on Android 11. However, installing the service as a separate app avoids this problem.)&lt;/p>
 
 		&lt;p>For the documentation, source code, etc. see the &lt;a href="http://kaljurand.github.io/K6nele/">%1$s website&lt;/a>.
         See also the &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">privacy policy&lt;/a>.&lt;/p>
