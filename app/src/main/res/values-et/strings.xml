@@ -82,44 +82,30 @@
     <string name="buttonUseDefault1">Vaikeserver 1</string>
     <string name="buttonUseDefault2">Vaikeserver 2</string>
     <string name="statusImeTranscribing">Oodake…</string>
-    <string name="tvAbout">&lt;p>&lt;b>%1$s&lt;/b> on kõnetuvastusteenus Androidi rakendustele,
-        mis võimaldab kõne abil sooritada infootsingut, kirjutada e-kirju ja märkmeid, anda käske jne.&lt;/p>
+    <string name="tvAbout">&lt;p>&lt;b>Kõnele&lt;/b> on kaks kõnetuvastusel põhinevat kasutajaliidest Androidi rakendustele,
+        mis võimaldavad kirjutada e-kirju/märkmeid, sooritada infootsingut, anda käske jne.&lt;/p>
 
-		&lt;p>Paljudes rakendustes (nt e-kirja ja lühisõnumirakendused, veebibrauser) on tekstikast või otsinguriba, millele
-        vajutades avaneb klaviatuurirakendus. Kõnele töötab kui klaviatuurirakendus, mis võimaldab teksti sisestada
-        ja toimetada kõne abil. Kõnele klaviatuuri on mõistlik kasutada vaheldumisi mõne tavaklaviatuuriga.
-        Paljudes rakendustes (nt navigatsiooni- ja tõlkerakendused, targad abilised) on väike mikrofonikujuline nupp,
-		millele vajutades eeldab rakendus kasutajalt mõnesekundilist kõnejuppi,
-        mis Androidi kõnetuvastusliidese abil tekstiks teisendatakse.
-        Kõnele sisaldab endas selle liidese implementatsiooni.&lt;/p>
-
-        &lt;p>Kuidas töötab Kõnele klaviatuur? Mikrofoninupule vajutamine
+        &lt;p>Paljudes Androidi rakendustes on tekstikastid, millele vajutades avaneb klaviatuurirakendus, nn \"sisestusmeetod\" ehk \"ekraanil kuvatav klaviatuur\".
+        Kõnele pakutavas sisestusmeetodis on keskseks tekstisisestusviisiks on kõnetuvastus, aga
+        svaipimine ja nupud on samuti toetatud, olukordadeks, kus neid on võib-olla mugavam kasutada kui kõneleda.
+        Mikrofoninupule vajutamine
         käivitab/lõpetab/katkestab kõnetuvastuse. Transkribeeritud tekst lisatakse kursori kohale.
         Svaipides saab kursori asukohta muuta. Pikalt vajutades ja seejärel svaipides saab teksti valida.
         Topeltvajutus lisab tühiku.
-        Ümberkirjutusreeglite abil saab luua tekstiasendus- ja tekstitoimetuskäske.&lt;/p>
+        Ümberkirjutusreeglite abil saab luua tekstiasendus- ja tekstitoimetuskäske, mida saab käivitada nii kõne kui ka
+        nuppudega.&lt;/p>
 
-        &lt;p>Kõnele toetab kõiki seadmes olevad tuvastusteenusi, mis on läbi Androidi avatud kõnetuvastusliidese
-        kasutatavad, ning lisab omalt poolt kaks teenust,
-        mis kasutavad kõne transkribeerimiseks vastavalt kahte veebiserverit.
-        Vaikimisi on nendeks TTÜ Küberneetika Instituudi foneetika ja kõnetehnoloogia labori eesti keele
-		kõnetuvastusserverid, vt &lt;a href="http://phon.ioc.ee">http://phon.ioc.ee&lt;/a>.
-        Seega, Kõnele kasutamine eeldab üldiselt internetiühenduse olemasolu,
-        laadides serverisse umbes 1 MB kõne poole minuti kohta.&lt;/p>
+        &lt;p>Paljudes rakendustes on ka väike mikrofonikujuline nupp (nt otsingurea kõrval),
+        millele vajutades eeldab rakendus kasutajalt mõnesekundilist kõnejuppi, mis automaatselt tekstiks teisendatakse.
+        See mikrofoninupp on tüüpiliselt seotav Kõnele tuvastuspaneeliga.
+        Kui käivitada Kõnele tuvastuspaneel otse, st mitte läbi teise rakenduse, siis suunatakse tuvastatud tekst edasi veebiotsingumootorile.&lt;/p>
 
-        &lt;p>&lt;b>Kiire tuvastusega teenus&lt;/b> väljastab tuvastustulemuse juba rääkimise ajal ja ei sea
-        kõnesisendi pikkusele mingit piirangut.&lt;/p>
-
-        &lt;p>&lt;b>Grammatikatoega teenus&lt;/b> võimaldab dikteerida korraga maksimaalselt 30 sekundit ning
-        väljastab tuvastustulemuse alles sisendi lõpus. Samas võimaldab ta rakendustele omistada grammatikaid,
-        et tõlkida tuvastustulemus rakenduse-spetsiifilisse keelde.
-        Nt kalkulaatorirakendusele võib omistada aritmeetikaavaldiste
-		grammatika (mis teisendab nt /kaks pluss kolm/ kujule \"2 + 3\")
-		ning kaardirakendusele või bussiaegade rakendusele Eesti aadresside grammatika.
-		Nii on võimalik rääkida eesti keeles ka rakendustes, mis on mõeldud ainult ingliskeelsele kasutajale.
-		Vt ka
-		&lt;a
-		href="http://kaljurand.github.io/Grammars/">grammatikate projekti kodulehekülge&lt;/a>.&lt;/p>
+        &lt;p>Kõnele ühildub kõikide seadmes olevate kõnetuvastusteenustega, mis on läbi Androidi avatud kõnetuvastusliidese kasutatavad.
+        Vaikimisi proovib Kõnele kasutada
+        &lt;a href="https://github.com/Kaljurand/K6nele-service">Kõnele teenust&lt;/a>,
+        mis on eraldiseisev väike rakendus, mis omakorda kasutab
+        TalTechi keeletehnoloogia labori tarkvara &lt;a href="https://github.com/alumae/kaldi-gstreamer-server">kaldi-gstreamer-server&lt;/a>
+        ja eesti keele tuvastusmudelite peal töötavat veebiteenust.&lt;/p>
 
 		&lt;p>Põhjalikum
 		dokumentatsioon ja lähtekood on

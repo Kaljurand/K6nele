@@ -1,0 +1,7 @@
+Kõnele on kaks kõnetuvastusel põhinevat kasutajaliidest Androidi rakendustele, mis võimaldavad kirjutada e-kirju/märkmeid, sooritada infootsingut, anda käske jne.
+
+- Paljudes Androidi rakendustes on tekstikastid, millele vajutades avaneb klaviatuurirakendus, nn "sisestusmeetod" ehk "ekraanil kuvatav klaviatuur". Kõnele pakutavas sisestusmeetodis on keskseks tekstisisestusviisiks on kõnetuvastus. Svaipimine ja nupud on samuti toetatud, olukordadeks, kus neid on võib-olla mugavam kasutada kui kõneleda.
+
+- Paljudes rakendustes on ka väike mikrofonikujuline nupp (nt otsingurea kõrval), millele vajutades eeldab rakendus kasutajalt mõnesekundilist kõnejuppi, mis automaatselt tekstiks teisendatakse. See mikrofoninupp on tüüpiliselt seotav Kõnele tuvastuspaneeliga. Kui käivitada Kõnele tuvastuspaneel otse, st mitte läbi teise rakenduse, siis suunatakse tuvastatud tekst edasi veebiotsingumootorile.
+
+Kõnele ühildub kõikide seadmes olevate kõnetuvastusteenustega, mis on läbi Androidi avatud kõnetuvastusliidese kasutatavad. Vaikimisi proovib Kõnele kasutada <b>Kõnele teenust</b> (<a href="https://github.com/Kaljurand/K6nele-service">https://github.com/Kaljurand/K6nele-service</a>), mis on eraldiseisev väike rakendus, mis omakorda kasutab TalTechi keeletehnoloogia labori tarkvara <b>kaldi-gstreamer-server</b> (<a href="https://github.com/alumae/kaldi-gstreamer-server">https://github.com/alumae/kaldi-gstreamer-server</a>) ja eesti keele tuvastusmudelite peal töötavat veebiteenust.
