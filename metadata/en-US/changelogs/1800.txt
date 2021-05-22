@@ -1,0 +1,6 @@
+- Lift min API level to 21
+- Improve mic button colors
+- Show selected combos as individual buttons, if at least 3 combos
+- Improve help text
+- IME/Buttons: Hide rules that do not have a label
+- IME/Ops: replaceSel: add 2nd arg "regex" which sets a new selection within the replacement using the first group of the matching regex.
