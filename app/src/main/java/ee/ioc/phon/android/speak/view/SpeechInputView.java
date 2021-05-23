@@ -16,7 +16,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -32,6 +34,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
@@ -55,6 +58,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private View mCentralButtons;
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
+    private ImageButton mBImeDragHandle;
     private ImageButton mBImeAction;
     private ImageButton mBUiMode;
     private ComboSelectorView mComboSelectorView;
@@ -214,32 +218,71 @@ public class SpeechInputView extends LinearLayoutCompat {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
                 mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
-                mBUiMode.setImageResource(R.drawable.ic_baseline_swap_vert_24);
+                mBUiMode.setImageResource(R.drawable.ic_baseline_mic_24);
                 showUi(mUiState);
 
-                mBUiMode.setOnClickListener(v -> {
-                    if (mUiState == null) {
-                        mUiState = "1";
-                    } else if ("1".equals(mUiState)) {
-                        mUiState = "2";
-                    } else {
-                        mUiState = null;
-                    }
-
-                    PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
-                    showUi(mUiState);
-                });
-                // TODO: experimental: long press controls mic
-                mBUiMode.setOnLongClickListener(v -> {
-                    changeState();
-                    return true;
-                });
+                mBUiMode.setOnClickListener(v -> changeState());
 
                 mBImeKeyboard.setImageResource(R.drawable.ic_ime);
                 mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
                 mBImeKeyboard.setOnLongClickListener(v -> {
                     mListener.onSwitchIme(false);
                     return true;
+                });
+
+                mBImeDragHandle.setImageResource(R.drawable.ic_baseline_drag_handle_24);
+
+                mBImeDragHandle.setOnTouchListener(new View.OnTouchListener() {
+                    int mDownY;
+                    int mMoveY;
+                    ViewGroup.LayoutParams mParams = null;
+                    int mParamsHeight;
+
+                    @Override
+                    public boolean onTouch(View view, MotionEvent evt) {
+                        int y = (int) evt.getRawY();
+
+                        switch (evt.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                mParams = mRvClipboard.getLayoutParams();
+                                mParamsHeight = mParams.height;
+                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                                mDownY = y;
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                int dMoveY = mMoveY - y;
+                                if (dMoveY > 5 || dMoveY < -5) {
+                                    mMoveY = y;
+                                    int dDownY = mDownY - y;
+                                    int height = mParamsHeight + dDownY;
+                                    if (height >= 0) {
+                                        showMessage("[" + height + "]");
+                                        String state = null;
+                                        if (height > 250) {
+                                            state = "1";
+                                        } else if (height < 30) {
+                                            state = "2";
+                                        }
+                                        if (!Objects.equals(state, mUiState)) {
+                                            mUiState = state;
+                                            showUi(mUiState);
+                                            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                        }
+                                        mParams.height = height;
+                                        mRvClipboard.setLayoutParams(mParams);
+                                        invalidate();
+                                    }
+                                }
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                // TODO: persist height in preferences
+                                PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
+                                break;
+                            default:
+                                break;
+                        }
+                        return true;
+                    }
                 });
             }
         }
@@ -295,6 +338,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 @Override
                 public void onDown() {
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
+                    mBImeDragHandle.setVisibility(View.INVISIBLE);
                     mBImeAction.setVisibility(View.INVISIBLE);
                     setVisibility(mBUiMode, View.INVISIBLE);
                     if (mRlClipboard.getVisibility() == View.GONE) {
@@ -310,6 +354,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 public void onUp() {
                     showMessage("");
                     mBImeKeyboard.setVisibility(View.VISIBLE);
+                    mBImeDragHandle.setVisibility(View.VISIBLE);
                     mBImeAction.setVisibility(View.VISIBLE);
                     setVisibility(mBUiMode, View.VISIBLE);
                     if (mRlClipboard.getVisibility() == View.GONE) {
@@ -344,6 +389,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mCentralButtons = findViewById(R.id.centralButtons);
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
+        mBImeDragHandle = findViewById(R.id.bImeDragHandle);
         mBImeAction = findViewById(R.id.bImeAction);
         mBUiMode = findViewById(R.id.bClipboard);
         mComboSelectorView = findViewById(R.id.vComboSelector);
