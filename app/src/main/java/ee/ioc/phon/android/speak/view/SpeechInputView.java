@@ -256,7 +256,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                                     int dDownY = mDownY - y;
                                     int height = mParamsHeight + dDownY;
                                     if (height >= 0) {
-                                        showMessage("[" + height + "]");
+                                        showMessage("[" + mParamsHeight + ", " + height + "]");
                                         String state = null;
                                         if (height > 250) {
                                             state = "1";
@@ -277,6 +277,11 @@ public class SpeechInputView extends LinearLayoutCompat {
                             case MotionEvent.ACTION_UP:
                                 // TODO: persist height in preferences
                                 PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
+                                // Hide IME if dragged to the bottom
+                                if (mParams.height < 5) {
+                                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                    mListener.onAction(EditorInfo.IME_ACTION_NONE, true);
+                                }
                                 break;
                             default:
                                 break;
@@ -665,13 +670,16 @@ public class SpeechInputView extends LinearLayoutCompat {
     private void showUi(String state) {
         if (state == null) {
             mRlClipboard.setVisibility(View.GONE);
+            mBUiMode.setVisibility(View.GONE);
             mCentralButtons.setVisibility(View.VISIBLE);
         } else if ("1".equals(state)) {
             mCentralButtons.setVisibility(View.GONE);
+            mBUiMode.setVisibility(View.VISIBLE);
             mRlClipboard.setVisibility(View.VISIBLE);
         } else {
             mCentralButtons.setVisibility(View.GONE);
             mRlClipboard.setVisibility(View.GONE);
+            mBUiMode.setVisibility(View.VISIBLE);
         }
     }
 
