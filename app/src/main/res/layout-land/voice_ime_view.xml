@@ -37,6 +37,22 @@
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_ime" />
 
+        <ImageButton
+            android:id="@+id/bImeDragHandle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_clip"
+            android:contentDescription="DRAG"
+            android:paddingStart="@dimen/layoutMargin2"
+            android:paddingLeft="@dimen/layoutMargin2"
+            android:paddingTop="@dimen/layoutMargin4dp"
+            android:paddingEnd="@dimen/layoutMargin2"
+            android:paddingRight="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin1"
+            app:srcCompat="@drawable/ic_baseline_drag_handle_24" />
+
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"

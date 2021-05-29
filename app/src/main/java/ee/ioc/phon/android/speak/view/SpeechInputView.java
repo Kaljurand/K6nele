@@ -66,6 +66,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private TextView mTvMessage;
     private RecyclerView mRvClipboard;
     private RelativeLayout mRlClipboard;
+    private RelativeLayout mRlMiddle;
     private LinearLayout mLlEmpty;
 
     private ComponentName mApp;
@@ -222,6 +223,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 showUi(mUiState);
 
                 mBUiMode.setOnClickListener(v -> changeState());
+                mBUiMode.setContentDescription(res.getString(R.string.cdMicrophone));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mBUiMode.setTooltipText(res.getString(R.string.cdMicrophone));
+                }
 
                 mBImeKeyboard.setImageResource(R.drawable.ic_ime);
                 mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
@@ -235,6 +240,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBImeDragHandle.setOnTouchListener(new View.OnTouchListener() {
                     int mDownY;
                     int mMoveY;
+
+                    int heightTotal = 1000;
+                    int mHeightSmall = heightTotal / 30;
+                    int mHeightLarge = heightTotal / 2;
                     ViewGroup.LayoutParams mParams = null;
                     int mParamsHeight;
 
@@ -244,7 +253,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
                         switch (evt.getAction()) {
                             case MotionEvent.ACTION_DOWN:
-                                mParams = mRvClipboard.getLayoutParams();
+                                mParams = mRlMiddle.getLayoutParams();
                                 mParamsHeight = mParams.height;
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                                 mDownY = y;
@@ -256,11 +265,11 @@ public class SpeechInputView extends LinearLayoutCompat {
                                     int dDownY = mDownY - y;
                                     int height = mParamsHeight + dDownY;
                                     if (height >= 0) {
-                                        showMessage("[" + mParamsHeight + ", " + height + "]");
+                                        showMessage("[" + heightTotal + ": " + mParamsHeight + ", " + height + "]");
                                         String state = null;
-                                        if (height > 250) {
+                                        if (height > mHeightLarge) {
                                             state = "1";
-                                        } else if (height < 30) {
+                                        } else if (height < mHeightSmall) {
                                             state = "2";
                                         }
                                         if (!Objects.equals(state, mUiState)) {
@@ -269,7 +278,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                                             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                                         }
                                         mParams.height = height;
-                                        mRvClipboard.setLayoutParams(mParams);
+                                        mRlMiddle.setLayoutParams(mParams);
                                         invalidate();
                                     }
                                 }
@@ -278,10 +287,10 @@ public class SpeechInputView extends LinearLayoutCompat {
                                 // TODO: persist height in preferences
                                 PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
                                 // Hide IME if dragged to the bottom
-                                if (mParams.height < 5) {
-                                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                                    mListener.onAction(EditorInfo.IME_ACTION_NONE, true);
-                                }
+                                //if (mParams.height < 5) {
+                                //    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                //    mListener.onAction(EditorInfo.IME_ACTION_NONE, true);
+                                //}
                                 break;
                             default:
                                 break;
@@ -402,6 +411,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
         mRlClipboard = findViewById(R.id.rlClipboard);
+        mRlMiddle = findViewById(R.id.rlMiddle);
         mLlEmpty = findViewById(R.id.empty);
 
         Context context = getContext();
