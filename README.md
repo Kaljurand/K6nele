@@ -1,14 +1,17 @@
 Kõnele
 ======
 
-Kõnele is an Android app that offers speech-to-text services to other apps.
+Kõnele is an Android app that offers speech-to-text user interfaces to other apps.
 Its main components are:
 
   - a voice search panel (i.e. a [RecognizerIntent](http://developer.android.com/reference/android/speech/RecognizerIntent.html) activity)
+  - a speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
   - two implementations of [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html), backed by two open source speech recognition servers
     - <https://github.com/alumae/kaldi-gstreamer-server>
     - <https://github.com/alumae/ruby-pocketsphinx-server>
-  - a speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
+
+The SpeechRecognizer-implementations have been deprecated, we recommend to use the external app
+[Kõnele service](https://github.com/Kaljurand/K6nele-service) to connect to kaldi-gstreamer-server.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
@@ -17,7 +20,7 @@ Its main components are:
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=ee.ioc.phon.android.speak)
 
-The diagram below shows Kõnele's main components in yellow, while the standard Android interfaces via which other apps can interact with Kõnele are in green.
+The diagram below shows Kõnele's main components in dark yellow, while the standard Android interfaces via which other apps can interact with Kõnele are in green. Deprecated parts are crossed out.
 
 ![Components](https://rawgithub.com/Kaljurand/K6nele/master/docs/components.dot.svg)
 

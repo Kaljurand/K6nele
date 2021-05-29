@@ -11,14 +11,14 @@ digraph G {
     edge [arrowhead="normal", arrowsize="0.6"];
     labeljust = "l";
 
-    "Kõnele View" [label="Kõnele mic+swipe editor\n(view component)", shape="component", style="filled", fillcolor="yellow"];
+    "Kõnele View" [label="Kõnele mic+swipe editor\n(view component)", shape="component", style="filled", fillcolor="#ffc400"];
 
     subgraph cluster_0 {
         label = "Cloud speech servers";
         style = "filled";
         color = "lightblue";
-        "kaldi" [label="kaldi-gstreamer-server"];
-        "pocketsphinx" [label="ruby-pocketsphinx-server"];
+        "kaldi" [label=<kaldi-gstreamer-server<br/><br/><i>WebSockets</i>>];
+        "pocketsphinx" [label=<<s>ruby-pocketsphinx-server<br/><br/><i>net-speech-api (HTTP)</i></s>>];
     }
 
     // Services record audio, send it to the server, and make the transcription
@@ -28,24 +28,25 @@ digraph G {
     subgraph cluster_1 {
         label = "Android speech services";
         "other_service" [label="some other service:\nGoogle, ..."];
-        "Kõnele fast" [label="Kõnele (fast recognition)", style="filled", fillcolor="yellow"];
-        "Kõnele grammar" [label="Kõnele (grammar support)", style="filled", fillcolor="yellow"];
+        "Kõnele service" [label="Kõnele service", style="filled", fillcolor="yellow"];
+        "Kõnele fast" [label=<<s>Kõnele (fast recognition)</s>>, style="filled", fillcolor="#ffc400"];
+        "Kõnele grammar" [label=<<s>Kõnele (grammar support)</s>>, style="filled", fillcolor="#ffc400"];
     }
 
     // Android speech and text input APIs
-    "Android SpeechRecognizer" [label="Android SpeechRecognizer API", shape="egg", style="filled", fillcolor="limegreen"];
-    "Android RecognizerIntent" [label="Android RecognizerIntent API", shape="egg", style="filled", fillcolor="limegreen"];
-    "IME" [label="Input Method Editor API", shape="egg", style="filled", fillcolor="limegreen"];
+    "Android SpeechRecognizer" [label="Android SpeechRecognizer API", shape="egg", style="filled", fillcolor="#99cc33"];
+    "Android RecognizerIntent" [label="Android RecognizerIntent API", shape="egg", style="filled", fillcolor="#99cc33"];
+    "IME" [label="Input Method Editor API", shape="egg", style="filled", fillcolor="#99cc33"];
 
     subgraph cluster_2 {
         label = "Android RecognizerIntent activities";
         "other_activity" [label="some other activity:\nGoogle, ..."];
-        "panel" [label="Kõnele voice search panel", style="filled", fillcolor="yellow"];
+        "panel" [label="Kõnele voice search panel", style="filled", fillcolor="#ffc400"];
     }
 
     subgraph cluster_3 {
-        label = "Android IME apps";
-        "Kõnele IME" [label="Kõnele speak & swipe", style="filled", fillcolor="yellow"];
+        label = "Android IME services";
+        "Kõnele IME" [label="Kõnele speak & swipe", style="filled", fillcolor="#ffc400"];
         "Gboard" [label="Gboard"];
         "other_ime" [label="some other keyboard"];
     }
@@ -59,10 +60,12 @@ digraph G {
         "Arvutaja";
     }
 
-    "kaldi" -> "Kõnele fast" [label="WebSockets", fontsize=9, fontname="monospace"];
-    "pocketsphinx" -> "Kõnele grammar" [label="net-speech-api (HTTP)", fontsize=9, fontname="monospace"];
+    "kaldi" -> "Kõnele fast" [fontsize=9, fontname="monospace"];
+    "kaldi" -> "Kõnele service" [fontsize=9, fontname="monospace"];
+    "pocketsphinx" -> "Kõnele grammar" [fontsize=9, fontname="monospace"];
 
     // Services that implement Android SpeechRecognizer
+    "Kõnele service" -> "Android SpeechRecognizer" ;
     "Kõnele fast" -> "Android SpeechRecognizer" ;
     "Kõnele grammar" -> "Android SpeechRecognizer" ;
     "other_service" -> "Android SpeechRecognizer" ;
