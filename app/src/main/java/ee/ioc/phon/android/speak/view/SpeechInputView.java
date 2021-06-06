@@ -15,10 +15,12 @@ import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -34,7 +36,6 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import ee.ioc.phon.android.speak.Log;
@@ -76,7 +77,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private MicButton.State mState;
 
-    private String mUiState;
+    private int mUiState = -1;
 
     // Y (yellow i.e. not-transcribing)
     // R (red, i.e. transcribing)
@@ -88,6 +89,9 @@ public class SpeechInputView extends LinearLayoutCompat {
     private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
     private final static String NEW_TAB_LABEL = "+";
+
+    int mOrientation;
+    int mHeight;
 
     public interface SpeechInputViewListener {
 
@@ -218,10 +222,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 Context context = getContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
                 mBUiMode.setImageResource(R.drawable.ic_baseline_mic_24);
-                showUi(mUiState);
-
                 mBUiMode.setOnClickListener(v -> changeState());
                 mBUiMode.setContentDescription(res.getString(R.string.cdMicrophone));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -235,16 +236,13 @@ public class SpeechInputView extends LinearLayoutCompat {
                     return true;
                 });
 
+                showUi(PreferenceUtils.getPrefMapEntryInt(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, mHeight / 30));
+
                 mBImeDragHandle.setImageResource(R.drawable.ic_baseline_drag_handle_24);
 
                 mBImeDragHandle.setOnTouchListener(new View.OnTouchListener() {
                     int mDownY;
                     int mMoveY;
-
-                    int heightTotal = 1000;
-                    int mHeightSmall = heightTotal / 30;
-                    int mHeightLarge = heightTotal / 2;
-                    ViewGroup.LayoutParams mParams = null;
                     int mParamsHeight;
 
                     @Override
@@ -253,44 +251,26 @@ public class SpeechInputView extends LinearLayoutCompat {
 
                         switch (evt.getAction()) {
                             case MotionEvent.ACTION_DOWN:
-                                mParams = mRlMiddle.getLayoutParams();
-                                mParamsHeight = mParams.height;
+                                ViewGroup.LayoutParams paramsDown = mRlMiddle.getLayoutParams();
+                                mParamsHeight = paramsDown.height;
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                                 mDownY = y;
                                 break;
                             case MotionEvent.ACTION_MOVE:
                                 int dMoveY = mMoveY - y;
+                                // Do not react to small moves
                                 if (dMoveY > 5 || dMoveY < -5) {
                                     mMoveY = y;
                                     int dDownY = mDownY - y;
-                                    int height = mParamsHeight + dDownY;
-                                    if (height >= 0) {
-                                        showMessage("[" + heightTotal + ": " + mParamsHeight + ", " + height + "]");
-                                        String state = null;
-                                        if (height > mHeightLarge) {
-                                            state = "1";
-                                        } else if (height < mHeightSmall) {
-                                            state = "2";
-                                        }
-                                        if (!Objects.equals(state, mUiState)) {
-                                            mUiState = state;
-                                            showUi(mUiState);
-                                            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                                        }
-                                        mParams.height = height;
-                                        mRlMiddle.setLayoutParams(mParams);
-                                        invalidate();
+                                    boolean isModeChange = showUi(mParamsHeight + dDownY);
+                                    if (isModeChange) {
+                                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                                     }
                                 }
                                 break;
                             case MotionEvent.ACTION_UP:
-                                // TODO: persist height in preferences
-                                PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
-                                // Hide IME if dragged to the bottom
-                                //if (mParams.height < 5) {
-                                //    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                                //    mListener.onAction(EditorInfo.IME_ACTION_NONE, true);
-                                //}
+                                ViewGroup.LayoutParams paramsUp = mRlMiddle.getLayoutParams();
+                                PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, paramsUp.height);
                                 break;
                             default:
                                 break;
@@ -417,6 +397,12 @@ public class SpeechInputView extends LinearLayoutCompat {
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = getResources();
+
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        mOrientation = display.getOrientation();
+        mHeight = display.getHeight();
+        Log.i("Display: orientation: " + mOrientation);
+        Log.i("Display: height: " + mHeight);
 
         mApp = app;
         mAppId = mApp == null ? "" : mApp.flattenToShortString();
@@ -677,20 +663,59 @@ public class SpeechInputView extends LinearLayoutCompat {
         PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapClipboardTabName, appId, name);
     }
 
-    private void showUi(String state) {
-        if (state == null) {
-            mRlClipboard.setVisibility(View.GONE);
-            mBUiMode.setVisibility(View.GONE);
-            mCentralButtons.setVisibility(View.VISIBLE);
-        } else if ("1".equals(state)) {
-            mCentralButtons.setVisibility(View.GONE);
-            mBUiMode.setVisibility(View.VISIBLE);
-            mRlClipboard.setVisibility(View.VISIBLE);
-        } else {
-            mCentralButtons.setVisibility(View.GONE);
-            mRlClipboard.setVisibility(View.GONE);
-            mBUiMode.setVisibility(View.VISIBLE);
+    /**
+     * TODO: animate state change
+     */
+    private boolean showUi(int height) {
+        // TODO: Hide IME if dragged to the bottom
+        //if (height <= 0) {
+        //    mListener.onAction(0, true);
+        //    return false;
+        //}
+        // TODO: These constants should depend on the orientation
+        final int mHeightSmall = mHeight / 40;
+        final int mHeightLarge = mHeight / 3;
+
+        if (height <= 0) {
+            height = mHeightSmall;
+        } else if (height >= mHeight) {
+            height = mHeightLarge;
         }
+
+        ViewGroup.LayoutParams params = mRlMiddle.getLayoutParams();
+        params.height = height;
+        mRlMiddle.setLayoutParams(params);
+
+        int state;
+        if (height >= mHeightLarge) {
+            state = 1;
+        } else if (height <= mHeightSmall) {
+            state = 2;
+        } else {
+            state = 0;
+        }
+        if (state != mUiState) {
+            mUiState = state;
+            if (state == 1) {
+                mCentralButtons.setVisibility(View.GONE);
+                mBUiMode.setVisibility(View.VISIBLE);
+                mRlClipboard.setVisibility(View.VISIBLE);
+            } else if (state == 2) {
+                mCentralButtons.setVisibility(View.GONE);
+                mRlClipboard.setVisibility(View.GONE);
+                mBUiMode.setVisibility(View.VISIBLE);
+            } else {
+                mRlClipboard.setVisibility(View.GONE);
+                mBUiMode.setVisibility(View.GONE);
+                mCentralButtons.setVisibility(View.VISIBLE);
+            }
+            //showMessage("[" + height + ", " + state + "]");
+            invalidate();
+            return true;
+        }
+        //showMessage("[" + height + "]");
+        invalidate();
+        return false;
     }
 
     /*

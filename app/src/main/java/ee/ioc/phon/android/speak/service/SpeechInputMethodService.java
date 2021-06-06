@@ -457,7 +457,9 @@ public class SpeechInputMethodService extends InputMethodService {
                 if (hide) {
                     closeSession();
                 }
-                runOp(mCommandEditor.imeAction(editorAction));
+                if (editorAction > 0) {
+                    runOp(mCommandEditor.imeAction(editorAction));
+                }
                 if (hide) {
                     requestHideSelf(0);
                 }
