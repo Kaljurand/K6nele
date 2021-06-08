@@ -408,7 +408,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mAppId = mApp == null ? "" : mApp.flattenToShortString();
 
         if (mRvClipboard != null) {
-            mRvClipboard.setHasFixedSize(true);
+            //mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
             mRvClipboard.setLayoutManager(new GridLayoutManager(context, getResources().getInteger(R.integer.spanCount)));
         }
@@ -674,7 +674,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         //}
         // TODO: These constants should depend on the orientation
         final int mHeightSmall = mHeight / 40;
-        final int mHeightLarge = mHeight / 3;
+        final int mHeightLarge = mHeight / 5;
 
         if (height <= 0) {
             height = mHeightSmall;

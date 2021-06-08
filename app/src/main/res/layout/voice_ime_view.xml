@@ -89,7 +89,8 @@
         android:id="@+id/rlMiddle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvMessage">
+        android:layout_below="@+id/tvMessage"
+        android:animateLayoutChanges="true">
 
         <include layout="@layout/editor_rewrites" />
 
@@ -97,6 +98,7 @@
             android:id="@+id/centralButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:elevation="1dp"
             android:gravity="center">
