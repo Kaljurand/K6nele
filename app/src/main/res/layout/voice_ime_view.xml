@@ -40,8 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/button_clip"
-            android:contentDescription="DRAG"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cdChangeUiMode"
             android:paddingStart="@dimen/layoutMargin2"
             android:paddingLeft="@dimen/layoutMargin2"
             android:paddingTop="@dimen/layoutMargin4dp"
@@ -90,7 +90,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvMessage"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="1dp">
 
         <include layout="@layout/editor_rewrites" />
 
@@ -100,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:elevation="1dp"
+            android:elevation="2dp"
             android:gravity="center">
 
             <ee.ioc.phon.android.speechutils.view.MicButton

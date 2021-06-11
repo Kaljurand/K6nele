@@ -236,7 +236,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     return true;
                 });
 
-                showUi(PreferenceUtils.getPrefMapEntryInt(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, mHeight / 30));
+                showUi(PreferenceUtils.getPrefMapEntryInt(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, mHeight / 20));
 
                 mBImeDragHandle.setImageResource(R.drawable.ic_baseline_drag_handle_24);
 
@@ -673,11 +673,11 @@ public class SpeechInputView extends LinearLayoutCompat {
         //    return false;
         //}
         // TODO: These constants should depend on the orientation
-        final int mHeightSmall = mHeight / 40;
+        final int mHeightSmall = mHeight / 30;
         final int mHeightLarge = mHeight / 5;
 
-        if (height <= 0) {
-            height = mHeightSmall;
+        if (height < 0) {
+            height = 0;
         } else if (height >= mHeight) {
             height = mHeightLarge;
         }

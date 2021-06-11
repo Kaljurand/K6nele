@@ -298,6 +298,7 @@
     <string name="cdAppIcon">App icon</string>
     <string name="cdServiceIcon">Service icon</string>
     <string name="cdChangeInputMethod">Change input method</string>
+    <string name="cdChangeUiMode">Change UI mode by dragging the panel up and down</string>
     <string name="cdGo">Launch search</string>
     <string name="cdSettings">Kõnele settings</string>
     <string name="cdImeDelete">Delete previous character</string>

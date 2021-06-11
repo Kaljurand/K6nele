@@ -88,7 +88,11 @@
             android:id="@+id/rlMiddle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvMessage">
+            android:layout_below="@+id/tvMessage"
+            android:animateLayoutChanges="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="1dp">
 
             <include layout="@layout/editor_rewrites" />
 
