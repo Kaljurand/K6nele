@@ -24,7 +24,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     private final Handler mHandlerPress = new GestureHandler(this);
 
     // TODO: calculate dynamically
-    private static final float VERTICAL_SPEED = 3.5f;
+    // TODO: swiping up should be much faster
+    private static final float VERTICAL_SPEED = 5f;
     private static final float DISTANCE_SCALE = 0.04f;
 
     private final int mEdge;
@@ -194,8 +195,8 @@ public class OnCursorTouchListener implements View.OnTouchListener {
     }
 
     private void cancelEdge() {
-        if (mHandler != null) mHandler.removeCallbacks(mTask1);
-        if (mHandler != null) mHandler.removeCallbacks(mTask2);
+        mHandler.removeCallbacks(mTask1);
+        mHandler.removeCallbacks(mTask2);
         mIsEdge = false;
     }
 
@@ -224,7 +225,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
             startY = hy;
         }
         // add distance from last historical point to event's point
-        */
+         */
         float dx = (ev.getX(0) - startX);
         float dy = VERTICAL_SPEED * (ev.getY(0) - startY);
         distanceSum += Math.sqrt(dx * dx + dy * dy);
