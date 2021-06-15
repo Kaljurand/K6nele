@@ -334,7 +334,9 @@ public class SpeechInputView extends LinearLayoutCompat {
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
                     mBImeDragHandle.setVisibility(View.INVISIBLE);
                     mBImeAction.setVisibility(View.INVISIBLE);
-                    setVisibility(mBUiMode, View.INVISIBLE);
+                    if (mUiState != 0) {
+                        setVisibility(mBUiMode, View.INVISIBLE);
+                    }
                     if (mRlClipboard.getVisibility() == View.GONE) {
                         setVisibility(mCentralButtons, View.INVISIBLE);
                     } else {
@@ -350,7 +352,9 @@ public class SpeechInputView extends LinearLayoutCompat {
                     mBImeKeyboard.setVisibility(View.VISIBLE);
                     mBImeDragHandle.setVisibility(View.VISIBLE);
                     mBImeAction.setVisibility(View.VISIBLE);
-                    setVisibility(mBUiMode, View.VISIBLE);
+                    if (mUiState != 0) {
+                        setVisibility(mBUiMode, View.VISIBLE);
+                    }
                     if (mRlClipboard.getVisibility() == View.GONE) {
                         setVisibility(mCentralButtons, View.VISIBLE);
                     } else {
@@ -385,6 +389,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBImeDragHandle = findViewById(R.id.bImeDragHandle);
         mBImeAction = findViewById(R.id.bImeAction);
+        // TODO: rename to SmallMic or something similar
         mBUiMode = findViewById(R.id.bClipboard);
         mComboSelectorView = findViewById(R.id.vComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
@@ -706,7 +711,8 @@ public class SpeechInputView extends LinearLayoutCompat {
                 mBUiMode.setVisibility(View.VISIBLE);
             } else {
                 mRlClipboard.setVisibility(View.GONE);
-                mBUiMode.setVisibility(View.GONE);
+                // mBUiMode should be not be shown but should still take place
+                mBUiMode.setVisibility(View.INVISIBLE);
                 mCentralButtons.setVisibility(View.VISIBLE);
             }
             //showMessage("[" + height + ", " + state + "]");
