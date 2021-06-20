@@ -68,6 +68,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private RecyclerView mRvClipboard;
     private RelativeLayout mRlClipboard;
     private RelativeLayout mRlMiddle;
+    private RelativeLayout mRlBottomBar;
     private LinearLayout mLlEmpty;
 
     private ComponentName mApp;
@@ -397,6 +398,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mRvClipboard = findViewById(R.id.rvClipboard);
         mRlClipboard = findViewById(R.id.rlClipboard);
         mRlMiddle = findViewById(R.id.rlMiddle);
+        mRlBottomBar = findViewById(R.id.rlBottomBar);
         mLlEmpty = findViewById(R.id.empty);
 
         Context context = getContext();
@@ -702,25 +704,42 @@ public class SpeechInputView extends LinearLayoutCompat {
         if (state != mUiState) {
             mUiState = state;
             if (state == 1) {
+                // Buttons
                 mCentralButtons.setVisibility(View.GONE);
                 mBUiMode.setVisibility(View.VISIBLE);
                 mRlClipboard.setVisibility(View.VISIBLE);
+                // On Watch, remove message bar and bottom bar to make more room for the buttons.
+                if (getResources().getBoolean(R.bool.isWatch)) {
+                    mTvMessage.setVisibility(View.GONE);
+                    if (mRlBottomBar != null) {
+                        mRlBottomBar.setVisibility(View.GONE);
+                    }
+                }
             } else if (state == 2) {
                 mCentralButtons.setVisibility(View.GONE);
                 mRlClipboard.setVisibility(View.GONE);
                 mBUiMode.setVisibility(View.VISIBLE);
+                mTvMessage.setVisibility(View.VISIBLE);
+                if (mRlBottomBar != null) {
+                    mRlBottomBar.setVisibility(View.VISIBLE);
+                }
             } else {
                 mRlClipboard.setVisibility(View.GONE);
                 // mBUiMode should be not be shown but should still take place
                 mBUiMode.setVisibility(View.INVISIBLE);
                 mCentralButtons.setVisibility(View.VISIBLE);
+                mTvMessage.setVisibility(View.VISIBLE);
+                if (mRlBottomBar != null) {
+                    mRlBottomBar.setVisibility(View.VISIBLE);
+                }
             }
             //showMessage("[" + height + ", " + state + "]");
-            invalidate();
+            //invalidate();
+            mRlMiddle.invalidate();
             return true;
         }
         //showMessage("[" + height + "]");
-        invalidate();
+        mRlMiddle.invalidate();
         return false;
     }
 
