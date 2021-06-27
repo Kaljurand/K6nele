@@ -11,6 +11,8 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Pair;
 
+import androidx.annotation.RequiresPermission;
+
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 
@@ -29,6 +31,8 @@ import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.service.AbstractRecognitionService;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
+
+import static android.Manifest.permission.RECORD_AUDIO;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.
@@ -67,6 +71,7 @@ public class WebSocketRecognitionService extends AbstractRecognitionService {
 
     private int mNumBytesSent;
 
+    @RequiresPermission(RECORD_AUDIO)
     @Override
     protected void configure(Intent recognizerIntent) throws IOException {
         Bundle bundle = getExtras();
