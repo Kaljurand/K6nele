@@ -20,9 +20,9 @@ import ee.ioc.phon.android.speak.model.CallerInfo
 import ee.ioc.phon.android.speak.model.Combo
 
 class ComboSelectorView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr) {
 
     private lateinit var mSlc: ServiceLanguageChooser
@@ -35,9 +35,10 @@ class ComboSelectorView @JvmOverloads constructor(
 
     init {
         context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.ComboSelectorView,
-                0, 0).apply {
+            attrs,
+            R.styleable.ComboSelectorView,
+            0, 0
+        ).apply {
 
             try {
                 mMinButtons = getInteger(R.styleable.ComboSelectorView_minButtons, 3)
@@ -47,7 +48,15 @@ class ComboSelectorView @JvmOverloads constructor(
         }
     }
 
-    fun init(context: Context, prefs: SharedPreferences?, keys: Int, callerInfo: CallerInfo?, appId: String?, key: Int, listener: ComboSelectorListener) {
+    fun init(
+        context: Context,
+        prefs: SharedPreferences?,
+        keys: Int,
+        callerInfo: CallerInfo?,
+        appId: String?,
+        key: Int,
+        listener: ComboSelectorListener
+    ) {
         // TODO: check for null? (test by deinstalling a recognizer but not changing K6nele settings)
         mSlc = ServiceLanguageChooser(context, prefs, keys, callerInfo, appId)
         mListener = listener

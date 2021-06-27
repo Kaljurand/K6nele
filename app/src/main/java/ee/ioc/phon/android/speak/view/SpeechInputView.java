@@ -61,7 +61,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private ImageButton mBImeKeyboard;
     private ImageButton mBImeDragHandle;
     private ImageButton mBImeAction;
-    private ImageButton mBUiMode;
+    private ImageButton mBSmallMic;
     private ComboSelectorView mComboSelectorView;
     private TextView mTvInstruction;
     private TextView mTvMessage;
@@ -223,11 +223,11 @@ public class SpeechInputView extends LinearLayoutCompat {
                 Context context = getContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                mBUiMode.setImageResource(R.drawable.ic_baseline_mic_24);
-                mBUiMode.setOnClickListener(v -> changeState());
-                mBUiMode.setContentDescription(res.getString(R.string.cdMicrophone));
+                mBSmallMic.setImageResource(R.drawable.ic_baseline_mic_24);
+                mBSmallMic.setOnClickListener(v -> changeState());
+                mBSmallMic.setContentDescription(res.getString(R.string.cdMicrophone));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    mBUiMode.setTooltipText(res.getString(R.string.cdMicrophone));
+                    mBSmallMic.setTooltipText(res.getString(R.string.cdMicrophone));
                 }
 
                 mBImeKeyboard.setImageResource(R.drawable.ic_ime);
@@ -336,7 +336,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     mBImeDragHandle.setVisibility(View.INVISIBLE);
                     mBImeAction.setVisibility(View.INVISIBLE);
                     if (mUiState != 0) {
-                        setVisibility(mBUiMode, View.INVISIBLE);
+                        setVisibility(mBSmallMic, View.INVISIBLE);
                     }
                     if (mRlClipboard.getVisibility() == View.GONE) {
                         setVisibility(mCentralButtons, View.INVISIBLE);
@@ -354,7 +354,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     mBImeDragHandle.setVisibility(View.VISIBLE);
                     mBImeAction.setVisibility(View.VISIBLE);
                     if (mUiState != 0) {
-                        setVisibility(mBUiMode, View.VISIBLE);
+                        setVisibility(mBSmallMic, View.VISIBLE);
                     }
                     if (mRlClipboard.getVisibility() == View.GONE) {
                         setVisibility(mCentralButtons, View.VISIBLE);
@@ -390,8 +390,7 @@ public class SpeechInputView extends LinearLayoutCompat {
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
         mBImeDragHandle = findViewById(R.id.bImeDragHandle);
         mBImeAction = findViewById(R.id.bImeAction);
-        // TODO: rename to SmallMic or something similar
-        mBUiMode = findViewById(R.id.bClipboard);
+        mBSmallMic = findViewById(R.id.bSmallMic);
         mComboSelectorView = findViewById(R.id.vComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
@@ -706,7 +705,7 @@ public class SpeechInputView extends LinearLayoutCompat {
             if (state == 1) {
                 // Buttons
                 mCentralButtons.setVisibility(View.GONE);
-                mBUiMode.setVisibility(View.VISIBLE);
+                mBSmallMic.setVisibility(View.VISIBLE);
                 mRlClipboard.setVisibility(View.VISIBLE);
                 // On Watch, remove message bar and bottom bar to make more room for the buttons.
                 if (getResources().getBoolean(R.bool.isWatch)) {
@@ -718,27 +717,24 @@ public class SpeechInputView extends LinearLayoutCompat {
             } else if (state == 2) {
                 mCentralButtons.setVisibility(View.GONE);
                 mRlClipboard.setVisibility(View.GONE);
-                mBUiMode.setVisibility(View.VISIBLE);
+                mBSmallMic.setVisibility(View.VISIBLE);
                 mTvMessage.setVisibility(View.VISIBLE);
                 if (mRlBottomBar != null) {
                     mRlBottomBar.setVisibility(View.VISIBLE);
                 }
             } else {
                 mRlClipboard.setVisibility(View.GONE);
-                // mBUiMode should be not be shown but should still take place
-                mBUiMode.setVisibility(View.INVISIBLE);
+                // mBSmallMic should be not be shown but should still take place
+                mBSmallMic.setVisibility(View.INVISIBLE);
                 mCentralButtons.setVisibility(View.VISIBLE);
                 mTvMessage.setVisibility(View.VISIBLE);
                 if (mRlBottomBar != null) {
                     mRlBottomBar.setVisibility(View.VISIBLE);
                 }
             }
-            //showMessage("[" + height + ", " + state + "]");
-            //invalidate();
             mRlMiddle.invalidate();
             return true;
         }
-        //showMessage("[" + height + "]");
         mRlMiddle.invalidate();
         return false;
     }
@@ -785,8 +781,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
 
-        if (mBUiMode != null) {
-            mBUiMode.setColorFilter(null);
+        if (mBSmallMic != null) {
+            mBSmallMic.setColorFilter(null);
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -876,8 +872,8 @@ public class SpeechInputView extends LinearLayoutCompat {
         public void onReadyForSpeech(Bundle params) {
             Log.i("onReadyForSpeech: state = " + mState);
             setGuiState(MicButton.State.LISTENING);
-            if (mBUiMode != null) {
-                mBUiMode.setColorFilter(MicButton.COLOR_LISTENING);
+            if (mBSmallMic != null) {
+                mBSmallMic.setColorFilter(MicButton.COLOR_LISTENING);
             }
             mBtnType = "R";
             setText(mTvInstruction, R.string.buttonImeStop);
@@ -900,8 +896,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             // Google Voice Search, which calls EndOfSpeech after onResults.
             if (mState == MicButton.State.RECORDING) {
                 setGuiState(MicButton.State.TRANSCRIBING);
-                if (mBUiMode != null) {
-                    mBUiMode.setColorFilter(MicButton.COLOR_TRANSCRIBING);
+                if (mBSmallMic != null) {
+                    mBSmallMic.setColorFilter(MicButton.COLOR_TRANSCRIBING);
                 }
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }

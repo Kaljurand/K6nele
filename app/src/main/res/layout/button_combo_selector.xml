@@ -40,8 +40,7 @@ set color to be the icon color
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComboButtons"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="GridLayoutManager"
-        app:spanCount="4" />
+        app:layoutManager="GridLayoutManager" />
 </ee.ioc.phon.android.speak.view.ComboSelectorView>

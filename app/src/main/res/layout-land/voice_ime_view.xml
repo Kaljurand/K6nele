@@ -44,7 +44,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/button_clip"
-            android:contentDescription="DRAG"
+            android:contentDescription="@string/cdChangeUiMode"
             android:paddingStart="@dimen/layoutMargin2"
             android:paddingLeft="@dimen/layoutMargin2"
             android:paddingTop="@dimen/layoutMargin4dp"

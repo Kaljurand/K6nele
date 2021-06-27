@@ -247,8 +247,9 @@
     <string name="cdMicrophone">Vajutage sellele nupule ja kõnelege</string>
     <string name="cdAppIcon">Rakenduse logo</string>
     <string name="cdServiceIcon">Teenuse logo</string>
-    <string name="cdChangeInputMethod">Vahetage sisestusmeetodit</string>
-    <string name="cdChangeUiMode">Vahetage kasutajaliidese režiimi, paneeli üles ja alla vedades</string>
+    <string name="cdChangeCombo">Muutke tuvastusteenust/keelt</string>
+    <string name="cdChangeInputMethod">Muutke sisestusmeetodit</string>
+    <string name="cdChangeUiMode">Muutke kasutajaliidese režiimi, paneeli üles ja alla vedades</string>
     <string name="cdGo">Käivitage otsing</string>
     <string name="cdSettings">Kõnele seaded</string>
     <string name="cdImeDelete">Kustuta eelnev sümbol</string>

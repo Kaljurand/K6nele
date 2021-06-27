@@ -297,6 +297,7 @@
     <string name="cdMicrophone">Press this button and speak</string>
     <string name="cdAppIcon">App icon</string>
     <string name="cdServiceIcon">Service icon</string>
+    <string name="cdChangeCombo">Change recognition service/locale</string>
     <string name="cdChangeInputMethod">Change input method</string>
     <string name="cdChangeUiMode">Change UI mode by dragging the panel up and down</string>
     <string name="cdGo">Launch search</string>

@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak.adapter
 
 import android.content.ComponentName
+import android.graphics.Paint
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,11 @@ import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.ServiceLanguageChooser
 import ee.ioc.phon.android.speak.model.Combo
 
-class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, private val mSlc: ServiceLanguageChooser) : RecyclerView.Adapter<ComboButtonsAdapter.MyViewHolder>() {
-    private lateinit var mSelectedView: View
+class ComboButtonsAdapter(
+    private val mListener: ComboButtonsAdapterListener,
+    private val mSlc: ServiceLanguageChooser
+) : RecyclerView.Adapter<ComboButtonsAdapter.MyViewHolder>() {
+    private lateinit var mSelectedView: Button
 
     interface ComboButtonsAdapterListener {
         fun onComboChange(language: String, service: ComponentName)
@@ -22,8 +26,10 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
     class MyViewHolder(var mView: Button) : RecyclerView.ViewHolder(mView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.list_item_combo_button, parent, false) as Button)
+        return MyViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.list_item_combo_button, parent, false) as Button
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -39,8 +45,12 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
             if (mSlc.isSelected(position)) {
                 mSelectedView = holder.mView
                 holder.mView.alpha = 1f
+                holder.mView.paintFlags = holder.mView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                mSelectedView.isClickable = false
             } else {
                 holder.mView.alpha = 0.5f
+                holder.mView.paintFlags = 0
+                mSelectedView.isClickable = true
             }
             var label = combo.localeAsStr
             if (label.isEmpty() || label.equals("und")) {
@@ -50,13 +60,17 @@ class ComboButtonsAdapter(private val mListener: ComboButtonsAdapterListener, pr
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 holder.mView.tooltipText = combo.longLabel
             }
-            // TODO: selected button should not be clickable
+
             holder.mView.setOnClickListener { view: View ->
                 if (!mSlc.isSelected(position)) {
                     mSlc.set(position)
                     mSelectedView.alpha = 0.5f
-                    mSelectedView = view
+                    mSelectedView.paintFlags = 0
+                    mSelectedView.isClickable = true
+                    mSelectedView = view as Button
                     mSelectedView.alpha = 1f
+                    mSelectedView.paintFlags = holder.mView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                    mSelectedView.isClickable = false
                     mListener.onComboChange(mSlc.language, mSlc.service)
                 }
             }
