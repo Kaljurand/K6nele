@@ -44,13 +44,13 @@ class ComboButtonsAdapter(
             val combo = Combo(context, mSlc[position])
             if (mSlc.isSelected(position)) {
                 mSelectedView = holder.mView
-                holder.mView.alpha = 1f
-                holder.mView.paintFlags = holder.mView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                mSelectedView.alpha = 1f
+                mSelectedView.paintFlags = mSelectedView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
                 mSelectedView.isClickable = false
             } else {
                 holder.mView.alpha = 0.5f
                 holder.mView.paintFlags = 0
-                mSelectedView.isClickable = true
+                holder.mView.isClickable = true
             }
             var label = combo.localeAsStr
             if (label.isEmpty() || label.equals("und")) {
