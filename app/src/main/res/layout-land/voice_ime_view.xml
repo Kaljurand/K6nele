@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/button_clip"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/cdChangeUiMode"
             android:paddingStart="@dimen/layoutMargin2"
             android:paddingLeft="@dimen/layoutMargin2"

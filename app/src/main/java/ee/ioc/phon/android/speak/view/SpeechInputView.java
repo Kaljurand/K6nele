@@ -237,7 +237,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                     return true;
                 });
 
-                showUi(PreferenceUtils.getPrefMapEntryInt(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, mHeight / 20));
+                showUi(PreferenceUtils.getPrefMapEntryInt(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, mHeight / 10));
 
                 mBImeDragHandle.setImageResource(R.drawable.ic_baseline_drag_handle_24);
 
