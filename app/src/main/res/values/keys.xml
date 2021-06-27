@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefCurrentSortOrder" translatable="false">CurrentSortOrder</string>
-    <string name="mapAppToMode" translatable="false">mapAppToMode</string>
+    <string name="mapAppToHeight" translatable="false">mapAppToHeight</string>
     <string name="mapClipboardTabName" translatable="false">mapClipboardTabName</string>
     <string name="keyHttpServer" translatable="false">keyHttpServer</string>
     <string name="keyWsServer" translatable="false">keyWsServer</string>

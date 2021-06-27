@@ -15,8 +15,12 @@ import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.HapticFeedbackConstants;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -55,13 +59,16 @@ public class SpeechInputView extends LinearLayoutCompat {
     private View mCentralButtons;
     private MicButton mBImeStartStop;
     private ImageButton mBImeKeyboard;
+    private ImageButton mBImeDragHandle;
     private ImageButton mBImeAction;
-    private ImageButton mBUiMode;
+    private ImageButton mBSmallMic;
     private ComboSelectorView mComboSelectorView;
     private TextView mTvInstruction;
     private TextView mTvMessage;
     private RecyclerView mRvClipboard;
     private RelativeLayout mRlClipboard;
+    private RelativeLayout mRlMiddle;
+    private RelativeLayout mRlBottomBar;
     private LinearLayout mLlEmpty;
 
     private ComponentName mApp;
@@ -71,7 +78,7 @@ public class SpeechInputView extends LinearLayoutCompat {
 
     private MicButton.State mState;
 
-    private String mUiState;
+    private int mUiState = -1;
 
     // Y (yellow i.e. not-transcribing)
     // R (red, i.e. transcribing)
@@ -83,6 +90,9 @@ public class SpeechInputView extends LinearLayoutCompat {
     private final static String DASH_SEL = "■■■■■■■■■■■■■■■■■■■■";
     private final static int DASH_LENGTH = DASH_CUR.length();
     private final static String NEW_TAB_LABEL = "+";
+
+    int mOrientation;
+    int mHeight;
 
     public interface SpeechInputViewListener {
 
@@ -213,33 +223,61 @@ public class SpeechInputView extends LinearLayoutCompat {
                 Context context = getContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                mUiState = PreferenceUtils.getPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId);
-                mBUiMode.setImageResource(R.drawable.ic_baseline_swap_vert_24);
-                showUi(mUiState);
-
-                mBUiMode.setOnClickListener(v -> {
-                    if (mUiState == null) {
-                        mUiState = "1";
-                    } else if ("1".equals(mUiState)) {
-                        mUiState = "2";
-                    } else {
-                        mUiState = null;
-                    }
-
-                    PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToMode, mAppId, mUiState);
-                    showUi(mUiState);
-                });
-                // TODO: experimental: long press controls mic
-                mBUiMode.setOnLongClickListener(v -> {
-                    changeState();
-                    return true;
-                });
+                mBSmallMic.setImageResource(R.drawable.ic_baseline_mic_24);
+                mBSmallMic.setOnClickListener(v -> changeState());
+                mBSmallMic.setContentDescription(res.getString(R.string.cdMicrophone));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mBSmallMic.setTooltipText(res.getString(R.string.cdMicrophone));
+                }
 
                 mBImeKeyboard.setImageResource(R.drawable.ic_ime);
                 mBImeKeyboard.setOnClickListener(v -> mListener.onSwitchToLastIme());
                 mBImeKeyboard.setOnLongClickListener(v -> {
                     mListener.onSwitchIme(false);
                     return true;
+                });
+
+                showUi(PreferenceUtils.getPrefMapEntryInt(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, mHeight / 10));
+
+                mBImeDragHandle.setImageResource(R.drawable.ic_baseline_drag_handle_24);
+
+                mBImeDragHandle.setOnTouchListener(new View.OnTouchListener() {
+                    int mDownY;
+                    int mMoveY;
+                    int mParamsHeight;
+
+                    @Override
+                    public boolean onTouch(View view, MotionEvent evt) {
+                        int y = (int) evt.getRawY();
+
+                        switch (evt.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                ViewGroup.LayoutParams paramsDown = mRlMiddle.getLayoutParams();
+                                mParamsHeight = paramsDown.height;
+                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                                mDownY = y;
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                int dMoveY = mMoveY - y;
+                                // Do not react to small moves
+                                if (dMoveY > 5 || dMoveY < -5) {
+                                    mMoveY = y;
+                                    int dDownY = mDownY - y;
+                                    boolean isModeChange = showUi(mParamsHeight + dDownY);
+                                    if (isModeChange) {
+                                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                    }
+                                }
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                ViewGroup.LayoutParams paramsUp = mRlMiddle.getLayoutParams();
+                                PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapAppToHeight, mAppId + "::" + mOrientation, paramsUp.height);
+                                break;
+                            default:
+                                break;
+                        }
+                        return true;
+                    }
                 });
             }
         }
@@ -295,8 +333,11 @@ public class SpeechInputView extends LinearLayoutCompat {
                 @Override
                 public void onDown() {
                     mBImeKeyboard.setVisibility(View.INVISIBLE);
+                    mBImeDragHandle.setVisibility(View.INVISIBLE);
                     mBImeAction.setVisibility(View.INVISIBLE);
-                    setVisibility(mBUiMode, View.INVISIBLE);
+                    if (mUiState != 0) {
+                        setVisibility(mBSmallMic, View.INVISIBLE);
+                    }
                     if (mRlClipboard.getVisibility() == View.GONE) {
                         setVisibility(mCentralButtons, View.INVISIBLE);
                     } else {
@@ -310,8 +351,11 @@ public class SpeechInputView extends LinearLayoutCompat {
                 public void onUp() {
                     showMessage("");
                     mBImeKeyboard.setVisibility(View.VISIBLE);
+                    mBImeDragHandle.setVisibility(View.VISIBLE);
                     mBImeAction.setVisibility(View.VISIBLE);
-                    setVisibility(mBUiMode, View.VISIBLE);
+                    if (mUiState != 0) {
+                        setVisibility(mBSmallMic, View.VISIBLE);
+                    }
                     if (mRlClipboard.getVisibility() == View.GONE) {
                         setVisibility(mCentralButtons, View.VISIBLE);
                     } else {
@@ -344,24 +388,33 @@ public class SpeechInputView extends LinearLayoutCompat {
         mCentralButtons = findViewById(R.id.centralButtons);
         mBImeStartStop = findViewById(R.id.bImeStartStop);
         mBImeKeyboard = findViewById(R.id.bImeKeyboard);
+        mBImeDragHandle = findViewById(R.id.bImeDragHandle);
         mBImeAction = findViewById(R.id.bImeAction);
-        mBUiMode = findViewById(R.id.bClipboard);
+        mBSmallMic = findViewById(R.id.bSmallMic);
         mComboSelectorView = findViewById(R.id.vComboSelector);
         mTvInstruction = findViewById(R.id.tvInstruction);
         mTvMessage = findViewById(R.id.tvMessage);
         mRvClipboard = findViewById(R.id.rvClipboard);
         mRlClipboard = findViewById(R.id.rlClipboard);
+        mRlMiddle = findViewById(R.id.rlMiddle);
+        mRlBottomBar = findViewById(R.id.rlBottomBar);
         mLlEmpty = findViewById(R.id.empty);
 
         Context context = getContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = getResources();
 
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        mOrientation = display.getOrientation();
+        mHeight = display.getHeight();
+        Log.i("Display: orientation: " + mOrientation);
+        Log.i("Display: height: " + mHeight);
+
         mApp = app;
         mAppId = mApp == null ? "" : mApp.flattenToShortString();
 
         if (mRvClipboard != null) {
-            mRvClipboard.setHasFixedSize(true);
+            //mRvClipboard.setHasFixedSize(true);
             // TODO: make span count configurable
             mRvClipboard.setLayoutManager(new GridLayoutManager(context, getResources().getInteger(R.integer.spanCount)));
         }
@@ -616,17 +669,74 @@ public class SpeechInputView extends LinearLayoutCompat {
         PreferenceUtils.putPrefMapEntry(prefs, res, R.string.mapClipboardTabName, appId, name);
     }
 
-    private void showUi(String state) {
-        if (state == null) {
-            mRlClipboard.setVisibility(View.GONE);
-            mCentralButtons.setVisibility(View.VISIBLE);
-        } else if ("1".equals(state)) {
-            mCentralButtons.setVisibility(View.GONE);
-            mRlClipboard.setVisibility(View.VISIBLE);
-        } else {
-            mCentralButtons.setVisibility(View.GONE);
-            mRlClipboard.setVisibility(View.GONE);
+    /**
+     * TODO: animate state change
+     */
+    private boolean showUi(int height) {
+        // TODO: Hide IME if dragged to the bottom
+        //if (height <= 0) {
+        //    mListener.onAction(0, true);
+        //    return false;
+        //}
+        // TODO: These constants should depend on the orientation
+        final int mHeightSmall = mHeight / 30;
+        final int mHeightLarge = mHeight / 5;
+
+        if (height < 0) {
+            height = 0;
+        } else if (height >= mHeight) {
+            height = mHeightLarge;
         }
+
+        ViewGroup.LayoutParams params = mRlMiddle.getLayoutParams();
+        params.height = height;
+        mRlMiddle.setLayoutParams(params);
+
+        int state;
+        if (height >= mHeightLarge) {
+            state = 1;
+        } else if (height <= mHeightSmall) {
+            state = 2;
+        } else {
+            state = 0;
+        }
+        if (state != mUiState) {
+            mUiState = state;
+            if (state == 1) {
+                // Buttons
+                mCentralButtons.setVisibility(View.GONE);
+                mBSmallMic.setVisibility(View.VISIBLE);
+                mRlClipboard.setVisibility(View.VISIBLE);
+                // On Watch, remove message bar and bottom bar to make more room for the buttons.
+                if (getResources().getBoolean(R.bool.isWatch)) {
+                    mTvMessage.setVisibility(View.GONE);
+                    if (mRlBottomBar != null) {
+                        mRlBottomBar.setVisibility(View.GONE);
+                    }
+                }
+            } else if (state == 2) {
+                mCentralButtons.setVisibility(View.GONE);
+                mRlClipboard.setVisibility(View.GONE);
+                mBSmallMic.setVisibility(View.VISIBLE);
+                mTvMessage.setVisibility(View.VISIBLE);
+                if (mRlBottomBar != null) {
+                    mRlBottomBar.setVisibility(View.VISIBLE);
+                }
+            } else {
+                mRlClipboard.setVisibility(View.GONE);
+                // mBSmallMic should be not be shown but should still take place
+                mBSmallMic.setVisibility(View.INVISIBLE);
+                mCentralButtons.setVisibility(View.VISIBLE);
+                mTvMessage.setVisibility(View.VISIBLE);
+                if (mRlBottomBar != null) {
+                    mRlBottomBar.setVisibility(View.VISIBLE);
+                }
+            }
+            mRlMiddle.invalidate();
+            return true;
+        }
+        mRlMiddle.invalidate();
+        return false;
     }
 
     /*
@@ -671,8 +781,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             showMessage(String.format(getResources().getString(R.string.labelSpeechInputViewMessage), getResources().getString(message)));
         }
 
-        if (mBUiMode != null) {
-            mBUiMode.setColorFilter(null);
+        if (mBSmallMic != null) {
+            mBSmallMic.setColorFilter(null);
         }
         setText(mTvInstruction, R.string.buttonImeSpeak);
     }
@@ -762,8 +872,8 @@ public class SpeechInputView extends LinearLayoutCompat {
         public void onReadyForSpeech(Bundle params) {
             Log.i("onReadyForSpeech: state = " + mState);
             setGuiState(MicButton.State.LISTENING);
-            if (mBUiMode != null) {
-                mBUiMode.setColorFilter(MicButton.COLOR_LISTENING);
+            if (mBSmallMic != null) {
+                mBSmallMic.setColorFilter(MicButton.COLOR_LISTENING);
             }
             mBtnType = "R";
             setText(mTvInstruction, R.string.buttonImeStop);
@@ -786,8 +896,8 @@ public class SpeechInputView extends LinearLayoutCompat {
             // Google Voice Search, which calls EndOfSpeech after onResults.
             if (mState == MicButton.State.RECORDING) {
                 setGuiState(MicButton.State.TRANSCRIBING);
-                if (mBUiMode != null) {
-                    mBUiMode.setColorFilter(MicButton.COLOR_TRANSCRIBING);
+                if (mBSmallMic != null) {
+                    mBSmallMic.setColorFilter(MicButton.COLOR_TRANSCRIBING);
                 }
                 setText(mTvInstruction, R.string.statusImeTranscribing);
             }

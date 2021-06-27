@@ -37,6 +37,22 @@
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_ime" />
 
+        <ImageButton
+            android:id="@+id/bImeDragHandle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cdChangeUiMode"
+            android:paddingStart="@dimen/layoutMargin2"
+            android:paddingLeft="@dimen/layoutMargin2"
+            android:paddingTop="@dimen/layoutMargin4dp"
+            android:paddingEnd="@dimen/layoutMargin2"
+            android:paddingRight="@dimen/layoutMargin2"
+            android:paddingBottom="@dimen/layoutMargin1"
+            app:srcCompat="@drawable/ic_baseline_drag_handle_24" />
+
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
@@ -68,69 +84,80 @@
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_search" />
 
-        <include layout="@layout/editor_rewrites" />
-
         <RelativeLayout
-            android:id="@+id/centralButtons"
+            android:id="@+id/rlMiddle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_toStartOf="@+id/bImeAction"
-            android:layout_toLeftOf="@+id/bImeAction"
+            android:layout_below="@+id/tvMessage"
+            android:animateLayoutChanges="true"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:elevation="2dp"
-            android:gravity="end"
-            android:padding="@dimen/layoutMargin4dp">
+            android:elevation="1dp">
 
-            <TextView
-                android:id="@+id/tvInstruction"
-                android:layout_width="wrap_content"
+            <include layout="@layout/editor_rewrites" />
+
+            <RelativeLayout
+                android:id="@+id/centralButtons"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/layoutMargin1"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="@dimen/textSize3"
-                tools:text="@string/buttonImeSpeak" />
+                android:layout_gravity="end"
+                android:layout_toStartOf="@+id/bImeAction"
+                android:layout_toLeftOf="@+id/bImeAction"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:elevation="2dp"
+                android:gravity="end"
+                android:padding="@dimen/layoutMargin4dp">
 
-            <ee.ioc.phon.android.speechutils.view.MicButton
-                android:id="@+id/bImeStartStop"
-                android:layout_width="@dimen/layoutHeightButtonMicrophoneIme"
-                android:layout_height="@dimen/layoutHeightButtonMicrophoneIme"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/tvInstruction"
-                android:layout_toRightOf="@+id/tvInstruction"
-                android:background="@drawable/button_mic"
-                android:contentDescription="@string/cdMicrophone"
-                android:elevation="6dp"
-                app:srcCompat="@drawable/ic_voice_search_api_material" />
-
-            <LinearLayout
-                android:id="@+id/rlKeyButtons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/layoutMargin1"
-                android:layout_marginLeft="@dimen/layoutMargin1"
-                android:layout_toEndOf="@+id/bImeStartStop"
-                android:layout_toRightOf="@+id/bImeStartStop"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/bImeDelete"
+                <TextView
+                    android:id="@+id/tvInstruction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_go"
-                    android:contentDescription="@string/cdImeDelete"
-                    android:padding="@dimen/layoutMargin2"
-                    android:paddingTop="@dimen/layoutMargin3"
-                    android:paddingEnd="@dimen/layoutMargin3"
-                    android:paddingRight="@dimen/layoutMargin3"
-                    android:paddingBottom="@dimen/layoutMargin3"
-                    app:srcCompat="@drawable/ic_backspace" />
-            </LinearLayout>
-        </RelativeLayout>
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/layoutMargin1"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="@dimen/textSize3"
+                    tools:text="@string/buttonImeSpeak" />
 
+                <ee.ioc.phon.android.speechutils.view.MicButton
+                    android:id="@+id/bImeStartStop"
+                    android:layout_width="@dimen/layoutHeightButtonMicrophoneIme"
+                    android:layout_height="@dimen/layoutHeightButtonMicrophoneIme"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/tvInstruction"
+                    android:layout_toRightOf="@+id/tvInstruction"
+                    android:background="@drawable/button_mic"
+                    android:contentDescription="@string/cdMicrophone"
+                    android:elevation="6dp"
+                    app:srcCompat="@drawable/ic_voice_search_api_material" />
+
+                <LinearLayout
+                    android:id="@+id/rlKeyButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/layoutMargin1"
+                    android:layout_marginLeft="@dimen/layoutMargin1"
+                    android:layout_toEndOf="@+id/bImeStartStop"
+                    android:layout_toRightOf="@+id/bImeStartStop"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/bImeDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_go"
+                        android:contentDescription="@string/cdImeDelete"
+                        android:padding="@dimen/layoutMargin2"
+                        android:paddingTop="@dimen/layoutMargin3"
+                        android:paddingEnd="@dimen/layoutMargin3"
+                        android:paddingRight="@dimen/layoutMargin3"
+                        android:paddingBottom="@dimen/layoutMargin3"
+                        app:srcCompat="@drawable/ic_backspace" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <include layout="@layout/editor_bottom_bar" />
