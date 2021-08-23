@@ -41,7 +41,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import ee.ioc.phon.android.speak.AboutActivity;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
