@@ -27,13 +27,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdChangeInputMethod"
             android:padding="@dimen/layoutMargin1"
             android:paddingEnd="@dimen/layoutMargin2"
-            android:paddingRight="@dimen/layoutMargin2"
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_ime" />
 
@@ -59,9 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/bImeAction"
-            android:layout_toLeftOf="@+id/bImeAction"
             android:layout_toEndOf="@+id/bImeKeyboard"
-            android:layout_toRightOf="@+id/bImeKeyboard"
             android:ellipsize="start"
             android:padding="@dimen/layoutMargin1"
             android:singleLine="true"
@@ -75,12 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
             android:paddingStart="@dimen/layoutMargin2"
-            android:paddingLeft="@dimen/layoutMargin2"
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_search" />
 
@@ -102,7 +96,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_toStartOf="@+id/bImeAction"
-                android:layout_toLeftOf="@+id/bImeAction"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:elevation="2dp"
@@ -125,7 +118,6 @@
                     android:layout_height="@dimen/layoutHeightButtonMicrophoneIme"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/tvInstruction"
-                    android:layout_toRightOf="@+id/tvInstruction"
                     android:background="@drawable/button_mic"
                     android:contentDescription="@string/cdMicrophone"
                     android:elevation="6dp"
@@ -137,9 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/layoutMargin1"
-                    android:layout_marginLeft="@dimen/layoutMargin1"
                     android:layout_toEndOf="@+id/bImeStartStop"
-                    android:layout_toRightOf="@+id/bImeStartStop"
                     android:orientation="vertical">
 
                     <ImageButton
@@ -151,7 +141,6 @@
                         android:padding="@dimen/layoutMargin2"
                         android:paddingTop="@dimen/layoutMargin3"
                         android:paddingEnd="@dimen/layoutMargin3"
-                        android:paddingRight="@dimen/layoutMargin3"
                         android:paddingBottom="@dimen/layoutMargin3"
                         app:srcCompat="@drawable/ic_backspace" />
                 </LinearLayout>

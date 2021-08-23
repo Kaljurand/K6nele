@@ -69,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/layoutMargin4dp"
-            android:layout_marginRight="@dimen/layoutMargin4dp"
             android:digits="0123456789."
             android:hint="@string/hintLocalServer"
             android:imeOptions="actionDone"

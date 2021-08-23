@@ -24,13 +24,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdChangeInputMethod"
             android:padding="@dimen/layoutMargin1"
             android:paddingEnd="@dimen/layoutMargin2"
-            android:paddingRight="@dimen/layoutMargin2"
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_ime" />
 
@@ -59,9 +57,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/layoutMargin4dp"
             android:layout_toStartOf="@+id/bImeAction"
-            android:layout_toLeftOf="@+id/bImeAction"
             android:layout_toEndOf="@+id/bImeKeyboard"
-            android:layout_toRightOf="@+id/bImeKeyboard"
             android:ellipsize="start"
             android:gravity="center"
             android:singleLine="true"
@@ -75,12 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:background="@drawable/button_go"
             android:contentDescription="@string/cdGo"
             android:padding="@dimen/layoutMargin1"
             android:paddingStart="@dimen/layoutMargin2"
-            android:paddingLeft="@dimen/layoutMargin2"
             android:paddingBottom="@dimen/layoutMargin2"
             app:srcCompat="@drawable/ic_search" />
     </RelativeLayout>
@@ -127,9 +121,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/layoutMargin1"
-                android:layout_marginLeft="@dimen/layoutMargin1"
                 android:layout_toEndOf="@+id/bImeStartStop"
-                android:layout_toRightOf="@+id/bImeStartStop"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone">
@@ -145,7 +137,6 @@
                     android:padding="@dimen/layoutMargin1"
                     android:paddingTop="@dimen/layoutMargin3"
                     android:paddingEnd="@dimen/layoutMargin3"
-                    android:paddingRight="@dimen/layoutMargin3"
                     android:paddingBottom="@dimen/layoutMargin3"
                     app:srcCompat="@drawable/ic_backspace" />
             </LinearLayout>
