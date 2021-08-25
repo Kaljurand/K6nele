@@ -42,7 +42,7 @@ import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcher;
 import ee.ioc.phon.android.speechutils.editor.CommandMatcherFactory;
 
-// TODO: use CursorAdapter to be able to specify the filterting
+// TODO: use CursorAdapter to be able to specify the filtering
 // TODO: make it possible to select multiple rows to convert them to a new table and test in Kõnele
 public class RewritesActivity extends AppCompatActivity {
 
