@@ -84,7 +84,7 @@
             android:title="@string/labelActivityEncoderListDemo"
             app:iconSpaceReserved="false">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.demo.EncoderListDemo"
+                android:targetClass="ee.ioc.phon.android.speak.demo.AudioEncoderListDemo"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
 

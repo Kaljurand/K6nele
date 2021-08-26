@@ -2,23 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.ioc.phon.android.speak"
     android:installLocation="auto">
-
-    <!-- Permission RECORD_AUDIO.
+    <!--
+    Permission RECORD_AUDIO.
     Used to record the speech input to be transcribed.
     This is an essential permission for Kõnele. Because it is also a "dangerous" permission,
     then Kõnele requests it as soon as the user starts the audio recorder.
     -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <!-- Permission INTERNET.
+    <!--
+ Permission INTERNET.
     Used to reach the speech recognition server.
     Non-dangerous permission, i.e. granted automatically at install time.
     This is not needed when only using offline recognition services (e.g. wake up word triggers),
     but unfortunately there is no way to enable/disable it at runtime.
     -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Permission READ_EXTERNAL_STORAGE is sometimes required when importing rewrite rules,
+    <!--
+ Permission READ_EXTERNAL_STORAGE is sometimes required when importing rewrite rules,
     e.g. when opening rules via Firefox or Dropbox. (It is not needed via Chrome.)
     This is a "dangerous" permission, i.e. it is not enabled by default. Kõnele currently does not
     provide a UI to request it either, but listing it in the manifest makes it show up in the Apps settings,
@@ -28,20 +28,21 @@
     disappear over time.
     -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!-- Permission SET_ALARM.
+    <!--
+ Permission SET_ALARM.
     Used to set the alarm clock if the transcription resolves to an AlarmClock intent.
     Non-dangerous permission, i.e. granted automatically at install time.
     This is only used when a rewrite rule creates an AlarmClock intent, so most users would not
     need it, but unfortunately there is no way to enable/disable it at runtime.
     -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-
-    <!-- TODO: investigate if we need this permission (and enable it during runtime), to
-    mute the audio stream during recognition. -->
+    <!--
+ TODO: investigate if we need this permission (and enable it during runtime), to
+    mute the audio stream during recognition.
+    -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-
-    <!-- TODO: try to avoid having to request this permission (and then enable QueryAllPackagesPermission)
+    <!--
+ TODO: try to avoid having to request this permission (and then enable QueryAllPackagesPermission)
     Android v11. We query packages for several reasons:
     1) finding speech recognizer providers (this query is declared below in the queries-section)
     2) finding TTS service providers (this query is declared below in the queries-section)
@@ -49,17 +50,13 @@
     4) launching intents (e.g. setting the alarm or opening maps) via rewrites
     It is unclear if use-cases 3 and 4 could be instead declared via the queries-section.
     -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-
-    <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" /> <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
+    <!--     <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" /> -->
     <!--
-    <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" />
+ Custom permission required by FetchUrlActivity to be able to fetch data from a given URL
+    and interpret and execute its corresponding activity.
     -->
-
-    <!-- Custom permission required by FetchUrlActivity to be able to fetch data from a given URL
-    and interpret and execute its corresponding activity. -->
     <uses-permission android:name="ee.ioc.phon.android.speak.permission.FETCH_URL" />
-
     <!--
     <permission
         android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING"
@@ -74,23 +71,22 @@
         android:label="@string/labelPermissionFetchUrl"
         android:permissionGroup="android.permission-group.RUN_ACTIVITY"
         android:protectionLevel="dangerous" />
-
-    <!-- Some Chromebooks don't support touch. Although not essential,
-     it's a good idea to explicitly include this declaration. -->
+    <!--
+ Some Chromebooks don't support touch. Although not essential,
+     it's a good idea to explicitly include this declaration.
+    -->
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false" />
-
-    <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
-
+        android:required="false" /> <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
     <!-- TODO: review -->
-
     <queries>
         <intent>
+
             <!-- Packages that provide speech recognition services -->
             <action android:name="android.speech.RecognitionService" />
         </intent>
         <intent>
+
             <!-- Packages that provide TTS services -->
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
@@ -105,7 +101,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K6nele"
         android:usesCleartextTraffic="true">
-
         <!--
         <meta-data
             android:name="com.google.android.wearable.standalone"
@@ -115,16 +110,13 @@
             android:name="com.google.android.wearable"
             android:required="false" />
         -->
-
         <!--
 TODO: singleTask seems a more appropriate launchMode but returns the results to the caller
 only on Android v5, So we have to use standard on older versions. See also:
 http://stackoverflow.com/questions/8960072/onactivityresult-with-launchmode-singletask
 Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION
--->
-
+        -->
         <!-- Voice search panel. -->
-
         <!--
 			android:finishOnTaskLaunch="true"
 			android:allowTaskReparenting="false"
@@ -193,7 +185,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <!-- TODO: future work
+            <!--
+            TODO: future work
             <intent-filter>
                 <action android:name="android.provider.MediaStore.RECORD_SOUND" />
 
@@ -210,9 +203,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             <meta-data
                 android:name="android.speech.DETAILS"
                 android:value="ee.ioc.phon.android.speak.GetLanguageDetailsReceiver" />
-        </activity>
-
-        <!-- This receiver is exported, i.e. any app can ask which languages K6nele supports. -->
+        </activity> <!-- This receiver is exported, i.e. any app can ask which languages K6nele supports. -->
         <receiver
             android:name=".GetLanguageDetailsReceiver"
             android:exported="true">
@@ -220,9 +211,10 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <action android:name="android.speech.action.GET_LANGUAGE_DETAILS" />
             </intent-filter>
         </receiver>
-
-        <!-- Preferences are exported by default because they have intent filters.
-        But they should be not exported to avoid a security issue on older Androids (see lint check). -->
+        <!--
+ Preferences are exported by default because they have intent filters.
+        But they should be not exported to avoid a security issue on older Androids (see lint check).
+        -->
         <activity
             android:name=".activity.Preferences"
             android:exported="false"
@@ -233,7 +225,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".PreferencesRecognitionServiceHttp"
             android:exported="false"
@@ -245,7 +236,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".PreferencesRecognitionServiceWs"
             android:exported="false"
@@ -257,19 +247,15 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".AboutActivity"
+            android:name=".activity.AboutActivity"
             android:label="@string/labelActivityAbout"
             android:parentActivityName=".activity.Preferences"
-            android:theme="@style/Theme.K6nele" />
-
-        <!-- This is the only activity that the recognizer can launch. -->
+            android:theme="@style/Theme.K6nele" /> <!-- This is the only activity that the recognizer can launch. -->
         <!-- TODO: do not reparent -->
         <activity
             android:name=".activity.DetailsActivity"
-            android:theme="@style/Theme.K6nele.Dialog" />
-        <!-- TODO: remove Light (once style inheritance works) -->
+            android:theme="@style/Theme.K6nele.Dialog" /> <!-- TODO: remove Light (once style inheritance works) -->
         <activity
             android:name=".activity.RewritesErrorsActivity"
             android:theme="@style/Theme.K6nele.Light.Dialog" />
@@ -293,8 +279,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.ServerListActivity"
             android:label="@string/labelActivityServerList"
-            android:parentActivityName=".PreferencesRecognitionServiceHttp" />
-        <!-- Exporting this to allow a shortcut to be created e.g. using Tasker. -->
+            android:parentActivityName=".PreferencesRecognitionServiceHttp" /> <!-- Exporting this to allow a shortcut to be created e.g. using Tasker. -->
         <activity
             android:name=".activity.RewritesSelectorActivity"
             android:exported="true"
@@ -307,7 +292,9 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:windowSoftInputMode="stateUnchanged">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/tab-separated-values" />
             </intent-filter>
             <intent-filter>
@@ -331,11 +318,12 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".activity.RewritesActivity"
             android:parentActivityName=".activity.RewritesSelectorActivity">
+
             <!--
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"></meta-data>
-                -->
+            -->
         </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
@@ -344,8 +332,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".activity.FetchUrlActivity"
             android:exported="true"
             android:permission="ee.ioc.phon.android.speak.permission.FETCH_URL"
-            android:theme="@style/Theme.K6nele.Translucent" />
-        <!-- TODO: require: ee.ioc.phon.android.speak.permission.GET_PUT_SETTING -->
+            android:theme="@style/Theme.K6nele.Translucent" /> <!-- TODO: require: ee.ioc.phon.android.speak.permission.GET_PUT_SETTING -->
         <activity
             android:name=".activity.GetPutPreferenceActivity"
             android:exported="true"
@@ -383,28 +370,22 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <activity
             android:name=".demo.VoiceSearchDemo"
             android:label="@string/labelActivityVoiceSearchDemo" />
-
         <activity
             android:name=".demo.EncoderDemoActivity"
             android:exported="true"
             android:label="@string/labelActivityEncoderDemo" />
-
         <activity
-            android:name=".demo.EncoderListDemo"
+            android:name=".demo.AudioEncoderListDemo"
             android:exported="true"
             android:label="@string/labelActivityEncoderListDemo" />
-
         <activity
             android:name=".demo.ImeListDemo"
             android:exported="true"
             android:label="@string/labelActivityImeListDemo" />
-
         <activity
             android:name=".demo.FormDemoActivity"
             android:exported="true"
-            android:label="@string/labelActivityFormDemo" />
-
-        <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
+            android:label="@string/labelActivityFormDemo" /> <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->
         <service
             android:name=".service.WebSocketRecognitionService"
@@ -429,9 +410,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             <meta-data
                 android:name="k6nele.test"
                 android:value="123" />
-                -->
+            -->
         </service>
-
         <service
             android:name=".service.HttpRecognitionService"
             android:description="@string/summaryServiceHttp"
@@ -452,7 +432,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
                 android:name="android.speech"
                 android:resource="@xml/recognition_service_http" />
         </service>
-
         <service
             android:name=".service.SpeechInputMethodService"
             android:foregroundServiceType="microphone"
@@ -461,6 +440,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
+
             <meta-data
                 android:name="android.view.im"
                 android:resource="@xml/input_method" />
@@ -470,7 +450,6 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:name=".provider.AppsContentProvider"
             android:authorities="ee.ioc.phon.android.speak.provider.AppsContentProvider"
             android:exported="false" />
-
         <provider
             android:name=".provider.FileContentProvider"
             android:authorities="ee.ioc.phon.android.speak.provider.FileContentProvider"
