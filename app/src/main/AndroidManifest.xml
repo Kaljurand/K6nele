@@ -406,6 +406,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <!-- This service is exported, i.e. any app can call K6nele, but needs to have recording-permission. -->
         <!-- TODO: why can't I specify more permissions here? -->
+        <!-- Setting the process here solves the permission issue on Android 11. -->
         <service
             android:name=".service.WebSocketRecognitionService"
             android:description="@string/summaryServiceWs"
@@ -413,7 +414,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:foregroundServiceType="microphone"
             android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceWs"
-            android:permission="android.permission.RECORD_AUDIO">
+            android:permission="android.permission.RECORD_AUDIO"
+            android:process=":service">
             <intent-filter>
 
                 <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
@@ -439,7 +441,8 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:foregroundServiceType="microphone"
             android:icon="@drawable/ic_service"
             android:label="@string/labelRecognitionServiceHttp"
-            android:permission="android.permission.RECORD_AUDIO">
+            android:permission="android.permission.RECORD_AUDIO"
+            android:process=":service">
             <intent-filter>
 
                 <!-- The constant value is defined at RecognitionService.SERVICE_INTERFACE. -->
