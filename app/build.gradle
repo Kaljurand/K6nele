@@ -27,8 +27,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1809
-        versionName '1.8.09'
+        versionCode 1810
+        versionName '1.8.10'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs "en", "et"
