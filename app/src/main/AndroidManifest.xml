@@ -222,10 +222,12 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </receiver>
 
         <!-- Preferences are exported by default because they have intent filters.
-        But they should be not exported to avoid a security issue on older Androids (see lint check). -->
+        But they should be not exported to avoid a security issue on older Androids (see lint check).
+        But on Android 12 they must be exported again...
+        -->
         <activity
             android:name=".activity.Preferences"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/labelActivityPreferences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -236,7 +238,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <activity
             android:name=".PreferencesRecognitionServiceHttp"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/labelActivityPreferencesRecognitionServiceHttp"
             android:parentActivityName=".activity.RecServiceSelectorActivity">
             <intent-filter>
@@ -248,7 +250,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <activity
             android:name=".PreferencesRecognitionServiceWs"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/labelActivityPreferencesRecognitionServiceWs"
             android:parentActivityName=".activity.RecServiceSelectorActivity">
             <intent-filter>
@@ -260,6 +262,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <activity
             android:name=".AboutActivity"
+            android:exported="false"
             android:label="@string/labelActivityAbout"
             android:parentActivityName=".activity.Preferences"
             android:theme="@style/Theme.K6nele" />
@@ -268,13 +271,16 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         <!-- TODO: do not reparent -->
         <activity
             android:name=".activity.DetailsActivity"
+            android:exported="false"
             android:theme="@style/Theme.K6nele.Dialog" />
         <!-- TODO: remove Light (once style inheritance works) -->
         <activity
             android:name=".activity.RewritesErrorsActivity"
+            android:exported="false"
             android:theme="@style/Theme.K6nele.Light.Dialog" />
         <activity
             android:name=".activity.ComboSelectorActivity"
+            android:exported="false"
             android:label="@string/dialogTitleCombo"
             android:parentActivityName=".activity.Preferences" />
         <activity
@@ -284,14 +290,17 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.AppListActivity"
+            android:exported="false"
             android:label="@string/labelActivityAppList"
             android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.GrammarListActivity"
+            android:exported="false"
             android:label="@string/labelActivityGrammarList"
             android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.ServerListActivity"
+            android:exported="false"
             android:label="@string/labelActivityServerList"
             android:parentActivityName=".PreferencesRecognitionServiceHttp" />
         <!-- Exporting this to allow a shortcut to be created e.g. using Tasker. -->
@@ -302,6 +311,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.RewritesLoaderActivity"
+            android:exported="false"
             android:label="@string/labelActivityRewritesLoader"
             android:theme="@style/Theme.K6nele.Dialog.NoActionBar"
             android:windowSoftInputMode="stateUnchanged">
@@ -330,6 +340,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </activity>
         <activity
             android:name=".activity.RewritesActivity"
+            android:exported="false"
             android:parentActivityName=".activity.RewritesSelectorActivity">
             <!--
             <meta-data
@@ -339,6 +350,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
         </activity>
         <activity
             android:name=".activity.PermissionsRequesterActivity"
+            android:exported="false"
             android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".activity.FetchUrlActivity"
@@ -352,15 +364,18 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".activity.QuickSettingsActivity"
+            android:exported="false"
             android:label="@string/labelActivityQuickSettings"
             android:parentActivityName=".activity.Preferences" />
         <activity
             android:name=".activity.RecognitionServiceWsUrlActivity"
+            android:exported="false"
             android:label="@string/titleWsServer"
             android:parentActivityName=".PreferencesRecognitionServiceWs"
             android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".demo.SimpleDemo"
+            android:exported="false"
             android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".demo.ExtrasDemo"
@@ -368,6 +383,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:theme="@style/Theme.K6nele.Translucent" />
         <activity
             android:name=".demo.HandsfreeDemoActivity"
+            android:exported="true"
             android:label="@string/labelActivityHandsfreeDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -382,6 +398,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:theme="@style/Theme.K6nele.Light" />
         <activity
             android:name=".demo.VoiceSearchDemo"
+            android:exported="false"
             android:label="@string/labelActivityVoiceSearchDemo" />
 
         <activity
@@ -458,6 +475,7 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
 
         <service
             android:name=".service.SpeechInputMethodService"
+            android:exported="true"
             android:foregroundServiceType="microphone"
             android:label="@string/labelIme"
             android:permission="android.permission.BIND_INPUT_METHOD">
