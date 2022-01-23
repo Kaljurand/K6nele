@@ -10,14 +10,15 @@ Tekstitoimetuskäsud
 1cOkZZ1l8aEsWNHj_ynZm9VPKuktDWCy4tRZlT7qc_Og	Tekstitoimetuskäsud Androidi tekstiväljadele
 13yVjVHMrHVBMZQYaBkHXdvE5U_MUgkW7XbKONYCc2xA	Tekstitoimetuskäsud tekstiredaktorile Vim
 
-Nupud ja svaibid (eeldab Kõnele v1.7.32+)
------------------------------------------
+Nupud ja svaibid
+----------------
 
 1h7IZFTzfVQH808laHl5ekt7JJnhXgjidnVAOdklmXPs	Mikrofoninupu svaip-käsud
 1zmeVsyvWD_R3z_IEsBcAYR81ILsiUNGtzPj1K7x74mM	Rakenduste käivitaja (_app launcher_)
 1ZVUFSBtKczdSpRa3CladG1QhxMga5Pjf9jAqo7SIgKo	Operatsioonid valitud tekstiga (kopeeri/kleebi, otsi, tõlgi, jms)
-1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc	Kalkulaator
 1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw	Tekstitöötlusnupud (kursori liigutamine, kopeeri/kleebi, jms)
+1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc	Kalkulaator. Numbrid, tehtemärgid, ja päring [math.js](https://mathjs.org) teenusele
+1PLM6TJ7T84OrDE1lMzqom2WhlYOMh8g7wIJ1_uy_r4E	Sildid. Valik toitude, pudelite jms nimesid, mis on seotud beebide söötmisega. TODO: lisada ajatemplinupp
 126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU	Tühi tabel. Salvestades selle `#c`, `#f` või `#r` nime all, käivitab vastavalt lõikelaua klippide, kõige sagedasemate lausungite, või kõige viimaste lausungite kogumise.
 
 Dialoogisüsteemid
