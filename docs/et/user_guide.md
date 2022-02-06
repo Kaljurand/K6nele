@@ -193,7 +193,7 @@ kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
 <img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115719.jpg">&harr;<img title="Ekraanipilt: Kõnele katab ainult kolmandiku märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115837.jpg">
 
-Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult veerandi.
+Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult kolmandiku.
 
 ### Omadused
 
@@ -264,7 +264,7 @@ Paneel:
 #### Alates v1.8
 
 Klaviatuuripaneelil on 3 režiimi, mille vahel saab valida paneeli horisontaalselt väiksemaks ja suuremaks
-nihutades. Paneeli kõrgus on seotud rakendusega.
+venitades. Paneeli kõrgus on jääb seotuks rakendusega.
 
 1. Keskmine (vaikimisi): mikrofoninupp ja kustutamisnupp.
    Vajutus mikrofoninupule käivitab/lõpetab/katkestab kõnetuvastuse.
@@ -272,10 +272,10 @@ nihutades. Paneeli kõrgus on seotud rakendusega.
    saab kasutajadefineertud operatsioonidega siduda, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
    Kustutamisnupp kustutab kursorist vasakul oleva sümboli või praeguse tekstivaliku.
 
-2. Väike: ainult nurganuppudega paneel,
+2. Väike: ainult nurganuppudega paneel.
    <img style="float: right" title="Ekraanipilt: ainult nurganupudega paneel" alt="Ekraanipilt: ainult nurganupudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115735.jpg">
 
-3. Suur: lausunginuppudega paneel, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus),
+3. Suur: lausunginuppudega paneel, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
    <img style="float: right" title="Ekraanipilt: lausunginuppudega paneel" alt="Ekraanipilt: lausunginuppudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115017.jpg">
 
 Paneeli nurganupud on kõikides režiimides valdavalt samad.
@@ -300,9 +300,9 @@ Paneeli nurganupud on kõikides režiimides valdavalt samad.
 
 - Vasak alumine nurk: keele/teenuse vahetamise nupp/nupud, mis sõltub aktiveeritud keelte/teenuste arvust:
 
-  - 1 keel/teenus: nupp puudub,
+  - 1 keel/teenus: nupp puudub;
 
-  - 2 keelt/teenust: lühike vajus lülitab järgmisele keelele/teenusele, pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta;
+  - 2 keelt/teenust: lühike vajus lülitab teisele keelele/teenusele, pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta;
 
   - 3+ keelt/teenust: iga keele/teenuse jaoks on omaette nupp, millele lühike vajutus teenuse sisse lülitab.
     Nuppude siltideks on keelte/teenuste lühendid. Nupul pikalt vajutades kuvatakse keele/teenuse täisnimi.
