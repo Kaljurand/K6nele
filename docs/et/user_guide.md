@@ -93,7 +93,7 @@ Antud juhul on reeglil kolm komponenti: regulaaravaldis, mis vastab lausungile (
 
 ## Kõnele seadistamine
 
-<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_2021-03-20-20-18-30.jpg">
+<img style="float: right" title="Ekraanipilt: seadistamine" alt="Ekraanipilt: seadistamine." src="{{ site.baseurl }}/images/et/Screenshot_20220206-120115.jpg">
 
 Mikrofoninupuga paneeli ülemises paremas nurgas on nupp, mis viib Kõnele seadetesse.
 Need võimaldavad Kõnele kasutajaliidest (st klaviatuuri ja otsingupaneeli)
@@ -113,7 +113,7 @@ Kõnele kaudu saab põhimõtteliselt kasutada kõiki seadmes olevaid kõnetuvast
     (vt peatükk [Tuvastusserver koduvõrgus](#tuvastusserver-koduvõrgus)).
     Teenust sisaldav rakendus tuleb paigaldada eraldi.
   - "kiire tuvastusega" teenus. Sama, mis "Kõnele teenus", aga installeerub Kõnele osana, st paigaldamine on lihtsam.
-    Kahjuks pole kasutatav Android v11 seadmetes.
+    Kahjuks pole kasutatav Android v11-12 seadmetes.
   - "grammatikatoega" teenus (kasutab serverit tarkvaraga <http://github.com/alumae/ruby-pocketsphinx-server>)
     lubab sisendkõnele omistada tõlkegrammatikaid, kuid on aeglasem ja sisendkõne pikkus ei tohi ületada
     30 sekundit. Hetkel puudub selle tarkvara toetusega avalik server, st kasutamiseks tuleb paigaldada oma server.
@@ -163,7 +163,7 @@ Androidi versiooniti:
 
 - v5: `Keeled ja sisestamine -> Klaviatuur ja sisestusmeetodid`
 - v6-?: `Täpsemad seaded -> Keel ja klahvistik -> Virtuaalne klaviatuur`
-- v11: `Süsteem -> Keeled ja sisend -> Ekraanil kuvatav klaviatuur -> Ekraanil kuvatavate klaviatuuride haldamine`
+- v11-12: `Süsteem -> Keeled ja sisend -> Ekraanil kuvatav klaviatuur -> Ekraanil kuvatavate klaviatuuride haldamine`
 
 Järgnevad ekraanipildid näitavad klaviatuuri seadistamist Androidis v5.
 
@@ -191,12 +191,13 @@ _Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
-<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20201230-114003.png">&harr;<img title="Ekraanipilt: Kõnele katab ainult kolmandiku märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20201230-114031.png">
+<img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115719.jpg">&harr;<img title="Ekraanipilt: Kõnele katab ainult kolmandiku märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115837.jpg">
 
 Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult veerandi.
 
-
 ### Omadused
+
+#### v1.7
 
 Lisaks mikrofoninupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
 klaviatuuri puutetundlik paneel erinevaid operatsioone, sõltuvalt
@@ -260,6 +261,69 @@ Paneel:
 
   - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
+#### Alates v1.8
+
+Klaviatuuripaneelil on 3 režiimi, mille vahel saab valida paneeli horisontaalselt väiksemaks ja suuremaks
+nihutades. Paneeli kõrgus on seotud rakendusega.
+
+1. Keskmine (vaikimisi): mikrofoninupp ja kustutamisnupp.
+   Vajutus mikrofoninupule käivitab/lõpetab/katkestab kõnetuvastuse.
+   Lisaks toetab mikrofoninupp svaipimist ja pikalt/topelt vajutamist, mida
+   saab kasutajadefineertud operatsioonidega siduda, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
+   Kustutamisnupp kustutab kursorist vasakul oleva sümboli või praeguse tekstivaliku.
+
+2. Väike: ainult nurganuppudega paneel,
+   <img style="float: right" title="Ekraanipilt: ainult nurganupudega paneel" alt="Ekraanipilt: ainult nurganupudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115735.jpg">
+
+3. Suur: lausunginuppudega paneel, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus),
+   <img style="float: right" title="Ekraanipilt: lausunginuppudega paneel" alt="Ekraanipilt: lausunginuppudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115017.jpg">
+
+Paneeli nurganupud on kõikides režiimides valdavalt samad.
+
+- Vasak ülemine nurk: klaviatuurinupp:
+
+  - lühike vajutus vahetab eelmisele klaviatuurile,
+
+  - pikk vajutus vahetab järgmisele klaviatuurile.
+
+- Parem ülemine nurk: tekstivälja tüübist sõltuv "action" nupp, nt
+
+  - otsinguväli: lühike vajutus sooritab otsingu,
+
+  - üherealine tekstiväli (nt pealkirjaväli): lühike vajutus liigutab kursori järgmisele väljale,
+
+  - tavaline mitmerealine tekstiväli: lühike vajutus lisab reavahetuse.
+
+- Parem alumine nurk (keskmises režiimis puudub): lihtne mikrofoninupp, millega saab kõnetuvastust
+  väikses ja suures režiimis alustada ja lõpetada, kuid mida ei saa keskmise režiimi mikrofoninupule sarnaselt
+  svaipida jms.
+
+- Vasak alumine nurk: keele/teenuse vahetamise nupp/nupud, mis sõltub aktiveeritud keelte/teenuste arvust:
+
+  - 1 keel/teenus: nupp puudub,
+
+  - 2 keelt/teenust: lühike vajus lülitab järgmisele keelele/teenusele, pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta;
+
+  - 3+ keelt/teenust: iga keele/teenuse jaoks on omaette nupp, millele lühike vajutus teenuse sisse lülitab.
+    Nuppude siltideks on keelte/teenuste lühendid. Nupul pikalt vajutades kuvatakse keele/teenuse täisnimi.
+    Vajutus plussmärgiga nupule kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta.
+
+Paneeli svaipoperatsioonid on kõikides režiimides samad, kuid keskmises režiimis on nende jaoks rohkem
+paneelipinda.
+
+  - lühike vajutus tühistab praeguse tekstivaliku,
+
+  - topeltvajutus lisab tühiku,
+
+  - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
+
+  - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
+
+  - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
+
+  - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
+
+  - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
 
 ## Kõnele kutsumine teistest rakendustest
 
