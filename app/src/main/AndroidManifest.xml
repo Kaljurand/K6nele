@@ -68,11 +68,14 @@
         android:permissionGroup="android.permission-group.CHANGE_SETTINGS"
         android:protectionLevel="dangerous" />
     -->
+    <!--
+    TODO: setting the permissionGroup to a non-existent group did not work in Android v12.
+    android:permissionGroup="android.permission-group.RUN_ACTIVITY"
+    -->
     <permission
         android:name="ee.ioc.phon.android.speak.permission.FETCH_URL"
         android:description="@string/descriptionPermissionFetchUrl"
         android:label="@string/labelPermissionFetchUrl"
-        android:permissionGroup="android.permission-group.RUN_ACTIVITY"
         android:protectionLevel="dangerous" />
 
     <!-- Some Chromebooks don't support touch. Although not essential,

@@ -7,12 +7,12 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:3.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
 }
 
 android {
@@ -26,12 +26,12 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 1811
-        versionName '1.8.11'
+        targetSdkVersion 32
+        versionCode 1812
+        versionName '1.8.12'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
-        resConfigs "en", "et"
+        resConfigs 'en', 'et'
     }
 
     compileOptions {
@@ -42,12 +42,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
     packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
     }
+
 
     signingConfigs {
         release {
@@ -64,14 +64,14 @@ android {
         }
     }
 
-    lintOptions {
-        // TODO: in the future check for Kotlin-Java interop
-        //check 'Interoperability'
-        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill', 'QueryAllPackagesPermission'
-    }
 
     buildFeatures {
         viewBinding true
+    }
+    lint {
+        // TODO: in the future check for Kotlin-Java interop
+        //check 'Interoperability'
+        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill', 'QueryAllPackagesPermission'
     }
 
 }
