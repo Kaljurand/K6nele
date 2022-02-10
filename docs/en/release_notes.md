@@ -5,6 +5,37 @@ title: Release notes
 
 (For more detailed notes see <https://github.com/Kaljurand/K6nele/commits/master>)
 
+## v1.8 -
+
+Requires Android 5.0+
+
+### v1.8.xx (xxxx-xx-xx)
+
+New in this release:
+
+- Move the built-in services to a separate process.
+  This solves the long-standing permission issue on Android 11
+  ([issue #82](https://github.com/Kaljurand/K6nele/issues/82)).
+  Note that the issue does not seem to occur on Android 12.
+  It is still recommended to use a separate service like "Kõnele service" for possibly more features and improved configurability.
+- Improve the microphone button DB visualization.
+- Improve the combo button. If 3 or more combos are selected then show them as individual buttons. The active combo is underlined.
+  The button label is the locale ID or the first 3 letters of the service name in case locale is "und" (undefined). Long-pressing on the button shows the full label.
+- IME: change UI mode by vertical dragging (instead of pressing the lower-right-corner button). The height (and thus the mode) of the IME is stored per app.
+  Use case: full screen buttons IME in apps where the text is edited in a single-line text field (e.g. dictionary lookup, calculator).
+- IME: lower-right-corner button is now only a microphone button (but invisible in the default UI mode)
+- IME: up/down swipe moves/selects faster
+- Remove IME setting "Swiping".
+  This can be emulated by the microphone swipe commands, which offer more control anyway.
+- IME: long-pressing on the IME action button shows the action label (often missing).
+  Long-press is implemented via the tooltip, which is available only in Android v8+.
+- IME. Buttons. Skip rules with no label.
+- IME/Ops. replaceSel. Add 2nd arg "regex" which sets a new selection within the replacement using the first group of the matching regex.
+- IME/Ops. replaceSel. Support function ``@timestamp(pattern, locale)``, where _pattern_ is the Java ``SimpleDateFormat`` date and time pattern string, and _locale_ is a locale label. The function is expanded by formatting the current time based on the given pattern and locale.
+  Use cases: generating file names, adding timestamped notes into a diary.
+- Fix a crash with some recognition services that do not have a preferences panel.
+- Small fixes to improve compatibility with Android 12.
+
 ## v1.7 -
 
 Requires Android 4.1+
