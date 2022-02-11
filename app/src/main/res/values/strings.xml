@@ -161,8 +161,8 @@
         The default server operates from Tallinn and provides Estonian speech recognition, but the software is easy to deploy elsewhere (e.g. a private network)
         and customize for other languages.&lt;/p>
 
-        &lt;p>(Note that while Kõnele also includes the service implementation under the name \"Kõnele (fast recognition)\",
-        this is known not to work on Android 11. However, installing the service as a separate app avoids this problem.)&lt;/p>
+        &lt;p>(For convenience, Kõnele itself includes the service implementation under the name \"Kõnele (fast recognition)\", but
+        installing it as a separate app might add more features and configurability.)&lt;/p>
 
 		&lt;p>For the documentation, source code, etc. see the &lt;a href="http://kaljurand.github.io/K6nele/">%1$s website&lt;/a>.
         See also the &lt;a href="https://github.com/Kaljurand/K6nele/blob/master/privacy_policy.rst">privacy policy&lt;/a>.&lt;/p>
