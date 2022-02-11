@@ -8,7 +8,7 @@ Its main components are:
   - a speech keyboard that implements the [input method editor (IME) API](http://developer.android.com/reference/android/inputmethodservice/InputMethodService.html)
   - two implementations of [SpeechRecognizer](http://developer.android.com/reference/android/speech/SpeechRecognizer.html), backed by two open source speech recognition servers
     - <https://github.com/alumae/kaldi-gstreamer-server>
-    - <https://github.com/alumae/ruby-pocketsphinx-server>
+    - (not maintained) <https://github.com/alumae/ruby-pocketsphinx-server>
 
 The SpeechRecognizer-implementations have been deprecated, we recommend to use the external app
 [Kõnele service](https://github.com/Kaljurand/K6nele-service) to connect to kaldi-gstreamer-server.
@@ -46,17 +46,11 @@ Point to the Android SDK directory by setting the environment variable
 In order to change your build environment create the file `gradle.properties`
 at a location pointed to by the environment variable `GRADLE_USER_HOME`.
 This will extend and override the definitions found in the `gradle.properties`
-that is part of the release. Add e.g.
-
-    org.gradle.jvmargs=-Xmx1536m
-    org.gradle.parallel=true
-    # Experimental (makes the APK a bit smaller)
-    android.enableR8.fullMode=true
+that is part of the release.
 
 Build the Kõnele app
 
     ./gradlew assemble
-
 
 If you have access to a release keystore then
 
