@@ -18,7 +18,7 @@ Nupud ja svaibid
 1ZVUFSBtKczdSpRa3CladG1QhxMga5Pjf9jAqo7SIgKo	Operatsioonid valitud tekstiga (kopeeri/kleebi, otsi, tõlgi, jms)
 1PvkhIzzX8FuPDpRT5ylFv1R3Kw9ESnYgqqXxG6zDwIw	Tekstitöötlusnupud (kursori liigutamine, kopeeri/kleebi, jms)
 1K8Q-uHMwZABXshyANPhh76ojKm-_HMiHdMeRi0aKURc	Kalkulaator. Numbrid, tehtemärgid, ja päring [math.js](https://mathjs.org) teenusele
-1PLM6TJ7T84OrDE1lMzqom2WhlYOMh8g7wIJ1_uy_r4E	Sildid. Valik toitude, pudelite jms nimesid, mis on seotud beebide söötmisega. TODO: lisada ajatemplinupp
+1PLM6TJ7T84OrDE1lMzqom2WhlYOMh8g7wIJ1_uy_r4E	Sildid. Valik toitude, pudelite jms nimesid, mis on seotud beebide söötmisega.
 126BVW7jYPcXMWOeeCfRbnYHCNwYa5zW10c9l2DQCqDU	Tühi tabel. Salvestades selle `#c`, `#f` või `#r` nime all, käivitab vastavalt lõikelaua klippide, kõige sagedasemate lausungite, või kõige viimaste lausungite kogumise.
 
 Dialoogisüsteemid
