@@ -49,12 +49,14 @@
             android:summary="@string/summaryImeShowPartialResults"
             android:title="@string/titleImeShowPartialResults"
             app:iconSpaceReserved="false" />
+        <!--
         <CheckBoxPreference
             android:defaultValue="@bool/defaultImeHelpText"
             android:key="@string/keyImeHelpText"
             android:summary="@string/summaryImeHelpText"
             android:title="@string/titleImeHelpText"
             app:iconSpaceReserved="false" />
+        -->
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)
@@ -112,11 +114,11 @@
         android:title="@string/titleCategoryDependencies"
         app:iconSpaceReserved="false">
         <Preference
-            android:summary="@string/summaryAppList"
-            android:title="@string/labelActivityAppList"
+            android:summary="@string/summarySelectRewrites"
+            android:title="@string/titleSelectRewrites"
             app:iconSpaceReserved="false">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.activity.AppListActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
@@ -128,11 +130,11 @@
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference
-            android:summary="@string/summarySelectRewrites"
-            android:title="@string/titleSelectRewrites"
+            android:summary="@string/summaryAppList"
+            android:title="@string/labelActivityAppList"
             app:iconSpaceReserved="false">
             <intent
-                android:targetClass="ee.ioc.phon.android.speak.activity.RewritesSelectorActivity"
+                android:targetClass="ee.ioc.phon.android.speak.activity.AppListActivity"
                 android:targetPackage="ee.ioc.phon.android.speak" />
         </Preference>
         <Preference

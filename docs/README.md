@@ -11,7 +11,7 @@ Various documents, notes, examples
 
 [intents.dot](intents.dot) is a diagram showing how information can flow from Kõnele to external devices/apps and back.
 
-[Rewrite rule examples](http://kaljurand.github.io/K6nele/docs/et/user_guide.html#näited)
+[Rewrite rule examples](http://kaljurand.github.io/K6nele/docs/et/rewrites.html)
 contains (mostly) Estonian rewrite rule tables (documented in English).
 A rewrite rule table contains the following tab-separated columns:
 

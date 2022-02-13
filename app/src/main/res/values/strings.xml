@@ -106,7 +106,9 @@
     <string name="summarySystemVoiceInputSettings">System-wide settings panel for the installed speech recognition services, as well as the Assist app</string>
 
     <string name="titleSelectRewrites">Rewrites</string>
-    <string name="summarySelectRewrites">List of available rewrite rule tables that can be used to rewrite the transcription. (Works with any service.)</string>
+    <string name="summarySelectRewrites">List of available rewrite rule tables,
+        where the activated tables modify the returned transcription and can be also
+        used as keyboard buttons. (Works with any service.)</string>
 
     <string name="titleQuickSettings">Quick settings</string>
     <string name="summaryQuickSettings">Quickly apply some common default settings</string>
@@ -294,7 +296,7 @@
     <!-- Content description of images and buttons -->
     <string name="cdUndefined">Undefined</string>
     <string name="cdNewline">Insert new line</string>
-    <string name="cdMicrophone">Press this button and speak</string>
+    <string name="cdMicrophone">Tap this button and speak</string>
     <string name="cdAppIcon">App icon</string>
     <string name="cdServiceIcon">Service icon</string>
     <string name="cdChangeCombo">Change recognition service/locale</string>
