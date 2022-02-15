@@ -13,7 +13,7 @@ Requires Android 5.0+
 
 New in this release:
 
-- Move the built-in services to a separate process.
+- Assign the built-in services to a separate process.
   This solves the long-standing permission issue on Android 11
   ([issue #82](https://github.com/Kaljurand/K6nele/issues/82)).
   Note that the issue does not seem to occur on Android 12.
@@ -25,8 +25,8 @@ New in this release:
   Use case: full screen buttons IME in apps where the text is edited in a single-line text field (e.g. dictionary lookup, calculator).
 - IME: lower-right-corner button is now only a microphone button (but invisible in the default UI mode)
 - IME: up/down swipe moves/selects faster
-- Remove IME setting "Swiping".
-  This can be emulated by the microphone swipe commands, which offer more control anyway.
+- Settings. Remove IME settings "Help text" (made the IME too "crowded" if swtched on)
+  and "Swiping" (can be emulated by the user-defined microphone swipe commands)
 - IME: long-pressing on the IME action button shows the action label (often missing).
   Long-press is implemented via the tooltip, which is available only in Android v8+.
 - IME. Buttons. Skip rules with no label.
