@@ -2,4 +2,4 @@ Kõnele is an app that offers speech-to-text user interfaces to other apps. Many
 
 Kõnele can connect to any speech recognition service available on the device but by default uses, and is optimized for <b>Kõnele service</b> (<a href="https://github.com/Kaljurand/K6nele-service">https://github.com/Kaljurand/K6nele-service</a>), a separate lightweight app whose backing server runs the <b>kaldi-gstreamer-server</b> (<a href="https://github.com/alumae/kaldi-gstreamer-server">https://github.com/alumae/kaldi-gstreamer-server</a>) software. The default server operates from Tallinn and provides Estonian speech recognition, but the software is easy to deploy elsewhere (e.g. a private network) and customize for other languages.
 
-(Note that while Kõnele also includes the service implementation under the name "Kõnele (fast recognition)", this is known not to work on Android 11. However, installing the service as a separate app avoids this problem.)
+(Note that Kõnele also includes a simpler version of "Kõnele service" under the name "Kõnele (fast recognition)".)

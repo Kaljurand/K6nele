@@ -1,0 +1,7 @@
+- Assign the built-in services to a separate process.
+  This solves the long-standing permission issue on Android 11.
+  It is still recommended to use a separate service like "Kõnele service" for possibly more features and improved configurability.
+- IME: change UI mode by vertical dragging (instead of pressing the lower-right-corner button). The height (and thus the mode) of the IME is stored per app.
+- IME: lower-right-corner button is now only a microphone button (but invisible in the default UI mode)
+- Settings. Remove IME setting "Help text"
+- IME/Ops. replaceSel. Support function ``@timestamp(pattern, locale)``, where _pattern_ is the Java ``SimpleDateFormat`` date and time pattern string, and _locale_ is a locale label. The function is expanded by formatting the current time based on the given pattern and locale.
