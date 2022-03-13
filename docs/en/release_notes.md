@@ -9,7 +9,7 @@ title: Release notes
 
 Requires Android 5.0+
 
-### v1.8.xx (xxxx-xx-xx)
+### v1.8.14 (2022-02-16)
 
 New in this release:
 
@@ -25,7 +25,7 @@ New in this release:
   Use case: full screen buttons IME in apps where the text is edited in a single-line text field (e.g. dictionary lookup, calculator).
 - IME: lower-right-corner button is now only a microphone button (but invisible in the default UI mode)
 - IME: up/down swipe moves/selects faster
-- Settings. Remove IME settings "Help text" (made the IME too "crowded" if swtched on)
+- Settings. Remove IME settings "Help text" (made the IME too "crowded" if switched on)
   and "Swiping" (can be emulated by the user-defined microphone swipe commands)
 - IME: long-pressing on the IME action button shows the action label (often missing).
   Long-press is implemented via the tooltip, which is available only in Android v8+.

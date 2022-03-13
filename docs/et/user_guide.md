@@ -184,84 +184,23 @@ kus keskkond on vaikne ja privaatne, ja tekst ei pea olema keeleliselt täiesti 
 Sellistes olukordades on kõnetuvastuse kasutamine reeglina kiirem ja loomulikum
 ning lisaks võtab kõneklaviatuur ekraanil vähem ruumi.
 Muudes olukordades võib ümber lülitada teisele klaviatuurile.
-Mõned klaviatuurid (nt _Gboard_ ja _Kõnele_ ise)
-võimaldavad klaviatuurivahetust ainult ühe nupuvajutusega. Nt, vajutades maakera-ikooni
-_Gboard_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
-_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _Gboard_ klaviatuurile.
+Mõned klaviatuurid (nt _FlorisBoard_, ja _Kõnele_ ise)
+võimaldavad klaviatuurivahetust ainult ühe (lühikese) nupuvajutusega.
+Nt, vajutades maakera-ikooni
+_X_ klaviatuuril vahetub klaviatuur _Kõnele_ vastu; vajutades klaviatuuri-ikooni
+_Kõnele_ klaviatuuril, vahetub klaviatuur tagasi _X_ klaviatuurile.
 Selles rotatsioonis võib osaleda ka rohkem klaviatuure,
 kui nad samamoodi vastavat Androidi klaviatuurivahetusliidest toetavad.
 
 <img title="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest" alt="Ekraanipilt: traditsiooniline klaviatuur katab pool märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115719.jpg">&harr;<img title="Ekraanipilt: Kõnele katab ainult kolmandiku märkmerakendusest." src="{{ site.baseurl }}/images/et/Screenshot_20220206-115837.jpg">
 
-Traditsiooniline klaviatuur katab pool märkmerakendusest. Kõnele katab ainult kolmandiku.
+Kahetsusväärselt on selliste "koostööaltite" klaviatuuride hulk viimasel ajal vähenenud,
+nt _Gboard_, _OpenBoard_, jne. enam kiiret ümbervahetust "eelmisele" või "järgmisele"
+klaviatuurile ei võimalda, st maakera-ikoonile tuleb vajutada pikalt
+(või süsteemsele klaviatuurikoonile lühikeselt), pärast mida kuvatakse kõikide klaviatuuride
+valikumenüü.
 
 ### Omadused
-
-#### v1.7
-
-Lisaks mikrofoninupule, mis käivitab/lõpetab/katkestab kõnetuvastuse, toetab Kõnele
-klaviatuuri puutetundlik paneel erinevaid operatsioone, sõltuvalt
-tekstivälja tüübist, ja sellest, kas paneel on tuvastusrežiimis või mitte.
-Osa nendest operatsioonidest on võimalik
-[tekstitoimetuskäskude](#tekstitoimetuskäsud) abil dubleerida.
-Alates versioonist 1.7 toetab mikrofoninupp lisaks svaipimist ja pikalt/topelt vajutamist, mida
-saab kasutajadefineertud operatsioonidega siduda,
-vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus).
-
-Nurganupud:
-
-- vasak ülemine nurk, klaviatuurinupp:
-
-  - lühike vajutus vahetab eelmisele klaviatuurile,
-
-  - pikk vajutus vahetab järgmisele klaviatuurile;
-
-- parem ülemine nurk, tekstivälja tüübist sõltuv "action" nupp, nt
-
-  - otsinguväli: lühike vajutus sooritab otsingu,
-
-  - üherealine tekstiväli (nt pealkirjaväli): lühike vajutus liigutab kursori järgmisele väljale,
-
-  - tavaline mitmerealine tekstiväli: lühike vajutus lisab reavahetuse;
-
-- parem alumine nurk:
-
-  - lühike vajutus muudab paneeli tüüpi,
-
-    1. mikrofoni- ja kustutamisnupuga paneel
-       (kustutamisnupp kustutab kursorist vasakul oleva sümboli või praeguse tekstivaliku),
-
-    2. lausunginuppudega paneel, vt [Lausung kui nupuvajutus](#lausung-kui-nupuvajutus),
-       <img style="float: right" title="Ekraanipilt: lausunginuppudega paneel" alt="Ekraanipilt: lausunginuppudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20201230-115204.png">
-
-    3. ainult nurganuppudega (ja seega väiksem) paneel,
-       <img style="float: right" title="Ekraanipilt: ainult nurganupudega paneel" alt="Ekraanipilt: ainult nurganupudega paneel." src="{{ site.baseurl }}/images/et/Screenshot_20201230-114051.png">
-
-  - pikk vajutus käivitab/lõpetab/katkestab kõnetuvastuse (samamoodi nagu mikrofoninupp);
-
-- vasak alumine nurk, keele/teenuse vahetamise nupp (nähtav, kui mitu keelt/teenust on aktiivsed):
-
-  - lühike vajus lülitab järgmisele keelele/teenusele,
-
-  - pikk vajutus kuvab kõik võimalikud keeled/teenused, võimaldades valikut muuta;
-
-Paneel:
-
-  - lühike vajutus tühistab praeguse tekstivaliku,
-
-  - topeltvajutus lisab tühiku,
-
-  - svaip vasakule liigutab kursori vasakule (svaip vasakule üles teeb sama kiiremini),
-
-  - svaip paremale liigutab kursori paremale (svaip paremale alla teeb sama kiiremini),
-
-  - pikk vajutus valib kursori all/kõrval oleva sõna ning siseneb valiku-režiimi, kus svaibid muudavad valiku ulatust,
-
-  - pidev vajutus klaviatuuri vasakule äärele liigutab kursorit vasakule,
-
-  - pidev vajutus klaviatuuri paremale äärele liigutab kursorit paremale.
-
-#### Alates v1.8
 
 Klaviatuuripaneelil on 3 režiimi, mille vahel saab valida paneeli horisontaalselt väiksemaks ja suuremaks
 venitades. Paneeli kõrgus on jääb seotuks rakendusega.
