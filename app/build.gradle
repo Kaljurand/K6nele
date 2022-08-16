@@ -7,12 +7,12 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:3.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
 }
 
 android {
@@ -26,9 +26,9 @@ android {
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 1814
-        versionName '1.8.14'
+        targetSdkVersion 33
+        versionCode 1815
+        versionName '1.8.15'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs 'en', 'et'
