@@ -6,13 +6,15 @@ dependencies {
     // TODO: used only in ChunkedWebRecSessionResult, use Android's JSON library instead
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:3.1.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    // Added only to resolve https://issuetracker.google.com/issues/242384116
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 }
 
 android {
@@ -27,8 +29,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1815
-        versionName '1.8.15'
+        versionCode 1816
+        versionName '1.8.16'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs 'en', 'et'
@@ -50,8 +52,7 @@ android {
 
 
     signingConfigs {
-        release {
-        }
+        release {}
     }
 
     buildTypes {
@@ -73,12 +74,11 @@ android {
         //check 'Interoperability'
         disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill', 'QueryAllPackagesPermission'
     }
-
+    namespace 'ee.ioc.phon.android.speak'
 }
 
 
-if (project.hasProperty('storePassword') &&
-        project.hasProperty('keyPassword')) {
+if (project.hasProperty('storePassword') && project.hasProperty('keyPassword')) {
     android.signingConfigs.release.storeFile = file(System.getenv("KEYSTORE"))
     android.signingConfigs.release.keyAlias = System.getenv("KEY_ALIAS")
     android.signingConfigs.release.storePassword = storePassword
