@@ -16,13 +16,13 @@
 
 package ee.ioc.phon.android.speak.demo
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.activity.GrammarListActivity
 import ee.ioc.phon.android.speak.provider.Grammar
@@ -43,15 +43,33 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
 
 
     private val grammarName: String?
-        get() = Utils.idToValue(this, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.NAME, mGrammarId)
+        get() = Utils.idToValue(
+            this,
+            Grammar.Columns.CONTENT_URI,
+            Grammar.Columns._ID,
+            Grammar.Columns.NAME,
+            mGrammarId
+        )
 
 
     private val grammarUrl: String?
-        get() = Utils.idToValue(this, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.URL, mGrammarId)
+        get() = Utils.idToValue(
+            this,
+            Grammar.Columns.CONTENT_URI,
+            Grammar.Columns._ID,
+            Grammar.Columns.URL,
+            mGrammarId
+        )
 
 
     private val grammarTargetLang: String?
-        get() = Utils.idToValue(this, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.LANG, mGrammarId)
+        get() = Utils.idToValue(
+            this,
+            Grammar.Columns.CONTENT_URI,
+            Grammar.Columns._ID,
+            Grammar.Columns.LANG,
+            mGrammarId
+        )
 
     protected abstract fun onSuccess(intent: Intent?)
 
@@ -65,7 +83,8 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuDemoGrammarAssign -> {
-                val intent = Intent(this@AbstractRecognizerDemoActivity, GrammarListActivity::class.java)
+                val intent =
+                    Intent(this@AbstractRecognizerDemoActivity, GrammarListActivity::class.java)
                 startActivityForResult(intent, ACTIVITY_SELECT_GRAMMAR_URL)
                 return true
             }
@@ -94,6 +113,7 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("TODO: add a better message")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ACTIVITY_SELECT_GRAMMAR_URL) {
             if (resultCode != AppCompatActivity.RESULT_OK) {
@@ -104,8 +124,18 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
                 toast(getString(R.string.errorFailedGetGrammarUrl))
             } else {
                 mGrammarId = java.lang.Long.parseLong(grammarUri.pathSegments[1])
-                toast(String.format(getString(R.string.toastAssignGrammar),
-                        Utils.idToValue(this, Grammar.Columns.CONTENT_URI, Grammar.Columns._ID, Grammar.Columns.NAME, mGrammarId)))
+                toast(
+                    String.format(
+                        getString(R.string.toastAssignGrammar),
+                        Utils.idToValue(
+                            this,
+                            Grammar.Columns.CONTENT_URI,
+                            Grammar.Columns._ID,
+                            Grammar.Columns.NAME,
+                            mGrammarId
+                        )
+                    )
+                )
             }
         } else if (requestCode == VOICE_RECOGNITION_REQUEST_CODE) {
             if (resultCode == AppCompatActivity.RESULT_OK) {
