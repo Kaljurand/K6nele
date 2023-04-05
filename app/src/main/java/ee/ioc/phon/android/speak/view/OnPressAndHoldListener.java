@@ -33,7 +33,7 @@ public abstract class OnPressAndHoldListener implements View.OnTouchListener {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_OUTSIDE:
             case MotionEvent.ACTION_CANCEL:
-                if (mHandler != null) mHandler.removeCallbacks(mTask);
+                mHandler.removeCallbacks(mTask);
                 v.setPressed(false);
                 break;
             default:

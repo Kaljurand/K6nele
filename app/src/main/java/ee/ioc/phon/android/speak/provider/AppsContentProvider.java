@@ -58,9 +58,9 @@ public class AppsContentProvider extends ContentProvider {
 	private static final int SERVERS = 5;
 	private static final int SERVER_ID = 6;
 
-	private static HashMap<String, String> appsProjectionMap;
-	private static HashMap<String, String> grammarsProjectionMap;
-	private static HashMap<String, String> serversProjectionMap;
+	private static final HashMap<String, String> appsProjectionMap;
+	private static final HashMap<String, String> grammarsProjectionMap;
+	private static final HashMap<String, String> serversProjectionMap;
 
 	private DatabaseHelper dbHelper;
 

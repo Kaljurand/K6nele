@@ -40,11 +40,14 @@ class SimpleDemo : AbstractRecognizerDemoActivity() {
 
         val intent = createRecognizerIntent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
-        if (getRecognizers(intent).size == 0) {
+        if (getRecognizers(intent).isEmpty()) {
             toast(getString(R.string.errorRecognizerNotPresent))
             finish()
         } else {
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
             launchRecognizerIntent(intent)
         }
@@ -55,7 +58,7 @@ class SimpleDemo : AbstractRecognizerDemoActivity() {
      */
     override fun onSuccess(intent: Intent?) {
         val matches = intent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-        (findViewById(android.R.id.list) as ListView).adapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, matches as ArrayList<String>)
+        (findViewById<ListView>(android.R.id.list)).adapter =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, matches as ArrayList<String>)
     }
 }

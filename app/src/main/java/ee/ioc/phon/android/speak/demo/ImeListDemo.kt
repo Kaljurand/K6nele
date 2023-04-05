@@ -11,7 +11,6 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.R
-import java.util.*
 
 class ImeListDemo : AppCompatActivity() {
 
@@ -22,7 +21,7 @@ class ImeListDemo : AppCompatActivity() {
         val mngr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val info = getVoiceImeInputMethodInfo(packageManager, mngr)
 
-        val listView = findViewById(android.R.id.list) as ListView
+        val listView = findViewById<ListView>(android.R.id.list)
         listView.adapter = ArrayAdapter(this, R.layout.list_item_detail, info.toTypedArray())
 
         listView.onItemClickListener = OnItemClickListener { _, view, _, _ ->
@@ -33,10 +32,13 @@ class ImeListDemo : AppCompatActivity() {
     }
 
     companion object {
-        private val VOICE_IME_SUBTYPE_MODE = "voice"
+        private const val VOICE_IME_SUBTYPE_MODE = "voice"
 
         @Throws(SecurityException::class, IllegalArgumentException::class)
-        private fun getVoiceImeInputMethodInfo(pm: PackageManager, inputMethodManager: InputMethodManager): List<String> {
+        private fun getVoiceImeInputMethodInfo(
+            pm: PackageManager,
+            inputMethodManager: InputMethodManager
+        ): List<String> {
             val imeInfos = ArrayList<String>()
             for (inputMethodInfo in inputMethodManager.enabledInputMethodList) {
                 for (i in 0 until inputMethodInfo.subtypeCount) {
