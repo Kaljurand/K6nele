@@ -48,8 +48,9 @@
     4) launching intents (e.g. setting the alarm or opening maps) via rewrites
     It is unclear if use-cases 3 and 4 could be instead declared via the queries-section.
     -->
+    <!--
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-
+-->
     <!-- Custom permission required by GetPutPreferenceActivity to be able to read/write the Kõnele settings. -->
     <!--
     <uses-permission android:name="ee.ioc.phon.android.speak.permission.GET_PUT_SETTING" />
