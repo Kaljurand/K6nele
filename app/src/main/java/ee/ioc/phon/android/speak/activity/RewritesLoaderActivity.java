@@ -31,7 +31,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,11 +113,7 @@ public class RewritesLoaderActivity extends AppCompatActivity {
                 if (uri != null) {
                     if ("k6".equals(uri.getScheme())) {
                         byte[] data = Base64.decode(uri.getSchemeSpecificPart().substring(2), Base64.NO_WRAP | Base64.URL_SAFE);
-                        try {
-                            utteranceRewriter = new UtteranceRewriter(new String(data, "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            // TODO: dont ignore
-                        }
+                        utteranceRewriter = new UtteranceRewriter(new String(data, StandardCharsets.UTF_8));
                     } else {
                         utteranceRewriter = loadFromUri(uri);
                     }

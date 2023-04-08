@@ -70,7 +70,7 @@ public class Caller {
         if (pendingIntent == null) {
             mPrimaryCaller = bundle.getString(RecognizerIntent.EXTRA_CALLING_PACKAGE);
         } else {
-            mPrimaryCaller = pendingIntent.getTargetPackage();
+            mPrimaryCaller = pendingIntent.getCreatorPackage();
         }
         mSecondaryCaller = getPackageName(bundle);
     }
@@ -120,7 +120,7 @@ public class Caller {
                 return callingActivity.getPackageName();
             }
         } else {
-            return pendingIntent.getTargetPackage();
+            return pendingIntent.getCreatorPackage();
         }
         return null;
     }

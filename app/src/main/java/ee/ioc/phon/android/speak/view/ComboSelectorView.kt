@@ -63,7 +63,7 @@ class ComboSelectorView @JvmOverloads constructor(
         val mBComboSelector = findViewById<Button>(R.id.tvComboSelector)
         val mRvComboButtons: RecyclerView = findViewById(R.id.rvComboButtons)
         val size = mSlc.size()
-        if (size >= mMinButtons && mMinButtons > 0) {
+        if (mMinButtons in (1..size)) {
             // We show buttons if the user has requested at least one button (by default at least 3),
             // and there are at least that many to show.
             mBComboSelector.visibility = GONE
@@ -94,7 +94,7 @@ class ComboSelectorView @JvmOverloads constructor(
                 val combo = Combo(context, mSlc.combo)
                 mBComboSelector.text = combo.longLabel
             }
-            mBComboSelector.setOnLongClickListener { view: View? ->
+            mBComboSelector.setOnLongClickListener {
                 comboSelector(context, key)
                 true
             }
@@ -108,7 +108,7 @@ class ComboSelectorView @JvmOverloads constructor(
     }
 
     fun click() {
-        mListener.onComboChange(mSlc.language, mSlc.service);
+        mListener.onComboChange(mSlc.language, mSlc.service)
     }
 
     val speechRecognizer: SpeechRecognizer

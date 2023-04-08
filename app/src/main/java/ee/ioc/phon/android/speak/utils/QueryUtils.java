@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ee.ioc.phon.android.speak.ChunkedWebRecSessionBuilder;
 import ee.ioc.phon.android.speak.Log;
@@ -35,7 +36,7 @@ public final class QueryUtils {
         List<Pair<String, String>> list = new ArrayList<>();
         flattenBundle("editorInfo_", list, intent.getBundleExtra(Extras.EXTRA_EDITOR_INFO));
         listAdd(list, "lang", builder.getLang());
-        listAdd(list, "lm", toString(builder.getGrammarUrl()));
+        listAdd(list, "lm", Objects.toString(builder.getGrammarUrl(), ""));
         listAdd(list, "output-lang", builder.getGrammarTargetLang());
         listAdd(list, "user-agent", builder.getUserAgentComment());
         listAdd(list, "calling-package", builder.getCaller());
@@ -44,11 +45,10 @@ public final class QueryUtils {
         return list;
     }
 
-    private static boolean listAdd(List<Pair<String, String>> list, String key, String value) {
-        if (value == null || value.length() == 0) {
-            return false;
+    private static void listAdd(List<Pair<String, String>> list, String key, String value) {
+        if (value != null && value.length() > 0) {
+            list.add(new Pair<>(key, value));
         }
-        return list.add(new Pair<>(key, value));
     }
 
     private static void flattenBundle(String prefix, List<Pair<String, String>> list, Bundle bundle) {
@@ -59,19 +59,11 @@ public final class QueryUtils {
                     if (value instanceof Bundle) {
                         flattenBundle(prefix + key + "_", list, (Bundle) value);
                     } else {
-                        listAdd(list, prefix + key, toString(value));
+                        listAdd(list, prefix + key, Objects.toString(value, ""));
                     }
                 }
             }
         }
-    }
-
-    // TODO: replace by a built-in
-    private static String toString(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return obj.toString();
     }
 
     /**

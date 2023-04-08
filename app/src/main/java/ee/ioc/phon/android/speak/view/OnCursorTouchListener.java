@@ -46,7 +46,7 @@ public class OnCursorTouchListener implements View.OnTouchListener {
             mHandler.postDelayed(this, DELAY);
         }
     };
-    private Runnable mTask2 = new Runnable() {
+    private final Runnable mTask2 = new Runnable() {
         public void run() {
             onMoveAux(1, 1);
             mHandler.postDelayed(this, DELAY);

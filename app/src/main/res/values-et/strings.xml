@@ -284,8 +284,6 @@
     <string name="summaryReturnErrors">Tagasta audio/võrgu/jne vigade teated kutsuvale rakendusele</string>
     <string name="titleImeShowPartialResults">Vahetulemused</string>
     <string name="summaryImeShowPartialResults">Näita tekstikastis kõnetuvastuse vahetulemusi</string>
-    <string name="summaryImeHelpText">Näita klaviatuuril abiteksti (teeb klaviatuuri sellevõrra suuremaks)</string>
-    <string name="titleImeHelpText">Abitekst</string>
     <string name="dialogTitleCombo">Keeled &amp; teenused</string>
     <string name="titleCombo">Kõnetuvastuskeeled &amp; teenused</string>
     <string name="summaryImeCombo">Uuendan…</string>

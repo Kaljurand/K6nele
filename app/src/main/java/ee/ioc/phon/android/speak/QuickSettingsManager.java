@@ -21,8 +21,8 @@ public class QuickSettingsManager {
         COMBOS_MULTILINGUAL = Collections.unmodifiableSet(set);
     }
 
-    private SharedPreferences mPrefs;
-    private Resources mRes;
+    private final SharedPreferences mPrefs;
+    private final Resources mRes;
 
     public QuickSettingsManager(SharedPreferences prefs, Resources res) {
         mPrefs = prefs;

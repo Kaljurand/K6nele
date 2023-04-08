@@ -32,7 +32,7 @@ public class ServerListActivity extends AbstractContentActivity {
             Server.Columns.URL
     };
 
-    private static int[] TO = new int[]{
+    private static final int[] TO = new int[]{
             R.id.itemServerId,
             R.id.itemServerUrl
     };

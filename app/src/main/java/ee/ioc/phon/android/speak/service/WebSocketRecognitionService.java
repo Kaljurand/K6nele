@@ -1,5 +1,7 @@
 package ee.ioc.phon.android.speak.service;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,8 +33,6 @@ import ee.ioc.phon.android.speechutils.EncodedAudioRecorder;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.service.AbstractRecognitionService;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
-
-import static android.Manifest.permission.RECORD_AUDIO;
 
 /**
  * Implements RecognitionService, connects to the server via WebSocket.

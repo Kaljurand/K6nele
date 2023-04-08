@@ -27,10 +27,10 @@ android {
     // API level 21: Jetpack Compose
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
-        versionCode 1817
-        versionName '1.8.17'
+        versionCode 1900
+        versionName '1.9.00'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs 'en', 'et'

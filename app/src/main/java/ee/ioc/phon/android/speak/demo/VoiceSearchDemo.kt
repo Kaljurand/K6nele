@@ -36,8 +36,8 @@ class VoiceSearchDemo : AbstractRecognizerDemoActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.voice_search_demo)
-        val speakButton = findViewById(R.id.buttonMicrophone) as ImageButton
-        speakButton.setOnClickListener({ launchRecognizerIntent(createVoiceAppSearchIntent()) })
+        val speakButton = findViewById<ImageButton>(R.id.buttonMicrophone)
+        speakButton.setOnClickListener { launchRecognizerIntent(createVoiceAppSearchIntent()) }
     }
 
     override fun onSuccess(intent: Intent?) {
@@ -65,7 +65,10 @@ class VoiceSearchDemo : AbstractRecognizerDemoActivity() {
         val queryExtras = Bundle()
 
         val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        voiceIntent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
         //voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, (String) null);
         voiceIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
         // Add the values that configure forwarding the results

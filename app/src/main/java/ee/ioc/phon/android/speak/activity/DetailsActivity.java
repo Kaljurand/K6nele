@@ -54,7 +54,7 @@ public class DetailsActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
             mIsFinishAfterPlayAudio = true;
         }
 
@@ -66,7 +66,7 @@ public class DetailsActivity extends AppCompatActivity {
         if (extras != null) {
             String title = extras.getString(EXTRA_TITLE);
             if (title == null) {
-                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
             } else {
                 setTitle(title);
             }

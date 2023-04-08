@@ -43,8 +43,8 @@ import ee.ioc.phon.android.speak.utils.Utils;
  */
 public class AppListCursorAdapter extends CursorAdapter {
 
-    private String mDefaultServerUrl;
-    private PackageManager mPm;
+    private final String mDefaultServerUrl;
+    private final PackageManager mPm;
 
     public AppListCursorAdapter(Context context, Cursor c, boolean autoRequery) {
         super(context, c, autoRequery);

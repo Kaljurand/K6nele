@@ -86,8 +86,6 @@
     <string name="summaryHelpText">Show usage instructions by the microphone button. Makes the search panel larger.</string>
     <string name="titleReturnErrors">Return errors</string>
     <string name="summaryReturnErrors">Return network/audio/etc. errors to the caller (useful if the caller does error handling)</string>
-    <string name="titleImeHelpText">Help text</string>
-    <string name="summaryImeHelpText">Show usage instructions by the microphone button. Makes the keyboard larger.</string>
     <string name="summaryImeCombo">Updating…</string>
     <string name="titleEnableIme">Enable Speak &amp; swipe keyboard</string>
     <string name="summaryEnableIme">The keyboard allows you to dictate into any text field in any app, and navigate and edit the text with swipe operations. Tap here to enable it in the Android virtual keyboard settings.</string>

@@ -81,18 +81,22 @@ class HandsfreeDemoActivity : AbstractRecognizerDemoActivity() {
 
 
     private fun updateListView(list: List<String>) {
-        (findViewById<View>(R.id.list_matches) as ListView).adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        (findViewById<View>(R.id.list_matches) as ListView).adapter =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
     }
 
     companion object {
 
         // TODO: smaller values (e.g. < 800) cause an error with the local server with a single slot
-        private val SLEEP_TIME = 10
-        private val MAX_COUNT = 5
+        private const val SLEEP_TIME = 10
+        private const val MAX_COUNT = 5
 
         private fun createRecognizerIntent(): Intent {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
             intent.putExtra(Extras.EXTRA_AUTO_START, true)
             intent.putExtra(Extras.EXTRA_RETURN_ERRORS, true)

@@ -86,7 +86,7 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
 
     private Iterable<UtteranceRewriter> mRewriters;
 
-    private static SparseIntArray mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
+    private static final SparseIntArray mErrorCodesServiceToIntent = IntentUtils.createErrorCodesServiceToIntent();
 
     private List<byte[]> mBufferList = new ArrayList<>();
 
@@ -580,7 +580,7 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
      */
     protected void setResultError(int errorCode) {
         if (mIsReturnErrors) {
-            Integer errorCodeIntent = mErrorCodesServiceToIntent.get(errorCode);
+            int errorCodeIntent = mErrorCodesServiceToIntent.get(errorCode);
             setResult(errorCodeIntent);
             finish();
         }
