@@ -57,8 +57,10 @@ class ChatDemoActivity : AppCompatActivity() {
             private var mRewriters: Iterable<UtteranceRewriter>? = null
 
             override fun onComboChange(language: String, service: ComponentName) {
-                mRewriters = Utils.genRewriters(mPrefs, mRes, arrayOf("Base", "Commands"),
-                        CommandMatcherFactory.createCommandFilter(language, service, componentName))
+                mRewriters = Utils.genRewriters(
+                    mPrefs, mRes, arrayOf("Base", "Commands"),
+                    CommandMatcherFactory.createCommandFilter(language, service, componentName)
+                )
             }
 
             override fun onFinalResult(results: List<String>, bundle: Bundle) {
@@ -96,22 +98,26 @@ class ChatDemoActivity : AppCompatActivity() {
         siv.init(R.array.keysActivity, callerInfo, false, null)
         siv.setListener(speechInputViewListener, null)
 
-        (findViewById(android.R.id.list) as ListView).onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-            val entry = parent.adapter.getItem(position)
-            startActivity(entry.toString())
-        }
+        (findViewById<ListView>(android.R.id.list)).onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val entry = parent.adapter.getItem(position)
+                startActivity(entry.toString())
+            }
     }
 
     private fun startActivity(intentAsJson: String) {
         try {
-            IntentUtils.startActivityIfAvailable(this, JsonUtils.createIntent(intentAsJson))
+            IntentUtils.startActivity(this, JsonUtils.createIntent(intentAsJson))
         } catch (e: JSONException) {
+            toast(e.localizedMessage)
+        } catch (e: SecurityException) {
             toast(e.localizedMessage)
         }
     }
 
     private fun updateListView(list: List<String>) {
-        (findViewById(android.R.id.list) as ListView).adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        (findViewById<ListView>(android.R.id.list)).adapter =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
     }
 
     private fun toast(message: String) {

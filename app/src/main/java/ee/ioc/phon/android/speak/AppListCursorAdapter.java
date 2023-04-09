@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2023, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package ee.ioc.phon.android.speak;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,18 +58,16 @@ public class AppListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor c) {
         String packageName = c.getString(c.getColumnIndexOrThrow(App.Columns.FNAME));
 
-        String label = "";
-        Drawable icon = null;
+        ApplicationInfo ai = null;
         try {
-            label = mPm.getApplicationLabel(mPm.getApplicationInfo(packageName, 0)).toString();
-            icon = mPm.getApplicationIcon(packageName);
+            ai = mPm.getApplicationInfo(packageName, 0);
         } catch (NameNotFoundException e) {
-            // Intentionally empty
+            // The given package has been uninstalled from the device
         }
 
         // App label which can be "" if the app has been uninstalled.
         TextView itemAppName = view.findViewById(R.id.itemAppName);
-        itemAppName.setText(label);
+        itemAppName.setText(ai == null ? "" : mPm.getApplicationLabel(ai));
 
         // App package name (comes from the DB)
         TextView itemAppFname = view.findViewById(R.id.itemAppFname);
@@ -81,11 +79,11 @@ public class AppListCursorAdapter extends CursorAdapter {
 
         // App icon (can be null if the app has been uninstalled)
         ImageView itemAppIcon = view.findViewById(R.id.itemAppIcon);
-        if (icon == null) {
+        if (ai == null) {
             itemAppIcon.setVisibility(View.INVISIBLE);
         } else {
             itemAppIcon.setVisibility(View.VISIBLE);
-            itemAppIcon.setImageDrawable(icon);
+            itemAppIcon.setImageDrawable(mPm.getApplicationIcon(ai));
         }
 
         // Grammar URL assigned to the app (comes from the DB)

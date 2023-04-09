@@ -29,8 +29,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 1900
-        versionName '1.9.00'
+        versionCode 1901
+        versionName '1.9.01'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs 'en', 'et'
@@ -72,7 +72,7 @@ android {
     lint {
         // TODO: in the future check for Kotlin-Java interop
         //check 'Interoperability'
-        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill', 'QueryAllPackagesPermission'
+        disable 'ResourceType', 'AppLinkUrlError', 'EllipsizeMaxLines', 'RtlSymmetry', 'Autofill'
     }
     namespace 'ee.ioc.phon.android.speak'
 }
