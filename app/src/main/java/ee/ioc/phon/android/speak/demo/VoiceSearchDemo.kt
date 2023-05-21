@@ -56,7 +56,12 @@ class VoiceSearchDemo : AbstractRecognizerDemoActivity() {
         // in the voice search system. We have to keep the bundle separate,
         // because it becomes immutable once it enters the PendingIntent.
         val queryIntent = Intent(Intent.ACTION_SEARCH)
-        val pending = PendingIntent.getActivity(this, 0, queryIntent, PendingIntent.FLAG_ONE_SHOT)
+        val pending = PendingIntent.getActivity(
+            this,
+            0,
+            queryIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         // Now set up the bundle that will be inserted into the pending intent
         // when it is time to do the search. We always build it here (even if empty)

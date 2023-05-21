@@ -25,8 +25,14 @@
     In Android versions before v6.0 (~35% of the users as of 2017-06-18)
     the permission is granted at install time, which is not nice, but this user base will
     disappear over time.
+    Doc: "READ_EXTERNAL_STORAGE is deprecated (and is not granted) when targeting Android 13+.
+    If you need to query or interact with MediaStore or media files on the shared storage,
+    you should instead use one or more new storage permissions: READ_MEDIA_IMAGES, READ_MEDIA_VIDEO or READ_MEDIA_AUDIO."
+    TODO: test importing rewrite rules (which are plain text) on Android 13+.
     -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <!-- Permission SET_ALARM.
     Used to set the alarm clock if the transcription resolves to an AlarmClock intent.

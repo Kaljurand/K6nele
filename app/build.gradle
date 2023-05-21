@@ -12,7 +12,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     // Added only to resolve https://issuetracker.google.com/issues/242384116
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 }
@@ -27,10 +27,10 @@ android {
     // API level 21: Jetpack Compose
     defaultConfig {
         applicationId 'ee.ioc.phon.android.speak'
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 33
-        versionCode 1901
-        versionName '1.9.01'
+        versionCode 1906
+        versionName '1.9.06'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resConfigs 'en', 'et'
