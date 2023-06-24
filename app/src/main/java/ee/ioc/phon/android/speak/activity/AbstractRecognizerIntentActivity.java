@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -553,7 +552,7 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
         boolean isFinish = true;
         if (mExtras.containsKey(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT)) {
             isFinish = mExtras.getBoolean(Extras.EXTRA_FINISH_AFTER_LAUNCH_INTENT, true);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
+        } else if (isInMultiWindowMode()) {
             isFinish = false;
         }
         if (isFinish) {
