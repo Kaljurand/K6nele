@@ -90,13 +90,13 @@ if (project.hasProperty('storePassword') && project.hasProperty('keyPassword')) 
 
 
 task deploy {
+    // TODO: temporary fix for the issue with accessing the android-property from doLast
+    notCompatibleWithConfigurationCache("https://docs.gradle.org/current/userguide/configuration_cache.html")
     doLast {
         description 'Copy the APK and the ProGuard mapping file to the deploy directory'
 
         def deploy_dir = System.getenv('APK_DEPLOY_DIR')
-
         def version = android.defaultConfig.versionName
-
         def name = 'K6nele'
 
         def outputs = 'build/outputs/'
