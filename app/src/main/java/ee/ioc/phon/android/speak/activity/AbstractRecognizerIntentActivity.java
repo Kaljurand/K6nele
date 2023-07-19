@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak.activity;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -41,6 +42,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileNotFoundException;
@@ -113,6 +116,15 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
     abstract void showError(String msg);
 
     abstract String[] getDetails();
+
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    Uri uri = intent.getData();
+                    handleResultByLaunchIntent(intent.getStringExtra(SearchManager.QUERY));
+                }
+            });
 
     protected Uri getAudioUri(String filename) {
         // TODO: ask the sample rate directly from the recorder
@@ -528,7 +540,7 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
             Intent searchIntent = new Intent(this, DetailsActivity.class);
             searchIntent.putExtra(DetailsActivity.EXTRA_TITLE, getString(R.string.dialogTitleHypotheses));
             searchIntent.putExtra(DetailsActivity.EXTRA_STRING_ARRAY, results.toArray(new String[results.size()]));
-            startActivityForResult(searchIntent, ACTIVITY_REQUEST_CODE_DETAILS);
+            mStartForResult.launch(searchIntent);
         }
     }
 
