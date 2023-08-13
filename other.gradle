@@ -1,4 +1,4 @@
-task makeIcons {
+tasks.register('makeIcons') {
     doLast {
         description 'Converts the SVG launcher icon to multiple resolution PNGs'
 
@@ -32,7 +32,7 @@ task makeIcons {
     }
 }
 
-task makeDiagrams {
+tasks.register('makeDiagrams') {
     doLast {
         description 'Converts dot to SVG'
 

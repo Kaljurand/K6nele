@@ -6,10 +6,10 @@ dependencies {
     // TODO: used only in ChunkedWebRecSessionResult, use Android's JSON library instead
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:3.1.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.21'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     implementation 'com.google.android.material:material:1.9.0'
@@ -18,7 +18,7 @@ dependencies {
 }
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
+    compileSdk rootProject.compileSdk
 
     // API level 3: some default button was not found, but we didn't explore it further.
     // API level 7: MediaRecorder.AudioSource.VOICE_RECOGNITION
@@ -33,7 +33,7 @@ android {
         versionName '1.9.07'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
-        resConfigs 'en', 'et'
+        resourceConfigurations += ['en', 'et']
     }
 
     compileOptions {
@@ -89,7 +89,7 @@ if (project.hasProperty('storePassword') && project.hasProperty('keyPassword')) 
 }
 
 
-task deploy {
+tasks.register('deploy') {
     // TODO: temporary fix for the issue with accessing the android-property from doLast
     notCompatibleWithConfigurationCache("https://docs.gradle.org/current/userguide/configuration_cache.html")
     doLast {
