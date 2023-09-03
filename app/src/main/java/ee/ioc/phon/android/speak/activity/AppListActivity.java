@@ -34,6 +34,8 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -63,9 +65,6 @@ import ee.ioc.phon.android.speechutils.utils.IntentUtils;
  */
 public class AppListActivity extends AbstractContentActivity {
 
-    private static final int ACTIVITY_SELECT_GRAMMAR_URL = 1;
-    private static final int ACTIVITY_SELECT_SERVER_URL = 2;
-
     private static final Uri CONTENT_URI = App.Columns.CONTENT_URI;
 
     private static final String[] COLUMNS = new String[]{
@@ -77,6 +76,33 @@ public class AppListActivity extends AbstractContentActivity {
     };
 
     private long mCurrentAppId;
+
+    ActivityResultLauncher<Intent> mStartForResultGrammar = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    Uri grammarUri = intent.getData();
+                    if (grammarUri == null) {
+                        toast(getString(R.string.errorFailedGetGrammarUrl));
+                    } else {
+                        updateApp(mCurrentAppId, App.Columns.GRAMMAR, grammarUri);
+                    }
+                }
+            });
+
+
+    ActivityResultLauncher<Intent> mStartForResultServer = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    Uri serverUri = intent.getData();
+                    if (serverUri == null) {
+                        toast(getString(R.string.errorFailedGetServerUrl));
+                    } else {
+                        updateApp(mCurrentAppId, App.Columns.SERVER, serverUri);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +120,7 @@ public class AppListActivity extends AbstractContentActivity {
         switch (itemId) {
             case R.id.cmAppAssignGrammar:
                 Intent pickSpeakerIntent = new Intent(AppListActivity.this, GrammarListActivity.class);
-                startActivityForResult(pickSpeakerIntent, ACTIVITY_SELECT_GRAMMAR_URL);
+                mStartForResultGrammar.launch(pickSpeakerIntent);
                 return true;
             case R.id.cmAppRemoveGrammar:
                 Utils.getYesNoDialog(
@@ -105,7 +131,7 @@ public class AppListActivity extends AbstractContentActivity {
                 return true;
             case R.id.cmAppAssignServer:
                 Intent intentServer = new Intent(AppListActivity.this, ServerListActivity.class);
-                startActivityForResult(intentServer, ACTIVITY_SELECT_SERVER_URL);
+                mStartForResultServer.launch(intentServer);
                 return true;
             case R.id.cmAppRemoveServer:
                 Utils.getYesNoDialog(
@@ -125,35 +151,6 @@ public class AppListActivity extends AbstractContentActivity {
                 return false;
         }
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        switch (requestCode) {
-            case ACTIVITY_SELECT_GRAMMAR_URL:
-                Uri grammarUri = data.getData();
-                if (grammarUri == null) {
-                    toast(getString(R.string.errorFailedGetGrammarUrl));
-                } else {
-                    updateApp(mCurrentAppId, App.Columns.GRAMMAR, grammarUri);
-                }
-                break;
-            case ACTIVITY_SELECT_SERVER_URL:
-                Uri serverUri = data.getData();
-                if (serverUri == null) {
-                    toast(getString(R.string.errorFailedGetServerUrl));
-                } else {
-                    updateApp(mCurrentAppId, App.Columns.SERVER, serverUri);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
 
     private void updateApp(long key, String columnName, Uri uri) {
         long id = Long.parseLong(uri.getPathSegments().get(1));

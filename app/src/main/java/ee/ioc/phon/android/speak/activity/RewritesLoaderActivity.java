@@ -16,6 +16,7 @@
 
 package ee.ioc.phon.android.speak.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -28,6 +29,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -52,11 +55,22 @@ public class RewritesLoaderActivity extends AppCompatActivity {
 
     //private static final String TYPE = "text/tab-separated-values";
     private static final String TYPE = "text/*";
-    private static final int GET_CONTENT_REQUEST_CODE = 1;
 
     private UtteranceRewriter utteranceRewriter;
 
     private ActivityRewritesLoaderBinding binding;
+
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    Uri uri = intent.getData();
+                    if (uri != null) {
+                        utteranceRewriter = loadFromUri(uri);
+                    }
+                }
+                finishIfFailed();
+            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +111,7 @@ public class RewritesLoaderActivity extends AppCompatActivity {
             intent.setType(TYPE);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             Intent chooser = Intent.createChooser(intent, "");
-            startActivityForResult(chooser, GET_CONTENT_REQUEST_CODE);
+            mStartForResult.launch(chooser);
         } else {
             // Responding to SEND and VIEW actions
             String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
@@ -123,18 +137,6 @@ public class RewritesLoaderActivity extends AppCompatActivity {
             }
             finishIfFailed();
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        super.onActivityResult(requestCode, resultCode, resultData);
-        if (requestCode == GET_CONTENT_REQUEST_CODE && resultCode == RESULT_OK && resultData != null) {
-            Uri uri = resultData.getData();
-            if (uri != null) {
-                utteranceRewriter = loadFromUri(uri);
-            }
-        }
-        finishIfFailed();
     }
 
     private UtteranceRewriter loadFromUri(Uri uri) {

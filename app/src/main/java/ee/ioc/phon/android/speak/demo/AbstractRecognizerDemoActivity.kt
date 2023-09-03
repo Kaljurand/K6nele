@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018, Institute of Cybernetics at Tallinn University of Technology
+ * Copyright 2011-2023, Institute of Cybernetics at Tallinn University of Technology
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,22 @@
 
 package ee.ioc.phon.android.speak.demo
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.activity.GrammarListActivity
 import ee.ioc.phon.android.speak.provider.Grammar
 import ee.ioc.phon.android.speak.utils.Utils
 import ee.ioc.phon.android.speechutils.Extras
-import java.util.*
+import java.util.Random
 
 /**
  * This demo shows how to create an input to RecognizerIntent.ACTION_RECOGNIZE_SPEECH
@@ -38,6 +41,41 @@ import java.util.*
  * @author Kaarel Kaljurand
  */
 abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
+
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                onSuccess(result.data)
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                onCancel()
+            } else {
+                onError(result.resultCode)
+            }
+        }
+
+    private val startForResultGrammar =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val grammarUri = result.data?.data
+                if (grammarUri == null) {
+                    toast(getString(R.string.errorFailedGetGrammarUrl))
+                } else {
+                    mGrammarId = java.lang.Long.parseLong(grammarUri.pathSegments[1])
+                    toast(
+                        String.format(
+                            getString(R.string.toastAssignGrammar),
+                            Utils.idToValue(
+                                this,
+                                Grammar.Columns.CONTENT_URI,
+                                Grammar.Columns._ID,
+                                Grammar.Columns.NAME,
+                                mGrammarId
+                            )
+                        )
+                    )
+                }
+            }
+        }
 
     private var mGrammarId: Long = 0
 
@@ -85,9 +123,10 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
             R.id.menuDemoGrammarAssign -> {
                 val intent =
                     Intent(this@AbstractRecognizerDemoActivity, GrammarListActivity::class.java)
-                startActivityForResult(intent, ACTIVITY_SELECT_GRAMMAR_URL)
+                startForResultGrammar.launch(intent)
                 return true
             }
+
             else -> return super.onContextItemSelected(item)
         }
     }
@@ -112,44 +151,6 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
             else -> return "Unknown error"
         }
     }
-
-    @Deprecated("TODO: add a better message")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == ACTIVITY_SELECT_GRAMMAR_URL) {
-            if (resultCode != AppCompatActivity.RESULT_OK) {
-                return
-            }
-            val grammarUri = data?.data
-            if (grammarUri == null) {
-                toast(getString(R.string.errorFailedGetGrammarUrl))
-            } else {
-                mGrammarId = java.lang.Long.parseLong(grammarUri.pathSegments[1])
-                toast(
-                    String.format(
-                        getString(R.string.toastAssignGrammar),
-                        Utils.idToValue(
-                            this,
-                            Grammar.Columns.CONTENT_URI,
-                            Grammar.Columns._ID,
-                            Grammar.Columns.NAME,
-                            mGrammarId
-                        )
-                    )
-                )
-            }
-        } else if (requestCode == VOICE_RECOGNITION_REQUEST_CODE) {
-            if (resultCode == AppCompatActivity.RESULT_OK) {
-                onSuccess(data)
-            } else if (resultCode == AppCompatActivity.RESULT_CANCELED) {
-                onCancel()
-            } else {
-                onError(resultCode)
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
 
     protected fun getRecognizers(intent: Intent): List<ResolveInfo> {
         val pm = packageManager
@@ -176,15 +177,10 @@ abstract class AbstractRecognizerDemoActivity : AppCompatActivity() {
     }
 
     protected fun launchRecognizerIntent(intent: Intent) {
-        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE)
+        startForResult.launch(intent)
     }
 
     protected fun toast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
-    }
-
-    companion object {
-        private val VOICE_RECOGNITION_REQUEST_CODE = 1234
-        private val ACTIVITY_SELECT_GRAMMAR_URL = 1
     }
 }

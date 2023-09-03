@@ -23,6 +23,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -36,39 +38,30 @@ import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 public class PreferencesRecognitionServiceHttp extends AppCompatActivity {
 
-    private static final int ACTIVITY_SELECT_SERVER_URL = 1;
+    ActivityResultLauncher<Intent> mLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    Uri serverUri = intent.getData();
+                    if (serverUri == null) {
+                        toast(getString(R.string.errorFailedGetServerUrl));
+                    } else {
+                        long id = Long.parseLong(serverUri.getPathSegments().get(1));
+                        String url = Utils.idToValue(this, Server.Columns.CONTENT_URI, Server.Columns._ID, Server.Columns.URL, id);
+                        if (url != null) {
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyHttpServer, url);
+                        }
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
+                .replace(android.R.id.content, new SettingsFragment(mLauncher))
                 .commit();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        switch (requestCode) {
-            case ACTIVITY_SELECT_SERVER_URL:
-                Uri serverUri = data.getData();
-                if (serverUri == null) {
-                    toast(getString(R.string.errorFailedGetServerUrl));
-                } else {
-                    long id = Long.parseLong(serverUri.getPathSegments().get(1));
-                    String url = Utils.idToValue(this, Server.Columns.CONTENT_URI, Server.Columns._ID, Server.Columns.URL, id);
-                    if (url != null) {
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        PreferenceUtils.putPrefString(prefs, getResources(), R.string.keyHttpServer, url);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     private void toast(String message) {
@@ -77,6 +70,13 @@ public class PreferencesRecognitionServiceHttp extends AppCompatActivity {
 
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        private final ActivityResultLauncher<Intent> mLauncher;
+
+        public SettingsFragment(ActivityResultLauncher<Intent> launcher) {
+            mLauncher = launcher;
+        }
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences_server_http, rootKey);
@@ -110,7 +110,7 @@ public class PreferencesRecognitionServiceHttp extends AppCompatActivity {
             service.setSummary(sp.getString(getString(R.string.keyHttpServer), getString(R.string.defaultHttpServer)));
 
             service.setOnPreferenceClickListener(preference -> {
-                getActivity().startActivityForResult(preference.getIntent(), ACTIVITY_SELECT_SERVER_URL);
+                mLauncher.launch(preference.getIntent());
                 return true;
             });
         }

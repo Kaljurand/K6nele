@@ -1,6 +1,5 @@
 package ee.ioc.phon.android.speak.demo
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import ee.ioc.phon.android.speak.Log
 import ee.ioc.phon.android.speak.R
 import ee.ioc.phon.android.speak.activity.DetailsActivity
@@ -42,7 +42,7 @@ class EncoderDemoActivity : AppCompatActivity() {
         })
 
 
-        mBTest1 = findViewById<Button>(R.id.buttonTest1)
+        mBTest1 = findViewById(R.id.buttonTest1)
         mBTest1?.setOnClickListener {
             mBTest1?.setText(R.string.buttonImeStopByPause)
             mBTest1?.isEnabled = false
@@ -99,7 +99,8 @@ class EncoderDemoActivity : AppCompatActivity() {
     private fun stopRecording0(task: Runnable) {
         releaseRecorder()
         mStopHandler.removeCallbacks(task)
-        val recordingAsWav = AudioUtils.getRecordingAsWav(mRecording, 16000, 2.toShort(), 1.toShort())
+        val recordingAsWav =
+            AudioUtils.getRecordingAsWav(mRecording, 16000, 2.toShort(), 1.toShort())
         mBTest1?.setText(R.string.buttonImeSpeak)
 
         try {
