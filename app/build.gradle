@@ -9,7 +9,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     implementation 'com.google.android.material:material:1.10.0'
@@ -27,8 +27,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 1910
-        versionName '1.9.10'
+        versionCode 1912
+        versionName '1.9.12'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resourceConfigurations += ['en', 'et']

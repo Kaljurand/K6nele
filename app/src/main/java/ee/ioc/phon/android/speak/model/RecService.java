@@ -28,7 +28,9 @@ public class RecService {
         Pair<ComponentName, String> pair = RecognitionServiceManager.unflattenFromString(id);
         mComponentName = pair.first;
 
-        mLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
+        String label = RecognitionServiceManager.getServiceLabel(context, mComponentName);
+        // Present the service by its short class name, if it does not have a label.
+        mLabel = label.isEmpty() ? mComponentName.getShortClassName() : label;
         ServiceInfo si = RecognitionServiceManager.getServiceInfo(context, mComponentName);
         int resId = si.descriptionRes;
         if (resId != 0) {

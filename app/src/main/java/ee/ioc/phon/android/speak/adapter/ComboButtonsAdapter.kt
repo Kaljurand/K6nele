@@ -52,11 +52,7 @@ class ComboButtonsAdapter(
                 holder.mView.paintFlags = 0
                 holder.mView.isClickable = true
             }
-            var label = combo.localeAsStr
-            if (label.isEmpty() || label.equals("und")) {
-                label = combo.service.substring(0, 3)
-            }
-            holder.mView.text = label
+            holder.mView.text = combo.tinyLabel
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 holder.mView.tooltipText = combo.longLabel
             }

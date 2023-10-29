@@ -21,6 +21,7 @@ public class Combo {
     private final ComponentName mComponentName;
     private final String mLocaleLongLabel;
     private final String mLocaleAsStr;
+    private final String mTinyLabel;
     private final String mShortLabel;
     private final String mLongLabel;
     private boolean mIsSelected;
@@ -31,18 +32,22 @@ public class Combo {
         mId = id;
         mComponentName = pair.first;
         mLocaleAsStr = pair.second;
-        mServiceLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
+        String serviceLabel = RecognitionServiceManager.getServiceLabel(context, mComponentName);
+        // Present the service by its short class name, if it does not have a label.
+        mServiceLabel = serviceLabel.isEmpty() ? mComponentName.getShortClassName() : serviceLabel;
         if (mLocaleAsStr.isEmpty() || "und".equals(mLocaleAsStr)) {
             mLocaleLongLabel = "";
             mAsString = String.format(context.getString(R.string.labelComboListItemWithoutLocale), mServiceLabel);
             mShortLabel = mServiceLabel;
             mLongLabel = mServiceLabel;
+            mTinyLabel = mServiceLabel.length() < 3 ? mServiceLabel : mServiceLabel.substring(0, 3);
         } else {
             mLocaleLongLabel = RecognitionServiceManager.makeLangLabel(mLocaleAsStr);
             mAsString = String.format(context.getString(R.string.labelComboListItem), mServiceLabel, mLocaleLongLabel);
             String mFormatLabelComboItem = context.getString(R.string.labelComboItem);
             mShortLabel = String.format(mFormatLabelComboItem, mServiceLabel, mLocaleAsStr);
             mLongLabel = String.format(mFormatLabelComboItem, mServiceLabel, mLocaleLongLabel);
+            mTinyLabel = mLocaleAsStr;
         }
     }
 
@@ -64,6 +69,10 @@ public class Combo {
 
     public String getLanguage() {
         return mLocaleLongLabel;
+    }
+
+    public String getTinyLabel() {
+        return mTinyLabel;
     }
 
     public String getShortLabel() {
