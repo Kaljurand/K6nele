@@ -57,6 +57,19 @@
             android:title="@string/titleImeHelpText"
             app:iconSpaceReserved="false" />
         -->
+        <Preference
+            android:key="string/keyImeComboNew"
+            android:summary="@string/summaryImeCombo"
+            android:title="@string/titleCombo"
+            app:iconSpaceReserved="false">
+            <intent
+                android:targetClass="ee.ioc.phon.android.speak.activity.Combo1SelectorActivity"
+                android:targetPackage="ee.ioc.phon.android.speak">
+                <extra
+                    android:name="key"
+                    android:value="@string/keyImeCombo" />
+            </intent>
+        </Preference>
     </PreferenceCategory>
 
     // Voice search activity (TODO: unify terminology: dialog, panel, UI, speech action)

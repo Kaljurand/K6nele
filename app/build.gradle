@@ -1,16 +1,19 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
+}
 
 dependencies {
     implementation project(':speechutils:app')
     // TODO: used only in ChunkedWebRecSessionResult, use Android's JSON library instead
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.koushikdutta.async:androidasync:3.1.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     // implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     implementation 'com.google.android.material:material:1.10.0'
@@ -20,9 +23,13 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.6.0'
 
     // Room
-    implementation "androidx.room:room-runtime:2.6.0"
-    implementation 'com.google.android.datatransport:transport-runtime:3.1.9'
-    kapt "androidx.room:room-compiler:2.6.0"
+    def room_version = "2.6.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // TODO: use KSP
+    ksp "androidx.room:room-compiler:$room_version"
+
+    implementation 'com.google.android.datatransport:transport-runtime:3.2.0'
     implementation "androidx.room:room-ktx:2.6.0"
 
 
@@ -31,26 +38,21 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling:1.5.4"
     implementation "androidx.compose.material:material:1.5.4"
     implementation "androidx.compose.runtime:runtime-livedata:1.5.4"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha03"
     implementation "androidx.compose.runtime:runtime:1.5.4"
     // Jetpack Compose Integration with Activities
     implementation "androidx.activity:activity-compose:1.8.0"
 
     // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-livedata:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
+    def lifecycle_version = "2.7.0-beta01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
-
-    // Hilt
-    implementation "com.google.dagger:hilt-android:2.42"
-    kapt "com.google.dagger:hilt-android-compiler:2.42"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-    kapt "androidx.hilt:hilt-compiler:1.0.0"
 }
 
 android {
@@ -65,8 +67,8 @@ android {
         applicationId 'ee.ioc.phon.android.speak'
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 1910
-        versionName '1.9.10'
+        versionCode 1914
+        versionName '1.9.14'
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resourceConfigurations += ['en', 'et']

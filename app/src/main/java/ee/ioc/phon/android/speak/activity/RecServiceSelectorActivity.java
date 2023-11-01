@@ -18,6 +18,9 @@ import ee.ioc.phon.android.speak.model.RecService;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 
+/**
+ * @deprecated use ServiceSelectorActivity
+ */
 public class RecServiceSelectorActivity extends AppCompatActivity {
 
     @Override
