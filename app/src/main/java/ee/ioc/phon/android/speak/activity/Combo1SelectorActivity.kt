@@ -1,6 +1,7 @@
 package ee.ioc.phon.android.speak.activity
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -16,6 +17,7 @@ import ee.ioc.phon.android.speak.adapter.Combo1Adapter
 import ee.ioc.phon.android.speak.database.Combo1
 import ee.ioc.phon.android.speak.viewmodel.Combo1ViewModel
 import ee.ioc.phon.android.speak.viewmodel.Combo1ViewModelFactory
+import java.util.Locale
 
 class Combo1SelectorActivity : AppCompatActivity() {
 
@@ -33,9 +35,9 @@ class Combo1SelectorActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        combo1ViewModel.allItems.observe(this, Observer { words ->
+        combo1ViewModel.allItems.observe(this, Observer { combos ->
             // Update the cached copy of the words in the adapter.
-            words?.let { adapter.submitList(it) }
+            combos?.let { adapter.submitList(it) }
         })
 
         // TODO: use normal Add menu (like in the rest of the app) instead of the FAB
@@ -56,8 +58,9 @@ class Combo1SelectorActivity : AppCompatActivity() {
 
         if (requestCode == addRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(ServiceSelectorActivity.EXTRA_COMPONENT_NAME)?.let {
-                val word = Combo1(componentName = it)
-                combo1ViewModel.insert(word)
+                val combo = Combo1(componentName = ComponentName.unflattenFromString(it)!!)
+                combo1ViewModel.insert(combo)
+                combo1ViewModel.updateLocale(2, Locale("et-EE"))
             }
         } else {
             Toast.makeText(

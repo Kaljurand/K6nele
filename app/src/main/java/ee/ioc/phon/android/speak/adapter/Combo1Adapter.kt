@@ -18,20 +18,22 @@ class Combo1Adapter : ListAdapter<Combo1, Combo1Adapter.Combo1ViewHolder>(Combo1
 
     override fun onBindViewHolder(holder: Combo1ViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.componentName)
+        holder.bind(current.shortLabel, current.componentName.flattenToShortString())
     }
 
     class Combo1ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val combo1ItemView: TextView = itemView.findViewById(R.id.textView)
+        private val language: TextView = itemView.findViewById(R.id.language)
+        private val service: TextView = itemView.findViewById(R.id.service)
 
-        fun bind(text: String?) {
-            combo1ItemView.text = text
+        fun bind(languageText: String?, serviceText: String?) {
+            language.text = languageText
+            service.text = serviceText
         }
 
         companion object {
             fun create(parent: ViewGroup): Combo1ViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_combo1, parent, false)
+                    .inflate(R.layout.list_item_combo, parent, false)
                 return Combo1ViewHolder(view)
             }
         }

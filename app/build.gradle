@@ -72,6 +72,13 @@ android {
         vectorDrawables.useSupportLibrary = true
         // Keep only en and et resources
         resourceConfigurations += ['en', 'et']
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     compileOptions {

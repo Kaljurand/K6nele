@@ -1,15 +1,21 @@
 package ee.ioc.phon.android.speak.database
 
+import android.content.ComponentName
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.util.Locale
 
+// TODO: derive labels from componentName and locale
+// TODO: sort key (for IME and panel)
+// TODO: isDisabled (for IME and panel)
 @Entity(tableName = "combos")
 data class Combo1(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val shortLabel: String = "und",
     val longLabel: String = "und",
-    val componentName: String
+    val locale: Locale = Locale("und"),
+    val componentName: ComponentName
 )
 
 @Entity(

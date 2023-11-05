@@ -30,7 +30,7 @@ class ComboSelectorView @JvmOverloads constructor(
     private val mMinButtons: Int
 
     interface ComboSelectorListener {
-        fun onComboChange(language: String, service: ComponentName)
+        fun onComboChange(language: String?, service: ComponentName)
     }
 
     init {
@@ -50,10 +50,10 @@ class ComboSelectorView @JvmOverloads constructor(
 
     fun init(
         context: Context,
-        prefs: SharedPreferences?,
+        prefs: SharedPreferences,
         keys: Int,
-        callerInfo: CallerInfo?,
-        appId: String?,
+        callerInfo: CallerInfo,
+        appId: String,
         key: Int,
         listener: ComboSelectorListener
     ) {
@@ -72,7 +72,7 @@ class ComboSelectorView @JvmOverloads constructor(
             //mRvComboButtons.setHasFixedSize(true)
             mRvComboButtons.layoutManager = GridLayoutManager(context, size + 1)
             val adapter = ComboButtonsAdapter(object : ComboButtonsAdapterListener {
-                override fun onComboChange(language: String, service: ComponentName) {
+                override fun onComboChange(language: String?, service: ComponentName) {
                     mListener.onComboChange(language, service)
                 }
 

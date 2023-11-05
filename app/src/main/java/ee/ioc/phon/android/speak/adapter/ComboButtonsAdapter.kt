@@ -19,7 +19,7 @@ class ComboButtonsAdapter(
     private lateinit var mSelectedView: Button
 
     interface ComboButtonsAdapterListener {
-        fun onComboChange(language: String, service: ComponentName)
+        fun onComboChange(language: String?, service: ComponentName)
         fun onMore()
     }
 

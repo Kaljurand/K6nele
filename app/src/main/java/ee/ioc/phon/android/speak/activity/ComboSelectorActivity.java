@@ -28,6 +28,9 @@ import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
+/**
+ * @deprecated use Combo1SelectorActivity
+ */
 public class ComboSelectorActivity extends AppCompatActivity {
 
     @Override
