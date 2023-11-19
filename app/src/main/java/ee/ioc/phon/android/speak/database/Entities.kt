@@ -8,14 +8,16 @@ import java.util.Locale
 
 // TODO: derive labels from componentName and locale
 // TODO: sort key (for IME and panel)
-// TODO: isDisabled (for IME and panel)
+// TODO: isEnabled (for IME and panel)
 @Entity(tableName = "combos")
 data class Combo1(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val shortLabel: String = "und",
     val longLabel: String = "und",
     val locale: Locale = Locale("und"),
-    val componentName: ComponentName
+    val componentName: ComponentName,
+    val isEnabledIme: Boolean = true,
+    val isEnabledPanel: Boolean = true,
 )
 
 @Entity(

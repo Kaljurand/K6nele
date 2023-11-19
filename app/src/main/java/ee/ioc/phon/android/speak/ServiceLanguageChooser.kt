@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.text.TextUtils
@@ -64,7 +65,7 @@ class ServiceLanguageChooser(
                 "ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;et-EE",
                 "ee.ioc.phon.android.k6neleservice/.service.WebSocketRecognitionService;et-EE",
                 "com.google.android.tts/com.google.android.apps.speech.tts.googletts.service.GoogleTTSRecognitionService;en-US",
-                "com.google.android.tts/com.google.android.apps.speech.tts.googletts.service.GoogleTTSRecognitionService;de-AT"
+                //"com.google.android.tts/com.google.android.apps.speech.tts.googletts.service.GoogleTTSRecognitionService;de-AT"
             )
             val repository = (mContext.applicationContext as K6neleApplication).repository
             lateinit var comboList: List<String>
@@ -74,9 +75,9 @@ class ServiceLanguageChooser(
                 //    .map { "ee.ioc.phon.android.speak/.service.WebSocketRecognitionService;en-US" }
                 //    .toList()
 
-                comboList = baseList + repository.getAllItems0()
+                comboList = baseList + repository.getEnabledItemsIme()
                     .take(2)
-                    .map { it.componentName.flattenToShortString() + ";en-US" }
+                    .map { it.componentName.flattenToShortString() + ";" + it.locale }
                     .toList()
             }
             mCombosAsList = if (mCombos == null || mCombos.isEmpty()) {
@@ -178,12 +179,66 @@ class ServiceLanguageChooser(
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext, service)
         }
 
-        // TODO: support other actions
-        intent = Utils.getRecognizerIntent(
-            RecognizerIntent.ACTION_RECOGNIZE_SPEECH,
+        val repository = (mContext.applicationContext as K6neleApplication).repository
+        val bundle: Bundle = Bundle()
+        val comboId: Int
+        // TODO: get the current comboId instead
+        comboId = 1
+        lateinit var comboList: List<String>
+        runBlocking {
+            repository.getKeyValuePairsForItem1(comboId)
+                .forEach { bundle.putString(it.key, it.value) }
+        }
+
+        intent = getRecognizerIntent(
             mCallerInfo,
-            language
+            bundle = bundle,
+            language = language
         )
         this.language = language
     }
+
+    // TODO: support other actions (maybe allow this to be set in the database)
+    // TODO: document how value clashes are resolved if callerInfo and database have the same keys
+    fun getRecognizerIntent(
+        callerInfo: CallerInfo,
+        bundle: Bundle? = null,
+        action: String = RecognizerIntent.ACTION_RECOGNIZE_SPEECH,
+        language: String? = null
+    ): Intent {
+        val intent = Intent(action)
+        val extras = callerInfo.extras
+        if (extras != null) {
+            intent.putExtras(extras)
+        }
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, callerInfo.packageName)
+        if (callerInfo.editorInfo != null) {
+            intent.putExtra(Extras.EXTRA_EDITOR_INFO, Utils.toBundle(callerInfo.editorInfo))
+        }
+        // Declaring that in the IME we would like to allow longer pauses (2 sec).
+        // The service might not implement these (e.g. Kõnele currently does not)
+        // TODO: what is the difference of these two constants?
+        //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+        //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
+        if (language != null) {
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language)
+            // TODO: make this configurable
+            intent.putExtra(Extras.EXTRA_ADDITIONAL_LANGUAGES, arrayOf<String>())
+        }
+        // TODO: causes error
+        //intent.putExtra(
+        //    Extras.EXTRA_SERVER_URL,
+        //    "ws://bark.phon.ioc.ee:82/dev/duplex-speech-api/ws/speech"
+        //)
+        if (bundle != null) {
+            intent.putExtras(bundle)
+        }
+        return intent
+    }
+
 }

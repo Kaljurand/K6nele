@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 // TODO: Set a directory for Room to use to export the schema and version control it.
-@Database(entities = arrayOf(Combo1::class, KeyValuePair::class), version = 4, exportSchema = true)
+@Database(entities = arrayOf(Combo1::class, KeyValuePair::class), version = 5, exportSchema = true)
 @TypeConverters(Converters::class)
 public abstract class Combo1Database : RoomDatabase() {
 
@@ -45,7 +45,7 @@ public abstract class Combo1Database : RoomDatabase() {
                     longLabel = "Estonian (Estonia) * Kõnele (fast recognition)",
                     // TODO: remove !!
                     componentName = ComponentName.unflattenFromString("ee.ioc.phon.android.speak/.service.WebSocketRecognitionService")!!,
-                    locale = Locale("et-EE")
+                    locale = Locale("et-EE"),
                 )
             )
         }

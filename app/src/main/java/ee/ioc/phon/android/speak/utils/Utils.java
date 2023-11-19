@@ -58,7 +58,6 @@ import ee.ioc.phon.android.speak.ExecutableString;
 import ee.ioc.phon.android.speak.Log;
 import ee.ioc.phon.android.speak.R;
 import ee.ioc.phon.android.speak.activity.SpeechActionActivity;
-import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.model.Combo;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
@@ -267,32 +266,6 @@ public final class Utils {
         return list;
     }
 
-    public static Intent getRecognizerIntent(String action, CallerInfo callerInfo, String language) {
-        Intent intent = new Intent(action);
-        Bundle extras = callerInfo.getExtras();
-        if (extras != null) {
-            intent.putExtras(extras);
-        }
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, callerInfo.getPackageName());
-        if (callerInfo.getEditorInfo() != null) {
-            intent.putExtra(Extras.EXTRA_EDITOR_INFO, toBundle(callerInfo.getEditorInfo()));
-        }
-        // Declaring that in the IME we would like to allow longer pauses (2 sec).
-        // The service might not implement these (e.g. Kõnele currently does not)
-        // TODO: what is the difference of these two constants?
-        //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
-        //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000);
-
-        if (language != null) {
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);
-            // TODO: make this configurable
-            intent.putExtra(Extras.EXTRA_ADDITIONAL_LANGUAGES, new String[]{});
-        }
-        return intent;
-    }
-
     /**
      * Constructs and publishes the list of app shortcuts, one for each combo that is selected for the
      * search panel. The intent behind the shortcut sets AUTO_START=true and sets RESULTS_REWRITES
@@ -368,7 +341,7 @@ public final class Utils {
         }
     }
 
-    private static Bundle toBundle(EditorInfo attribute) {
+    public static Bundle toBundle(EditorInfo attribute) {
         Bundle bundle = new Bundle();
         bundle.putBundle("extras", attribute.extras);
         bundle.putInt("inputType", attribute.inputType);

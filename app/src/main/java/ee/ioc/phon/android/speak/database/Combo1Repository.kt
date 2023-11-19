@@ -18,6 +18,18 @@ class Combo1Repository(private val combo1Dao: Combo1Dao) {
         return combo1Dao.getAllItems0()
     }
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getEnabledItemsIme(): List<Combo1> {
+        return combo1Dao.getEnabledItemsIme()
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getKeyValuePairsForItem1(comboId: Int): List<KeyValuePair> {
+        return combo1Dao.getKeyValuePairsForItem1(comboId)
+    }
+
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
     // implement anything else to ensure we're not doing long running database work
     // off the main thread.

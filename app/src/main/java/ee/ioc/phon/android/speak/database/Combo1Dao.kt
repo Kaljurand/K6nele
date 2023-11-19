@@ -17,8 +17,14 @@ interface Combo1Dao {
     @Query("SELECT * FROM combos")
     suspend fun getAllItems0(): List<Combo1>
 
+    @Query("SELECT * FROM combos WHERE isEnabledIme = 1")
+    suspend fun getEnabledItemsIme(): List<Combo1>
+
     @Query("SELECT * FROM key_value_pairs WHERE comboId = :comboId")
     fun getKeyValuePairsForItem(comboId: Int): Flow<List<KeyValuePair>>
+
+    @Query("SELECT * FROM key_value_pairs WHERE comboId = :comboId")
+    suspend fun getKeyValuePairsForItem1(comboId: Int): List<KeyValuePair>
 
     @Insert
     suspend fun insert(combo: Combo1): Long
