@@ -33,7 +33,6 @@ public class ServiceLanguageChooser {
     private final String mAppId;
     private final int mKeyCurrentCombo;
     private int mIndex;
-    private SpeechRecognizer mSpeechRecognizer;
     private Intent mIntent;
     private String mLanguage = null;
     private ComponentName mRecognizerComponentName = null;
@@ -87,9 +86,16 @@ public class ServiceLanguageChooser {
         update();
     }
 
-
+    /**
+     * If the stored recognizer component name does not refer to an existing service on the device then we use
+     * the default service. This can happen if services get removed or renamed.
+     * TODO: improve
+     */
     public SpeechRecognizer getSpeechRecognizer() {
-        return mSpeechRecognizer;
+        if (mRecognizerComponentName == null || !IntentUtils.isRecognitionAvailable(mContext, mRecognizerComponentName)) {
+            return SpeechRecognizer.createSpeechRecognizer(mContext);
+        }
+        return SpeechRecognizer.createSpeechRecognizer(mContext, mRecognizerComponentName);
     }
 
     public int size() {
@@ -139,10 +145,12 @@ public class ServiceLanguageChooser {
         return mCombosAsList.get(mIndex);
     }
 
+    // TODO: can return null, but some callers expect non-null
     public String getLanguage() {
         return mLanguage;
     }
 
+    // TODO: can return null, but some callers expect non-null
     public ComponentName getService() {
         return mRecognizerComponentName;
     }
@@ -154,14 +162,6 @@ public class ServiceLanguageChooser {
         mRecognizerComponentName = ComponentName.unflattenFromString(splits[0]);
         if (splits.length > 1) {
             language = splits[1];
-        }
-
-        // If the stored combo name does not refer to an existing service on the device then we use
-        // the default service. This can happen if services get removed or renamed.
-        if (mRecognizerComponentName == null || !IntentUtils.isRecognitionAvailable(mContext, mRecognizerComponentName)) {
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext);
-        } else {
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(mContext, mRecognizerComponentName);
         }
 
         // TODO: support other actions

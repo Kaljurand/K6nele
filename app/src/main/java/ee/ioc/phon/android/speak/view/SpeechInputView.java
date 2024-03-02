@@ -757,7 +757,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     }
 
     private static String selectFirstResult(List<String> results) {
-        if (results == null || results.size() < 1) {
+        if (results == null || results.isEmpty()) {
             return null;
         }
         return results.get(0);
