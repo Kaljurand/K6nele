@@ -214,7 +214,7 @@
     <string name="errorFailedGetGrammarUrl">VIGA: grammatika aadressi valimine luhtus</string>
     <string name="errorFailedGetServerUrl">VIGA: serveri aadressi valimine luhtus</string>
 
-    // SpeechRecognizer error messages (9) shown in the IME
+    // SpeechRecognizer error messages shown in the IME
     <string name="errorImeResultAudioError">lindistamine luhtus</string>
     <string name="errorImeResultNetworkError">serveriga puudub ühendus</string>
     <string name="errorImeResultNetworkTimeoutError">server ei tööta</string>
@@ -224,6 +224,7 @@
     <string name="errorImeResultSpeechTimeout">kõnet polnud kuulda</string>
     <string name="errorImeResultNoMatch">transkribeerimine luhtus</string>
     <string name="errorImeResultInsufficientPermissions">vajalikud õigused puuduvad</string>
+    <string name="errorImeResultTooManyRequests">liiga palju päringuid</string>
 
     <string name="errorResultAudioError">Lindistamine luhtus.
         Võibolla mõni teine rakendus parasjagu lindistab.</string>

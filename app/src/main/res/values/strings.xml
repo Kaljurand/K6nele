@@ -218,7 +218,7 @@
     <string name="errorFailedLaunchApp">ERROR: App cannot be launched or is not installed (anymore): %1$s</string>
     <string name="errorFailedPlayAudio">ERROR: Failed to play the recorded audio: %1$s, %2$s</string>
 
-    // SpeechRecognizer error messages (9) shown in the IME
+    // SpeechRecognizer error messages shown in the IME
     <string name="errorImeResultAudioError">audio recording failed</string>
     <string name="errorImeResultNetworkError">server not reachable</string>
     <string name="errorImeResultNetworkTimeoutError">network connection timeout</string>
@@ -228,6 +228,7 @@
     <string name="errorImeResultInsufficientPermissions">insufficient permissions</string>
     <string name="errorImeResultClientError">general app error</string>
     <string name="errorImeResultServerError">recognizer server error</string>
+    <string name="errorImeResultTooManyRequests">too many requests</string>
 
     <string name="errorResultAudioError">Audio recording failed. Maybe another app is currently recording.</string>
     <string name="errorResultNetworkError">Server not reachable. The internet connection is broken or the server is down.</string>

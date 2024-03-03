@@ -20,7 +20,6 @@ import ee.ioc.phon.android.speak.model.CallerInfo;
 import ee.ioc.phon.android.speak.utils.Utils;
 import ee.ioc.phon.android.speechutils.Extras;
 import ee.ioc.phon.android.speechutils.RecognitionServiceManager;
-import ee.ioc.phon.android.speechutils.utils.IntentUtils;
 import ee.ioc.phon.android.speechutils.utils.PreferenceUtils;
 
 
@@ -87,14 +86,11 @@ public class ServiceLanguageChooser {
     }
 
     /**
-     * If the stored recognizer component name does not refer to an existing service on the device then we use
-     * the default service. This can happen if services get removed or renamed.
-     * TODO: improve
+     * Note that if the stored recognizer component name does not refer to an existing service on the device,
+     * because it has been removed in the mean time, then SpeechRecognizer returns error 10
+     * ("Bind to system recognition service failed with error 10").
      */
     public SpeechRecognizer getSpeechRecognizer() {
-        if (mRecognizerComponentName == null || !IntentUtils.isRecognitionAvailable(mContext, mRecognizerComponentName)) {
-            return SpeechRecognizer.createSpeechRecognizer(mContext);
-        }
         return SpeechRecognizer.createSpeechRecognizer(mContext, mRecognizerComponentName);
     }
 
