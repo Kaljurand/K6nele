@@ -5,6 +5,16 @@ title: Release notes
 
 (For more detailed notes see <https://github.com/Kaljurand/K6nele/commits/master>)
 
+## v1.9 -
+
+Requires Android 7.0+ (API 24)
+
+### v1.9.14 (2024-03-06)
+
+New in this release:
+
+- Improve compatibility with Android v13 and v14.
+
 ## v1.8 -
 
 Requires Android 5.0+
