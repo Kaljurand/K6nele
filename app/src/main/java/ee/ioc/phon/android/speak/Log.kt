@@ -18,8 +18,9 @@ package ee.ioc.phon.android.speak
 import android.util.Log
 
 object Log {
+    // TODO: restore = BuildConfig.DEBUG once we understand how it works
     @JvmField
-    val DEBUG = BuildConfig.DEBUG
+    val DEBUG = false
     private const val LOG_TAG = "k6nele"
     private const val NULL = "NULL"
 
