@@ -3,6 +3,8 @@
 
     <style name="Theme.K6nele" parent="Theme.AppCompat.DayNight">
         <item name="colorAccent">@color/accent</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <!--
