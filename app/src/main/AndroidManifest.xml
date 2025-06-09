@@ -287,6 +287,11 @@ Also, failed to set the launchMode from the resource, INSTALL_PARSE_FAILED_UNEXP
             android:label="@string/dialogTitleCombo"
             android:parentActivityName=".activity.Preferences" />
         <activity
+            android:name=".activity.ComboListActivity"
+            android:exported="false"
+            android:label="@string/dialogTitleCombo"
+            android:parentActivityName=".activity.Preferences" />
+        <activity
             android:name=".activity.RecServiceSelectorActivity"
             android:exported="true"
             android:label="@string/titleServices"
