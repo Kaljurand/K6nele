@@ -1,26 +1,24 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
-from __future__ import division, unicode_literals, print_function
+"""Simple dialog engine.
+
+This script expects a single query parameter (``q``) whose value is a natural
+language utterance.  The response is a JSON object that describes an Android
+intent.  ``RESPONSE_DEFAULT`` can be used to launch Kõnele to get answers to
+possible follow-up questions.
+
+Usage::
+
+    nohup python3 server.py 8000 &
+    curl http://192.168.1.5:8000/?q=play+Gangnam+Style
+
+"""
 
 import sys
 import re
 import json
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import urlparse
-
-"""
-Simple dialog engine.
-Expects a single query parameter (q) whose value is a natural language uttrance.
-Responds with a JSON that describes an Android intent, e.g. RESPONSE_DEFAULT
-can be used to launch Kõnele to get answers to possible follow-up questions.
-
-Usage::
-
-    nohup python server.py 8000 &
-    curl http://192.168.1.5:8000/?q=play+Gangnam+Style
-
-"""
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 
 # Response in the case the query was "play <name>"
 RESPONSE_MUSIC = {
@@ -60,16 +58,16 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        o = urlparse.urlparse(self.path)
-        d = urlparse.parse_qs(o.query)
-        q = d.get('q', None)
+        o = urlparse(self.path)
+        d = parse_qs(o.query)
+        q = d.get('q')
         if q:
-            m = re.search(u'(?:mängi|laula|play)\s*(.+)', q[0].decode('utf8'), re.IGNORECASE | re.UNICODE)
+            m = re.search(r'(?:mängi|laula|play)\s*(.+)', q[0], re.IGNORECASE | re.UNICODE)
             if m:
                 RESPONSE_MUSIC['extras']['query'] = m.group(1)
-                self.wfile.write(json.dumps(RESPONSE_MUSIC))
+                self.wfile.write(json.dumps(RESPONSE_MUSIC).encode('utf-8'))
                 return
-        self.wfile.write(json.dumps(RESPONSE_DEFAULT))
+        self.wfile.write(json.dumps(RESPONSE_DEFAULT).encode('utf-8'))
 
 
 def run(server_class=HTTPServer, handler_class=S, port=8000):
