@@ -93,6 +93,14 @@ public class SpeechInputMethodService extends InputMethodService {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        if (mInputView != null) {
+            mInputView.destroy();
+        }
+        super.onDestroy();
+    }
+
     /**
      * This is called at configuration change. We just kill the running session.
      * TODO: better handle configuration changes
@@ -106,6 +114,10 @@ public class SpeechInputMethodService extends InputMethodService {
     @Override
     public View onCreateInputView() {
         Log.i("onCreateInputView");
+        // A recreated input view must not leave the old SpeechRecognizer binding behind.
+        if (mInputView != null) {
+            mInputView.destroy();
+        }
         //ViewGroup view = (ViewGroup) findViewById(android.R.id.content);
         ViewGroup view = (ViewGroup) getMyWindow().getDecorView().getRootView();
         mInputView = (SpeechInputView) getLayoutInflater().inflate(R.layout.voice_ime_view, view, false);
@@ -129,7 +141,7 @@ public class SpeechInputMethodService extends InputMethodService {
         String type = "UNKNOWN";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mFlagPersonalizedLearning = (attribute.imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING;
+            mFlagPersonalizedLearning = (attribute.imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != InputMethodService.INPUT_METHOD_SERVICE.length();
         }
 
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
@@ -267,6 +279,8 @@ public class SpeechInputMethodService extends InputMethodService {
 
     private void closeSession() {
         if (mInputView != null) {
+            // Cancel only the active utterance. SpeechInputView deliberately keeps its
+            // SpeechRecognizer bound so an external on-device model can stay hot.
             mInputView.cancel();
         }
         Window window = getMyWindow();
@@ -318,8 +332,7 @@ public class SpeechInputMethodService extends InputMethodService {
 
     /**
      * Switch to the previous IME, either when the user tries to edit an unsupported field (e.g. password),
-     * or when they explicitly want to be taken back to the previous IME e.g. in case of a one-shot
-     * speech input.
+     * or when they explicitly want to be taken back to the previous keyboard.
      */
     private void switchToLastIme() {
         closeSession();
