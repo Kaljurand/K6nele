@@ -75,6 +75,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     private String mAppId = "";
     private SpeechInputViewListener mListener;
     private SpeechRecognizer mRecognizer;
+    private ComponentName mRecognizerService;
 
     private MicButton.State mState;
 
@@ -187,7 +188,7 @@ public class SpeechInputView extends LinearLayoutCompat {
                 final boolean finalHide = hide;
                 mBImeAction.setOnClickListener(v -> {
                     if (finalHide) {
-                        cancelOrDestroy();
+                        cancelRecognition();
                     }
                     mListener.onAction(imeAction, finalHide);
                 });
@@ -433,16 +434,16 @@ public class SpeechInputView extends LinearLayoutCompat {
         keysAsTypedArray.recycle();
 
         mComboSelectorView.init(context, prefs, keys, callerInfo, mAppId, key, (language, service) -> {
-            if (mState == MicButton.State.RECORDING) {
-                stopListening();
+            if (mState != MicButton.State.INIT && mState != MicButton.State.ERROR) {
+                cancelRecognition();
+                setGuiInitState(0);
             }
+            updateRecognitionService(service);
             mListener.onComboChange(language, service);
             if (mRvClipboard != null) {
                 updateClipboard(getContext(), language, service, mApp);
             }
         });
-
-        updateServiceLanguage(mComboSelectorView.getSpeechRecognizer());
 
         if (mTvInstruction != null) {
             if (PreferenceUtils.getPrefBoolean(prefs, res, keyHelpText, defaultHelpText)) {
@@ -500,14 +501,14 @@ public class SpeechInputView extends LinearLayoutCompat {
         switch (mState) {
             case INIT:
             case ERROR:
-                startListening(mComboSelectorView.getSpeechRecognizer(), mComboSelectorView.getIntent());
+                startListening(mComboSelectorView.getIntent());
                 break;
             case RECORDING:
                 stopListening();
                 break;
             case LISTENING:
             case TRANSCRIBING:
-                cancelOrDestroy();
+                cancelRecognition();
                 setGuiInitState(0);
                 break;
             default:
@@ -517,7 +518,7 @@ public class SpeechInputView extends LinearLayoutCompat {
     public void start() {
         if (mState == MicButton.State.INIT || mState == MicButton.State.ERROR) {
             // TODO: fix this
-            startListening(mComboSelectorView.getSpeechRecognizer(), mComboSelectorView.getIntent());
+            startListening(mComboSelectorView.getIntent());
         }
     }
 
@@ -529,8 +530,15 @@ public class SpeechInputView extends LinearLayoutCompat {
         mListener.onStopListening();
     }
 
+    /** Cancel the current utterance but keep the SpeechRecognizer/service binding warm. */
     public void cancel() {
-        cancelOrDestroy();
+        cancelRecognition();
+        setGuiInitState(0);
+    }
+
+    /** Release the SpeechRecognizer and its RecognitionService binding. */
+    public void destroy() {
+        destroyRecognizer();
         setGuiInitState(0);
     }
 
@@ -827,15 +835,27 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    private void updateServiceLanguage(SpeechRecognizer sr) {
-        cancelOrDestroy();
-        mRecognizer = sr;
+    /**
+     * Keep one SpeechRecognizer bound while the selected RecognitionService stays the same.
+     * A language change can reuse the same binding because the language is carried by the Intent.
+     */
+    private void updateRecognitionService(ComponentName service) {
+        boolean sameService = mRecognizerService == null ? service == null : mRecognizerService.equals(service);
+        if (mRecognizer != null && sameService) {
+            return;
+        }
+
+        destroyRecognizer();
+        mRecognizer = mComboSelectorView.getSpeechRecognizer();
+        mRecognizerService = service;
         mRecognizer.setRecognitionListener(new SpeechInputRecognitionListener());
     }
 
-    private void startListening(SpeechRecognizer sr, Intent intent) {
+    private void startListening(Intent intent) {
         setGuiState(MicButton.State.WAITING);
-        updateServiceLanguage(sr);
+        if (mRecognizer == null) {
+            updateRecognitionService(mComboSelectorView.getService());
+        }
         try {
             mRecognizer.startListening(intent);
             mListener.onStartListening();
@@ -854,16 +874,20 @@ public class SpeechInputView extends LinearLayoutCompat {
         }
     }
 
-    /**
-     * TODO: not sure if it is better to call cancel or destroy
-     * Note that SpeechRecognizer#destroy calls cancel first.
-     */
-    private void cancelOrDestroy() {
+    private void cancelRecognition() {
+        mBtnType = "Y";
+        if (mRecognizer != null) {
+            mRecognizer.cancel();
+        }
+    }
+
+    private void destroyRecognizer() {
         mBtnType = "Y";
         if (mRecognizer != null) {
             mRecognizer.destroy();
             mRecognizer = null;
         }
+        mRecognizerService = null;
     }
 
     private class SpeechInputRecognitionListener implements RecognitionListener {
