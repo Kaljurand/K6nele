@@ -2,11 +2,13 @@ package ee.ioc.phon.android.speak.activity;
 
 import android.Manifest;
 import android.content.ComponentName;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -158,11 +160,50 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
         }
     }
 
+    private boolean hasRecordAudioPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestRecordAudioPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                PERMISSION_REQUEST_RECORD_AUDIO);
+    }
+
+    private void startViewRecognition() {
+        if (mView != null) {
+            mView.post(() -> mView.start());
+        }
+    }
+
     private void start() {
-        if (isAutoStart()) {
+        if (!isAutoStart()) {
+            return;
+        }
+
+        // RecognitionService checks RECORD_AUDIO against the SpeechRecognizer caller. On modern
+        // Android this can fail before the selected recognition service gets a useful callback, so
+        // make sure Kõnele itself has the runtime permission before calling startListening().
+        if (hasRecordAudioPermission()) {
             // TODO: test what happens if the view is started while TTS is running
             // and then started again when the TTS stops and calls onDone
-            mView.post(() -> mView.start());
+            startViewRecognition();
+        } else {
+            requestRecordAudioPermission();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_RECORD_AUDIO
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // The base class handles the common permission UI. Retry the recognition request
+            // after the permission has actually been granted.
+            startViewRecognition();
         }
     }
 
@@ -170,11 +211,10 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onPause() {
         super.onPause();
         Log.i("onPause");
-        // We stop the service unless a configuration change causes onStop(),
-        // i.e. the service is not stopped because of rotation, but is
-        // stopped if BACK or HOME is pressed, or the Settings-activity is launched.
-        if (!isChangingConfigurations()) {
-            mView.cancel();
+        // SpeechActionActivity is short-lived, unlike the IME. Release its recognizer binding when
+        // the activity really leaves the foreground, but preserve it across configuration changes.
+        if (!isChangingConfigurations() && mView != null) {
+            mView.destroy();
         }
 
         stopTts();
@@ -201,11 +241,13 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
 
             @Override
             public void onError(int errorCode) {
-                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
-                    ActivityCompat.requestPermissions(SpeechActionActivity.this,
-                            new String[]{Manifest.permission.RECORD_AUDIO},
-                            PERMISSION_REQUEST_RECORD_AUDIO);
+                if (errorCode == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS
+                        && !hasRecordAudioPermission()) {
+                    requestRecordAudioPermission();
                 } else {
+                    // If Android still returns ERROR_INSUFFICIENT_PERMISSIONS while the runtime
+                    // permission is already granted, do not loop on requestPermissions(). Surface
+                    // the real recognizer error so AppOps/privacy-state problems remain visible.
                     setResultError(errorCode);
                 }
             }
