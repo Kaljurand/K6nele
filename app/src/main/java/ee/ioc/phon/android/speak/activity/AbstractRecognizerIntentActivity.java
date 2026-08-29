@@ -379,7 +379,7 @@ public abstract class AbstractRecognizerIntentActivity extends AppCompatActivity
                 audioFormat = DEFAULT_AUDIO_FORMAT;
             }
             if (SUPPORTED_AUDIO_FORMATS.contains(audioFormat)) {
-                Uri uri = getAudioUri(filename);
+                Uri uri = getAudioUri(AUDIO_FILENAME);
                 if (uri != null) {
                     // TODO: not sure about the type (or if it's needed)
                     intent.setDataAndType(uri, audioFormat);
