@@ -198,19 +198,12 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode != PERMISSION_REQUEST_RECORD_AUDIO) {
-            return;
-        }
-
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            showError("");
-            setTvPrompt();
-            // Retry the recognition that caused the permission request. This also fixes the old
-            // onRequestPermissionsResults(...) typo in AbstractRecognizerIntentActivity for this
-            // activity without depending on that misspelled callback.
+        if (requestCode == PERMISSION_REQUEST_RECORD_AUDIO
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // The base class handles the common permission UI. Retry the recognition request
+            // after the permission has actually been granted.
             startViewRecognition();
-        } else {
-            setTvPrompt(getString(R.string.promptPermissionRationale));
         }
     }
 
