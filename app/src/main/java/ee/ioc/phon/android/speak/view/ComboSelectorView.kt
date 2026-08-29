@@ -113,6 +113,8 @@ class ComboSelectorView @JvmOverloads constructor(
 
     val speechRecognizer: SpeechRecognizer
         get() = mSlc.speechRecognizer
+    val service: ComponentName
+        get() = mSlc.service
     val intent: Intent
         get() = mSlc.intent
 
