@@ -141,7 +141,7 @@ public class SpeechInputMethodService extends InputMethodService {
         String type = "UNKNOWN";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mFlagPersonalizedLearning = (attribute.imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != InputMethodService.INPUT_METHOD_SERVICE.length();
+            mFlagPersonalizedLearning = (attribute.imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING;
         }
 
         switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
@@ -332,7 +332,8 @@ public class SpeechInputMethodService extends InputMethodService {
 
     /**
      * Switch to the previous IME, either when the user tries to edit an unsupported field (e.g. password),
-     * or when they explicitly want to be taken back to the previous keyboard.
+     * or when they explicitly want to be taken back to the previous IME e.g. in case of a one-shot
+     * speech input.
      */
     private void switchToLastIme() {
         closeSession();
