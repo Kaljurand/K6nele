@@ -211,11 +211,10 @@ public class SpeechActionActivity extends AbstractRecognizerIntentActivity {
     public void onPause() {
         super.onPause();
         Log.i("onPause");
-        // We stop the service unless a configuration change causes onStop(),
-        // i.e. the service is not stopped because of rotation, but is
-        // stopped if BACK or HOME is pressed, or the Settings-activity is launched.
-        if (!isChangingConfigurations()) {
-            mView.cancel();
+        // SpeechActionActivity is short-lived, unlike the IME. Release its recognizer binding when
+        // the activity really leaves the foreground, but preserve it across configuration changes.
+        if (!isChangingConfigurations() && mView != null) {
+            mView.destroy();
         }
 
         stopTts();
